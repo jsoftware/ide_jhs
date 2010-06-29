@@ -45,7 +45,7 @@ load PATH,'demo/jdemo4.ijs'
 load PATH,'demo/jdemo5.ijs'
 load PATH,'demo/jdemo6.ijs'
 load PATH,'demo/jdemo7.ijs'
-load PATH,'demo/jdemo7.ijs'
+load PATH,'demo/jdemo8.ijs'
 hr 'jdemo';(css'');(js'');B getbody BIS
 )
 
