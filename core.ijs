@@ -1,7 +1,7 @@
 NB. JHS - core services
 require 'socket'
 coclass'jhs'
-VERSION=: '2.7'
+VERSION=: '2.9'
 
 0 : 0
 *** Cache-Control: no-cache
