@@ -68,7 +68,6 @@ doselect'install'
 )
 
 ev_upgrade_click=: 3 : 0
-smoutput 'upgrade mysteries'
 doselect'upgrade'
 )
 
