@@ -537,7 +537,31 @@ while.
 do. end.
 )
 
-NB. read cfg file to set PORT LHOK BIND PASS
+NB.! kludge
+cfg=: 0 : 0
+NB. ~config/jhs.cfg overridden by ~user/config/jhs.cfg
+
+NB. private port range 49152 to 65535
+PORT=: 65001
+
+NB. 0 localhost jlogin if PASS set
+NB. 1 localhost ok (no jlogin)
+LHOK=: 1
+
+NB. 'localhost' access from same machine
+NB. 'any' access from any machine (should have PASS set)
+BIND=: 'localhost'
+
+NB. ''    no jlogin
+NB. '...' jlogin password
+PASS=: ''
+
+NB. username for PASS
+NB. JUM ignores and sets USER to be JUM user (jhs folder)
+USER=: ''
+)
+
+NB. read cfg file to set PORT LHOK BIND PASS USER
 jhscfg=: 3 : 0
 try.
  load jpath'~config/jhs.cfg'
@@ -545,7 +569,10 @@ catch.
  try.
   load jpath'~system/config/jhs.cfg'
  catch.
-  'problem loading ~config/jhs.cfg or ~system/config/jhs.cfg'assert 0
+  NB.! kludge because installer does not have jhs.cfg
+  cfg fwrite jpath'~config/jhs.cfg'
+  load jpath'~config/jhs.cfg'
+  NB.! 'problem loading ~config/jhs.cfg or ~system/config/jhs.cfg'assert 0
  end.
 end.
 'jhs.cfg PORT invalid' assert (PORT>49151)*.PORT<2^16
@@ -564,6 +591,10 @@ NB. PORT BIND LHOK PASS from ~system/config/jhs.cfg or ~config/jhs.cfg
 NB. SO_REUSEADDR allows server to kill/exit and restart immediately
 NB. FD_CLOEXEC prevents inheritance by new tasks (UM startask)
 init=: 3 : 0
+
+NB.! kludge - installer jhs.bat has old style jhs call
+if. 2~:3!:0 y do. y=. '' end.
+
 'already initialized' assert _1=nc<'SKLISTEN'
 fixuf y
 jhscfg''
