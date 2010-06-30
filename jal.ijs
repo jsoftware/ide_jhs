@@ -17,7 +17,7 @@ index
 )
 
 BIS=: 0 : 0
-wiki   '<a href="http://www.jsoftware.com/jwiki/addons">www.jsoftware.com/jwikie/addons</a>'
+wiki   '<a href="http://www.jsoftware.com/jwiki/addons">www.jsoftware.com/jwiki/addons</a>'
 status hb'status'
 update hb'update'
 notin  hb'not installed'
