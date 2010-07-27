@@ -8,7 +8,7 @@ jhostpath_j_=: jpath_j_ NB.! required by remove - temp fix
 jev_get=: create
 
 B=:  0 : 0
-jide
+jma jmlink jmz
 '<h1>J Active Library - pacman - Package Manager<h1>'
 wiki                     ^^
 status update notin inst ^^
@@ -78,4 +78,5 @@ doselect'remove'
 JS=: 0 : 0
 function evload(){if(jform.select) jform.select.focus();}
 function ev_select_click(){;} //jform.select.selectedIndex;
+function ev_jmlink_click(){menuclick();}
 )
