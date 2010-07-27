@@ -3,7 +3,7 @@ coinsert'jhs'
 demo=: 'jdemo2.ijs'
 
 B=:  0 : 0
-jdemo jsep jide
+jdemo
 '<h1>Roll with ajax<h1>'
 roll result
 -

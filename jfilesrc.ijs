@@ -197,6 +197,7 @@ htmlresponse d,~gsrchead rplc '<TYPE>';x;'<LENGTH>';":#d
 )
 
 jev_getsrcfile=: 3 : 0
+smoutput'getsrcfile: ',y
 if. y-:'favicon.ico' do.
  favicon 0 
 elseif. '.pdf'-:_4{.y do.
@@ -205,6 +206,8 @@ elseif. '.svg'-:_4{.y do.
  svgget y
 elseif. '.js'-:_3{.y do.
  'application/x-javascript'gsrcf y
+elseif. '.css'-:_4{.y do.
+ 'text/css'gsrcf y
 elseif. '.htc'-:_4{.y do.
  'text/x-component'gsrcf y
 elseif. '.swf'-:_4{.y do.

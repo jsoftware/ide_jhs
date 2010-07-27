@@ -1,6 +1,8 @@
 NB. core javascript utilities for all pages
 coclass'jhs'
-
+NB.! core.js file should be read by src=
+NB. this would use cache and make page loads faster
+NB. doing it this way is easier for debugging (not cached)
 JSCORE=: hjs 0 : 0
 // global constants
 var ASEP= '\1'; // delimit substrings in ajax response
@@ -108,26 +110,40 @@ function getpostargs(ids)
  return t;
 }
 
+// app keyboard shortcuts
 
-// ctrl shortcuts
 document.onkeyup= kup;
+document.onkeypress= kpress;
+var shortcut= 0;
 
-// app keyboard shortcuts 
-// app defines ctrl_xxxx to handle the shortcut event
-// semicolon not used - should be 186 but is 59 in win ff
-//! noarrows vs itouch (safari) 68 85 vs 38 40
+function kpress(ev)
+{
+ if(!shortcut) return true;
+ shortcut= 0;
+ var e=window.event||ev;
+ var c=e.charCode||e.keyCode; // ff vs ie
+ try{doshortcut(String.fromCharCode(c));}catch(ex){;};
+ return false;
+}
+
+// ^/ traps next keypress
+// up/dn arrow call uarrow/darrow
 function kup(ev)
 {
  var e=window.event||ev;
  var c=e.keyCode;
  if(e.ctrlKey)
  {
-  if(c==188&&'function'==typeof ctrl_comma){ctrl_comma();return false;}
-  if(c==190&&'function'==typeof ctrl_dot){ctrl_dot()  ;return false;}
-  if(c==191&&'function'==typeof ctrl_slash){ctrl_slash();return false;}
-  if(c==219&&'function'==typeof ctrl_lbracket){ctrl_lbracket();return false;}
-  if(c==221&&'function'==typeof ctrl_rbracket){ctrl_rbracket();return false;}
-  if(c==220&&'function'==typeof ctrl_bslash){ctrl_bslash();return false;}
+  if(c==190&&'function'==typeof ev_advance_click)
+  {
+   jform.jid.value  = "advance";
+   jform.jtype.value= "click";
+   jform.jmid.value = "advance";
+   jform.jsid.value = "";
+   ev_advance_click();
+   return false;
+  }
+  if(c==191){shortcut= 1;return false;}
  }
  else
  {
@@ -140,10 +156,26 @@ function kup(ev)
  return true;
 }
 
-// default shortcuts - override with new definitions
-function ctrl_lbracket(){location='jijx';}
-function ctrl_rbracket(){location='jfile';}
-function ctrl_bslash(){location='jhelp';}
+// set values for shortcut call
+function setshortcut(n)
+{
+ jform.jtype.value= "click";
+ jform.jid.value= n;
+ jform.jmid.value= n;
+ jform.jsid.value= "";
+}
+ 
+function dostdshortcut(c)
+{
+ switch(c)
+ {
+  case '.': document.getElementById("link").focus(); break;
+  case '/': location="jijx";  break;
+  case 'o': location="jfile"; break;
+  case '?': location="jhelp"; break;
+  case 'n': location="jijs"; break;
+ }
+}
 
 // menu
 var menublock= null; // menu ul element with display:block
@@ -171,11 +203,34 @@ function menuclick()
 
 function menuhide()
 {
+ if(tmenuid!=0) clearTimeout(tmenuid);
  menulast= menublock;
  if(menublock!=null) menublock.style.display= "none";
  menublock= null;
  return true;
 }
+
+// browser differences
+//  safari/chrome onblur on mousedown and onfocus on mouseup
+//  onblur will hide the menu 250 after mousedown (no clear)
+//  so menu item click needs to be quick
+
+var tmenuid= 0;
+
+function menublur()
+{
+ if(tmenuid!=0) clearTimeout(tmenuid);
+ tmenuid= setTimeout(menuhide,250)
+ return true;
+}
+
+function menufocus()
+{
+ if(tmenuid!=0) clearTimeout(tmenuid);
+ tmenuid= 0;
+ return true;
+}
+
 // menu end
 
 // get pixel... - sizing/resizing

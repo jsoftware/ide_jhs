@@ -3,7 +3,7 @@ coinsert'jhs'
 demo=: 'jdemo5.ijs'
 
 B=:  0 : 0
-jdemo jsep jide
+jdemo
 '<h1>Plot demo<h1>'
 svg pdf sentence
 '<PLOT>'

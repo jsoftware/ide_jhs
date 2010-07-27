@@ -149,7 +149,7 @@ if. _1~:SKSERVER do. try. ".'urlresponse_',URL,'_ y' catch. end. end. NB. jijx
 if. _1~:SKSERVER do. jbad'' end.
 getdata'' NB. get and parse http request
 if. 1=NVDEBUG do. smoutput seebox NV end. NB. HNV,NV
-if. (-.cookie-:gethv'Cookie:')*.-.LHOK*.PEER-:LOCALHOST 
+if. (0~:#PASS)*.(-.cookie-:gethv'Cookie:')*.-.LHOK*.PEER-:LOCALHOST 
                        do. r=. 'jev_get_jlogin_ 0'
 elseif. 'post'-:METHOD do. r=. getv'jdo'
 elseif. '.'e.URL       do. r=. 'jev_getsrcfile_jfilesrc_ URL_jhs_'
@@ -417,9 +417,10 @@ jhtml '<!-- refresh -->'
 i.0 0
 )
 
+NB. one very long line as LF is <br>
 jhtml__=: 3 : 0
 a=. 9!:36''
-9!:37[ 0 1000 0 10000 NB. allow lots of html formatted output
+9!:37[ 4$0,1000+#y NB. allow lots of html formatted output
 smoutput marka_jhs_,y,markz_jhs_
 9!:37 a
 )
@@ -438,32 +439,32 @@ console_welcome=: 0 : 0
 
 J HTTP Server - init OK
 
-Edit startup to change PORT or access/noaccess from other machines.
-Default startup is: STARTUP
-
 Requires a modern browser (later than 2004) with Javascript.
 
 A : separates ip address from port. Numeric form ip can be faster than name.
+<REMOTE>
+Start a web browser on this machine and enter URL:
+   http://<LOCAL>:<PORT>/jijx
+)
+
+remoteaccess=: 0 : 0
 
 Access from another machine:
-   http://IPAD:PORT/jijx
-
-Start a web browser on this machine and enter URL:
-   http://LOCAL:PORT/jijx
+   http://<IPAD>:<PORT>/jijx
 )
 
 console_failed=: 0 : 0
 
 J HTTP Server - init failed 
 
-Edit startup to change PORT or access/noaccess from other machines.
-Default startup is: STARTUP
-
-Port PORT is already in use by JHS or another service.
+Port <PORT> already in use by JHS or another service.
 
 If JHS is serving the port, close this task and use the running server.
 
 If JHS server is not working, close it, close this task, and restart.
+
+See file: <CFGFILE>
+for information on using another PORT.
 )
 
 NB. html config parameters
@@ -561,20 +562,19 @@ NB. JUM ignores and sets USER to be JUM user (jhs folder)
 USER=: ''
 )
 
-NB. read cfg file to set PORT LHOK BIND PASS USER
-jhscfg=: 3 : 0
-try.
- load jpath'~config/jhs.cfg'
-catch.
- try.
-  load jpath'~system/config/jhs.cfg'
- catch.
-  NB.! kludge because installer does not have jhs.cfg
-  cfg fwrite jpath'~config/jhs.cfg'
-  load jpath'~config/jhs.cfg'
-  NB.! 'problem loading ~config/jhs.cfg or ~system/config/jhs.cfg'assert 0
- end.
+lcfg=: 3 : 0
+if. fexist y do.
+ try. load y catch. ('load failed: ',y) assert 0 end.
+else.
+ ('file not found: ',y) assert -.'jhs_default.ijs'-:_15{.y
 end.
+)
+
+NB. load config files to set PORT LHOK BIND PASS USER
+jhscfg=: 3 : 0
+lcfg jpath'~addons/ide/jhs/config/jhs_default.ijs'
+lcfg jpath'~addons/ide/jhs/config/jhs.ijs'
+lcfg jpath'~config/ide/jhs/config/jhs.ijs'
 'jhs.cfg PORT invalid' assert (PORT>49151)*.PORT<2^16
 'jhs.cfg BIND invalid' assert +./(<BIND)='any';'localhost'
 'jhs.cfg LHOK invalid' assert +./LHOK=0 1
@@ -616,14 +616,16 @@ LOGFULL=: ''
 PDFOUTPUT=: 'output pdf "',(jpath'~temp\pdf\plot.pdf'),'" 480 360;'  
 DATAS=: ''
 PS=: '/'
-startup=. jpath'~bin/jhs',IFWIN#'.bat'
+cfgfile=. jpath'~addons/ide/jhs/config/jhs_default.ijs'
 r=. dobind BIND
-if. r=10048 do. assert 0[smoutput console_failed rplc 'STARTUP';startup;'PORT';":PORT end.
+if. r=10048 do. smoutput console_failed hrplc 'PORT CFGFILE';(":PORT);cfgfile return. end.
 sdcheck_jsocket_ r
 sdcheck_jsocket_ sdlisten_jsocket_ SKLISTEN,1
 SKSERVER_jhs_=: _1
 boxdraw_j_ PC_BOXDRAW
-smoutput console_welcome rplc 'STARTUP';startup;'PORT';(":PORT);'IPAD';(>(BIND-:''){'NOACCESS';ip);'LOCAL';LOCALHOST
+NB.! smoutput console_welcome rplc 'PORT LOCAL';(":PORT);'IPAD';(>(BIND-:''){'NOACCESS';ip);'LOCAL';LOCALHOST
+remote=. >(BIND-:''){'';remoteaccess hrplc 'IPAD PORT';ip;":PORT
+smoutput console_welcome hrplc 'PORT LOCAL REMOTE';(":PORT);LOCALHOST;remote
 startupjhs''
 allowedurls=: ''
 if. 0~:#PASS do.
@@ -641,11 +643,12 @@ t=. (<'.ijs'),~each ;:'core utilh utiljs jlogin jijx jijs jfile jfilesrc jhelp j
 corefiles=: (<jpath'~addons/ide/jhs/'),each t
 load__ }.corefiles
 
-pfiles=:     (<'/setup701/patch/addons/ide/jhs/'),each t NB.!
-patch=: 3 : 0
-d=. fread each pfiles
-d fwrite each corefiles
-load__ corefiles
+NB.! debug stuff
+pfiles=:     (<'/users/eric/svn/addons/ide/jhs/'),each t
+p__=: 3 : 0
+d=. fread each pfiles_jhs_
+d fwrite each corefiles_jhs_
+load corefiles_jhs_
 )                         
 
 jhs_z_=: init_jhs_

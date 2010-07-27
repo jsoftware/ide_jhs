@@ -4,7 +4,7 @@ coinsert'jhs'
 demo=: 'jdemo6.ijs'
 
 B=:  0 : 0
-jdemo jsep jide
+jdemo
 '<h1>Grid Demo<h1>'
 grid0   ^^
 grid1

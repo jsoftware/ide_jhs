@@ -42,8 +42,17 @@ r
 
 NB. body template id-sentence pairs
 BISCORE=: 0 : 0
-jsep  '&diams;'
-jide  hjide''
+jsep    '&diams;'
+jmlink  hjmlink''
+jmijs   'jijs' hml'ijs'; ' n'
+jmijx   'jijx' hml'ijx'; ' /'
+jmfile  'jfile'hml'open';'o'
+jmhelp  'jhelp'hml'help';'?'
+jmlogin >(-.0-:gethv'Cookie:'){' ';'jlogin'hml'jlogout';''
+jijx    '<a href="jijx">jijx</a>'
+jfile   '<a href="jfile">jfile</a>'
+jhelp   '<a href="jhelp">jhelp</a>'
+jlogout '<a href="jlogout">jlogout</a>'
 jma   '<div class="menu">'[MSTATE=:1[MINDEX=:100
 jmz   '</ul></span></div>'[MSTATE=:0
 + ' ' 
@@ -56,21 +65,29 @@ jmz   '</ul></span></div>'[MSTATE=:0
 ; '</td><td>'
 )
 
+NB.! menu fixed font kludges shortcut right align
 CSSCORE=: 0 : 0
 *{font-family:"sans-serif";font-size:<PC_FONTSIZE>}
 *.jcode{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;white-space:pre;}
 *.hab:hover{cursor:pointer;color:red;}
 *.hab{text-decoration:none;}
 *.hsel{background-color:buttonface;font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
-.menu{width:100%;float:left;}
-.menu a{
+body{margin-top:20px;}
+.menu{width:100%;position:fixed;background:#eee;
+ margin-top:-20px;margin-left:-10px;padding-left:10px;padding-top:3px;padding-bottom:3px;
+}
+.menu li{
  display:block;white-space:nowrap;
- padding:2px;color:#000;background:#fff;}
-.menu a:hover{cursor:pointer;color:#000;background:#ddd;}
+ padding:2px;color:#000;background:#eee;
+ font-family:"courier new","courier","monospace";
+}
+.menu a{font-family:"courier new","courier","monospace";}
+.menu a:hover{cursor:pointer;color:#000;background:#ddd;width:100%;}
 .menu span{float:left;position:relative;}
 .menu ul{
  position:absolute;top:100%;left:0%;display:none;
- list-style:none;border:1px black solid;margin:0;padding:0;}
+ list-style:none;border:1px black solid;margin:0;padding:0;
+}
 )
 
 hcss=: 3 : 0
@@ -115,8 +132,14 @@ NB. utils for generating html
 NB. ID global (kludge, but so convenient to use B id from getbody)
 NB. class hardwired based on util
 
-hjide=: 3 : 0
-'<a href="jijx">ijx</a> <a href="jfile">file</a> <a href="jhelp">help</a>',(0~:#PASS)#' <a href="jlogin">logout</a>'
+NB. J ide link menu
+hjmlink=: 3 : 0
+t=.   hmg'link'
+t=. t,'jijs' hml'ijs'; ' n'
+t=. t,'jijx' hml'ijx'; ' /'
+t=. t,'jfile'hml'open';'o'
+t=. t,>(-.0-:gethv'Cookie:'){' ';'jlogin'hml'jlogout';''
+t=. t,'jhelp'hml'help';'?'
 )
 
 hb=: 3 : 0
@@ -125,18 +148,22 @@ t hrplc 'ID VALUE';ID;y
 )
 
 hc=: 3 : 0
-t=. '<input type="checkbox" id="<ID>" value="<ID>" class="hcb" name="<SET>" onclick="return jev(''<ID>'',''click'',event)"/><VALUE>'
+t=.   '<input type="checkbox" id="<ID>" value="<ID>" class="hcb" name="<SET>"'
+t=. t,' onclick="return jev(''<ID>'',''click'',event)"/><label for="<ID>"><VALUE></label>'
 t hrplc 'ID VALUE SET';ID;y
 )
 
 hab=: 3 : 0
+ID hab y
+:
 t=. '<a id="<ID>" href="#" name="<ID>" class="hab" onclick="return jev(''<ID>'',''click'',event)"'
 t=. t,' ondblclick="return jev(''<ID>'',''dblclick'',event)"><VALUE></a>'
-t hrplc 'ID VALUE';ID;y
+t hrplc 'ID VALUE';x;y
 )
 
 hradio=: 3 : 0
-t=. '<input type="radio" id="<ID>" value="<ID>" class="<CLASS>" name="<SET>" onclick="return jev(''<ID>'',''click'',event)"/><VALUE>'
+t=.   '<input type="radio" id="<ID>" value="<ID>" class="<CLASS>" name="<SET>"'
+t=. t,' onclick="return jev(''<ID>'',''click'',event)"/><label for="<ID>"><VALUE></label>'
 t hrplc 'ID VALUE SET';ID;y
 )
 
@@ -186,12 +213,13 @@ end.
 t=. t,'</select>'
 )
 
-NB. menu group button - ID global
-hmg=: 3 : 0
+NB. menu group button
+hmgz=: 3 : 0
 t=. >(MSTATE=1){'</ul></span>';''
 t=. t,'<span style="z-index:<INDEX>";>'
-t=. t,'<span><a href="#" id="<ID>" name="<ID>" class="hab"'  
-t=. t,' onclick="return jev(''<ID>'',''click'',event)" ><VALUE> &#9660; </a></span>'
+t=. t,'<span><a href="#" id="<ID>" name="<ID>" class="hab"'
+t=. t,' onblur="return menublur();" onfocus="return menufocus();"'
+t=. t,' onclick="return jev(''<ID>'',''click'',event)" ><VALUE>&nbsp;</a></span>'
 t=. t,'<ul id="<ID>_ul">'
 t=. t hrplc 'ID VALUE INDEX';ID;y;":MINDEX
 MSTATE=: 2
@@ -199,15 +227,31 @@ MINDEX=: <:MINDEX
 t
 )
 
-NB. menu link
-hml=: 3 : 0
-t=. '<li><a href="<REF>" onclick="return menuhide();" onmouseup="return menuhide();" ><VALUE></a></li>'
-t hrplc 'REF VALUE';ID;y
+NB. menu group button - ID global
+hmg=: 3 : 0
+hmgz y,'&#9660;'
 )
 
-NB. menu button - ID global
-hmb=: 3 : 0
-'<li>',(hab y),'</li>'
+NB. menu group button action (different decorator)
+hmga=: 3 : 0
+hmgz y,'&#9668'
+)
+
+NB. menu link
+hml=: 3 : 0
+ID hml y
+:
+t=.   '<li><a href="<REF>" onclick="return menuhide();"'
+t=. t,' onblur="return menublur();" onfocus="return menufocus();"><VALUE></a>&nbsp;&nbsp;<TEXT></i></li>'
+t hrplc 'REF VALUE TEXT';x;y
+)
+
+hmab=: 3 : 0
+ID hmab y
+:
+t=. x hab {.y
+t=. t rplc 'class="hab"';'class="hab" onblur="return menublur();" onfocus="return menufocus();"'
+'<li>',t,'&nbsp;&nbsp;',(>{:y),'</li>'
 )
 
 hopenijs=: 3 : 0
@@ -444,4 +488,59 @@ cmdbase=: '<a href="jijx">ijx</a> <a href="jfile">file</a> <a href="jhelp">help<
 cmdsep=: '&diams;' NB. separate command groups
 
 svgjs=: '<!--[if IE]><script src="svg.js"></script><![endif]-->'
+
+NB. html J code syntax coloring
+NB. Roger provided this using dyadic ;: see
+NB. http://www.jsoftware.com/jwiki/Essays/Word_Formation_on_Lines .
+
+mfl=: 256$0                       NB. X other
+mfl=: 1  (9,a.i.' ')        }mfl  NB. S whitespace (space and horizontal tab)
+mfl=: 2  ((a.i.'Aa')+/i.26) }mfl  NB. A A-Z a-z excluding N B
+mfl=: 3  (a.i.'N')          }mfl  NB. N the letter N
+mfl=: 4  (a.i.'B')          }mfl  NB. B the letter B
+mfl=: 5  (a.i.'0123456789_')}mfl  NB. 9 digits and _
+mfl=: 6  (a.i.'.')          }mfl  NB. D .
+mfl=: 7  (a.i.':')          }mfl  NB. C :
+mfl=: 8  (a.i.'''')         }mfl  NB. Q quote
+mfl=: 9  (13)               }mfl  NB. CR
+mfl=: 10 (10)               }mfl  NB. LF
+
+sfl=: _2]\"1 }.".;._2 (0 : 0) 
+' X     S    A    N    B    9    D    C    Q    CR     LF  ']0
+ 1 1  12 1  2 1  3 1  2 1  6 1  1 1  1 1  7 1  10 1   1 1   NB. 0  initial
+ 1 2  12 2  2 2  3 2  2 2  6 2  1 0  1 0  7 2  10 2   1 2   NB. 1  other
+ 1 2  12 2  2 0  2 0  2 0  2 0  1 0  1 0  7 2  10 2   1 2   NB. 2  alp/num
+ 1 2  12 2  2 0  2 0  4 0  2 0  1 0  1 0  7 2  10 2   1 2   NB. 3  N
+ 1 2  12 2  2 0  2 0  2 0  2 0  5 0  1 0  7 2  10 2   1 2   NB. 4  NB
+ 9 0   9 0  9 0  9 0  9 0  9 0  1 0  1 0  9 0  10 2   1 2   NB. 5  NB.
+ 1 4  13 0  6 0  6 0  6 0  6 0  6 0  1 0  7 4  10 2   1 2   NB. 6  num
+ 7 0   7 0  7 0  7 0  7 0  7 0  7 0  7 0  8 0  10 2   1 2   NB. 7  '
+ 1 2  11 2  2 2  3 2  2 2  6 2  1 2  1 2  7 0  10 2   1 2   NB. 8  ''
+ 9 0   9 0  9 0  9 0  9 0  9 0  9 0  9 0  9 0  10 2   1 2   NB. 9  comment
+ 1 2  11 2  2 2  4 2  2 2  6 2  1 2  1 2  7 2  10 2  11 0   NB. 10 CR
+ 1 2  11 2  2 2  4 2  2 2  6 2  1 2  1 2  7 2  10 2   1 2   NB. 11 CRLF
+ 1 2  12 0  2 2  3 2  2 2  6 0  1 2  1 2  7 2  10 2   1 2   NB. 12 space
+ 1 2  13 0  2 2  3 2  2 2  6 0  1 2  1 2  7 2  10 2   1 2   NB. 13 space after num
+)
+
+wfl=: (0;sfl;mfl) & ;:
+
+syncat=: 3 : 0
+if.     'NB.'-:3{.y                   do. '<span style="color:green">'
+elseif. '=.'-:2{.y                    do. '<span style="color:blue">'
+elseif. '=:'-:2{.y                    do. '<span style="color:blue">'
+elseif. ('.'={:y)*.(2<#y)*.-.'p..'-:y do. '<span style="color:red">'
+elseif. ''''={.y                      do. '<span style="color:blue">'
+elseif. ({.dlb y)e.'0123456789_'      do. '<span style="color:navy">'
+elseif. 1                             do. '<span style="color:black">'
+end.
+)
+
+synhi=: 3 : 0
+if. 0=#y do. '' return. end.
+z=. wfl toJ y
+c=. syncat each z
+z=. htmlfroma each z
+;c,each z,each <'</span>'
+)
 

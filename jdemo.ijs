@@ -4,32 +4,33 @@ coinsert'jhs'
 demo=: 'jdemo.ijs'
 
 NB. html body template
-NB. ids (tokens) replaced by BIS values 
+NB. tokens replaced by BIS values 
+NB. jma starts menu
+NB. jmz ends menu
 NB. ^ token is <br>
+NB. _ is <hr>
 B=:  0 : 0
-jide
+jma
+ demo jdemo1 jdemo2 jdemo3 jdemo4 jdemo5 jdemo6 jdemo7 jdemo8
+ jmlink
+jmz
 '<h1>JHS demos</h1>'
-jdemo1  ^^
-jdemo2  ^^
-jdemo3  ^^
-jdemo4  ^^
-jdemo5  ^^
-jdemo6  ^^
-jdemo7  ^^
-jdemo8  ^^
+'Select demo from demo menu.'
+-
 openijs ^^
 Ndesc
 )
 
-BIS=: 0 : 0 NB. body id/sentence pairs
-jdemo1  ' Roll submit'    ,~href'jdemo1'
-jdemo2  ' Roll ajax'      ,~href'jdemo2'
-jdemo3  ' Flip ajax'      ,~href'jdemo3'
-jdemo4  ' Controls/JS/CSS',~href'jdemo4'
-jdemo5  ' Plot'           ,~href'jdemo5'
-jdemo6  ' Grid editor'    ,~href'jdemo6'
-jdemo7  ' Table layout'   ,~href'jdemo7'
-jdemo8  ' Dynamic resize' ,~href'jdemo8'
+BIS=: 0 : 0 NB. body token/sentence pairs
+demo    hmg'demo'
+ jdemo1  hml'Roll submit';''
+ jdemo2  hml'Roll ajax';''
+ jdemo3  hml'Flip ajax';''
+ jdemo4  hml'Controls/JS/CSS';''
+ jdemo5  hml'Plot';''
+ jdemo6  hml'Grid editor';''
+ jdemo7  hml'Table layout';''
+ jdemo8  hml'Dynamic resize';''
 openijs hopenijs'Open script: ';(PATH,demo);demo;''
 )
 
@@ -46,7 +47,7 @@ load PATH,'demo/jdemo5.ijs'
 load PATH,'demo/jdemo6.ijs'
 load PATH,'demo/jdemo7.ijs'
 load PATH,'demo/jdemo8.ijs'
-hr 'jdemo';(css'');(js'');B getbody BIS
+hr 'jdemo';(css CSS);(js JS);B getbody BIS
 )
 
 Ndesc=: 0 : 0
@@ -67,16 +68,13 @@ Apps have the following general structure.<br><br>
 coclass'appname'
 coinsert'jhs'
 
-B=: 0 : 0
- page layout in ids
- ids from ;: (J word formation)
-  'abc' adds abc to html body
-  Nabc  adds noun Nabc
-  Vabc  adds result of Vabc''
-  id    adds result of id sentence from BIS,BISCORE
-&#41;
- 
-BIS=: ... NB. id/sentence pairs for B ids
+NB. page layout in tokens (;: J word formation)
+NB. 'abc' adds abc to html body
+NB. Nabc  adds noun Nabc
+NB. token adds result of token sentence from BIS,BISCORE
+B=: ...
+
+BIS=: ... NB. id/sentence pairs for B ids 
 CSS=: ... NB. styles
 JS=:  ... NB. javascript (event handlers)
 
@@ -86,12 +84,26 @@ NB. JSCORE_jhs_  - framework js
 
 create=: 3 : 0 NB. create page and send to browser
  ...
- hr title;styles,javascript,B getbody BIS
+ hr title;css,js,B getbody BIS
 &#41;
 
 jev_get=: create NB. browser get request
-
-NB. event handlers
-...
 </div>
+)
+
+CSS=: 0 : 0
+)
+
+JS=: 0 : 0
+// menu handlers and shortcuts
+function ev_demo_click(){menuclick();}
+function ev_jmlink_click(){menuclick();}
+
+function doshortcut(c)
+{
+ switch(c)
+ {
+  default: dostdshortcut(c); break;
+ }
+}
 )

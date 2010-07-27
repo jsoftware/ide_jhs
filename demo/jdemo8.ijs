@@ -11,7 +11,7 @@ NB. can be useful in figuring this stuff out
 
 B=:  0 : 0
 '<div id="a">'
- jdemo jsep jide ^
+ jdemo ^
  'Dynamic resize' ^^
 '</div>'
 

@@ -4,10 +4,10 @@ demo=: 'jdemo4.ijs'
 
 B=:  0 : 0
 jma abc jijx jfile foo
-    def goo
-    ghi moo koo jmz ^^
-
-jdemo jsep jide
+ def goo
+ ghi moo koo
+jmz ^^
+jdemo
 '<h1>Controls with javascript and CSS<h1>'
 'javascript: ' which ^^
 cb0  cb1             ^
@@ -21,15 +21,15 @@ Ndesc
 )
 
 BIS=: 0 : 0
-abc     hmg'Abc'
- jijx   hml'jijx'
- jfile  hml'jfile'
- foo    hmb'do task foo'
-def     hmg'Def'
- goo    hmb'do task goo'
-ghi     hmg'More stuff'
- moo    hmb'do moo stuff'
- koo    hmb'do koo again'
+abc    hmg'Abc'
+ jijx    hml'ijx';''
+ jfile   hml'open';''
+ foo    hmab'do task foo';''
+def    hmg'Def'
+ goo    hmab'do task goo';''
+ghi    hmg'More stuff'
+ moo    hmab'do moo stuff';''
+ koo    hmab'do koo again';''
 
 which   '<span id="which">&nbsp;</span>'
 sel     hsel ('zero';'one';'two';'three';'four');1;0

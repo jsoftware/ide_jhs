@@ -3,7 +3,7 @@ coinsert'jhs'
 demo=: 'jdemo3.ijs'
 
 B=:  0 : 0
-jdemo jsep jide
+jdemo
 '<h1>Flip with ajax args and results<h1>'
 t1 t2   ^^
 flip

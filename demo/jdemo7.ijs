@@ -3,7 +3,7 @@ coinsert'jhs'
 demo=: 'jdemo7.ijs'
 
 B=:  0 : 0
-jdemo jsep jide
+jdemo
 '<h1>Table layout<h1>'
 
 [{'longer label: '   ;t0}

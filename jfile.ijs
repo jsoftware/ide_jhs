@@ -16,22 +16,24 @@ end.
 )
 
 B=: 0 : 0 NB. body template
-open+edit+newijs jsep del jsep jide
+jma
+ action open  edit  del newfi newfo
+ jmlink
+jmz 
+'rename: ' rename
 report
 path pathd
 rfi rp
 sel
--
-[{'new file:' ;newfile}
- {'new folder';newfolder}
- {'rename:'   ;rename}]
 )
 
 BIS=: 0 : 0 NB. body template id-sentence pairs
-open      hab'open'
-edit      hab'edit'
-newijs    hab'newijs'
-del       hab'del'
+action    hmg'action'
+ open      hmab'open';''
+ edit      hmab'edit';''
+ del       hmab'del';''
+ newfi     hmab'new file';''
+ newfo     hmab'new folder';''
 report    '<div id="report"><R>&nbsp;</div>'
 path      hh'<F>'
 pathd     '<div id="pathd"><F></div>'
@@ -54,8 +56,8 @@ CSS=: 0 : 0
 )
 
 createjs=: 3 : 0
-files=. buttons 'files';t,t=. <folderinfo remlev y
-paths=. buttons 'paths';t,t=. <{."1 SystemFolders_j_
+files=. buttons 'files';2#<folderinfo remlev y
+paths=. buttons 'paths';2#<{."1 SystemFolders_j_
 JSCORE,JS hrplc 'FILES PATHS';jsstring each files;paths
 )
 
@@ -77,107 +79,104 @@ end.
 
 NB. event handlers
 
-ev_newijs_click=: 3 : 0
-create_jijs_ jnew_jijs_''
-)
-
 ev_paths_click=: 3 : 0
 sid=. getv'jsid'
 select. sid
 case. 'labs' do. f=. jpath'~system/extras/labs/'
 case.        do. f=. jpath'~',sid,'/'
 end.
-ajaxresponse f,ASEP,buttons 'files';t,t=. <folderinfo remlev f
+ajaxresponse f,ASEP,buttons 'files';2#<folderinfo remlev f
 )
 
+NB. folder clicked (file handled in js)
 ev_files_click=: 3 : 0
 sid=. getv'jsid'
 path=. getv'path'
 sid=. sid-.PS
+sid=. 6}.sid NB. drop markfolder prefix
 if. sid-:'..' do.
  f=. PS,~remlev remlev path 
 else.
  f=. (remlev path),PS,sid,PS
 end.
-ajaxresponse f,ASEP,buttons 'files';t,t=. <folderinfo remlev f
+ajaxresponse f,ASEP,buttons 'files';2#<folderinfo remlev f
 )
 
 nsort=: 3 : 0
 y /: (>:;y i: each '.')}. each y
 )
 
+markfolder=: <'&nbsp;&nbsp;&nbsp;'
+
 NB. y path - result is folders,files
 folderinfo=: 3 : 0
 a=. 1!:0 <jpath y,'/*'
 n=. {."1 a
 d=. 'd'=;4{each 4{"1 a
-('/',each'/',~each(<'..'),nsort d#n),nsort (-.d)#n
+(markfolder,each'/',~each(<'..'),nsort d#n),nsort (-.d)#n
 )
 
-ev_newfile_enter=: 3 : 0
+ev_newfi_click=: 3 : 0
 F=. getv'path'
-n=. getv'newfile'
-t=. 'New file name ',n
-r=. ''
-if. ''-:n-.' ' do.
- r=. t,' is empty.'
+n=. 'newfile'
+r=. n,' created'
+f=. (remlev F),PS,n
+if. fexist f do.
+ r=. n,' already exists'
 else.
- f=. (remlev F),PS,n
- if. fexist f do.
-  r=. t,' already exists.'
- else.
-  try. 
-   ''1!:2<f
-   F=. f
-  catch.
-   r=. t,' create failed.'
-  end.
- end.
-end.
-create r;F
-)
-
-ev_newfolder_enter=: 3 : 0
-F=. getv'path'
-n=. getv'newfolder'
-t=. 'New folder name ',n
-r=. ''
-if. ''-:n-.' ' do.
- r=. t,' is empty.'
-else.
- f=. (remlev F),PS,n,PS
- try.
-  1!:5<f NB. catch failure
-  F=: f
+ try. 
+  ''1!:2<f
  catch.
-  r=. t,' failed.'
+  r=. n,' create failed'
  end.
 end.
-create r;F
+create r;f
 )
 
-NB.! needs work - e.g. allow rename folders
+ev_newfo_click=: 3 : 0
+F=. getv'path'
+n=. 'newfolder'
+r=. n,' created'
+f=. (remlev F),PS,n,PS
+try.
+ 1!:5<f
+catch.
+ r=. n,' create failed'
+end.
+create r;f
+)
+
+NB.! needs work - e.g. non-empty folders - bad folder name
 NB. should use host move/rename facility
 ev_rename_enter=: 3 : 0
 F=. getv'path'
 n=. getv'rename'
-t=. 'Rename ',n
-r=. ''
-if. PS-:_1{F do.
- r=. t,' not supported.'
-else.
+if. PS-:_1{F do. NB. delete folder
+ try.
+  smoutput F
+  f=. (remlev remlev F),PS,n,PS
+  smoutput f
+  1!:55 <}:F
+  1!:5  <}:f
+  r=. n,' new name for folder'
+  F=. f
+ catch.
+  r=. n,' new name for folder failed (folder must be empty)'
+ end.
+else. NB. delete file
  f=. jpath n
  if. -.PS e. f do. f=. (remlev F),PS,f end.
  if. fexist f do.
-  r=. t,' already exists.'
+  r=. n,' already exists'
  else.
   try.
    d=. 1!:1<F NB. read old
    d 1!:2<f   NB. write new
    1!:55<F    NB. erase old
+   r=. n,' new name for file'
    F=. f
   catch.
-   r=. t,' failed.'
+   r=. n,' new name for file failed'
   end.
  end.
 end. 
@@ -230,9 +229,8 @@ else.
    create''
   end.
  case. '.ijt' do.
-  require__'~system/util/lab.ijs'
-  LABFILE_jijx_=: F
-  create'Lab selected. On jijx press lab button.';F
+  labopen_jijx_ F
+  create'Lab opened: see ijx page';F
  case. '.svg' do.
   if. p-:c{.F do.
    svgresponse_jfilesrc_ '~home/',c}.F
@@ -274,15 +272,11 @@ function evload(){init();} // body onload -> jevload -> evload
 function ev_rfi_click(){repclr();jbyid("sel").innerHTML= FILES;return true;}
 function ev_rp_click() {repclr();jbyid("sel").innerHTML= PATHS;return true;}
 function ev_paths_click(){repclr();jdoh(["path"]);}
-function ctrl_comma(){jev("open","click");}
-function ctrl_dot()  {jev("edit","click");}
-function ctrl_slash(){jev("newijs","click");}
-
 
 function ev_files_click() // file select
 {
  repclr();
- if('/'!=jform.jsid.value.charAt(0))
+ if('/'!=jform.jsid.value.charAt(jform.jsid.value.length-1))
  {
   var t= jform.path.value;
   var i= t.lastIndexOf('/');
@@ -300,5 +294,18 @@ function rqupdate() // process folders/paths ajax result
  FILES= t.substring(++i,t.length)
  init();
 }
+
+// menu handlers and shortcuts
+function ev_action_click(){menuclick();}
+function ev_jmlink_click(){menuclick();}
+
+function doshortcut(c)
+{
+ switch(c)
+ {
+  default: dostdshortcut(c); break;
+ }
+}
+
 )
 
