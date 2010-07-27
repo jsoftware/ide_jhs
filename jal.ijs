@@ -1,4 +1,4 @@
-NB. J HTTP Server - jijx app
+NB. J HTTP Server - jal/pacman app
 coclass'jal'
 coinsert'jhs'
 require'pacman'
