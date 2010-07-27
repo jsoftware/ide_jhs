@@ -563,41 +563,48 @@ USER=: ''
 )
 
 lcfg=: 3 : 0
-if. fexist y do.
- try. load y catch. ('load failed: ',y) assert 0 end.
-else.
- ('file not found: ',y) assert -.'jhs_default.ijs'-:_15{.y
-end.
+try. load jpath y catch. ('load failed: ',y) assert 0 end.
 )
 
+NB. config_file jhscfg username
+NB. USERNAME not '' adjusts SystemFolders and does cd ~temp
 NB. load config files to set PORT LHOK BIND PASS USER
-jhscfg=: 3 : 0
+NB. configuration loads
+NB.    ~addons/ide/jhs/config/jhs_default.ijs
+NB.  then loads first file (if any) that exists from
+NB.    config_file (error if not '' and does not exist)
+NB.    ~config/jhs.cfg
+NB.    ~addons/ide/jhs/config/jhs.ijs
+NB. config sets PORT BIND LHOK PASS USER
+NB. USER used in jlogin - JUM forces USER=:USERNAME
+jhscfg=: 4 : 0
+fixuf y
 lcfg jpath'~addons/ide/jhs/config/jhs_default.ijs'
-lcfg jpath'~addons/ide/jhs/config/jhs.ijs'
-lcfg jpath'~config/ide/jhs/config/jhs.ijs'
-'jhs.cfg PORT invalid' assert (PORT>49151)*.PORT<2^16
-'jhs.cfg BIND invalid' assert +./(<BIND)='any';'localhost'
-'jhs.cfg LHOK invalid' assert +./LHOK=0 1
-'jhs.cfg PASS invalid' assert 2=3!:0 PASS
+if.     -.''-:t=. jpath x                                do. lcfg t
+elseif. fexist t=. jpath'~config/jhs.ijs'                do. lcfg t
+elseif. fexist t=. jpath'~addons/ide/jhs/config/jhs.ijs' do. lcfg t
+end.
+'PORT invalid' assert (PORT>49151)*.PORT<2^16
+'BIND invalid' assert +./(<BIND)='any';'localhost'
+'LHOK invalid' assert +./LHOK=0 1
+'PASS invalid' assert 2=3!:0 PASS
+if. _1=nc<'USER' do. USER=: '' end. NB.! not in JUM config
+'USER invalid' assert 2=3!:0 USER
 PASS=: ,PASS
-if. _1=nc<'USER' do. USER=: '' end.
-USER=: ,>(0=#USERNAME){USERNAME;USER NB. JUM USER set to USERNAME
+USER=: ,USER
+if. #USERNAME do. USER=:USERNAME end.
 BIND=: >(BIND-:'any'){'127.0.0.1';''
 )
 
-NB. init USERNAME
-NB. USERNAME not '' adjusts SystemFolders and does cd ~temp
-NB. PORT BIND LHOK PASS from ~system/config/jhs.cfg or ~config/jhs.cfg
+NB. [config_file] init USERNAME
 NB. SO_REUSEADDR allows server to kill/exit and restart immediately
 NB. FD_CLOEXEC prevents inheritance by new tasks (UM startask)
 init=: 3 : 0
-
-NB.! kludge - installer jhs.bat has old style jhs call
-if. 2~:3!:0 y do. y=. '' end.
-
+''init y
+:
+if. 2~:3!:0 y do. y=. '' end. NB.! installer jhs.bat has old style call
 'already initialized' assert _1=nc<'SKLISTEN'
-fixuf y
-jhscfg''
+x jhscfg y
 PATH=: (>:t i:'/'){.t=.jpath>(4!:4 <'VERSION_jhs_'){4!:3''
 t=. SystemFolders_j_,'labs';jpath'~system/extras/labs'
 SystemFolders_j_=: /:~t NB.! should be done in profile
@@ -618,7 +625,10 @@ DATAS=: ''
 PS=: '/'
 cfgfile=. jpath'~addons/ide/jhs/config/jhs_default.ijs'
 r=. dobind BIND
-if. r=10048 do. smoutput console_failed hrplc 'PORT CFGFILE';(":PORT);cfgfile return. end.
+if. r=10048 do.
+ smoutput console_failed hrplc 'PORT CFGFILE';(":PORT);cfgfile
+ 'JHS init failed'assert 0
+end.
 sdcheck_jsocket_ r
 sdcheck_jsocket_ sdlisten_jsocket_ SKLISTEN,1
 SKSERVER_jhs_=: _1

@@ -63,7 +63,6 @@ NB. valid login   - goes to page and does SetCookie
 NB. invalid login - shows page with setcookie expires and no-cache
 create=: 3 : 0
 p=. PASS
-jhscfg_jhs_'' NB. perhaps get new password
 if. -.p-:PASS do. count=: 0 end. NB. new password resets count
 u=. getv'user'
 p=. getv'pass'
