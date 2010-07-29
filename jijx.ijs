@@ -37,7 +37,7 @@ jmz
 form
 jsentence
 '</form>'
-'<div id="kbspace" sytle="display:none"></div>'
+'<div id="kbspace" style="display:none;height:120px"></div>'
 '</body>'
 )
 
@@ -92,12 +92,13 @@ NB. the margin requires reducing width to 99 to avoid hitting the right edge
 create=: 3 : 0
 iphone=. 0<#('iPhone'ss t),'iPod'ss t=. gethv_jhs_ 'User-Agent:'
 IP=: iphone NB.! IP global used in BIS for up dn
-js=.  JSCORE,jsx hrplc 'PROMPT FLIP NOARROWS RECALLS';y;iphone;iphone;recalls y
-b=. >iphone{B;BFLIP
-b=. (b getbody BIS)hrplc 'LOG';LOG
+js=.  JSCORE,jsx hrplc 'PROMPT KBSPACE NOARROWS RECALLS';y;iphone;iphone;recalls y
+NB.! b=. >iphone{B;BFLIP
+b=. (B getbody BIS)hrplc 'LOG';LOG
 hr 'jijx';(css CSS,cssfontcolors'');js;b
 )
 
+NB.! kill off flip as soon as confident kbspace is the way to go
 fliplog=: 3 : ';|.(markprompt E. y) <;.1 y'
 
 recalls=: 3 : 0
@@ -163,9 +164,10 @@ jsx=: hjs 0 : 0
 var URL= "jijx" // page url - same as j app
 var reci= 0;
 var recs= [<RECALLS>];
-var s;
-var flip= <FLIP>;
+var s,kbsd;
+var kbspace= <KBSPACE>;
 var noarrows= <NOARROWS>;
+var flip= 0; // kill off
 
 window.onfocus= refocus;
 
@@ -205,7 +207,7 @@ function addrecall()
   recs.unshift(a); reci=-1; // recalls
 }
 
-function scrollin(){if(flip)window.scrollTo(0,0);else window.scrollTo(0,1000000);}
+function scrollin(){window.scrollTo(0,1000000);}
 
 // refocus jsentence unless focus was on body
 // taking focus from body breaks copy/paste in IE
@@ -235,19 +237,27 @@ function darrow(){if(--reci<0) {reci= -1; s.value="   ";} else s.value= recs[rec
 
 function evload()
 {
- s= document.getElementById("jsentence");
+ s= jbyid("jsentence");
+ kbsd= jbyid("kbspace");
  s.focus();
  scrollin();
  s.value='<PROMPT>';
+ if(kbspace) s.onkeypress= keyp; 
 }
+
+function keyp(){kbsd.style.display= "block";scrollin();return true;} // space for screen kb
 
 function ev_up_click(){uarrow();refocus();}
 
 function ev_dn_click(){darrow();refocus();}
-function ev_jsentence_enter(){jbyid("kbspace").style.display= "none";addrecall();jdo(s.value,true,[]);}
+function ev_jsentence_enter()
+{
+ if(kbspace) kbsd.style.display= "none";
+ addrecall();
+ jdo(s.value,true,[]);
+}
 
 // menu handlers
-
 function ev_studio_click(){menuclick()}
 function ev_tool_click(){menuclick();}
 function ev_link_click(){menuclick();}

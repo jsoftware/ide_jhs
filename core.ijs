@@ -1,3 +1,5 @@
+
+
 NB. JHS - core services
 require 'socket'
 coclass'jhs'
@@ -573,7 +575,7 @@ NB. configuration loads
 NB.    ~addons/ide/jhs/config/jhs_default.ijs
 NB.  then loads first file (if any) that exists from
 NB.    config_file (error if not '' and does not exist)
-NB.    ~config/jhs.cfg
+NB.    ~config/jhs.ijs
 NB.    ~addons/ide/jhs/config/jhs.ijs
 NB. config sets PORT BIND LHOK PASS USER
 NB. USER used in jlogin - JUM forces USER=:USERNAME
@@ -581,7 +583,8 @@ jhscfg=: 4 : 0
 fixuf y
 lcfg jpath'~addons/ide/jhs/config/jhs_default.ijs'
 if.     -.''-:t=. jpath x                                do. lcfg t
-elseif. fexist t=. jpath'~config/jhs.ijs'                do. lcfg t
+NB.! ugh JUM uses jhs.cfg and we would prefer jhs.ijs
+elseif. fexist t=. jpath'~config/jhs.cfg'                do. lcfg t
 elseif. fexist t=. jpath'~addons/ide/jhs/config/jhs.ijs' do. lcfg t
 end.
 'PORT invalid' assert (PORT>49151)*.PORT<2^16
@@ -662,3 +665,58 @@ load corefiles_jhs_
 )                         
 
 jhs_z_=: init_jhs_
+
+jgcfd__=: 3 : 0
+if. 1=$$y do. y=. ,:y end.
+}:'t:',' ,_-'charsub ;'|',~each":each <"1 y
+)
+
+jgc__=: 3 : 0
+if. 'reset'-:y do.
+ gcurl=: ''
+elseif. 'plot'-:y do.
+ whpx=. ;(('width=';'height'),each":each gcwh),each <'px '
+ jhtml Q=:'<img ',whpx,'src="',gcurl,'"></img>'
+elseif. 1 do.
+ assert '&ch'-:3{.y
+ gcurl=: gcurl,y
+end.
+i.0 0
+:
+gcurl=:'http://chart.apis.google.com/chart?'
+gcdata=: y
+gcmin=: '_-'charsub":<./,y
+gcmax=: '_-'charsub":>./,y
+gcminmax=: gcmin,',',gcmax
+gcwh=: x
+i.0 0
+)
+
+NB. plotlines title;legends;width_height;data
+plotlines__=: 3 : 0
+'title legends wh data'=. y
+wh jgc data
+jgc'&cht=lc'
+jgc'&chs=',' x'charsub":gcwh
+jgc'&chd=',jgcfd gcdata
+jgc'&chxt=x,y'
+jgc'&chds=',gcminmax
+jgc'&chxr=1,',gcminmax
+jgc'&chco=FF0000,00FF00,0000FF'
+jgc'&chdl=',legends
+jgc'&chtt=',title
+jgc'plot'
+)
+
+NB. plotpie tiel;legends;width_height;data
+plotpie__=: 3 : 0
+'title legends wh data'=. y
+wh jgc data
+jgc'&cht=p3'
+jgc'&chs=',' x'charsub":gcwh
+jgc'&chd=',jgcfd 100*gcdata%+/gcdata
+jgc'&chco=FF0000,00FF00,0000FF'
+jgc'&chl=',legends
+jgc'&chtt=',title
+jgc'plot'
+)
