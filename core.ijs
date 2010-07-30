@@ -675,7 +675,7 @@ jgc__=: 3 : 0
 if. 'reset'-:y do.
  gcurl=: ''
 elseif. 'plot'-:y do.
- whpx=. ;(('width=';'height'),each":each gcwh),each <'px '
+ whpx=. ;(('width=';'height='),each":each gcwh),each <'px '
  jhtml Q=:'<img ',whpx,'src="',gcurl,'"></img>'
 elseif. 1 do.
  assert '&ch'-:3{.y
