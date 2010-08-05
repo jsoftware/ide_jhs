@@ -1,4 +1,4 @@
-NB. J HTTP Server - jhelp app
+NB. J HTTP Server
 coclass'jhelp'
 coinsert'jhs'
 
