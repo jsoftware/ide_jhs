@@ -1,5 +1,5 @@
 NB. JHS Google Charts
-coclass'jgcp
+coclass'jgcp'
 
 help=: 0 : 0
 JHS plots with Google Charts (GC).
@@ -83,7 +83,7 @@ gc each <;._2 x,' '
 i.0 0
 )
 
-jgc_z_=: jgc_jgcp
+jgc_z_=: jgc_jgcp_
 
 NB. x nouns for jgc
 xline=: '&cht=lc&chs=300x100&chds=<MIN>,<MAX>&chxt=x,y&chxr=1,<MIN>,<MAX>'
