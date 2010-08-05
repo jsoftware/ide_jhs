@@ -628,7 +628,7 @@ jfe 1
 )
 
 NB. load rest of JHS
-t=. (<'.ijs'),~each ;:'core utilh utiljs jlogin jijx jijs jfile jfilesrc jhelp jal jdemo jgcplot'
+t=. (<'.ijs'),~each ;:'core utilh utiljs jlogin jijx jijs jfile jfilesrc jhelp jal jdemo jgcp'
 corefiles=: (<jpath'~addons/ide/jhs/'),each t
 load__ }.corefiles
 
