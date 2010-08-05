@@ -420,7 +420,7 @@ i.0 0
 )
 
 NB. one very long line as LF is <br>
-jhtml__=: 3 : 0
+jhtml_z_=: 3 : 0
 a=. 9!:36''
 9!:37[ 4$0,1000+#y NB. allow lots of html formatted output
 smoutput marka_jhs_,y,markz_jhs_
@@ -540,30 +540,6 @@ while.
 do. end.
 )
 
-NB.! kludge
-cfg=: 0 : 0
-NB. ~config/jhs.cfg overridden by ~user/config/jhs.cfg
-
-NB. private port range 49152 to 65535
-PORT=: 65001
-
-NB. 0 localhost jlogin if PASS set
-NB. 1 localhost ok (no jlogin)
-LHOK=: 1
-
-NB. 'localhost' access from same machine
-NB. 'any' access from any machine (should have PASS set)
-BIND=: 'localhost'
-
-NB. ''    no jlogin
-NB. '...' jlogin password
-PASS=: ''
-
-NB. username for PASS
-NB. JUM ignores and sets USER to be JUM user (jhs folder)
-USER=: ''
-)
-
 lcfg=: 3 : 0
 try. load jpath y catch. ('load failed: ',y) assert 0 end.
 )
@@ -652,7 +628,7 @@ jfe 1
 )
 
 NB. load rest of JHS
-t=. (<'.ijs'),~each ;:'core utilh utiljs jlogin jijx jijs jfile jfilesrc jhelp jal jdemo'
+t=. (<'.ijs'),~each ;:'core utilh utiljs jlogin jijx jijs jfile jfilesrc jhelp jal jdemo jgcplot'
 corefiles=: (<jpath'~addons/ide/jhs/'),each t
 load__ }.corefiles
 
@@ -664,59 +640,6 @@ d fwrite each corefiles_jhs_
 load corefiles_jhs_
 )                         
 
+NB.! kill off - use init_jhs_ in next installer
 jhs_z_=: init_jhs_
 
-jgcfd__=: 3 : 0
-if. 1=$$y do. y=. ,:y end.
-}:'t:',' ,_-'charsub ;'|',~each":each <"1 y
-)
-
-jgc__=: 3 : 0
-if. 'reset'-:y do.
- gcurl=: ''
-elseif. 'plot'-:y do.
- whpx=. ;(('width=';'height='),each":each gcwh),each <'px '
- jhtml Q=:'<img ',whpx,'src="',gcurl,'"></img>'
-elseif. 1 do.
- assert '&ch'-:3{.y
- gcurl=: gcurl,y
-end.
-i.0 0
-:
-gcurl=:'http://chart.apis.google.com/chart?'
-gcdata=: y
-gcmin=: '_-'charsub":<./,y
-gcmax=: '_-'charsub":>./,y
-gcminmax=: gcmin,',',gcmax
-gcwh=: x
-i.0 0
-)
-
-NB. plotlines title;legends;width_height;data
-plotlines__=: 3 : 0
-'title legends wh data'=. y
-wh jgc data
-jgc'&cht=lc'
-jgc'&chs=',' x'charsub":gcwh
-jgc'&chd=',jgcfd gcdata
-jgc'&chxt=x,y'
-jgc'&chds=',gcminmax
-jgc'&chxr=1,',gcminmax
-jgc'&chco=FF0000,00FF00,0000FF'
-jgc'&chdl=',legends
-jgc'&chtt=',title
-jgc'plot'
-)
-
-NB. plotpie tiel;legends;width_height;data
-plotpie__=: 3 : 0
-'title legends wh data'=. y
-wh jgc data
-jgc'&cht=p3'
-jgc'&chs=',' x'charsub":gcwh
-jgc'&chd=',jgcfd 100*gcdata%+/gcdata
-jgc'&chco=FF0000,00FF00,0000FF'
-jgc'&chl=',legends
-jgc'&chtt=',title
-jgc'plot'
-)

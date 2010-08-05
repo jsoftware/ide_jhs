@@ -79,4 +79,12 @@ JS=: 0 : 0
 function evload(){if(jform.select) jform.select.focus();}
 function ev_select_click(){;} //jform.select.selectedIndex;
 function ev_jmlink_click(){menuclick();}
+
+function doshortcut(c)
+{
+ switch(c)
+ {
+  default: dostdshortcut(c); break;
+ }
+}
 )

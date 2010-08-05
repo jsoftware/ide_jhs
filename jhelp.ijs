@@ -4,6 +4,7 @@ coinsert'jhs'
 
 CSS=: 0 : 0
 span.h{color:red;}
+*{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
 )
 
 jev_get=: 3 : 0
@@ -11,7 +12,7 @@ hr 'jhelp';(css CSS);(JSCORE,JS);createbody''
 )
 
 createbody=: 3 : 0
-(B getbody BIS)hrplc'ENGINE CONFIG';(9!:14'');jpath'~addons/ide/jhs/jhs_default.ijs'
+(B getbody BIS)hrplc'ENGINE CONFIG';(9!:14'');jpath'~addons/ide/jhs/config/jhs_default.ijs'
 )
 
 B=: 0 : 0 NB. body template
@@ -26,8 +27,16 @@ text text
 
 JS=: hjs 0 : 0
 function evload(){;} // body onload -> jevload -> evload
-
 function ev_jmlink_click(){menuclick();}
+
+function doshortcut(c)
+{
+ switch(c)
+ {
+  default: dostdshortcut(c); break;
+ }
+}
+
 )
 
 text=: 0 : 0
@@ -39,9 +48,9 @@ text=: 0 : 0
 J701 - Copyright 1994-2010 Jsoftware Inc.
 <br>Engine: <ENGINE>
 <br><br><span class="h">keyboard shortcuts</span><br>
-ctrl+/ treats next character as a shortcut.
+ctrl+/ treats next character as a shortcut.<br>
 On jijx page, pressing ctrl+/ and then lowercase o
-links to jfile (open) page.
+links to jfile (open) page.<br>
 Shortcuts are documented on the right in a menu item.
 
 <br><br><span class="h">jijx page</span><br>
@@ -55,17 +64,14 @@ browse files for opening, editing, etc.
 <br><br><span class="h">jijs page</span><br>
 edit file
 
+<br><br><span class="h">Plot</span><br>
+jgc'help'  NB. plot info<br>
+jgcx''     NB. examples<br>
+plot 10?10 NB. default line plot
+
 <br><br><span class="h">Viewmat</span><br>
 jvm ?20 20$2<br>
 jvm */~ i:9
-
-<br><br><span class="h">Plot</span><br>
-jpdfplot 10?10 NB. pdf plot<br>
-jsvgplot 10?10 NB. svg - xml scalable vector graphics<br><br>
-
-click jijx window link or open in jfile<br><br>
-
-(svg only draws line - not integrated into plot yet)
 
 <br><br><span class="h">utils</span><br>
 jbd 1 NB. boxdraw +|-<br>
