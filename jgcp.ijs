@@ -1,4 +1,4 @@
-NB. JHS Google Charts
+NB. JHS Google Charts adsfasdf
 coclass'jgc'
 
 help=: 0 : 0
