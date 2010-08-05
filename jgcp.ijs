@@ -1,5 +1,5 @@
 NB. JHS Google Charts adsfasdf
-coclass'jgc'
+coclass'jgcp
 
 help=: 0 : 0
 JHS plots with Google Charts (GC).
@@ -65,7 +65,7 @@ jhtml d1,d2
 )
 
 jgcx=: 3 : '0!:101 examples'
-jgcx_z_=: jgcx_jgc_
+jgcx_z_=: jgcx_jgcp_
 
 NB. get last y command arg
 gca=: 3 : 0
@@ -83,7 +83,7 @@ gc each <;._2 x,' '
 i.0 0
 )
 
-jgc_z_=: jgc_jgc_
+jgc_z_=: jgc_jgcp
 
 NB. x nouns for jgc
 xline=: '&cht=lc&chs=300x100&chds=<MIN>,<MAX>&chxt=x,y&chxr=1,<MIN>,<MAX>'
@@ -114,7 +114,7 @@ end.
 i.0 0
 )
 
-jgcimg_z_=: gcimg_jgc_
+jgcimg_z_=: gcimg_jgcp_
 
 NB. returns html img src tag
 gcimg=: 3 : 0
