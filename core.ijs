@@ -141,6 +141,8 @@ is unigue and name is the same across a set of radio buttons.
 9. autocomplete and wrap fail validator - but are necessary
 )
 
+bull=: 226 128 162{a.
+
 NB. J needs input - y is prompt - '' '   ' '      '
 input=: 3 : 0
 logjhs 'prompt'
@@ -176,6 +178,7 @@ if. #allowedurls do.
   r=. 'jbad_jhs_ 0'
  end.
 end.
+if. bull-:3{.r do. r=. 3}.r end. NB. empty prompt kludge
 r NB. J sentence to run
 
 catch.
@@ -236,6 +239,8 @@ droplog=: 3 : 0
 NB. get/post data - headers end with LF,LF
 NB. post has Content-Length: bytes after the header
 NB. listen and read until a complete request is ready
+NB.! headers have CRLF but we do toJ in srecv
+NB.! the toJ in srecv in toJ might be a mistake
 getdata=: 3 : 0
 while. 1 do.
  logapp 'getdata loop'
@@ -294,12 +299,11 @@ NB. PC_RECVSLOW 1 gets small chunks with time delay
 srecv=: 3 : 0
 z=. sdselect_jsocket_ SKSERVER;'';'';PC_RECVTIMEOUT
 
-NB.! debug info
-if. SKSERVER~:>1{z do.
+if. -.SKSERVER e.>1{z do.
+ NB.! debug info - 0;'';'';'' is a timeout
  smoutput 'please report following output to beta'
  smoutput 'srecv select failure'
  smoutput z
- smoutput SKSERVER,SKLISTEN,PC_RECVTIMEOUT
 end.
 
 'recv not ready' serror SKSERVER~:>1{z
@@ -548,11 +552,11 @@ NB. config_file jhscfg username
 NB. USERNAME not '' adjusts SystemFolders and does cd ~temp
 NB. load config files to set PORT LHOK BIND PASS USER
 NB. configuration loads
-NB.    ~addons/ide/jhs/config/jhs_default.ijs
+NB.   ~addons/ide/jhs/config/jhs_default.ijs
 NB.  then loads first file (if any) that exists from
-NB.    config_file (error if not '' and does not exist)
-NB.    ~config/jhs.ijs
-NB.    ~addons/ide/jhs/config/jhs.ijs
+NB.   config_file (error if not '' and does not exist)
+NB.   ~config/jhs.ijs
+NB.   ~addons/ide/jhs/config/jhs.ijs
 NB. config sets PORT BIND LHOK PASS USER
 NB. USER used in jlogin - JUM forces USER=:USERNAME
 jhscfg=: 4 : 0
@@ -643,3 +647,64 @@ load corefiles_jhs_
 NB.! kill off - use init_jhs_ in next installer
 jhs_z_=: init_jhs_
 
+NB. simple wget with sockets - used to get google charts png
+
+NB. jwget 'host';'file'
+NB. jwget 'chart.apis.google.com';'chart?&cht=p3....'
+NB. simplistic - needs work to be robust and general
+NB.! JHS get/put and jwget should probably share code
+wget=: 3 : 0
+'host file'=. y
+ip=. >2{sdgethostbyname_jsocket_ host
+try.
+ sk=. >0{sdcheck_jsocket_ sdsocket_jsocket_''
+ sdcheck_jsocket_ sdconnect_jsocket_ sk;AF_INET_jsocket_;ip;80
+ t=. gettemplate rplc 'FILE';file
+ while. #t do. t=.(>sdcheck_jsocket_ t sdsend_jsocket_ sk,0)}.t end.
+ h=. d=. ''
+ cl=. 0
+ while. (0=#h)+.cl>#d do. NB. read until we have header and all data
+  z=. sdselect_jsocket_ sk;'';'';5000
+  assert sk e.>1{z NB. timeout
+  'c r'=. sdrecv_jsocket_ sk,10000,0
+  assert 0=c
+  assert 0~:#r
+  d=. d,r
+  if. 0=#h do. NB. get headers
+   i=. (d E.~ CRLF,CRLF)i.1 NB. headers CRLF delimited with CRLF at end
+   if. i<#d do. NB. have headers
+    i=. 4+i
+    h=. i{.d NB. headers
+    d=. i}.d
+    i=. ('Content-Length:'E. h)i.1
+    assert i<#h
+    t=. (15+i)}.h
+    t=. (t i.CR){.t
+    cl=. _1".W__=:t
+    assert _1~:cl
+   end.
+  end.
+ end.
+catch.
+ sdclose_jsocket_ sk
+ smoutput 13!:12''
+ 'get error' assert 0
+end.
+sdclose_jsocket_ sk
+h;d
+)
+
+jwget_z_=: wget_jhs_
+
+NB. jwget template
+gettemplate=: 0 : 0
+GET /FILE HTTP/1.1 
+Host: 127.0.0.1
+Accept: image/gif,image/png,*/*  
+Accept-Language: en-ca
+UA-CPU: x86
+Accept-Encoding: gzip, deflate
+User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; WOW64; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; .NET CLR 3.5.30729; .NET CLR 3.0.30729)
+Connection: Keep-Alive
+
+)

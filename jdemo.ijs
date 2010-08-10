@@ -85,7 +85,7 @@ NB. JSCORE_jhs_  - framework js
 create=: 3 : 0 NB. create page and send to browser
  ...
  hr title;css,js,B getbody BIS
-&#41;
+ ...
 
 jev_get=: create NB. browser get request
 </div>

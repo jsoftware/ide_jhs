@@ -15,13 +15,22 @@ LOGN_jhs_=: ''
 
 NB. y is J prompt - '' '   ' or '      '
 NB. called at start of input
+NB. ff/safari/chrome have problems with empty prompt div
+NB. empty prompt is &bull; which is removed if present from input
 urlresponse=: 3 : 0
-d=. LOGN
+if. 0=#y do.
+ t=. '&bull;'
+else.
+ t=. (6*#y)$'&nbsp;'
+end.
+t=. '<div id="prompt" class="log">',t,'</div>'
+NB. LOGN_jhs_=: LOGN,t
+d=. LOGN,t
 uplog''
 if. METHOD-:'post' do. NB. 'true'-:getv'jajax'
  htmlresponse d,~hajax rplc '<LENGTH>';":#d
 else.
- create y
+ create y,t
 end.
 )
 
@@ -32,11 +41,13 @@ jma
  studio demo advance labs
  tool   projman pacman debug
  link   jmijs jmijx jmfile jmlogin jmhelp
-jmz 
-'<LOG>'
+jmz
 form
-jsentence
 '</form>'
+'<div id="log" contenteditable=true autocomplete="off" autocapitalize="off" spellcheck="false" onkeydown="return jev(''log'',''enter'',event)">'
+ '<LOG>'
+ '<div id="logz"></div>'
+'</div>'
 '<div id="kbspace" style="display:none;height:120px"></div>'
 '</body>'
 )
@@ -55,7 +66,6 @@ BIS=: 0 : 0 NB. body template id-sentence pairs
 jsentence ht'';40
 form      hform''
 body      '<body onload="jevload();">'
-
 up       >IP{' ';hmga'up'
 dn       >IP{' ';hmga'dn'
 studio   hmg'studio'
@@ -92,7 +102,7 @@ NB. the margin requires reducing width to 99 to avoid hitting the right edge
 create=: 3 : 0
 iphone=. 0<#('iPhone'ss t),'iPod'ss t=. gethv_jhs_ 'User-Agent:'
 IP=: iphone NB.! IP global used in BIS for up dn
-js=.  JSCORE,jsx hrplc 'PROMPT KBSPACE NOARROWS RECALLS';y;iphone;iphone;recalls y
+js=.  JSCORE,jsx hrplc 'PROMPT KBSPACE NOARROWS RECALLS';y;iphone;iphone;recalls''
 NB.! b=. >iphone{B;BFLIP
 b=. (B getbody BIS)hrplc 'LOG';LOG
 hr 'jijx';(css CSS,cssfontcolors'');js;b
@@ -102,8 +112,9 @@ NB.! kill off flip as soon as confident kbspace is the way to go
 fliplog=: 3 : ';|.(markprompt E. y) <;.1 y'
 
 recalls=: 3 : 0
-t=. y;INPUT
+t=. INPUT
 t=. t rplc each <'"';'\"';'\';'\\'
+t=. t-.each <CRLF
 _2}.;'"',each t,each<'",',LF
 )
 
@@ -160,40 +171,73 @@ ev_debug_click=: 3 : 0
 'Debug not implemented yet.'
 )
 
+
+
 jsx=: hjs 0 : 0
+//! issues
+/*
+ff/safari/chrome f=: 3 : 0 has trouble with empty prompt div
+kludge for now is to prompt with &bull; and drop it from input
+
+ff input log does not get the blanks from the prompt
+so log lines have no indent - no kludge yet
+
+*/
+
 var URL= "jijx" // page url - same as j app
 var reci= 0;
 var recs= [<RECALLS>];
-var s,kbsd;
 var kbspace= <KBSPACE>;
 var noarrows= <NOARROWS>;
 var flip= 0; // kill off
+var phead= '<div id="prompt" class="log">'
+var ptail= '</div>'
 
-window.onfocus= refocus;
+function updatelog(t)
+{
+ var n= document.createElement("div");
+ n.innerHTML= t;
+
+ // remove prompt line - before adding log and result
+ // try because it once was possible to fail, perhaps no longer necessary
+ try{var p= jbyid("prompt");p.parentNode.removeChild(p);}catch(e){;}
+ jbyid("log").appendChild(n);
+
+ if (window.getSelection)
+ {
+  var sel= window.getSelection();
+  var rng = document.createRange(); // remove kills old - no rangeat 
+  rng.selectNode(jbyid("prompt"));
+  sel.removeAllRanges();
+  sel.addRange(rng);
+  // ff multiple selections - does not set caret
+  sel.collapse(jbyid("prompt"),true); 
+ }
+ else
+ {
+  //IE set caret at end
+  var ierng= document.selection.createRange();
+  ierng.expand("textedit");
+  ierng.collapse(false);
+  ierng.moveStart("character",-3); //! ugh need to back up to make visible (CRLF????)
+  ierng.moveEnd("character",-3);
+  ierng.select();
+ }
+ setTimeout(scrollin,1); // allow doc to update
+}
 
 // ajax update window with new output
 function rqupdate()
 {
- var n= document.createElement("div");
  var t= rq.responseText;
- n.innerHTML= t;
- var f=document.getElementById("j");
- if(flip)
-  f.parentNode.insertBefore(n,f.nextSibling ); // insertAfter(n,f);
- else
-  document.body.insertBefore(n,f);
- // prompt '' '   ' '      ' in parens in last html comment
- s.value= t.substring(1+t.lastIndexOf("("),t.lastIndexOf(")"));
- setTimeout(scrollin,1); // allow doc to update
-
+ updatelog(t);
  if(-1!=t.indexOf("<!-- refresh -->"))location="jijx"; //!
 }
 
 // add sentence to log unless blank or same as last
-function addrecall()
+function addrecall(a)
 {
- var a,i,blank=0,same=0;
- a= s.value;
+ var i,blank=0,same=0;
  for(i=0;i<a.length;++i)
   blank+= ' '==a.charAt(i);
 
@@ -209,21 +253,6 @@ function addrecall()
 
 function scrollin(){window.scrollTo(0,1000000);}
 
-// refocus jsentence unless focus was on body
-// taking focus from body breaks copy/paste in IE
-function refocus()
-{
- var ie= document.all && !window.opera;    
- if(ie && document.activeElement.name==null) return;
- setfocus();
-}
-
-function setfocus()
-{
- scrollin();
- s.focus();
-}
-
 function doshortcut(c)
 {
  switch(c)
@@ -232,37 +261,95 @@ function doshortcut(c)
  }
 }
 
-function uarrow(){++reci;reci= reci>=recs.length ? reci-1 : reci ; s.value= recs[reci];}
-function darrow(){if(--reci<0) {reci= -1; s.value="   ";} else s.value= recs[reci];}
+function newpline(t)
+{
+ t= t.replace(/&/g,"&amp;");
+ t= t.replace(/</g,"&lt;");
+ t= t.replace(/>/g,"&gt;");
+ t= t.replace(/ /g,"&nbsp;");
+ t= t.replace(/-/g,"&#45;");
+ t= t.replace(/\"/g,"&quot;");
+ updatelog(phead+t+ptail);
+}
+
+function uarrow()
+{
+ if(++reci>=recs.length) reci= recs.length-1;
+ if(reci==-1)
+  newpline("   ");
+ else
+  newpline(recs[reci]);
+}
+
+function darrow()
+{
+ var t;
+ if(--reci<0)
+  {reci= -1; t= "   ";}
+ else
+  t= recs[reci]
+ newpline(t);
+}
 
 function evload()
 {
- s= jbyid("jsentence");
- kbsd= jbyid("kbspace");
- s.focus();
- scrollin();
- s.value='<PROMPT>';
- if(kbspace) s.onkeypress= keyp; 
+ jbyid("log").focus();
+ updatelog(phead+"&nbsp;&nbsp;&nbsp;"+ptail);
 }
 
-function keyp(){kbsd.style.display= "block";scrollin();return true;} // space for screen kb
+function keyp(){jbyid("kbsp").style.display= "block";scrollin();return true;} // space for screen kb
 
-function ev_up_click(){uarrow();refocus();}
+function ev_up_click(){uarrow();}
+function ev_dn_click(){darrow();}
 
-function ev_dn_click(){darrow();refocus();}
-function ev_jsentence_enter()
+// log enter - contenteditable
+// run line with caret
+// do not know how to handle multiple-line selection - ignore selection for now
+function ev_log_enter()
 {
- if(kbspace) kbsd.style.display= "none";
- addrecall();
- jdo(s.value,true,[]);
+ var t,sel,rng,n,a,i;
+ if (window.getSelection)
+ {
+  sel= window.getSelection();
+  rng= sel.getRangeAt(0);
+  t= rng.toString();
+  if(0!=t.length) return; // ignore selection for now
+  rng.setStart(rng.startContainer,0); // extend selection to line
+  rng.setEndAfter(rng.endContainer);
+  t= rng.toString(); //! ff does not see prompt blanks
+  t= t.replace(/\u00A0/g," "); // &nbsp;
+ }
+ else
+ {
+  sel= document.selection.createRange();
+  t= sel.text;
+  if(0!=t.length) return; // ignore selection for now
+  // IE -  move left until CR or NaN - move right til no change
+  while(1) 
+  {
+    sel.moveStart('character',-1);
+    t= sel.text;
+    if(t.charAt(0)=='\r'||isNaN(t.charCodeAt(0))){sel.moveStart('character',1); break;}
+  }
+  while(1) 
+  {
+    n= sel.text.length; // no size change for CRLF
+    sel.moveEnd('character',1);
+    if(n==sel.text.length){sel.moveEnd('character',-1); break;}
+  }
+  t= sel.text;
+ }
+ addrecall(t);
+ jdo(t,true,[]);
 }
+
 
 // menu handlers
 function ev_studio_click(){menuclick()}
 function ev_tool_click(){menuclick();}
 function ev_link_click(){menuclick();}
 
-function sdo(){jdoh([]);setfocus();}
+function sdo(){jdoh([]);}
 
 function ev_lab0_click(){sdo();}
 function ev_lab1_click(){sdo();}

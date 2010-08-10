@@ -134,6 +134,7 @@ function kup(ev)
  var c=e.keyCode;
  if(e.ctrlKey)
  {
+  if(c==191){shortcut= 1;return false;}
   if(c==190&&'function'==typeof ev_advance_click)
   {
    jform.jid.value  = "advance";
@@ -143,15 +144,8 @@ function kup(ev)
    ev_advance_click();
    return false;
   }
-  if(c==191){shortcut= 1;return false;}
- }
- else
- {
-  if(('undefined'==typeof noarrows)||0==noarrows)
-  {
-   if(c==38&&'function'==typeof uarrow){uarrow();return false;}
-   if(c==40&&'function'==typeof darrow){darrow();return false;}
-  }
+  if(c==38&&e.shiftKey&&'function'==typeof uarrow){uarrow();return false;} //! noarrows
+  if(c==40&&e.shiftKey&&'function'==typeof darrow){darrow();return false;}
  }
  return true;
 }

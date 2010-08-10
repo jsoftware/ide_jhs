@@ -1,7 +1,10 @@
-NB. JHS initialization loads 3 files in turn (if they exist)
-NB.  ~addons/ide/jhs/config/jhs_default.ijs
-NB.  ~addons/ide/jhs/config/jhs.ijs
-NB.  ~config/ide/jhs/config/jhs.ijs
+NB. JHS initialization loads files to initialize
+NB.  loads
+NB.   ~addons/ide/jhs/config/jhs_default.ijs
+NB.  then loads first file (if any) that exists from
+NB.   jhs x argument (error if not '' and does not exist)
+NB.   ~config/jhs.ijs
+NB.   ~addons/ide/jhs/config/jhs.ijs
 
 NB. jhs_default.ijs is a default/template (do not edit)
 NB. copy 2nd and 3rd from default and edit as required
