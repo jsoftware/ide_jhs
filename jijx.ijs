@@ -92,6 +92,7 @@ NB. -3px aligns input text with output text
 CSS=: 0 : 0
 *{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
 #jsentence{width:99%; margin:3px 3px 3px -3px}
+#log{outline:transparent;}
 form{margin-top:0;margin-bottom:0;}
 )
 
