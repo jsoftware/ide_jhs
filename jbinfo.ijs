@@ -7,7 +7,7 @@ NB.      TITLE CSS JS BO BA FORM BZ
 hrbase 'jbinfo';'';'';'';js;'<body>'
 )
 
-js=: hjs 0 : 0
+js=: 0 : 0
 document.onkeyup= kup;
 
 function kup(ev)

@@ -194,6 +194,24 @@ else.
 end.
 )
 
+NB. clean_jum_(t i.' '){.t=.{.show_jum_ 6 NB. clean oldest
+
+NB. clean user - kill task if any and delete folders
+clean=: 3 : 0
+user=. y
+pid=. getpid user
+if. '0'-:pid do.
+ smoutput'task was not running'
+else.
+ smoutput'killing task: ',pid 
+ unixshell 'kill -s 9 ',pid
+ pid0 user
+end.
+p=. JHS,user
+smoutput 'destroying folder: ',p
+unixshell 'rm -r ',p
+)
+
 ev_attn_click=: 3 : 0
 signal 'SIGINT'
 )

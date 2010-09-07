@@ -141,13 +141,12 @@ is unigue and name is the same across a set of radio buttons.
 9. autocomplete and wrap fail validator - but are necessary
 )
 
-bull=: 226 128 162{a.
+JZWSPU8=: 226 128 139{a. NB. empty prompt kludge
 
 NB. J needs input - y is prompt - '' '   ' '      '
 input=: 3 : 0
 logjhs 'prompt'
 logapp 'jhs input prompt: ',":#y
-LOGN=: LOGN,markprompt,y,') -->'
 try.
 if. _1~:SKSERVER do. try. ".'urlresponse_',URL,'_ y' catch. end. end. NB. jijx
 if. _1~:SKSERVER do. jbad'' end.
@@ -178,7 +177,7 @@ if. #allowedurls do.
   r=. 'jbad_jhs_ 0'
  end.
 end.
-if. bull-:3{.r do. r=. 3}.r end. NB. empty prompt kludge
+if. JZWSPU8-:3{.r do. r=. 3}.r end. NB. empty prompt kludge
 r NB. J sentence to run
 
 catch.
@@ -201,8 +200,11 @@ try.
  s=. y NB. output string
  type=. x NB. MTYO type
  class=. >type{'';'fm';'er';'log';'sys';'';'file'
- if. (3~:type)+.-.'jev_'-:4{.s do. NB. jev_... lines not logged
-  LOGN=: LOGN,'<div class="',class,'">',(htmlfroma s),'</div>'
+ if. (3~:type)+.-.'jev_'-:4{.dlb s do. NB. jev_... lines not logged
+  if. 3=type do. s=. PROMPT,dlb s end.
+  t=. jhtmlfroma s
+  if. '<br>'-:_4{.t do. t=. _4}.t end.
+  LOGN=: LOGN,'<div class="',class,'">',t,'</div>'
  end.
  if. (3=type)*.(0~:#s-.' ')*.(-.s-:>{.INPUT)*.(-.'jev_'-:4{.s)*.0=+/'</script'E.tolower s do.  
   INPUT=: INPUT,~<s -. LF NB. labs (0!:noun) has LF???
@@ -240,7 +242,7 @@ NB. get/post data - headers end with LF,LF
 NB. post has Content-Length: bytes after the header
 NB. listen and read until a complete request is ready
 NB.! headers have CRLF but we do toJ in srecv
-NB.! the toJ in srecv in toJ might be a mistake
+NB.  the toJ in srecv in toJ might be a mistake
 getdata=: 3 : 0
 while. 1 do.
  logapp 'getdata loop'
@@ -265,6 +267,7 @@ while. 1 do.
    METHOD=: 'post'
    seturl'POST'
    parse d
+   if. 30000<#d do. PD__=: d end.
   else.
    METHOD=: 'get'
    seturl'GET'
@@ -281,7 +284,7 @@ end.
 )
 
 seturl=: 3 : 0
-URL=: urldecode}.(<./t i.' ?'){.t=. gethv y
+URL=: jurldecode}.(<./t i.' ?'){.t=. gethv y
 )
 
 serror=: 4 : 0
@@ -300,10 +303,7 @@ srecv=: 3 : 0
 z=. sdselect_jsocket_ SKSERVER;'';'';PC_RECVTIMEOUT
 
 if. -.SKSERVER e.>1{z do.
- NB.! debug info - 0;'';'';'' is a timeout
- smoutput 'please report following output to beta'
- smoutput 'srecv select failure'
- smoutput z
+ 'recv timeout' serror 1  NB.0;'';'';'' is a timeout
 end.
 
 'recv not ready' serror SKSERVER~:>1{z
@@ -317,6 +317,10 @@ end.
 ('recv error: ',":c) serror 0~:c
 'recv no data' serror 0=#r
 toJ r
+)
+
+secs=: 3 : 0
+":60#.4 5{6!:0''
 )
 
 NB. return count of bytes sent to SKSERVER
@@ -361,7 +365,7 @@ try.
  d=. <;._2 y,'&'#~0~:#y
  d=. ;d,each('='e.each d){'=&';'&'
  d=. <;._2 d rplc '&';'='
- NV=: urldecodeplus each (2,~(2%~#d))$d
+ NV=: jurldecodeplus each (2,~(2%~#d))$d
 catch.
  smoutput '*** parse failed: ',y
  NV=: 0 2$''
@@ -419,7 +423,6 @@ elseif. y-:_ do.
  LOG_jhs_=: LOGFULL_jhs_,LOG_jhs_
  LOGFULL_jhs_=: ''
 end.
-jhtml '<!-- refresh -->'
 i.0 0
 )
 
@@ -427,8 +430,9 @@ NB. one very long line as LF is <br>
 jhtml_z_=: 3 : 0
 a=. 9!:36''
 9!:37[ 4$0,1000+#y NB. allow lots of html formatted output
-smoutput marka_jhs_,y,markz_jhs_
+smoutput jmarka_jhs_,y,jmarkz_jhs_
 9!:37 a
+i.0 0
 )
 
 jnv__=: 3 : 'NVDEBUG_jhs_=:y' NB. toggle short NV debug display
@@ -589,8 +593,6 @@ if. 2~:3!:0 y do. y=. '' end. NB.! installer jhs.bat has old style call
 'already initialized' assert _1=nc<'SKLISTEN'
 x jhscfg y
 PATH=: (>:t i:'/'){.t=.jpath>(4!:4 <'VERSION_jhs_'){4!:3''
-t=. SystemFolders_j_,'labs';jpath'~system/extras/labs'
-SystemFolders_j_=: /:~t NB.! should be done in profile
 ip=. >2{sdgethostbyname_jsocket_ >1{sdgethostname_jsocket_''
 LOCALHOST=: >2{sdgethostbyname_jsocket_'localhost'
 logappfile=: <jpath'~user/.applog.txt' NB. username
@@ -600,7 +602,8 @@ config''
 SETCOOKIE=: 0
 NVDEBUG=: 0 NB. 1 shows NV on each input
 INPUT=: '' NB. <'   '
-LOG=: marka,'<font style="font-size:20px; color:red;" >J Http Server<br></font>',markz
+NB. leading &nbsp; for Chrome delete all
+LOG=: jmarka,'<div>&nbsp;<font style="font-size:20px; color:red;" >J Http Server</font></div>',jmarkz
 LOGN=: ''
 LOGFULL=: ''
 PDFOUTPUT=: 'output pdf "',(jpath'~temp\pdf\plot.pdf'),'" 480 360;'  
@@ -616,7 +619,6 @@ sdcheck_jsocket_ r
 sdcheck_jsocket_ sdlisten_jsocket_ SKLISTEN,1
 SKSERVER_jhs_=: _1
 boxdraw_j_ PC_BOXDRAW
-NB.! smoutput console_welcome rplc 'PORT LOCAL';(":PORT);'IPAD';(>(BIND-:''){'NOACCESS';ip);'LOCAL';LOCALHOST
 remote=. >(BIND-:''){'';remoteaccess hrplc 'IPAD PORT';ip;":PORT
 smoutput console_welcome hrplc 'PORT LOCAL REMOTE';(":PORT);LOCALHOST;remote
 startupjhs''
@@ -637,11 +639,18 @@ corefiles=: (<jpath'~addons/ide/jhs/'),each t
 load__ }.corefiles
 
 NB.! debug stuff
+d=. (<'.ijs'),~each (<'jdemo'),each ":each >:i.8
 pfiles=:     (<'/users/eric/svn/addons/ide/jhs/'),each t
+dsrcfiles=:  (<'/users/eric/svn/addons/ide/jhs/demo/'),each d
+dsnkfiles=:  (<jpath'~addons/ide/jhs/demo/'),each d
 p__=: 3 : 0
 d=. fread each pfiles_jhs_
 d fwrite each corefiles_jhs_
 load corefiles_jhs_
+d=. fread each dsrcfiles_jhs_
+d fwrite each dsnkfiles_jhs_
+load dsnkfiles
+i.0 0
 )                         
 
 NB.! kill off - use init_jhs_ in next installer

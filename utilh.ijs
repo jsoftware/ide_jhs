@@ -1,81 +1,21 @@
 NB. html templates and utilities
 coclass'jhs'
 
+NB. menu position:fixed
+NB. .menu{width:100%;position:fixed;background:#eee;
+NB.  margin-top:-20px;margin-left:-10px;padding-left:10px;padding-top:3px;padding-bottom:3px;
+NB. }
 
-NB. B getbody BIS
-NB. ids from ;: (J rules)
-NB. 'abc' adds abc
-NB. Nabc  adds noun Nabc
-NB. Vabc  adds result of sentence Vdef''
-NB. abc   adds result of sentence from BIS,BISCORE
-NB. ID global available for use in sentence
-NB. if no <body...> default <body.><form.></body></form> added
-getbody=: 4 : 0
-ids=. ;:x rplc LF;' '
-t=. dlb each<;._2 y,BISCORE
-i=. t i.each' '
-n=. i{.each t
-v=. dlb each i}.each t
-v=. v,<'+''no sentence'''
-r=. ''
-for_id. ids do.
- ID=: >id
- select. {.ID
-  case. '''' do. s=. ID
-  case. 'N'  do. s=. ID
-  case. 'V'  do. s=. ID,''''''
-  case.      do. s=. >(n i. id){v
- end.
- try.
-   assert.-.''-:t=. ".s
-   r=. r,t
- catch.
-   smoutput '*** failed template id - sentence: ',ID,' - ',s,LF,13!:12''
-   r=. r,'*** see ijx for debug info ***'
- end.
-end.
-if. -.'<body'-:5{.r do.
- r=. '<body onload="jevload();">',(hform''),r,'</body></form>'
-end.
-r
-)
-
-NB. body template id-sentence pairs
-BISCORE=: 0 : 0
-jsep    '&diams;'
-jmlink  hjmlink''
-jmijs   'jijs' hml'ijs'; ' n'
-jmijx   'jijx' hml'ijx'; ' /'
-jmfile  'jfile'hml'open';'o'
-jmhelp  'jhelp'hml'help';'?'
-jmlogin >(-.0-:gethv'Cookie:'){' ';'jlogin'hml'jlogout';''
-jijx    '<a href="jijx">jijx</a>'
-jfile   '<a href="jfile">jfile</a>'
-jhelp   '<a href="jhelp">jhelp</a>'
-jlogout '<a href="jlogout">jlogout</a>'
-jma   '<div class="menu">'[MSTATE=:1[MINDEX=:100
-jmz   '</ul></span></div>'[MSTATE=:0
-+ ' ' 
-^ '<br>'
-- '<hr>'
-[ '<table>'
-] '</table>'
-{ '<tr><td>'
-} '</td></tr>'
-; '</td><td>'
-)
-
-NB.! menu fixed font kludges shortcut right align
+NB. menu fixed font kludges shortcut right align
 CSSCORE=: 0 : 0
 *{font-family:"sans-serif";font-size:<PC_FONTSIZE>}
 *.jcode{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;white-space:pre;}
 *.hab:hover{cursor:pointer;color:red;}
 *.hab{text-decoration:none;}
+*.hmg:hover{cursor:pointer;color:red;}
+*.hmg{text-decoration:none;}
 *.hsel{background-color:buttonface;font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
-body{margin-top:20px;}
-.menu{width:100%;position:fixed;background:#eee;
- margin-top:-20px;margin-left:-10px;padding-left:10px;padding-top:3px;padding-bottom:3px;
-}
+.menu{width:100%;background:#eee;}
 .menu li{
  display:block;white-space:nowrap;
  padding:2px;color:#000;background:#eee;
@@ -90,25 +30,28 @@ body{margin-top:20px;}
 }
 )
 
-hcss=: 3 : 0
-'<style type="text/css">',y,'</style>'
-)
-
-hjs=: 3 : 0
-'<script type="text/javascript">',y,'</script>'
-)
-
 NB. core plus page styles with config replaces
 NB. apply outer style tags after removing inner ones
 css=: 3 : 0
-t=. (CSSCORE,y) hrplc 'PC_FONTSIZE';PC_FONTSIZE
-hcss t rplc '<style type="text/css">';'';'</style>';''
+t=. 'PC_FONTSIZE PC_FM_COLOR PC_ER_COLOR PC_LOG_COLOR PC_SYS_COLOR PC_FILE_COLOR'
+t=. (CSSCORE,y) hrplc t;PC_FONTSIZE;PC_FM_COLOR;PC_ER_COLOR;PC_LOG_COLOR;PC_SYS_COLOR;PC_FILE_COLOR
+t=. t rplc '<style type="text/css">';'';'</style>';'' NB.! are they any inner ones to remove?
+'<style type="text/css">',t,'</style>'
 )
 
 NB. core plus page js
-NB. apply outer js tags after removing inner ones
 js=: 3 : 0
-hjs (JSCORE,y)rplc '<script type="text/javascript">';'';'</script>';''
+'<script type="text/javascript">',JSCORE,y,'</script>'
+)
+
+seebox=: 3 : 0
+1 seebox y
+:
+;((x+>./>#each y){.each "1 y),.<LF
+)
+
+seehtml=: 3 : 0
+y rplc '<';LF,'<'
 )
 
 NB. form template - form, hidden handler sentence, hidden button for form enter (ff)
@@ -124,163 +67,13 @@ formtmpl=: 0 : 0 -. LF
 <input type="submit" value="" onclick="return false;" style="display:none;width:0px;height:0px;border:none">
 )
 
-hform=: 3 : 0
-formtmpl hrplc 'LOCALE';>coname''
-)
-
-NB. utils for generating html
-NB. ID global (kludge, but so convenient to use B id from getbody)
-NB. class hardwired based on util
-
-NB. J ide link menu
-hjmlink=: 3 : 0
-t=.   hmg'link'
-t=. t,'jijs' hml'ijs'; ' n'
-t=. t,'jijx' hml'ijx'; ' /'
-t=. t,'jfile'hml'open';'o'
-t=. t,>(-.0-:gethv'Cookie:'){' ';'jlogin'hml'jlogout';''
-t=. t,'jhelp'hml'help';'?'
-)
-
-hb=: 3 : 0
-t=. '<input type="submit" id="<ID>" name="<ID>" value="<VALUE>" class="hb" onclick="return jev(''<ID>'',''click'',event)">'
-t hrplc 'ID VALUE';ID;y
-)
-
-hc=: 3 : 0
-t=.   '<input type="checkbox" id="<ID>" value="<ID>" class="hcb" name="<SET>"'
-t=. t,' onclick="return jev(''<ID>'',''click'',event)"/><label for="<ID>"><VALUE></label>'
-t hrplc 'ID VALUE SET';ID;y
-)
-
-hab=: 3 : 0
-ID hab y
-:
-t=. '<a id="<ID>" href="#" name="<ID>" class="hab" onclick="return jev(''<ID>'',''click'',event)"'
-t=. t,' ondblclick="return jev(''<ID>'',''dblclick'',event)"><VALUE></a>'
-t hrplc 'ID VALUE';x;y
-)
-
-hradio=: 3 : 0
-t=.   '<input type="radio" id="<ID>" value="<ID>" class="<CLASS>" name="<SET>"'
-t=. t,' onclick="return jev(''<ID>'',''click'',event)"/><label for="<ID>"><VALUE></label>'
-t hrplc 'ID VALUE SET';ID;y
-)
-
-editatts=: ' autocomplete="off" autocapitalize="off" spellcheck="false" '
-
-ht=: 3 : 0
-t=. '<input type="text" id="<ID>" name="<ID>" class="ht"',editatts,'value="<VALUE>" size="<SIZE>" onkeydown="return jev(''<ID>'',''enter'',event)" >'
-t hrplc 'ID VALUE SIZE';ID;y
-)
-
-htp=: 3 : 0
-t=. '<input type="password" id="<ID>" name="<ID>" class="ht"',editatts,'value="<VALUE>" size="<SIZE>" onkeydown="return jev(''<ID>'',''enter'',event)" >'
-t hrplc 'ID VALUE SIZE';ID;y
-)
-
-NB. grid
-htx=: 3 : 0
-t=. '<input type="text" id="<ID>" name="<ID>" class="<CLASS>" <EXTRAS>',editatts,'value="<VALUE>" size="<SIZE>" onkeydown="return jev(''<ID>'',''enter'',event)" >'
-t hrplc 'ID VALUE SIZE CLASS EXTRAS';5{.y,(#y)}.'';'';'';'ht';''
-)
-
-htarea=: 3 : 0
-t=. '<textarea id="<ID>" name="<ID>" class="htarea" wrap="off" rows="1" cols="1"',editatts,'><DATA></textarea>'
-t hrplc 'ID DATA';ID;y
-)
-
-hh=: 3 : 0
-t=. '<input type="hidden" id="<ID>" name="<ID>" value="<VALUE>">'
-t hrplc 'ID VALUE';ID;y
-)
-
-href=: 3 : 0
-y=. boxopen y
-t=. '<a href="<REF>" class="href" ><VALUE></a>'
-t hrplc 'REF VALUE';ID;y
-)
-
-NB. no id/name for options
-hsel=: 3 : 0
-'values size sel'=. y
-t=. '<select id="<ID>" name="<ID>" class="hsel" size="<SIZE>" onchange="return jev(''<ID>'',''click'',event)" >'
-t=. t hrplc 'ID SIZE SEL';ID;size;sel
-opt=. '<option value="<VALUE>" label="<VALUE>" <SELECTED>><VALUE></option>'
-for_i. i.#values do.
- t=. t,opt hrplc'VALUE SELECTED';(i{values),(i=sel){'';'selected="selected"'
-end.
-t=. t,'</select>'
-)
-
-NB. menu group button
-hmgz=: 3 : 0
-t=. >(MSTATE=1){'</ul></span>';''
-t=. t,'<span style="z-index:<INDEX>";>'
-t=. t,'<span><a href="#" id="<ID>" name="<ID>" class="hab"'
-t=. t,' onblur="return menublur();" onfocus="return menufocus();"'
-t=. t,' onclick="return jev(''<ID>'',''click'',event)" ><VALUE>&nbsp;</a></span>'
-t=. t,'<ul id="<ID>_ul">'
-t=. t hrplc 'ID VALUE INDEX';ID;y;":MINDEX
-MSTATE=: 2
-MINDEX=: <:MINDEX
-t
-)
-
-NB. menu group button - ID global
-hmg=: 3 : 0
-hmgz y,'&#9660;'
-)
-
-NB. menu group button action (different decorator)
-hmga=: 3 : 0
-hmgz y,'&#9668'
-)
-
-NB. menu link
-hml=: 3 : 0
-ID hml y
-:
-t=.   '<li><a href="<REF>" onclick="return menuhide();"'
-t=. t,' onblur="return menublur();" onfocus="return menufocus();"><VALUE></a>&nbsp;&nbsp;<TEXT></i></li>'
-t hrplc 'REF VALUE TEXT';x;y
-)
-
-hmab=: 3 : 0
-ID hmab y
-:
-t=. x hab {.y
-t=. t rplc 'class="hab"';'class="hab" onblur="return menublur();" onfocus="return menufocus();"'
-'<li>',t,'&nbsp;&nbsp;',(>{:y),'</li>'
-)
-
-hopenijs=: 3 : 0
-t=. '<TA><a href="jfile?mid=open&path=<FULL>"><SHORT></a><TZ>'
-t hrplc 'TA FULL SHORT TZ';y
-)
-
-seebox=: 3 : 0
-1 seebox y
-:
-;((x+>./>#each y){.each "1 y),.<LF
-)
-
-seehtml=: 3 : 0
-y rplc '<';LF,'<'
-)
-
-
-jsstring=: 3 : 0
-y rplc '"';'\"'
-)
-
 NB. form urlencoded has + for blank
-urldecodeplus=: 3 : 0
-urldecode y rplc '+';' '
+jurldecodeplus=: 3 : 0
+jurldecode y rplc '+';' '
 )
 
-urldecode=: 3 : 0
-t=. <"1 (1 2 +"1 0 (y='%')#i.#y){y
+jurldecode=: 3 : 0
+t=. ~.<"1 (1 2 +"1 0 (y='%')#i.#y){y
 d=. ".each(<'16b'),each tolower each t
 d=. d{each <a.
 t=. '%',each t
@@ -288,17 +81,20 @@ t=. '%',each t
 y rplc ,t,.d
 )
 
-markprompt=: '<!-- j prompt ('
-marka=:     '<!-- j html output a -->'
-markz=:     '<!-- j html output z -->'
-markc=: #marka
+jmarka=:     '<!-- j html output a -->'
+jmarkz=:     '<!-- j html output z -->'
+jmarkc=: #jmarka
 
-NB. convert J text to html
-NB. output starting with marka and ending with markv,LF
+NB. output starting with jmarka and ending with jmarkv,LF
 NB.  is assumed to be html and is not touched
-htmlfroma=: 3 : 0
-if. (marka-:markc{.y)*.markz-:(-markc){.}:y do.y return. end.
-y=. y rplc '&';'&amp;';'<';'&lt;';'>';'&gt;';LF;'<br>';CR;'<br>';' ';'&nbsp;';'-';'&#45;';'"';'&quot;'
+jhtmlfroma=: 3 : 0
+if. (jmarka-:jmarkc{.y)*.jmarkz-:(-jmarkc){.}:y do. y return. end.
+NB.! y=. y rplc '<';'&lt;';'>';'&gt;';'&';'&amp;';'"';'&quot;';CRLF;'<br>';LF;'<br>';CR;'<br>';' ';'&nbsp;'
+jhfroma y
+)
+
+jhfroma=: 3 : 0
+y rplc '<';'&lt;';'>';'&gt;';'&';'&amp;';'"';'&quot;';CRLF;'<br>';LF;'<br>';CR;'<br>';' ';'&nbsp;'
 )
 
 NB. app did not send response - send one now
@@ -322,20 +118,6 @@ SKSERVER_jhs_=: _1
 i.0 0 NB. nothing to display if final J result
 )
 
-hr=: 3 : 0
-'t c j b'=. y
-tmpl=. hrtemplate
-if. SETCOOKIE do.
- SETCOOKIE_jhs_=: 0
- tmpl=. tmpl rplc (LF,LF);LF,'Set-Cookie: ',cookie,LF,LF
-end.
-htmlresponse tmpl hrplc 'TITLE CSS JS BODY';t;c;j;b
-)
-
-hrajax=: 3 : 0
-htmlresponse y,~hajax rplc '<LENGTH>';":#y
-)
-
 NB. x hrplc 'aa bb cb';daa;dbb;dcc
 NB. aa treated as <aa>
 NB. numbers converted to string
@@ -348,7 +130,7 @@ NB. grid stuff
 NB. template gridgen mid;vals
 NB. mid*row*col
 NB. template has <ID> and <VALUE> (other repaces already done)
-gridgen=: 4 : 0
+jgridgen=: 4 : 0
 'mid v'=. y
 'r c'=. $v
 d=. ''
@@ -369,14 +151,13 @@ NB. rowheads must be column
 NB. edit events are gid_dd_enter gid_dd_change
 NB. gid_hh contains the edited noun name for the event
 NB. gid_vv contains new cell value for the event
-gridnumedit=: 3 : 0
+jgridnumedit=: 3 : 0
 'gid colh rowh name'=. y
 try.
  assert. 0=nc <name
  data=. ".name
  assert. (2=$$data)*.(3!:0 data) e. 4 8 16
 catch.
- NB.! smoutput name,'*** bad grid data - reset to default'
  data=. i.2 3
  ".name,'=: data'
 end.
@@ -387,19 +168,19 @@ assert. c={:$colh
 assert. r=#rowh
 
 mid=. gid,'_dd'
-t=. htx'<ID>';'<VALUE>';10;mid;' onchange="return jev(''<ID>'',''change'',event)"'
-dd=. t gridgen mid;<data
+t=. jhtx'<ID>';'<VALUE>';10;mid;' onchange="return jev(''<ID>'',''change'',event)"'
+dd=. t jgridgen mid;<data
 mid=. gid,'_ch'
-t=. htx'<ID>';'<VALUE>';10;'<MID>';'readonly="readonly" tabindex="-1" '
-ch=. (t rplc '<MID>';mid) gridgen mid;<colh
+t=. jhtx'<ID>';'<VALUE>';10;'<MID>';'readonly="readonly" tabindex="-1" '
+ch=. (t rplc '<MID>';mid) jgridgen mid;<colh
 mid=. gid,'_cf'
-cf=. (t rplc '<MID>';mid) gridgen mid;<,:+/data
+cf=. (t rplc '<MID>';mid) jgridgen mid;<,:+/data
 mid=. gid,'_rh'
-rh=. (t rplc '<MID>';mid) gridgen mid;<rowh
+rh=. (t rplc '<MID>';mid) jgridgen mid;<rowh
 mid=. gid,'_rf'
-rf=. (t rplc '<MID>';mid) gridgen mid;<|:,:+/"1 data
+rf=. (t rplc '<MID>';mid) jgridgen mid;<|:,:+/"1 data
 mid=. gid,'_xx'
-co=. (t rplc '<MID>';mid) gridgen mid;<,:,<''
+co=. (t rplc '<MID>';mid) jgridgen mid;<,:,<''
 co=. <name
 cx=. <'+/'
 t=. co,.ch,.cx
@@ -409,14 +190,12 @@ d=. t,m,b
 d=. (<'<td>'),each(<'</td>'),~each d
 d=. (<'<tr>'),.(<'</tr>'),.~d
 d=. ('</table>'),~,('<table id="',gid,'" cellpadding="0" cellspacing="0">'),;d
-ID=: gid,'_hh'
-d=. (hh name),d NB. name of data for this grid
-ID=: gid,'_vv'
-d=. (hh''),d   NB. new value for this grid
+d=. ((gid,'_hh') jhh name),d NB. name of data for this grid
+d=. ((gid,'_vv') jhh''),d   NB. new value for this grid
 )
 
 NB. gid;80px
-gridnumeditcss=: 3 : 0
+jgridnumeditcss=: 3 : 0
 'gid width'=. y
 t=.   '.',gid,'_dd{text-align:right;width:',width,';}',LF 
 t=. t,'.',gid,'_ch{text-align:left; width:',width,';}',LF
@@ -477,70 +256,265 @@ Content-Length: <LENGTH>
 
 )
 
-ASEP=: 1{a. NB. delimit substrings in ajax response
+NB. jhbs body builders
 
-ajaxresponse=: 3 : 0
-htmlresponse y,~hajax rplc '<LENGTH>';":#y
+NB. HBS is LF delimited list of sentences
+NB. jhbs returns list of sentence results
+jhbs=: 3 : 0
+t=. ;jhbsex each <;._2 y
+'<body onload="jevload();">',(jhform''),t,'</body></form>'
 )
 
-cmdbase=: '<a href="jijx">ijx</a> <a href="jfile">file</a> <a href="jhelp">help</a>'
+jhbsex=: 3 : 0
+try.
+ t=. }.' ',,".y NB. need lit list
+catch.
+ smoutput t=.'HBS error:',(>coname''),' ',y
+ t=.'<div>',t,'</div>'
+end.
+t
+) 
 
-cmdsep=: '&diams;' NB. separate command groups
-
-svgjs=: '<!--[if IE]><script src="svg.js"></script><![endif]-->'
-
-NB. html J code syntax coloring
-NB. Roger provided this using dyadic ;: see
-NB. http://www.jsoftware.com/jwiki/Essays/Word_Formation_on_Lines .
-
-mfl=: 256$0                       NB. X other
-mfl=: 1  (9,a.i.' ')        }mfl  NB. S whitespace (space and horizontal tab)
-mfl=: 2  ((a.i.'Aa')+/i.26) }mfl  NB. A A-Z a-z excluding N B
-mfl=: 3  (a.i.'N')          }mfl  NB. N the letter N
-mfl=: 4  (a.i.'B')          }mfl  NB. B the letter B
-mfl=: 5  (a.i.'0123456789_')}mfl  NB. 9 digits and _
-mfl=: 6  (a.i.'.')          }mfl  NB. D .
-mfl=: 7  (a.i.':')          }mfl  NB. C :
-mfl=: 8  (a.i.'''')         }mfl  NB. Q quote
-mfl=: 9  (13)               }mfl  NB. CR
-mfl=: 10 (10)               }mfl  NB. LF
-
-sfl=: _2]\"1 }.".;._2 (0 : 0) 
-' X     S    A    N    B    9    D    C    Q    CR     LF  ']0
- 1 1  12 1  2 1  3 1  2 1  6 1  1 1  1 1  7 1  10 1   1 1   NB. 0  initial
- 1 2  12 2  2 2  3 2  2 2  6 2  1 0  1 0  7 2  10 2   1 2   NB. 1  other
- 1 2  12 2  2 0  2 0  2 0  2 0  1 0  1 0  7 2  10 2   1 2   NB. 2  alp/num
- 1 2  12 2  2 0  2 0  4 0  2 0  1 0  1 0  7 2  10 2   1 2   NB. 3  N
- 1 2  12 2  2 0  2 0  2 0  2 0  5 0  1 0  7 2  10 2   1 2   NB. 4  NB
- 9 0   9 0  9 0  9 0  9 0  9 0  1 0  1 0  9 0  10 2   1 2   NB. 5  NB.
- 1 4  13 0  6 0  6 0  6 0  6 0  6 0  1 0  7 4  10 2   1 2   NB. 6  num
- 7 0   7 0  7 0  7 0  7 0  7 0  7 0  7 0  8 0  10 2   1 2   NB. 7  '
- 1 2  11 2  2 2  3 2  2 2  6 2  1 2  1 2  7 0  10 2   1 2   NB. 8  ''
- 9 0   9 0  9 0  9 0  9 0  9 0  9 0  9 0  9 0  10 2   1 2   NB. 9  comment
- 1 2  11 2  2 2  4 2  2 2  6 2  1 2  1 2  7 2  10 2  11 0   NB. 10 CR
- 1 2  11 2  2 2  4 2  2 2  6 2  1 2  1 2  7 2  10 2   1 2   NB. 11 CRLF
- 1 2  12 0  2 2  3 2  2 2  6 0  1 2  1 2  7 2  10 2   1 2   NB. 12 space
- 1 2  13 0  2 2  3 2  2 2  6 0  1 2  1 2  7 2  10 2   1 2   NB. 13 space after num
+NB. show HBS sentences with html results
+jhbshtml=: 3 : 0
+s=.<;._2 HBS
+seebox s,.LF-.~each jhbsex each s
 )
 
-wfl=: (0;sfl;mfl) & ;:
+jhh=: 4 : 0
+t=. '<input type="hidden" id="<ID>" name="<ID>" value="<VALUE>">'
+t hrplc 'ID VALUE';x;y
+)
 
-syncat=: 3 : 0
-if.     'NB.'-:3{.y                   do. '<span style="color:green">'
-elseif. '=.'-:2{.y                    do. '<span style="color:blue">'
-elseif. '=:'-:2{.y                    do. '<span style="color:blue">'
-elseif. ('.'={:y)*.(2<#y)*.-.'p..'-:y do. '<span style="color:red">'
-elseif. ''''={.y                      do. '<span style="color:blue">'
-elseif. ({.dlb y)e.'0123456789_'      do. '<span style="color:navy">'
-elseif. 1                             do. '<span style="color:black">'
+NB. menu group button
+NB. id jmg 'text';decor;width
+NB. decor 0 for '' and 1 for &#9660; (dropdown)
+jhmg=: 4 : 0
+'text dec w'=. y
+text=. text,>dec{'';'&#9660;'
+t=. >(MSTATE=1){'</ul></span>';''
+t=. t,'<span style="z-index:<INDEX>";>'
+t=. t,'<span><a href="#" id="<ID>" name="<ID>" class="hmg"'
+t=. t,' onblur="return menublur();"'
+t=. t,' onfocus="return menufocus();"'
+t=. t,' onclick="return jev(''<ID>'',''menuclick'',event)"'
+t=. t,'><VALUE>&nbsp;</a></span>'
+t=. t,'<ul id="<ID>_ul">'
+t=. t hrplc 'ID VALUE INDEX';x;text;":MINDEX
+MSTATE=: 2
+MINDEX=: <:MINDEX
+JMWIDTH=: w
+t
+)
+
+jhmx=: 3 : 0
+if. '^'={:y do.
+ s=. ' ',_2{y
+ t=. _2}.y
+else.
+ s=. '  '
+ t=. y
+end.
+(dltb t);s
+)
+
+NB. menu link button
+jhmab=: 4 : 0
+'t s'=.jhmx y
+t=. (JMWIDTH{.t),s
+t=. x jhab t rplc ' ';'&nbsp;'
+t=. t rplc 'class="hab"';'class="hab" onblur="return menublur();" onfocus="return menufocus();"'
+'<li>',t,'</li>'
+)
+
+NB. menu link
+jhml=: 4 : 0
+'t s'=.jhmx y
+value=. t
+text=. ((0>.JMWIDTH-#value)#' '),s
+value=. value rplc ' ';'&nbsp;'
+text=. text rplc ' ';'&nbsp;'
+t=.   '<li><a href="<REF>" onclick="return menuhide();"'
+t=. t,' onblur="return menublur();" onfocus="return menufocus();"><VALUE></a><TEXT></li>'
+t hrplc 'REF VALUE TEXT';x;value;text
+)
+
+jhec=: 4 : 0
+t=. '<div id="<ID>" contenteditable="true"',jeditatts
+t=. t,'style="white-space:nowrap;" '
+t=. t,'onkeydown="return jev(''<ID>'',''enter'',event)"'
+t=. t,'>',y,'</div>'
+t hrplc 'ID';x
+)
+
+jeditatts=: ' autocomplete="off" autocapitalize="off" spellcheck="false" '
+
+jhb=: 4 : 0
+t=. '<input type="submit" id="<ID>" name="<ID>" value="<VALUE>" class="hb" onclick="return jev(''<ID>'',''click'',event)">'
+t hrplc 'ID VALUE';x;y
+)
+
+jhckb=: 4 : 0
+'value set checked'=. y
+checked=. >checked{'';'checked="checked"'
+t=.   '<input type="checkbox" id="<ID>" value="<ID>" class="hcb" name="<SET>" <CHECKED>'
+t=. t,' onclick="return jev(''<ID>'',''click'',event)"/><label for="<ID>"><VALUE></label>'
+t hrplc 'ID VALUE SET CHECKED';x;value;set;checked
+)
+
+jhradio=: 4 : 0
+'value set checked'=. y
+checked=. >checked{'';'checked="checked"'
+t=.   '<input type="radio" id="<ID>" value="<ID>" class="<CLASS>" name="<SET>" <CHECKED>'
+t=. t,' onclick="return jev(''<ID>'',''click'',event)"/><label for="<ID>"><VALUE></label>'
+t hrplc 'ID VALUE SET CHECKED';x;value;set;checked
+)
+
+jht=: 4 : 0
+t=. '<input type="text" id="<ID>" name="<ID>" class="ht"',jeditatts,'value="<VALUE>" size="<SIZE>" onkeydown="return jev(''<ID>'',''enter'',event)" >'
+t hrplc 'ID VALUE SIZE';x;y
+)
+
+jhtp=: 4 : 0
+t=. '<input type="password" id="<ID>" name="<ID>" class="ht"',jeditatts,'value="<VALUE>" size="<SIZE>" onkeydown="return jev(''<ID>'',''enter'',event)" >'
+t hrplc 'ID VALUE SIZE';x;y
+)
+
+
+jhtarea=: 4 : 0
+t=. '<textarea id="<ID>" name="<ID>" class="htarea" wrap="off" rows="1" cols="1"',jeditatts,'><DATA></textarea>'
+t hrplc 'ID DATA';x;y
+)
+
+NB. J ide link menu
+jhjmlink=: 3 : 0
+t=.   'jmlink'jhmg'link';1;7
+t=. t,'jijx'  jhml'ijx    j^'
+t=. t,'jfile' jhml'file   l^'
+t=. t,'jijs'  jhml'ijs    n^'
+t=. t,'jal'   jhml'pacman'
+
+t=. t,>(-.0-:gethv'Cookie:'){' ';'jlogin'jhml'logout'
+t=. t,'jhelp' jhml'help h^'
+)
+
+NB.! replace all M... with JM... when all in HBS style
+jhma=: 3 : 0
+MSTATE=:1[MINDEX=:100
+'<div class="menu">'
+)
+
+jhmz=: 3 : 0
+MSTATE=:0
+'</ul></span></div><br><hr>'
+)
+
+jhform=: 3 : 0
+formtmpl hrplc 'LOCALE';>coname''
+)
+
+jhdiva=: 4 : 0
+'<div id="',x,'">',y
+)
+
+jhdivahide=: 4 : 0
+'<div id="',x,'" style="display:none;">',y
+)
+ 
+jhdiv=: 4 : 0
+if. ''-:x do.
+ '<div>',y,'</div>'
+else.
+ '<div id="',x,'">',y,'</div>'
 end.
 )
 
-synhi=: 3 : 0
-if. 0=#y do. '' return. end.
-z=. wfl toJ y
-c=. syncat each z
-z=. htmlfroma each z
-;c,each z,each <'</span>'
+jhspan=: 4 : 0
+if. ''-:x do.
+ '<span>',y,'</span>'
+else.
+ '<span id="',x,'">',y,'</span>'
+end.
 )
 
+jhh1=: 3 : 0
+'<h1>',y,'</h1>'
+)
+
+jhab=: 4 : 0
+t=. '<a id="<ID>" href="#" name="<ID>" class="hab" onclick="return jev(''<ID>'',''click'',event)"'
+t=. t,' ondblclick="return jev(''<ID>'',''dblclick'',event)"><VALUE></a>'
+t hrplc 'ID VALUE';x;y
+)
+
+jhref=: 4 : 0
+y=. boxopen y
+t=. '<a href="<REF>" class="href" ><VALUE></a>'
+t hrplc 'REF VALUE';x;y
+)
+
+jhsel=: 4 : 0
+'values size sel'=. y
+t=. '<select id="<ID>" name="<ID>" class="hsel" size="<SIZE>" onchange="return jev(''<ID>'',''click'',event)" >'
+t=. t hrplc 'ID SIZE SEL';x;size;sel
+opt=. '<option value="<VALUE>" label="<VALUE>" <SELECTED>><VALUE></option>'
+for_i. i.#values do.
+ t=. t,opt hrplc'VALUE SELECTED';(i{values),(i=sel){'';'selected="selected"'
+end.
+t=. t,'</select>'
+)
+
+NB. jgrid
+jhtx=: 3 : 0
+t=. '<input type="text" id="<ID>" name="<ID>" class="<CLASS>" <EXTRAS>',jeditatts,'value="<VALUE>" size="<SIZE>" onkeydown="return jev(''<ID>'',''enter'',event)" >'
+t hrplc 'ID VALUE SIZE CLASS EXTRAS';5{.y,(#y)}.'';'';'';'ht';''
+)
+
+jhtr=: 3 : 0
+'<tr>','</tr>',~;(<'<td>'),each y,each<'</td>'
+)
+
+jhtaba=: '<table>'
+jhtabz=: '</table>'
+jhbr=: '<br/>'
+jhhr=: '<hr/>'
+
+NB. standard demo html boilerplate
+jhdemo=: 3 : 0
+c=. '.ijs',~>coname''
+if. 'jdemo.ijs'-:c do. t=. '' else. t=. 'demo/' end.
+p=. jpath'~addons/ide/jhs/',t,c
+t=. '<hr/>'
+t=. t,'jijx' jhref'ijx'
+t=. t,' ','jdemo'  jhref'jdemo'
+for_i. >:i.8 do.
+ d=. 'jdemo',":i
+ t=.t,' ',d jhref d
+end.
+t=. t,'<br/>'
+t,'Open script: <a href="jfile?mid=open&path=',p,'">',c,'</a>'
+)
+
+NB. title jhr (body hrplc arguments)
+NB. build html response from page globals CSS JS HBS
+NB. CSS or JS undefined allwed
+jhr=: 4 : 0
+if. _1=nc <'CSS' do. CSS=: '' end.
+if. _1=nc <'JS'  do. JS=: '' end.
+tmpl=. hrtemplate
+if. SETCOOKIE do.
+ SETCOOKIE_jhs_=: 0
+ tmpl=. tmpl rplc (LF,LF);LF,'Set-Cookie: ',cookie,LF,LF
+end.
+htmlresponse tmpl hrplc 'TITLE CSS JS BODY';x;(css CSS);(js JS);(jhbs HBS)hrplc y
+)
+
+JASEP=: 1{a. NB. delimit substrings in ajax response
+
+NB.! jhfroma ??? required for some uses?
+jhrajax=: 3 : 0
+htmlresponse y,~hajax rplc '<LENGTH>';":#y
+)
+
+jgetfile=: 3 : '(>:y i: PS)}.y'
+jgetpath=: 3 : '(>:y i: PS){.y'

@@ -2,76 +2,68 @@ NB. J HTTP Server - ijs app
 coclass'jijs'
 coinsert'jhs'
 
-jev_get=: 3 : 0
-create jnew''
-) 
+HBS=: 0 : 0
+jhma''
+'run'      jhmg'run';1;12
+ 'runw'    jhmab'run         r^'
+ 'runwd'   jhmab'run display'
+'action'   jhmg'action';1;10
+ 'save'    jhmab'save        s^'
+ 'saveas'  jhmab'save as...'
+ 'replace' jhmab'replace...'
+'style'    jhmg'style';1;6
+ 'ro'      jhmab'readonly    t^'
+ 'color'   jhmab'color       c^'
+jhjmlink''
+jhmz''
 
-B=: 0 : 0 NB. body template
-'<div id="a">'
- jma action ro save saveas findrep
-     run    runw runwd
-     jmlink
- jmz
- report
-filename filenamed
-'</div>'
-htmlarea
-textarea
+'saveasdlg'   jhdivahide'save as'
+ 'saveasx'    jht'';10
+  'saveasclose'jhb'X'
+'<hr></div>'
+
+'repldlg'     jhdivahide'replace'
+ 'replx'      jht'';10
+  'with'
+   'reply'      jht'';10
+    'repldo'     jhb'replace'
+     'replundo'   jhb'undo'
+      'replclose'  jhb'X'
+'<hr></div>'
+
+'rep'         jhdiv''
+
+'filename'    jhh  '<FILENAME>'
+'filenamed'   jhdiv'<FILENAME>'
+
+'ijs'         jhec'<DATA>'
+
+'textarea'    jhh''
 )
 
-NB.! padding should be related to textarea
-
-BIS=: 0 : 0 NB. body template id-sentence pairs
-action   hmg'action'
- ro       hmab'readonly';'t'
- save     hmab'save';'&nbsp;&nbsp;&nbsp;&nbsp;s'
- saveas   hmab'save as';''
- findrep  hmab'find';''
-run      hmg'run'
- runw     hmab'window';'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r'
- runwd    hmab'window display';''
-report    '<div id="rep"></div>'
-filename  hh'<FILENAME>'
-filenamed '<div id="filenamed">[<span id="status">0</span>] <FILENAME></div>'
-synhi     hradio'syntax';'radg'
-edit      hradio'edit';'radg'
-textarea  htarea'<DATA>'
-htmlarea  '<div id="c" style="display:none;padding-top:4px;padding-left:3px;"><SYNHIDATA></div>'
-)
-
-createbody=: 3 : 0
-(B getbody BIS)hrplc y
-)
-
-CSS=: 0 : 0
-#rep{color:red}
-#filenamed{color:blue;}
-textarea{width:100%;}
-*{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
-)
-
-NB. y if fullfilename
+NB. y file
 create=: 3 : 0
 try. d=. 1!:1<y catch. d=. 'file read failed' end.
-hr (getfile y);(css CSS);(JSCORE,JS);createbody 'FILENAME DATA SYNHIDATA';y;d;synhi d
+(jgetfile y) jhr 'FILENAME DATA';y;jhfroma d
 )
+
+jev_get=: 3 : 'create jnew'''''
 
 save=: 3 : 0
 if. #USERNAME do.
  fu=. jpath'~user'
  'save only allowed to ~user paths' assert fu-:(#fu){.y
 end.
-(toHOST getv'textarea')1!:2<y
+assert -._1-:(toHOST getv'textarea')fwrite <y
 )
-
 
 ev_save_click=: 3 : 0
 f=. jpath getv'filename'
 try.
  save f
- ajaxresponse 'saved without error'
+ jhrajax 'saved without error'
 catch.
- ajaxresponse htmlfroma 13!:12''
+ jhrajax 'save failed'
 end.
 )
 
@@ -84,16 +76,30 @@ try.
  else.
   loadd__ f
  end.  
- ajaxresponse 'ran saved without error'
+ jhrajax 'ran saved without error'
 catch.
- ajaxresponse htmlfroma 13!:12''
+ jhrajax 13!:12''
 end.
 )
 
 ev_runwd_click=: ev_runw_click
 
-ev_ro_click=: 3 : 0
-ajaxresponse synhi getv'textarea'
+NB.! saveas replace cancel option if file already exists
+ev_saveasx_enter=: 3 : 0
+f=. getv'filename'
+n=. getv'saveasx'
+if. n-:n-.'~/' do.
+ new=. (jgetpath f),n
+else.
+ new=. jpath n
+end.
+if. fexist new do. jhrajax 'file already exists' return. end.
+try.
+ save new
+ jhrajax ('saved as ',n),JASEP,new
+catch.
+ jhrajax 'save failed'
+end.
 )
 
 NB. new ijs temp filename
@@ -106,151 +112,117 @@ f=. <jpath'~temp\',a,'.ijs'
 >f
 )
 
-getfile=: 3 : '(>:y i: PS)}.y' NB. filename from fullname
+NB.! p{} klduge cause IE insert <p> instead of <br> for enter
+CSS=: 0 : 0
+#rep{color:red}
+#filenamed{color:blue;}
+*{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
+p{margin:0;}
+)
 
-JS=: hjs 0 : 0
-window.onresize= resize;
-window.onfocus= xfocus;
-var saved,ta,status,readonly;
+JS=: 0 : 0
+var ta,rep,readonly,color,saveasx,replx;
 
 function evload() // body onload->jevload->evload
 {
- ta= document.j.textarea;
- status = jbyid("status");
- ta.onmouseup= ta.onkeydown= reqlineup;
- resize();
- saved= ta.value;
- if(0==saved.length)
+ ce= jbyid("ijs");
+ rep= jbyid("rep");
+ ta= jbyid("textarea");
+ saveasx=jbyid("saveasx");
+ replx=jbyid("replx");
+ ro(0!=ce.innerHTML.length);
+ ce.focus();
+ jsetcaret("ijs",0);
+}
+
+function ro(only)
+{
+ readonly= only;
+ ce.setAttribute("contenteditable",readonly?"false":"true");
+ ce.style.background= readonly?"#eee":"#fff";
+}
+
+function click(){ta.value= jtfromh(ce.innerHTML);jdoh(["filename","textarea","saveasx"]);}
+function ev_save_click() {click();}
+function ev_runw_click() {click();}
+function ev_runwd_click(){click();}
+
+function ev_saveasx_enter(){click();}
+function ev_saveas_click()     {jshow("saveasdlg");saveasx.value="";saveasx.focus();}
+function ev_saveasclose_click(){jhide("saveasdlg");}
+
+function ev_replx_enter(){;}
+function ev_reply_enter(){;}
+function ev_replace_click()  {jshow("repldlg");replx.focus();}
+function ev_replclose_click(){jhide("repldlg");}
+
+//function repl(x,y)
+function repl(x,y)
+{
+ var d=jtfromh(ce.innerHTML);
+ d=d.replace(RegExp(x,"g"),y);
+ ce.innerHTML=jhfromt(d);
+}
+
+function ev_repldo_click()  {repl(replx.value,reply.value);}
+function ev_replundo_click(){repl(reply.value,replx.value);}
+
+function ev_ro_click(){ro(readonly= !readonly);}
+
+function colcs(d) {return "\0001"+d+"\0000";}  // control structure
+function colnb(d) {return "\0002"+d+"\0000";}  // nb
+function collit(d){return "\0003"+d+"\0000";} // literal
+
+var controls= RegExp("(assert|break|continue|for|if|do|else|elseif|end|return|select|case|fcase|throw|try|catch|while|whilest)\.","g");
+
+//! coloring needs lots of work
+// literals with '' and not closed
+// for_abc. not colored
+// consider doing coloring from kpress set timer event
+//  should work well except for nasty problem of preserving caret
+// loses focus and caret
+function ev_color_click()
+{
+ var t;
+ color= !color;
+ t= ce.innerHTML;
+ if(color)
  {
-  readonly= false;
-  jbyid("c").style.display= "none";
-  ta.style.display= "block";
-  ta.focus();
+  t= jtfromh(t);
+  t= t.replace(/NB\..*/g, colnb)
+  t= t.replace(controls,  colcs);
+  t= t.replace(/'[^']*'/g, collit);
+  t= jhfromt(t);
+  t= t.replace(/\0000/g, "</span>");
+  t= t.replace(/\0001/g, "<span style=\"color:red\">");
+  t= t.replace(/\0002/g, "<span style=\"color:green\">");
+  t= t.replace(/\0003/g, "<span style=\"color:blue\">");
  }
  else
  {
-  readonly= true;
-  ta.style.display= "none";
-  jbyid("c").style.display= "block";
-  jbyid("ro").innerHTML= "editable"; 
+  t= t.replace(/<span\/?[^>]+(>|$)/gi,"");
+  t= t.replace(/<\/span>/gi,"");
  }
+ ce.innerHTML= t;
+ jsetcaret("ijs",0);
 }
 
-function xfocus(){if(ta.style.display=="block")ta.focus();}
-
-function ctrl_comma(){jev("runw","click");}
-function ctrl_dot()  {jev("save","click")}
-function ctrl_slash(){jev("ro","click")}
-
-function ev_save_click(){jdoh(["filename","textarea"]);}
-function ev_runw_click(){jdoh(["filename","textarea"]);}
-function ev_runwd_click(){jdoh(["filename","textarea"]);}
-
-function ev_saveas_click(){jbyid("rep").innerHTML= "save as not implemented";}
-function ev_findrep_click(){jbyid("rep").innerHTML= "find/replace not implemented";}
-
-// toggle readonly
-function ev_ro_click()
+function ajax(ts)
 {
- readonly= !readonly;
- if(readonly)
+ rep.innerHTML= ts[0];
+ if(jform.jmid.value=="saveasx"&&2==ts.length)
  {
-  jdoh(["filename","textarea"]);
-  jbyid("ro").innerHTML= "editable"; 
- }
- else
- {
-  jbyid("c").style.display= "none";
-  ta.style.display= "block";
-  ta.focus();
-  jbyid("ro").innerHTML= "readonly"; 
+  jhide("saveasdlg");
+  jbyid("filenamed").innerHTML=ts[1];
+  jbyid("filename").value=jtfromh(ts[1]);
  }
 }
 
-function rqupdate()
-{
- if(jform.jmid.value=="ro")
- {
-  ta.style.display= "none";
-  jbyid("c").style.display= "block";
-  jbyid("c").innerHTML= rq.responseText;
- }
- else
-  jbyid("rep").innerHTML= rq.responseText;
-}
+function ev_ijs_enter(){return true;}
 
-function resize(){
- var a= gpwindowh();      // window height
- a-= gpbodymh();          // body margin h (top+bottom)
- a-= gpdivh("a");         // div a height
- a-= 10;                   // div and textarea borders???
- a=  a<10?0:a;            // - not allowed
- ta.style.height= a+"px"; // size ta to fit
-}
-
-// menu hide/show
-
-function mc(){jbyid("rep").innerHTML= ""; menuclick();}
-function ev_run_click()   {mc();}
-function ev_action_click(){mc();}
-function ev_jmlink_click(){mc();}
-
-// ta line status
-
-var tid=0; // timeout id
-
-function reqlineup()
-{
- if(tid!=0) clearTimeout(tid);
- tid= setTimeout(lineup,50)
-}
-
-function lineup(){tid=0; jbyid("status").innerHTML= gettaline(ta);}
-
-// get line number for textarea selection
-function gettaline(ta)
-{ 
- var t,n,sel,r= 0;
- if(ta.selectionStart!=null) //! !=null required by safari/chrome?
- {
-  t= ta.value;
-  n= ta.selectionStart; 
- }
- else if(document.selection)
- {
-  var m= "\001";
-  sel= document.selection.createRange();
-  sel.collapse(); 
-  sel.text= m;
-  t= ta.value;
-  n= t.indexOf(m);
-  if(n==-1) n= t.length;
-  sel.moveStart('character',-1); 
-  sel.text= ""; 
- }
- else
-  return 0;
-
- for(var i=0;i<n;++i)
- {
-  if(t.charAt(i)=='\n') ++r;
- }
- return r; 
-} 
-
-function doshortcut(c)
-{
- switch(c)
- {
-  case 'r': setshortcut("runw");ev_runw_click(); break;
-  case 's': setshortcut("save");ev_save_click(); break;
-  case 't': setshortcut("ro");ev_ro_click(); break;
-  default: dostdshortcut(c); break;
- }
-}
-
-
-
+function ev_t_shortcut(){jscdo("ro");}
+function ev_c_shortcut(){jscdo("color");}
+function ev_r_shortcut(){jscdo("runw");}
+function ev_s_shortcut(){jscdo("save");}
+function ev_2_shortcut(){ce.focus();window.scrollTo(0,0);jsetcaret("ijs",0);}
 )
-
-

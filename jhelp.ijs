@@ -2,41 +2,15 @@ NB. J HTTP Server - jhelp app
 coclass'jhelp'
 coinsert'jhs'
 
-CSS=: 0 : 0
-span.h{color:red;}
-*{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
-)
-
-jev_get=: 3 : 0
-hr 'jhelp';(css CSS);(JSCORE,JS);createbody''
-)
-
-createbody=: 3 : 0
-(B getbody BIS)hrplc'ENGINE CONFIG';(9!:14'');jpath'~addons/ide/jhs/config/jhs_default.ijs'
-)
-
-B=: 0 : 0 NB. body template
-jma jmlink jmz
+HBS=: 0 : 0
+jhma''
+ jhjmlink''
+jhmz''
 text
 )
 
-BIS=: 0 : 0 NB. body template id-sentence pairs
-tool hmg'tool'
-text text
-)
-
-JS=: hjs 0 : 0
-function evload(){;} // body onload -> jevload -> evload
-function ev_jmlink_click(){menuclick();}
-
-function doshortcut(c)
-{
- switch(c)
- {
-  default: dostdshortcut(c); break;
- }
-}
-
+jev_get=: 3 : 0
+'jhelp' jhr 'ENGINE CONFIG';(9!:14'');jpath'~addons/ide/jhs/config/jhs_default.ijs'
 )
 
 text=: 0 : 0
@@ -48,15 +22,15 @@ text=: 0 : 0
 J701 - Copyright 1994-2010 Jsoftware Inc.
 <br>Engine: <ENGINE>
 <br><br><span class="h">keyboard shortcuts</span><br>
-ctrl+/ treats next character as a shortcut.<br>
-On jijx page, pressing ctrl+/ and then lowercase o
-links to jfile (open) page.<br>
-Shortcuts are documented on the right in a menu item.
+ctrl escapes next character to be a shortcut.<br/>
+Press ctrl, release it, press j - links to ijx page.<br/>
+Shortcuts are documented on the right in a menu item.<br/><br/>
+
+1 shortcut (ctrl then 1) sets focus on menu.<br/>
+2 shortcut sets focus to page default.
 
 <br><br><span class="h">jijx page</span><br>
-enter J sentences (&uarr;&darr; recall)<br>
-jlog 0 NB. clear log<br>
-jlog _ NB. restore complete log
+enter J sentences (ctrl+shift+&uarr;&darr; recall)
 
 <br><br><span class="h">jfile page</span><br>
 browse files for opening, editing, etc.
@@ -80,16 +54,14 @@ jfe_jhs_ y NB. toggle console/browser<br>
 jhtml'&lt;font style="color:red;"&gt;A&lt;/font&gt;'
 
 <br><br><span class="h">configuration</span><br>
-JHS initializes based on configuration files.<br><br>
-
-Configuration includes port to serve,
-localhost password rules, remote host password,
-and username for multiple users on the same server.<br><br>
-
-See file<br>
+JHS initializes based on configuration files. See file<br>
 &nbsp;&nbsp;<CONFIG><br>
 for info on changing JHS configuration
 </div>
 )
 
+CSS=: 0 : 0
+span.h{color:red;}
+*{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
+)
 

@@ -20,6 +20,6 @@ form=: 0 : 0
 </form>
 )
 
-sc=: hjs 0 : 0
+sc=: 0 : 0
 function evonload(){document.getElementById("jsentence").focus();}
 )

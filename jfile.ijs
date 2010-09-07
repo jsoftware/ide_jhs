@@ -2,93 +2,63 @@ NB. J HTTP Server - jfile app
 coclass'jfile'
 coinsert'jhs'
 
-NB. <input type="file" ...> file browser is limited and has cross browser problems
-
-NB. report nbsp; important as FF disappears empty divs
-
-NB. get file with mid/path parameters opens the file
-jev_get=: 3 : 0
-if. 'open'-:getv'mid' do.
- ev_open_click''
-else.
- create '';jpath'~temp\'
-end.
-)
-
-B=: 0 : 0 NB. body template
-jma
- action open  edit  del newfi newfo
- jmlink
-jmz 
-'rename: ' rename
-report
-path pathd
-rfi rp
-sel
-)
-
-BIS=: 0 : 0 NB. body template id-sentence pairs
-action    hmg'action'
- open      hmab'open';''
- edit      hmab'edit';''
- del       hmab'del';''
- newfi     hmab'new file';''
- newfo     hmab'new folder';''
-report    '<div id="report"><R>&nbsp;</div>'
-path      hh'<F>'
-pathd     '<div id="pathd"><F></div>'
-rfi       hradio'folders/files';'rad'
-rp        hradio'~paths';'rad'
-sel       '<div id="sel"></div>'
-newfolder ht'';15
-newfile   ht'';15
-rename    ht'';15
-)
-
-createbody=: 3 : 0
-(B getbody BIS)hrplc y
-)
-
-CSS=: 0 : 0
-#report{color:red}
-#pathd{color:blue;}
-*{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
-)
-
-createjs=: 3 : 0
-files=. buttons 'files';2#<folderinfo remlev y
-paths=. buttons 'paths';2#<{."1 SystemFolders_j_
-JSCORE,JS hrplc 'FILES PATHS';jsstring each files;paths
+HBS=: 0 : 0
+jhma''
+'action'    jhmg'action';1;10
+ 'edit'     jhmab'edit'
+ 'del'      jhmab'del'
+ 'copy'     jhmab'copy        c^'
+ 'cut'      jhmab'cut         x^'
+ 'paste'    jhmab'paste       v^'
+ 'newfi'    jhmab'new file'
+ 'newfo'    jhmab'new folder'
+ jhjmlink''
+jhmz''
+'rename:'
+ 'rename'   jht'';15
+'report'    jhdiv'<R>'
+shorts''
+'path'      jhh'<F>'
+ 'pathd'    jhdiv'<F>'
+'sel'       jhdiv'<FILES>'
 )
 
 NB. y - error;file
 create=: 3 : 0
 'r f'=. y
 if. 0=#1!:0<(-PS={:f)}.f do. f=. jpath'~temp\' end. NB. ensure valid f
-hr 'jfile';(css CSS);(createjs f);createbody'R F';r;f 
+'jfile' jhr 'R F FILES';r;f;(buttons 'files';(2#<folderinfo remlev f),<'<br>') 
+)
+
+NB. get file with mid/path opens the file
+jev_get=: 3 : 0
+if. 'open'-:getv'mid' do.
+ ev_edit_click''
+else.
+ create '';jpath'~temp\'
+end.
 )
 
 buttons=: 3 : 0
-'mid sids values'=. y
+'mid sids values sep'=. y
 p=. ''
 for_i. i.#sids do.
- ID=: mid,'*',>i{sids
- p=. p,'<br>',~hab i{values
+ id=. mid,'*',>i{sids
+ p=. p,sep,~id jhab i{values
 end.
 )
 
-NB. event handlers
+shorts=: 3 : 0
+buttons 'paths';(2#<{."1 SystemFolders_j_),<' '
+)
 
 ev_paths_click=: 3 : 0
 sid=. getv'jsid'
-select. sid
-case. 'labs' do. f=. jpath'~system/extras/labs/'
-case.        do. f=. jpath'~',sid,'/'
-end.
-ajaxresponse f,ASEP,buttons 'files';2#<folderinfo remlev f
+f=. jpath'~',sid,'/'
+jhrajax f,JASEP,buttons 'files';(2#<folderinfo remlev f),<'<br>'
 )
 
-NB. folder clicked (file handled in js)
+NB. folder clicked (file click handled in js)
 ev_files_click=: 3 : 0
 sid=. getv'jsid'
 path=. getv'path'
@@ -99,7 +69,7 @@ if. sid-:'..' do.
 else.
  f=. (remlev path),PS,sid,PS
 end.
-ajaxresponse f,ASEP,buttons 'files';2#<folderinfo remlev f
+jhrajax f,JASEP,buttons 'files';(2#<folderinfo remlev f),<'<br>'
 )
 
 nsort=: 3 : 0
@@ -116,18 +86,20 @@ d=. 'd'=;4{each 4{"1 a
 (markfolder,each'/',~each(<'..'),nsort d#n),nsort (-.d)#n
 )
 
+NFI=: 'newfile'
+NFO=: 'newfolder'
+
 ev_newfi_click=: 3 : 0
 F=. getv'path'
-n=. 'newfile'
-r=. n,' created'
-f=. (remlev F),PS,n
+f=. (remlev F),PS,NFI
 if. fexist f do.
- r=. n,' already exists'
+ r=. NFI,' already exists'
 else.
  try. 
   ''1!:2<f
+  r=. NFI,' created'
  catch.
-  r=. n,' create failed'
+  r=. NFI,' create failed'
  end.
 end.
 create r;f
@@ -135,13 +107,12 @@ create r;f
 
 ev_newfo_click=: 3 : 0
 F=. getv'path'
-n=. 'newfolder'
-r=. n,' created'
-f=. (remlev F),PS,n,PS
+f=. (remlev F),PS,NFO,PS
 try.
  1!:5<f
+ r=. NFO,' created'
 catch.
- r=. n,' create failed'
+ r=. NFO,' create failed'
 end.
 create r;f
 )
@@ -184,7 +155,7 @@ create r;F
 )
 
 ev_del_click=: 3 : 0
-f=. getfile F=. jpath getv'path'
+f=. jgetfile F=. jpath getv'path'
 if. PS={:F do.
  NB. delete folder
  try.
@@ -198,7 +169,7 @@ else.
  try.
   d=. 1!:1<jpath F
   1!:5 :: [ <jpath'~temp/deleted'
-  d 1!:2    <jpath'~temp/deleted/',getfile F
+  d 1!:2    <jpath'~temp/deleted/',jgetfile F
   1!:55 <F
   create ('Deleted file saved as "',('~temp/deleted/',f),'".');PS,~remlev F
  catch.
@@ -207,71 +178,67 @@ else.
 end.
 )
 
-NB.! do not understand what happens with dblclick of folders
-NB.  does not seem to be a problem, but is puzzling
-ev_files_dblclick=: 3 : 0
-ev_open_click''
-)
-
-ev_open_click=: 3 : 0
-f=. getfile F=. jpath getv'path'
-if. f-:'' do.
- create'No file selected to open.';f
-else.
- t=. (f i:'.')}.f
- c=. #p=. jpath'~home\'
- select. t
- case. '.pdf' do.
-  if. p-:c{.F do.
-   pdfresponse_jfilesrc_ '~home/',c}.F
-  else.
-   OPNREPORT=: 'PDF file must be in ~home path.'
-   create''
-  end.
- case. '.ijt' do.
-  labopen_jijx_ F
-  create'Lab opened: see ijx page';F
- case. '.svg' do.
-  if. p-:c{.F do.
-   svgresponse_jfilesrc_ '~home/',c}.F
-  else.
-   NB.! all OPNREPORT uses must be fixed
-   OPNREPORT=: 'SVG file must be in ~home path.'
-   create''
-  end.
- case.        do. create_jijs_ F
- end.
-end.
-i.0 0
-)
+NB.! folder dblclick??? not a problem, but is puzzling
+ev_files_dblclick=: ev_edit_click
 
 ev_edit_click=: 3 : 0
-f=. getfile F=. getv'path'
+f=. jgetfile F=. getv'path'
 if. f-:'' do.
  create'No file selected to edit.';F
 else.
  create_jijs_ F
 end.
-i.0 0
 )
 
-remlev=: 3 : '(y i: PS){.y' NB. remove level from path
+copy=: _1 NB. _1 not ready, 0 copy, 1 cut 
 
-getfile=: 3 : '(>:y i: PS)}.y' NB. filename from fullname
+copycut=: 3 : 0
+copy=: y
+srcfile=: getv'path'
+create 'Ready for paste';srcfile
+)
 
-JS=: hjs 0 : 0
-var FILES= "<FILES>";
-var PATHS= "<PATHS>";
+ev_copy_click=: 3 : 'copycut 0'
+ev_cut_click=:  3 : 'copycut 1'
 
-// jsubmit default for undefined ev_mid_click handlers
+NB.! paste folder support
+ev_paste_click=: 3 : 0
+F=. jpath getv'path'
+f=. jgetfile srcfile
+if. ''-:f                do. create 'Paste: folder not implemented.';F  return. end.
+d=. fread srcfile
+i=. f i: '.'
+a=. i{.f
+z=. i}.f
+c=. 0
+while. fexist snkfile=. (remlev F),PS,f do.
+ c=. >:c
+ f=. a,'-Copy(',(":c),')',z
+end.
+if. _1=copy              do. create 'Paste: no copy or cut.';F          return. end.
+if. _1-:d                do. create 'Paste: read source file failed.';F return. end.
+if. _1-:d fwrite snkfile do. create 'Paste: write newfile failed.';F    return. end.
+if. copy=1 do. try. 1!:55 <srcfile catch. end. end.
+create ('Paste: ',f,' created.');F
+)
 
-function init(){jbyid("rfi").checked= true;jbyid("sel").innerHTML= FILES;}
+remlev=: 3 : '(y i: PS){.y'    NB. remove level from path
+
+CSS=: 0 : 0
+#report{color:red}
+#pathd{color:blue;}
+*{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
+)
+
+JS=: 0 : 0
 function repclr(){jbyid("report").innerHTML = "&nbsp;";}
 function setpath(t){jform.path.value= t;jbyid("pathd").innerHTML= t;}
-function evload(){init();} // body onload -> jevload -> evload
-function ev_rfi_click(){repclr();jbyid("sel").innerHTML= FILES;return true;}
-function ev_rp_click() {repclr();jbyid("sel").innerHTML= PATHS;return true;}
 function ev_paths_click(){repclr();jdoh(["path"]);}
+
+function ev_x_shortcut(){jscdo("cut");}
+function ev_c_shortcut(){jscdo("copy");}
+function ev_v_shortcut(){jscdo("paste");}
+function ev_2_shortcut(){jbyid("sel").childNodes[0].focus();}
 
 function ev_files_click() // file select
 {
@@ -286,25 +253,11 @@ function ev_files_click() // file select
   jdoh(["path"]);
 }
 
-function rqupdate() // process folders/paths ajax result
+function ajax(ts)
 {
- var t= rq.responseText;
- var i= t.indexOf(ASEP);
- setpath(t.substring(0,i));
- FILES= t.substring(++i,t.length)
- init();
-}
-
-// menu handlers and shortcuts
-function ev_action_click(){menuclick();}
-function ev_jmlink_click(){menuclick();}
-
-function doshortcut(c)
-{
- switch(c)
- {
-  default: dostdshortcut(c); break;
- }
+ if(2!=ts.length) alert("wrong number of ajax results");
+ setpath(ts[0]);
+ jbyid("sel").innerHTML= ts[1];
 }
 
 )

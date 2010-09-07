@@ -1,21 +1,25 @@
 coclass'jlogin'
 coinsert'jhs'
 
-NB. customize by defining
-NB.  Nlogin_jlogin_
-NB.  goto_jlogin_
-NB.  LIMIT
+HBS=: 0 : 0
+login
+'<MSG>'
+jhtaba
+ jhtr 'user: '   ;'user' jht'';15
+ jhtr 'pasword: ';'pass'  jhtp'';15
+jhtabz
+)
 
-NB. goto defined to return desired page after successfull login
-NB. for example:
-NB.  create '';jpath'~temp\'
-NB.  example: jev_get_jfile_''
+login=: 0 : 0
+<h1>J login</h1>
+)
 
-Nlogin=: 0 : 0
-<h1>J login<h1>
+loggedin=: 0 : 0
+<h1>Logged in</h1>
 SECURITY! Logout when you are done (close browser or press logout).<br><br>
 )
 
+NB. does not work
 goto=: 3 : 0
 create_jijx_'  '
 )
@@ -23,18 +27,6 @@ create_jijx_'  '
 NB. login not allowed after LIMIT failures
 NB. jum sets to _ (multiple users)
 LIMIT=: 10
-
-B=: 0 : 0
-Nlogin
-'<MSG>'
-[{'user: ';user}
- {'password: ';pass}]
-)
-
-BIS=: 0 : 0
-user ht '';15
-pass htp'';15
-)
 
 CSS=: JS=: ''
 
@@ -70,10 +62,12 @@ logins=: logins,u,'/',p,LF
 if. (count<:LIMIT)*.(u-:USER)*.p-:PASS do.
  count=: 0
  SETCOOKIE_jhs_=: 1
- goto''
+ NB.! goto'' ??? jijx page in bad state and crashes
+ NB.! related to jev_get_jijx_? and leftover jlogin url?
+ jhr 'jlogin';(css CSS);'';loggedin
 else.
  count=: count+METHOD-:'post'
- b=.(B getbody BIS) hrplc 'MSG';getmessage''
+ b=. (jhbs HBS)hrplc 'MSG';getmessage''
  t=. hrtemplate rplc (LF,LF);LF,'Cache-Control: no-cache',LF,LF
  t=. t rplc (LF,LF);LF,'Set-Cookie: ',expires,LF,LF
  htmlresponse t hrplc'TITLE CSS JS BODY';'jlogin';(css CSS);(js JS);b

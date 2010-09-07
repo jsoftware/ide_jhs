@@ -1,80 +1,60 @@
 coclass'jdemo4'
 coinsert'jhs'
-demo=: 'jdemo4.ijs'
 
-B=:  0 : 0
-jma abc jijx jfile foo
- def goo
- ghi moo koo
-jmz ^^
-jdemo
-'<h1>Controls with javascript and CSS<h1>'
-'javascript: ' which ^^
-cb0  cb1             ^
-rad0 rad1            ^^
-sel                  ^^ 
-text                 ^^
-blue red
--
-openijs              ^^
-Ndesc  
-)
+HBS=: 0 : 0
+jhma''
+'abc'    jhmg'Abc';1;8
+ 'foo'   jhmab'do foo  d^' NB. d keyboard shortcut
+'def'    jhmg'Def';1;8
+ 'goo'   jhmab'do goo'
+'ghi'    jhmg'More stuff';1;8
+ 'moo'   jhmab'do moo'
+ 'koo'   jhmab'do koo'
+jhmz''
 
-BIS=: 0 : 0
-abc    hmg'Abc'
- jijx    hml'ijx';''
- jfile   hml'open';''
- foo    hmab'do task foo';''
-def    hmg'Def'
- goo    hmab'do task goo';''
-ghi    hmg'More stuff'
- moo    hmab'do moo stuff';''
- koo    hmab'do koo again';''
-
-which   '<span id="which">&nbsp;</span>'
-sel     hsel ('zero';'one';'two';'three';'four');1;0
-text    text
-blue    hb'color blue'
-red     hb'color red'
-rad0    hradio'radio one';'radgroup'
-rad1    hradio'radio two';'radgroup'
-cb0     hc'checkbox 0';'cbgroup'
-cb1     hc'checkbox 1';'cbgroup'
-jdemo   href'jdemo'
-openijs hopenijs'Open script: ';(PATH,'demo/',demo);demo;''
-)
-
-CSS=: 0 :0
-span.red{color:green;}
+jhh1'Controls with javascript and CSS'
+'javascript:'
+'which' jhspan''
+jhbr,jhbr
+'cb0'   jhckb'checkbox 0';'cbgroup';0
+'cb1'   jhckb'checkbox 1';'cbgroup';1
+jhbr
+'rad0'  jhradio'radio one';'radgroup';1
+'rad1'  jhradio'radio two';'radgroup';0
+jhbr
+'sel'   jhsel ('zero';'one';'two';'three';'four');1;0
+jhbr
+text
+jhbr
+'blue'  jhb'color blue'
+'red'   jhb'color red'
+jhbr
+desc  
+jhdemo''
 )
 
 text=: 0 : 0
-Now is the <span id="one" class="red">time</span>
-for all <span id="two" class="red">good</span>
+Now is the <span id="one" class="mark">time</span>
+for all <span id="two" class="mark">good</span>
 folk to come to the party.
 )
 
 create=: 3 : 0
-hr 'jdemo4';(css CSS);(js JS);B getbody BIS
+'jdemo4'jhr''
 )
 
-ev_flip_click=: 3 : 0
-hrajax (|.getv't1'),ASEP,(|.getv't2')
+jev_get=: create
+
+desc=: 0 : 0
+<br/>This page has a few controls with simple javascript event handlers.
 )
 
-jev_get=: create NB. browser get request
-
-Ndesc=: 0 : 0
-This page has a few controls with minimal javascript event handlers.
+CSS=: 0 :0
+span.mark{color:green;}
 )
 
 JS=: 0 : 0
 function show(){jbyid("which").innerHTML= JEV;}
-
-// menu hide/show
-function ev_abc_click(){menuclick();}
-function ev_def_click(){menuclick();}
-function ev_ghi_click(){menuclick();}
 
 // menu commands
 function ev_foo_click(){show();}
@@ -82,19 +62,20 @@ function ev_goo_click(){show();}
 function ev_moo_click(){show();}
 function ev_koo_click(){show();}
 
-// set text span element (by id) blue
-function ev_blue_click(){
+function ev_d_shortcut(){jbyid("which").innerHTML= "ev_d_shortcut";}
+
+function color(c)
+{
  show();
- jbyid("one").style.color= "blue";
- jbyid("two").style.color= "blue";
+ jbyid("one").style.color=c;
+ jbyid("two").style.color=c;
 }
 
-// set text span element (by id) blue
-function ev_red_click(){
- show();
- jbyid("one").style.color= "red";
- jbyid("two").style.color= "red";
-}
+// set text span elements blue
+function ev_blue_click(){color("blue");}
+
+// set text span elements red
+function ev_red_click(){color("red");}
 
 // radio button handlers
 function ev_rad0_click(){show();return true;}
@@ -109,4 +90,3 @@ function ev_sel_click()
  jbyid("which").innerHTML= JEV+" : "+jbyid("sel").selectedIndex;
 }
 )
-
