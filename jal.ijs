@@ -13,10 +13,10 @@ jhmz''
 '<h1>J Active Library - pacman - Package Manager<h1>'
 '<a href="http://www.jsoftware.com/jwiki/addons">www.jsoftware.com/jwiki/addons</a>'
 '<hr>'
-'status' jhb'status'
- 'update' jhb'update'
- 'notin'  jhb 'notin'
- 'inst'   jhb 'inst'
+jhtaba
+jhtr ('status'jhb'Status (as of last Update)');'update' jhb'Update Status'
+jhtr ('notin'jhb 'List Not Installed');'inst'jhb 'List Installed'
+jhtabz
 '<hr>'
 'result' jhdiv'<RESULT>'
 
