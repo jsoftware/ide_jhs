@@ -140,15 +140,11 @@ function getpostargs(ids)
 // app keyboard shortcuts
 
 document.onkeyup= kup;
-document.onkeypress= kpress;
+document.onkeypress= keypress;
 
-var jsc= 0, jsctoid= 0;
+var jsc= 0;
 
-// set shortcut state/timeout
-function jscset(){jscreset();jsctoid= setTimeout(jscreset,1000);jsc= 1;}
-
-// reset shortcut state/timeout
-function jscreset(){if(0!=jsctoid)clearTimeout(jsctoid);jsctoid=0;jsc=0;}
+function jscset(){jsc=1;}
 
 // page redefines to avoid std shortcuts
 // '2' shortcut implemented as ev_2_shortcut for each page
@@ -164,13 +160,19 @@ function jdostdsc(c)
  }
 }
 
-function kpress(ev)
+function keypress(ev)
 {
  var e=window.event||ev;
  var c=e.charCode||e.keyCode;
  var s= String.fromCharCode(c);
- if(!jsc) return true;
- jscreset();
+ if(!jsc)
+ {
+  //! if('function'==typeof keypresspage)
+  //!  return keypresspage(ev);
+  //! else
+   return true;
+ }
+ jsc=0;
  try{eval("ev_"+s+"_shortcut()");}
  catch(e){jdostdsc(s);}
  return false;
@@ -180,11 +182,10 @@ function kup(ev)
 {
  var e=window.event||ev;
  var c=e.keyCode;
- if(c==17)jscset();
  if(e.ctrlKey)
  {
-  if(c==190&&!e.shiftKey){jshortcut= 1; return false;}
-  if(c==38&&e.shiftKey&&'function'==typeof uarrow){uarrow();return false;} // noarrows
+  if(c==190){jscset();return false;}
+  if(c==38&&e.shiftKey&&'function'==typeof uarrow){uarrow();return false;}
   if(c==40&&e.shiftKey&&'function'==typeof darrow){darrow();return false;}
  }
  return true;
@@ -302,22 +303,52 @@ function jsetcaret(id,collapse)
  }
 }
 
-// text from html
-// &lt; etc. to char
-// <div> <br> <br/> (case insensitive) to LF
-// all other tags removed
-// assumes valid html with matching tags
-//! not correct or complete - <p> and unmatched tags
+/* contenteditable to/from text
+IE:
+ <BR>             <-> N (\n)
+ </P>              -> N
+ <P>&nbsp;</P      -> N (can not tell emtpy from 1 blank)
+ can have \r\n !
+
+Chrome:
+ <br>            <-> N
+ <div>            -> N
+ <div><br></div>  -> N
+ saw nested divs, but do not know how to get them
+ starting div so break on div rather than /div
+ 
+FF:
+ <br>            <-> N
+ has (and needs) <br> at end
+
+Portable rules (all case insensitive):
+ remove \r \n
+ <p>&nbsp;</p>    -> N
+ <div><br></div>  -> N
+ <br>            <-> N
+ </p>             -> N
+ </div>           -> N
+ always have <br> at end (read/write)
+ &lt;...         <-> < > & space
+*/
+
+// text from html - what about <br/>?
 function jtfromh(d)
 {
- d= d.replace(/<div>/gi,"\n");
- d= d.replace(/<br>/gi,"\n");
- d= d.replace(/<br\/>/gi,"\n");
- d= d.replace(/<\/?[^>]+(>|$)/g, ""); // remove all remaining tags
+ d= d.replace(/\r|\n/g,"");
+ d= d.replace(/<br><div>/g,"<div>"); //! chrome - kludge
+ d= d.replace(/<p>&nbsp;<\/p>|<div><br><\/div>|<br>|<\/p>|<div>/gi,"\n");
+ // d= d.replace(/<p>&nbsp;<\/p>/gi,"\n");
+ // d= d.replace(/<div><br><\/div>/gi,"\n");
+ // d= d.replace(/<br>/gi,"\n");
+ // d= d.replace(/<\/p>/gi,"\n");
+ // d= d.replace(/<div>/gi,"\n");
+ d= d.replace(/<\/?[^>]+(>|$)/g,""); // remove all remaining tags
  d= d.replace(/&lt;/g,"<");
  d= d.replace(/&gt;/g,">");
  d= d.replace(/&amp;/g,"&");
  d= d.replace(/&nbsp;/g," ");
+ if('\n'!=d[d.length-1]){d=d+"\n";}
  return d
 }
 
@@ -328,7 +359,7 @@ function jhfromt(d)
  d= d.replace(/>/g,"&gt;");
  d= d.replace(/&/g,"&amp;");
  d= d.replace(/ /g,"&nbsp;");
- d= d.replace(/\n/g,"<br/>");
+ d= d.replace(/\n/g,"<br>");
  return d
 }
 
@@ -380,4 +411,15 @@ function jgpbodymh()
 function jgpdivh(id){return document.getElementById(id).offsetHeight;}
 
 // get pixel end
+
+// debug
+
+// numbers from unicode
+function debcodes(t)
+{
+ r= "";
+ for(var i=0;i<t.length;++i)
+  r= r+" "+t.charCodeAt(i);
+ return r;
+}
 )

@@ -141,7 +141,7 @@ is unigue and name is the same across a set of radio buttons.
 9. autocomplete and wrap fail validator - but are necessary
 )
 
-JZWSPU8=: 226 128 139{a. NB. empty prompt kludge
+JZWSPU8=: 226 128 139{a. NB. empty prompt kludge - &#8203; \200B
 
 NB. J needs input - y is prompt - '' '   ' '      '
 input=: 3 : 0

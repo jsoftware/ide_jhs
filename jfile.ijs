@@ -35,7 +35,7 @@ jev_get=: 3 : 0
 if. 'open'-:getv'mid' do.
  ev_edit_click''
 else.
- create '';jpath'~temp\'
+ create '&nbsp;';jpath'~temp\'
 end.
 )
 

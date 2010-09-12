@@ -11,7 +11,7 @@ jhma''
  'save'    jhmab'save        s^'
  'saveas'  jhmab'save as...'
  'replace' jhmab'replace...'
-'style'    jhmg'style';1;6
+'style'    jhmg'style';1;8
  'ro'      jhmab'readonly    t^'
  'color'   jhmab'color       c^'
 jhjmlink''
@@ -121,7 +121,7 @@ p{margin:0;}
 )
 
 JS=: 0 : 0
-var ta,rep,readonly,color,saveasx,replx;
+var ta,rep,readonly,colorflag,saveasx,replx,toid=0;
 
 function evload() // body onload->jevload->evload
 {
@@ -133,6 +133,8 @@ function evload() // body onload->jevload->evload
  ro(0!=ce.innerHTML.length);
  ce.focus();
  jsetcaret("ijs",0);
+ colorflag=1;
+ color();
 }
 
 function ro(only)
@@ -169,42 +171,79 @@ function ev_replundo_click(){repl(reply.value,replx.value);}
 
 function ev_ro_click(){ro(readonly= !readonly);}
 
-function colcs(d) {return "\0001"+d+"\0000";}  // control structure
-function colnb(d) {return "\0002"+d+"\0000";}  // nb
-function collit(d){return "\0003"+d+"\0000";} // literal
-
-var controls= RegExp("(assert|break|continue|for|if|do|else|elseif|end|return|select|case|fcase|throw|try|catch|while|whilest)\.","g");
-
-//! coloring needs lots of work
-// literals with '' and not closed
-// for_abc. not colored
-// consider doing coloring from kpress set timer event
-//  should work well except for nasty problem of preserving caret
-// loses focus and caret
 function ev_color_click()
 {
- var t;
- color= !color;
+ colorflag=!colorflag;
+ color();
+}
+
+function colcs(d) {return "\u0001"+d+"\u0000";}  // control structure
+function colnb(d) {return "\u0002"+d+"\u0000";}  // nb
+function collit(d){return "\u0003"+d+"\u0000";} // literal
+
+var controls= RegExp("(assert|break|continue|for|if|do|else|elseif|end|return|select|case|fcase|throw|try|catch|while|whilest)\\.","g");
+
+var markcaret="&#8203;"; // \u200B
+
+//! coloring needs lots of work
+// literals not closed - for_abc. - etc.
+// caret is preserved by
+//  inserting ZWSP, manipulating, ZWSP to span id, selecting span id
+// recolor or uncolor
+function color()
+{
+ var t,sel,rng,mark;
+ ce.focus();
+ try // mark caret location with ZWSP
+ {
+  if(window.getSelection)
+  {
+   sel= window.getSelection();
+   rng= sel.getRangeAt(0);
+   rng.collapse(true);
+   sel.removeAllRanges();
+   sel.addRange(rng);
+   document.execCommand("insertHTML",false,markcaret);
+  }
+  else
+  {
+   rng= document.selection.createRange();
+   rng.collapse(true);
+   rng.pasteHTML(markcaret);
+  }
+  mark=1;
+ }catch(e){mark=0;}
+
  t= ce.innerHTML;
- if(color)
+ if(colorflag)
  {
   t= jtfromh(t);
   t= t.replace(/NB\..*/g, colnb)
   t= t.replace(controls,  colcs);
   t= t.replace(/'[^']*'/g, collit);
   t= jhfromt(t);
-  t= t.replace(/\0000/g, "</span>");
-  t= t.replace(/\0001/g, "<span style=\"color:red\">");
-  t= t.replace(/\0002/g, "<span style=\"color:green\">");
-  t= t.replace(/\0003/g, "<span style=\"color:blue\">");
+  t= t.replace(/\u0009/,  "<span id=\"selection\"></span>");
+  t= t.replace(/\u0000/g, "</span>");
+  t= t.replace(/\u0001/g, "<span style=\"color:red\">");
+  t= t.replace(/\u0002/g, "<span style=\"color:green\">");
+  t= t.replace(/\u0003/g, "<span style=\"color:blue\">");
  }
  else
  {
   t= t.replace(/<span\/?[^>]+(>|$)/gi,"");
   t= t.replace(/<\/span>/gi,"");
  }
+ t= t.replace(/\u200B/,"<span id=\"caret\"></span>");
  ce.innerHTML= t;
- jsetcaret("ijs",0);
+ if(mark)jsetcaret("caret",0);
+}
+
+function ev_ijs_keypress()
+{
+ if(0==jevev.charCode) return true; // ignore arrows,bs,del,enter,etc.
+ if(toid!=0)clearTimeout(toid);
+ if(colorflag)toid=setTimeout(color,100);
+ return true;
 }
 
 function ajax(ts)
@@ -221,7 +260,7 @@ function ajax(ts)
 function ev_ijs_enter(){return true;}
 
 function ev_t_shortcut(){jscdo("ro");}
-function ev_c_shortcut(){jscdo("color");}
+function ev_c_shortcut(){ev_color_click();}
 function ev_r_shortcut(){jscdo("runw");}
 function ev_s_shortcut(){jscdo("save");}
 function ev_2_shortcut(){ce.focus();window.scrollTo(0,0);jsetcaret("ijs",0);}

@@ -343,6 +343,7 @@ jhec=: 4 : 0
 t=. '<div id="<ID>" contenteditable="true"',jeditatts
 t=. t,'style="white-space:nowrap;" '
 t=. t,'onkeydown="return jev(''<ID>'',''enter'',event)"'
+t=. t,'onkeypress="return jev(''<ID>'',''keypress'',event)"'
 t=. t,'>',y,'</div>'
 t hrplc 'ID';x
 )

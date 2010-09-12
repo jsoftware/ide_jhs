@@ -21,7 +21,6 @@ htmlresponse d,~gsrchead rplc '<TYPE>';x;'<LENGTH>';":#d
 )
 
 jev_getsrcfile=: 3 : 0
-smoutput'getsrcfile: ',y
 if. y-:'favicon.ico' do.
  favicon 0 
 elseif. '.js'-:_3{.y do.

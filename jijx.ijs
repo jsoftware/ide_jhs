@@ -264,6 +264,8 @@ function keyp(){jbyid("kbsp").style.display= "block";scrollz();return true;} // 
 function ev_up_click(){uarrow();}
 function ev_dn_click(){darrow();}
 
+function ev_log_keypress(){return true;}
+
 // log enter - contenteditable
 // run line with caret
 // do not know how to handle multiple-line selection - ignore selection for now
@@ -281,6 +283,7 @@ function ev_log_enter()
   rng.setEndAfter(rng.endContainer);
   t= rng.toString();
   t= t.replace(/\u00A0/g," "); // &nbsp;
+
   // last line exec vs old line recall
   if(null!=p)
   {
@@ -325,8 +328,6 @@ function ev_log_enter()
  }
  else
  {
-  try{t=jtfromh(jbyid("prompt").innerHTML);}
-  catch(e){;}
   addrecall(t);
   jdo(t,true,[]);
  }

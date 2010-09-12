@@ -22,11 +22,11 @@ text=: 0 : 0
 J701 - Copyright 1994-2010 Jsoftware Inc.
 <br>Engine: <ENGINE>
 <br><br><span class="h">keyboard shortcuts</span><br>
-ctrl escapes next character to be a shortcut.<br/>
-Press ctrl, release it, press j - links to ijx page.<br/>
+ctrl+. escapes next character to be a shortcut.<br/>
+For example, ctrl+. then j links to ijx page.<br/>
 Shortcuts are documented on the right in a menu item.<br/><br/>
 
-1 shortcut (ctrl then 1) sets focus on menu.<br/>
+1 shortcut (ctrl+. then 1) sets focus on menu.<br/>
 2 shortcut sets focus to page default.
 
 <br><br><span class="h">jijx page</span><br>
