@@ -36,7 +36,7 @@ function jevload()
 
 // event handler for id type - id is mid[*sid]
 function jev(id,type,event){
- menuhide(); // hide menu dropdown
+ jmenuhide(event); // hide menu dropdown
  jevev= window.event||event;
  var i= id.indexOf('*');
  jform.jid.value  = id;
@@ -44,7 +44,6 @@ function jev(id,type,event){
  jform.jmid.value = (-1==i)?id:id.substring(0,i);
  jform.jsid.value = (-1==i)?"":id.substring(++i,id.length);
  if(type=='enter'&&13!=jevev.keyCode) return true;
- if(type=='menuclick') return menuclick();
  return jevdo(id);
 }
 
@@ -165,13 +164,7 @@ function keypress(ev)
  var e=window.event||ev;
  var c=e.charCode||e.keyCode;
  var s= String.fromCharCode(c);
- if(!jsc)
- {
-  //! if('function'==typeof keypresspage)
-  //!  return keypresspage(ev);
-  //! else
-   return true;
- }
+ if(!jsc)return true;
  jsc=0;
  try{eval("ev_"+s+"_shortcut()");}
  catch(e){jdostdsc(s);}
@@ -206,24 +199,117 @@ function jfindmenu(n)
  return last;
 }
 
+// tar is current node
+// c is 37 38 39 40 - left up right down
+// navigate to node based on c and focus
+function jmenunav(tar,c)
+{
+ var i,n,nn,nc,node,cnt=0,last,len,cl,m=[];
+ //! alert(tar.id+" "+" "+tar.getAttribute("class")+" "+c);
+ var nodes=document.getElementsByTagName("a");
+ len=nodes.length
+ for(i=0;i<len;++i)
+ {
+  node=nodes[i];
+  cl=node.getAttribute("class");
+  if("hmg"==cl||"hml"==cl||"hmab"==cl)
+  {
+   m[m.length]=node;
+   if(tar==node)n=i;
+  }
+ }
+ len=m.length;
+ nn=m[n];                        // nn node
+ nc= m[n].getAttribute("class"); // nc class
+ if(c==39) // right
+ {
+  for(i=n+1;i<len;++i)
+   if(jmenunavfocushmg(m,i))return;
+  jmenunavfocushmg(m,0); 
+ }
+ else if(c==37) // left
+ {
+  for(n;n>=0;--n) // back n up to current group
+   if(1==jmenunavinfo(m,n))break;
+  for(i=n-1;i>=0;--i)
+   if(jmenunavfocushmg(m,i))return;
+  for(i=len-1;i>=0;--i) // focus last hmg
+   if(jmenunavfocushmg(m,i))return;
+ }
+ else if(c==38) // up
+ {
+  if("hmg"==nc) return;
+  if(jmenunavfocus(m,n-1))return;
+  else
+  {
+   for(i=n;i<len;++i) // forward to hmg then back one
+    if(2!=jmenunavinfo(m,i))break;
+   jmenunavfocus(m,i-1);
+   return;
+  }
+ }
+ else if(c==40) // dn
+ {
+  if("hmg"==nc)
+  {
+   jmenuhide();
+   nn.focus();
+   jmenushow(nn);
+  }
+  if(jmenunavfocus(m,n+1))return;
+  else
+  {
+   for(i=n;i>=0;--i) // back up to hmg then forward 1
+    if(1==jmenunavinfo(m,i))break;
+   jmenunavfocus(m,i+1);
+   return;
+  }
+ }
+}
+
+// focus,show if hmg - return 1 if focus is done
+function jmenunavfocushmg(m,n)
+{
+ if(1!=jmenunavinfo(m,n))return 0;
+ m[n].focus();jmenushow(m[n]);
+ return 1;
+}
+
+// focus if hml/jmab - return 1 if focus is done
+function jmenunavfocus(m,n)
+{
+  if(2!=jmenunavinfo(m,n))return 0;
+  m[n].focus();
+  return 1;
+}
+
+// return m[n] info - 0 none, 1 hmg, 2 hml or hmab
+function jmenunavinfo(m,n)
+{
+ if(n==m.length)return 0;
+ return ("hmg"==m[n].getAttribute("class"))?1:2
+}
+
 // activate menu group n
 function jactivatemenu(n)
 {
- menuhide();
- window.scrollTo(0,0);
+ jmenuhide();
+ //! window.scrollTo(0,0);
  var node= jfindmenu(n);
  if('undefined'==typeof node) return;
  node.focus(); 
- jform.jmid.value= node.id;
 }
 
 // menu
 var menublock= null; // menu ul element with display:block
 var menulast= null;  // menu ul element just hidden 
 
-function menuclick()
+function jmenuclick(ev)
 {
- var id= jform.jmid.value;
+ jmenuhide(ev);
+ var e=window.event||ev;
+ var tar=(typeof e.target=='undefined')?e.srcElement:e.target;
+ var id=tar.id;
  var idul= id+"_ul";
  jbyid(id).focus(); // required on mac
  if(jbyid(idul).style.display=="block")
@@ -241,7 +327,16 @@ function menuclick()
  }
 }
 
-function menuhide()
+function jmenushow(node)
+{
+ jmenuhide();
+ var id=node.id;
+ var idul= id+"_ul";
+ menublock= jbyid(idul);
+ menublock.style.display= "block";
+}
+
+function jmenuhide()
 {
  if(tmenuid!=0) clearTimeout(tmenuid);
  tmenuid= 0;
@@ -258,30 +353,43 @@ function menuhide()
 
 var tmenuid= 0;
 
-function menublur()
+function jmenublur(ev)
 {
  if(tmenuid!=0) clearTimeout(tmenuid);
- tmenuid= setTimeout(menuhide,250)
+ tmenuid= setTimeout(jmenuhide,250)
  return true;
 }
 
-function menufocus(ev)
+function jmenufocus(ev)
 {
  if(tmenuid!=0) clearTimeout(tmenuid);
  tmenuid= 0;
  return true;
 }
 
-/*
-function jmenukey(ev)
+function jmenukeydown(ev)
 {
  var e=window.event||ev;
  var c=e.keyCode;
- if(c==38){jbyid("tool").focus(); return false;}
- if(c==40){jbyid("studio").focus(); return false;}
+ return(c>36&&c<41)?false:true;
+}
+
+function jmenukeypress(ev)
+{
+ var e=window.event||ev;
+ var c=e.keyCode;
+ return(c>36&&c<41)?false:true;
+}
+
+function jmenukeyup(ev)
+{
+ var e=window.event||ev;
+ var c=e.keyCode;
+ if(c<37||c>40)return false;
+ var tar=(typeof e.target=='undefined')?e.srcElement:e.target;
+ jmenunav(tar,c);
  return true;
 }
-*/
 
 // menu end
 
@@ -335,8 +443,10 @@ Portable rules (all case insensitive):
 // text from html - what about <br/>?
 function jtfromh(d)
 {
+ //! t=d;
  d= d.replace(/\r|\n/g,"");
- d= d.replace(/<br><div>/g,"<div>"); //! chrome - kludge
+ d= d.replace(/<\/?[sS]\/?[^>]+(>|$)/g,""); // remove <span...> </span> tags
+ d= d.replace(/<br><div>/gi,"<div>"); //! chrome - kludge
  d= d.replace(/<p>&nbsp;<\/p>|<div><br><\/div>|<br>|<\/p>|<div>/gi,"\n");
  // d= d.replace(/<p>&nbsp;<\/p>/gi,"\n");
  // d= d.replace(/<div><br><\/div>/gi,"\n");
@@ -349,15 +459,16 @@ function jtfromh(d)
  d= d.replace(/&amp;/g,"&");
  d= d.replace(/&nbsp;/g," ");
  if('\n'!=d[d.length-1]){d=d+"\n";}
+ //! alert(t+"\nX\n"+d);
  return d
 }
 
 // inverse jtfromh
 function jhfromt(d)
 {
+ d= d.replace(/&/g,"&amp;");
  d= d.replace(/</g,"&lt;");
  d= d.replace(/>/g,"&gt;");
- d= d.replace(/&/g,"&amp;");
  d= d.replace(/ /g,"&nbsp;");
  d= d.replace(/\n/g,"<br>");
  return d

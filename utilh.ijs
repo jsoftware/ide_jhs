@@ -1,10 +1,13 @@
 NB. html templates and utilities
 coclass'jhs'
 
+NB. body css affects menu
 NB. menu position:fixed
 NB. .menu{width:100%;position:fixed;background:#eee;
 NB.  margin-top:-20px;margin-left:-10px;padding-left:10px;padding-top:3px;padding-bottom:3px;
 NB. }
+NB. menu position scroll
+NB. .menu{width:100%;}
 
 NB. menu fixed font kludges shortcut right align
 CSSCORE=: 0 : 0
@@ -12,10 +15,19 @@ CSSCORE=: 0 : 0
 *.jcode{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;white-space:pre;}
 *.hab:hover{cursor:pointer;color:red;}
 *.hab{text-decoration:none;}
-*.hmg:hover{cursor:pointer;color:red;}
+*.hmab:hover{cursor:pointer;}
+*.hmab{text-decoration:none;color:black;}
+*.hmg:hover{cursor:pointer;}
+*.hmg:visited{color:black;}
+*.hmg{color:black;}
 *.hmg{text-decoration:none;}
+*.hml{color:black;}
+*.hml:visited{color:black;}
 *.hsel{background-color:buttonface;font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
-.menu{width:100%;background:#eee;}
+body{margin-top:0;}
+.menu{width:100%;position:fixed;background:#eee;
+ margin-left:-10px;padding-left:10px;padding-top:3px;padding-bottom:3px;
+}
 .menu li{
  display:block;white-space:nowrap;
  padding:2px;color:#000;background:#eee;
@@ -286,6 +298,14 @@ t=. '<input type="hidden" id="<ID>" name="<ID>" value="<VALUE>">'
 t hrplc 'ID VALUE';x;y
 )
 
+jmon=: 3 : 0
+t=.   ' onblur="return jmenublur(event);"'
+t=. t,' onfocus="return jmenufocus(event);"'
+t=. t,' onkeyup="return jmenukeyup(event);"'
+t=. t,' onkeydown="return jmenukeydown(event);"'
+    t,' onkeypress="return jmenukeypress(event);"'
+)
+
 NB. menu group button
 NB. id jmg 'text';decor;width
 NB. decor 0 for '' and 1 for &#9660; (dropdown)
@@ -295,9 +315,8 @@ text=. text,>dec{'';'&#9660;'
 t=. >(MSTATE=1){'</ul></span>';''
 t=. t,'<span style="z-index:<INDEX>";>'
 t=. t,'<span><a href="#" id="<ID>" name="<ID>" class="hmg"'
-t=. t,' onblur="return menublur();"'
-t=. t,' onfocus="return menufocus();"'
-t=. t,' onclick="return jev(''<ID>'',''menuclick'',event)"'
+t=. t,' onclick="return jmenuclick(event);"'
+t=. t,jmon''
 t=. t,'><VALUE>&nbsp;</a></span>'
 t=. t,'<ul id="<ID>_ul">'
 t=. t hrplc 'ID VALUE INDEX';x;text;":MINDEX
@@ -323,7 +342,7 @@ jhmab=: 4 : 0
 't s'=.jhmx y
 t=. (JMWIDTH{.t),s
 t=. x jhab t rplc ' ';'&nbsp;'
-t=. t rplc 'class="hab"';'class="hab" onblur="return menublur();" onfocus="return menufocus();"'
+t=. t rplc 'class="hab"';'class="hmab"',jmon''
 '<li>',t,'</li>'
 )
 
@@ -334,8 +353,9 @@ value=. t
 text=. ((0>.JMWIDTH-#value)#' '),s
 value=. value rplc ' ';'&nbsp;'
 text=. text rplc ' ';'&nbsp;'
-t=.   '<li><a href="<REF>" onclick="return menuhide();"'
-t=. t,' onblur="return menublur();" onfocus="return menufocus();"><VALUE></a><TEXT></li>'
+t=.   '<li><a href="<REF>" class="hml" onclick="return jmenuhide();"'
+t=. t,jmon''
+t=. t,'><VALUE></a><TEXT></li>'
 t hrplc 'REF VALUE TEXT';x;value;text
 )
 
@@ -407,7 +427,7 @@ MSTATE=:1[MINDEX=:100
 
 jhmz=: 3 : 0
 MSTATE=:0
-'</ul></span></div><br><hr>'
+'</ul></span></div><br><br>'
 )
 
 jhform=: 3 : 0

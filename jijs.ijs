@@ -130,6 +130,7 @@ function evload() // body onload->jevload->evload
  ta= jbyid("textarea");
  saveasx=jbyid("saveasx");
  replx=jbyid("replx");
+ reply=jbyid("reply");
  ro(0!=ce.innerHTML.length);
  ce.focus();
  jsetcaret("ijs",0);
@@ -240,7 +241,7 @@ function color()
 
 function ev_ijs_keypress()
 {
- if(0==jevev.charCode) return true; // ignore arrows,bs,del,enter,etc.
+ if(jsc||0==jevev.charCode) return true; // ignore shortcuts,arrows,bs,del,enter,etc.
  if(toid!=0)clearTimeout(toid);
  if(colorflag)toid=setTimeout(color,100);
  return true;
