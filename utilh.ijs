@@ -392,7 +392,9 @@ t hrplc 'ID VALUE SET CHECKED';x;value;set;checked
 )
 
 jht=: 4 : 0
-t=. '<input type="text" id="<ID>" name="<ID>" class="ht"',jeditatts,'value="<VALUE>" size="<SIZE>" onkeydown="return jev(''<ID>'',''enter'',event)" >'
+t=.   '<input type="text" id="<ID>" name="<ID>" class="ht"',jeditatts,'value="<VALUE>" size="<SIZE>"'
+t=. t,' onkeydown="return jev(''<ID>'',''enter'',event)"'
+t=. t,'>'
 t hrplc 'ID VALUE SIZE';x;y
 )
 
@@ -413,6 +415,7 @@ t=.   'jmlink'jhmg'link';1;7
 t=. t,'jijx'  jhml'ijx    j^'
 t=. t,'jfile' jhml'file   l^'
 t=. t,'jijs'  jhml'ijs    n^'
+t=. t,'jfif'  jhml'fif    f^'
 t=. t,'jal'   jhml'pacman'
 
 t=. t,>(-.0-:gethv'Cookie:'){' ';'jlogin'jhml'logout'

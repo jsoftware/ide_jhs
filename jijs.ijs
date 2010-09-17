@@ -132,8 +132,11 @@ function evload() // body onload->jevload->evload
  replx=jbyid("replx");
  reply=jbyid("reply");
  ro(0!=ce.innerHTML.length);
- ce.focus();
- jsetcaret("ijs",0);
+ if(!readonly)
+ {
+  ce.focus();
+  jsetcaret("ijs",0);
+ }
  colorflag=1;
  color();
 }
@@ -193,27 +196,30 @@ var markcaret="&#8203;"; // \u200B
 // recolor or uncolor
 function color()
 {
- var t,sel,rng,mark;
- ce.focus();
- try // mark caret location with ZWSP
+ var t,sel,rng,mark=0;
+ if(!readonly) // IE readonly caret stuff messes up menu vs border 
  {
-  if(window.getSelection)
+  ce.focus();
+  try // mark caret location with ZWSP
   {
-   sel= window.getSelection();
-   rng= sel.getRangeAt(0);
-   rng.collapse(true);
-   sel.removeAllRanges();
-   sel.addRange(rng);
-   document.execCommand("insertHTML",false,markcaret);
-  }
-  else
-  {
-   rng= document.selection.createRange();
-   rng.collapse(true);
-   rng.pasteHTML(markcaret);
-  }
-  mark=1;
- }catch(e){mark=0;}
+   if(window.getSelection)
+   {
+    sel= window.getSelection();
+    rng= sel.getRangeAt(0);
+    rng.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(rng);
+    document.execCommand("insertHTML",false,markcaret);
+   }
+   else
+   {
+    rng= document.selection.createRange();
+    rng.collapse(true);
+    rng.pasteHTML(markcaret);
+   }
+   mark=1;
+  }catch(e){;}
+ }
 
  t= ce.innerHTML;
  if(colorflag)

@@ -43,6 +43,7 @@ function jev(id,type,event){
  jform.jtype.value= type;
  jform.jmid.value = (-1==i)?id:id.substring(0,i);
  jform.jsid.value = (-1==i)?"":id.substring(++i,id.length);
+ if(jevev.type=='keydown'&&27==jevev.keyCode)return false; //! IE ignore esc
  if(type=='enter'&&13!=jevev.keyCode) return true;
  return jevdo(id);
 }
@@ -159,6 +160,7 @@ function jdostdsc(c)
  }
 }
 
+// IE/FF see esc etc but Chrome/Safari do not
 function keypress(ev)
 {
  var e=window.event||ev;
@@ -180,6 +182,10 @@ function kup(ev)
   if(c==190){jscset();return false;}
   if(c==38&&e.shiftKey&&'function'==typeof uarrow){uarrow();return false;}
   if(c==40&&e.shiftKey&&'function'==typeof darrow){darrow();return false;}
+ }
+ if(c==27&&!e.shiftKey&&!e.altKey)
+ {
+  jsc=!jsc;return !jsc;
  }
  return true;
 }
