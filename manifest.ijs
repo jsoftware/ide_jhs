@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.20'
+VERSION=: '1.0.21'
 
 FILES=: 0 : 0
 history.txt
@@ -15,6 +15,7 @@ core.ijs
 jal.ijs
 jbinfo.ijs
 jdemo.ijs
+jfif.ijs
 jfile.ijs
 jfilesrc.ijs
 jgcp.ijs

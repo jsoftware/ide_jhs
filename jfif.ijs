@@ -10,13 +10,16 @@ jhmz''
 
 'what'   jht'';20
 'find'   jhb'Find'
-'<br>'
+jhbr
 'context'jhsel('zero';'one';'two';'three';'four');1;0
-'<br>'
+jhbr
 'type'   jhsel('zero';'one';'two';'three';'four');1;0
-'<br>'
+jhbr
 'where'  jhsel('zero';'one';'two';'three';'four');1;0
-'<br>'
+jhbr
+'nameonly'jhckb'File names only';'nameonly';0
+jhbr
+'flags'  jhh''
 'area'   jhec'<RESULT>'
 )
 
@@ -26,23 +29,41 @@ create=: 3 : 0
 
 jev_get=: create
 
+NB.! ev_find_click=: 3 : 'jhrajax ":>:6?49'
+
 ev_find_click=: 3 : 0
+fifinit''
+flags=. ".getv'flags'
 FIFWHAT=: getv'what'
 FIFTYPE=: 'All' NB. etype
 FIFDIR=: 'temp'   NB. edir
 FIFCONTEXTNDX=: 0 NB. ". econtext_select
 FIFCASE=: 0       NB. ". case
-FIFNAMEONLY=: 1   NB.  ". file names only
+FIFNAMEONLY=: {.flags
 FIFREGEX=: 0      NB. ". regex
 FIFSUBDIR=: 0     NB. ". subdir
 
-try. 
- fiff_find_button''
-catch.
- create 'finding: ',13!:12''
-end.
-create 'found some'
+fiff_find_button''
+jhrajax jhfroma >FIFNAMEONLY{FIFFOUND;FIFFOUNDFILES
 )
+
+ev_nameonly_click=: 3 : 0
+FIFNAMEONLY=: ".getv'nameonly'
+create jhfroma >FIFNAMEONLY{FIFFOUND;FIFFOUNDFILES
+)
+
+JS=: 0 : 0
+function ev_nameonly_click(){return true;}
+
+function ev_find_click()
+{
+ jbyid("flags").value=jbyid("nameonly").checked?1:0;
+ jdoh(["what","context","type","where","flags"]);
+}
+
+function ajax(ts){jbyid("area").innerHTML=ts[0];}
+)
+
 
 NB. hacked version of j602 fif
 
@@ -543,8 +564,6 @@ else.
 end.
 )
 ffss=: 3 : 0
-smoutput'ffss'
-
 RX=: FIFREGEX    
 
 if. FIFCASE=0 do.
@@ -552,9 +571,7 @@ if. FIFCASE=0 do.
 else.
   what=. FIFWHAT
 end.
-
 fls=. ffgetfiles''
-smoutput fls
 if. 0 e. #fls do. '' return. end.
 
 if. 0=ffssinit what do. '' return. end.
@@ -572,7 +589,6 @@ if. FIFFRET=CR do.
 end.
 
 while. #dr do.
-  smoutput >{.dr NB.!
   dat=. read fl=. >{.dr
   dr=. }.dr
   if. dat -: _1 do. msk=. msk,0 continue. end.
@@ -667,7 +683,6 @@ end.
 if. 0 = #dirs do.
   finfo 'Folder not found' return.
 end.
-
 r=. ''
 dirs=. fullname each dirs
 
@@ -913,7 +928,7 @@ rem form end;
 )
 fif_run=: 3 : 0
 getfoldernames''
-FIFFOLDERS=: c
+FIFFOLDERS=: 2 {."1 USERFOLDERS
 if. wdifopen 'fif' do.
   wd 'psel fif'
   id=. TABNDX pick 'pwhat';'what';'hwhat'
@@ -1523,18 +1538,29 @@ txt=. txt rplc '>';'&gt;'
 
 NB. hacked defines to let jhs run fif
 IFWINNT=: 0
-PATHSEP_j_=: '/'
+IFWIN32=: 0
+PATHSEP=: '/'
 TABNDX=: 1
 
+SYSTEMFOLDERS=: SystemFolders_j_
+USERFOLDERS=: UserFolders_j_
+
+fifinit=: 3 : 0
+getfoldernames''
+FIFFOLDERS=: 2 {."1 USERFOLDERS
 FIFFOLDERS=: SystemFolders_j_
+fif_rundef''
+)
 
 fifread=: 3 : 0
 ''
 )
 
 fifshowfind=: 3 : 0
-smoutput 'found'
-smoutput FIFFOUNDFILES
+FIFFOUNDFILES=: ''
+if. 0=#FIFFOUND do. return. end.
+j=. 0, +/\ 2 + }: #&> FIFLINES
+FIFFOUNDFILES=: }: ; j {<;.2 FIFFOUND,LF
 )
 
 finfo=: smoutput
