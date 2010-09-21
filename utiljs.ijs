@@ -118,6 +118,57 @@ function jdo(sentence,log,ids)
  rq.send(getpostargs(ids));
 }
 
+//! kill off jdoh when everyone converted to jdoa
+
+// ajax standard handler as provided by framework (j and js)
+//  ev_mid_type() -> jdoa(data)
+//   -> ev_mid_type (getv'jdata') -> jhrajax (JASEP delimited responses)
+//      -> jdor -> ev_mid_type_ajax(ts)
+//       ts is array of JASEP delimited responses
+
+// send ajax request to J
+// data is JASEP delimited data to send 
+function jdoa(data)
+{
+ if(0!=rqstate){alert("busy - wait for previous request to finish");return;}
+ rq= newrq();
+ rq.onreadystatechange= jdor;
+ rq.open("POST",jform.jlocale.value,true); // asynch
+ jform.jdo.value= jevsentence;
+ jform.jajax.value= true;
+ var t="";
+ t+="jdo="+jform.jdo.value;
+ t+="&jmid="+jform.jmid.value;
+ t+="&jsid="+jform.jsid.value;
+ t+="&jtype="+jform.jtype.value;
+ t+="&jdata="+encode(data);
+ rq.send(t);
+}
+
+// recv ajax response from J -> ev_mid_type_ajax(ts)
+function jdor()
+{
+ rqstate= rq.readyState;
+ if(rqstate==4)
+ {
+  if(200!=rq.status)
+   alert("ajax request failed - see jijx");
+  else
+  {
+   var d=rq.responseText.split(JASEP);
+   var f="ev_"+jform.jmid.value+"_"+jform.jtype.value+"_ajax(d)";
+   try{eval(f)}catch(e){alert(f+" failed");}
+  }
+  rqstate= 0;
+  busy= 0;
+ }
+}
+
+function encode(d)
+{
+  return(encodeURIComponent(d)).replace("/%20/g","+");
+}
+
 // ajax request - ids is array of form elements (names) for post
 function jdoh(ids){jdo(jevsentence,false,ids);}
 
@@ -154,9 +205,10 @@ function jdostdsc(c)
  {
   case '1': jactivatemenu('1'); break;
   case 'j': location="jijx";  break;
-  case 'l': location="jfile"; break;
+  case 'f': location="jfile"; break;
   case 'h': location="jhelp"; break;
-  case 'n': location="jijs"; break;
+  case 'J': location="jijs"; break;
+  case 'F': location="jfif"; break;
  }
 }
 
@@ -482,6 +534,17 @@ function jhfromt(d)
 
 function jshow(id){jbyid(id).style.display="block";}
 function jhide(id){jbyid(id).style.display="none";}
+
+function jdlgshow(id,focus)
+{
+ if(jbyid(id).style.display=="block")
+  jhide(id);
+ else
+ {
+  jshow(id);
+  jbyid(focus).focus();
+ }
+}
 
 // get pixel... - sizing/resizing
 

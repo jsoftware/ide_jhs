@@ -93,6 +93,10 @@ t=. '%',each t
 y rplc ,t,.d
 )
 
+jurlencode=: 3 : 0
+,'%',.(16 16#:a.i.y){'0123456789ABCDEF'
+)
+
 jmarka=:     '<!-- j html output a -->'
 jmarkz=:     '<!-- j html output z -->'
 jmarkc=: #jmarka
@@ -368,6 +372,26 @@ t=. t,'>',y,'</div>'
 t hrplc 'ID';x
 )
 
+jhecleft=: 4 : 0
+t=. '<div id="<ID>" contenteditable="true"',jeditatts
+t=. t,'style="white-space:nowrap;float:left;" '
+t=. t,'onkeydown="return jev(''<ID>'',''enter'',event)"'
+t=. t,'onkeypress="return jev(''<ID>'',''keypress'',event)"'
+t=. t,' tabindex="-1"'
+t=. t,'>',y,'</div>'
+t hrplc 'ID';x
+)
+
+jhecright=: 4 : 0
+t=. '<div id="<ID>" contenteditable="true"',jeditatts
+t=. t,'style="white-space:nowrap;right:left;" '
+t=. t,'onkeydown="return jev(''<ID>'',''enter'',event)"'
+t=. t,'onkeypress="return jev(''<ID>'',''keypress'',event)"'
+t=. t,'>',y,'</div>'
+t hrplc 'ID';x
+)
+
+
 jeditatts=: ' autocomplete="off" autocapitalize="off" spellcheck="false" '
 
 jhb=: 4 : 0
@@ -375,6 +399,7 @@ t=. '<input type="submit" id="<ID>" name="<ID>" value="<VALUE>" class="hb" oncli
 t hrplc 'ID VALUE';x;y
 )
 
+NB. checkbox control
 jhckb=: 4 : 0
 'value set checked'=. y
 checked=. >checked{'';'checked="checked"'
@@ -383,11 +408,30 @@ t=. t,' onclick="return jev(''<ID>'',''click'',event)"/><label for="<ID>"><VALUE
 t hrplc 'ID VALUE SET CHECKED';x;value;set;checked
 )
 
+NB. checkbox control with no event call
+jhckbne=: 4 : 0
+'value set checked'=. y
+checked=. >checked{'';'checked="checked"'
+t=.   '<input type="checkbox" id="<ID>" value="<ID>" class="hcb" name="<SET>" <CHECKED>'
+t=. t,' /><label for="<ID>"><VALUE></label>'
+t hrplc 'ID VALUE SET CHECKED';x;value;set;checked
+)
+
+NB radio control
 jhradio=: 4 : 0
 'value set checked'=. y
 checked=. >checked{'';'checked="checked"'
 t=.   '<input type="radio" id="<ID>" value="<ID>" class="<CLASS>" name="<SET>" <CHECKED>'
 t=. t,' onclick="return jev(''<ID>'',''click'',event)"/><label for="<ID>"><VALUE></label>'
+t hrplc 'ID VALUE SET CHECKED';x;value;set;checked
+)
+
+NB radio control with no event call
+jhradio=: 4 : 0
+'value set checked'=. y
+checked=. >checked{'';'checked="checked"'
+t=.   '<input type="radio" id="<ID>" value="<ID>" class="<CLASS>" name="<SET>" <CHECKED>'
+t=. t,' /><label for="<ID>"><VALUE></label>'
 t hrplc 'ID VALUE SET CHECKED';x;value;set;checked
 )
 
@@ -412,14 +456,13 @@ t hrplc 'ID DATA';x;y
 NB. J ide link menu
 jhjmlink=: 3 : 0
 t=.   'jmlink'jhmg'link';1;7
-t=. t,'jijx'  jhml'ijx    j^'
-t=. t,'jfile' jhml'file   l^'
-t=. t,'jijs'  jhml'ijs    n^'
-t=. t,'jfif'  jhml'fif    f^'
+t=. t,'jijx'  jhml'ijx     j^'
+t=. t,'jfile' jhml'fileman f^'
+t=. t,'jijs'  jhml'ijs     J^'
+t=. t,'jfif'  jhml'fif     F^'
 t=. t,'jal'   jhml'pacman'
-
 t=. t,>(-.0-:gethv'Cookie:'){' ';'jlogin'jhml'logout'
-t=. t,'jhelp' jhml'help h^'
+t=. t,'jhelp' jhml'help    h^'
 )
 
 NB.! replace all M... with JM... when all in HBS style
@@ -477,9 +520,22 @@ t=. '<a href="<REF>" class="href" ><VALUE></a>'
 t hrplc 'REF VALUE';x;y
 )
 
+NB. select control
 jhsel=: 4 : 0
 'values size sel'=. y
 t=. '<select id="<ID>" name="<ID>" class="hsel" size="<SIZE>" onchange="return jev(''<ID>'',''click'',event)" >'
+t=. t hrplc 'ID SIZE SEL';x;size;sel
+opt=. '<option value="<VALUE>" label="<VALUE>" <SELECTED>><VALUE></option>'
+for_i. i.#values do.
+ t=. t,opt hrplc'VALUE SELECTED';(i{values),(i=sel){'';'selected="selected"'
+end.
+t=. t,'</select>'
+)
+
+NB. select control with no event calls
+jhselne=: 4 : 0
+'values size sel'=. y
+t=. '<select id="<ID>" name="<ID>" class="hsel" size="<SIZE>" >'
 t=. t hrplc 'ID SIZE SEL';x;size;sel
 opt=. '<option value="<VALUE>" label="<VALUE>" <SELECTED>><VALUE></option>'
 for_i. i.#values do.

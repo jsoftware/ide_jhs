@@ -5,70 +5,144 @@ HBS=: 0 : 0
 jhma''
  jhjmlink''
 jhmz''
-
 '<h1>Find in Files<h1>'
-
-'what'   jht'';20
+'context'jhselne(<;._2 FIFCONTEXT);1;FIFCONTEXTNDX
+'type'   jhselne JHSFILTERS;1;JHSFILTERS i. <FIFTYPE
+'where'  jhselne JHSFOLDERS;1;JHSFOLDERS i. <FIFDIR
+jhbr
+'nameonly'  jhckbne'File names only';'nameonly';FIFNAMEONLY
+'matchcase' jhckbne'case';'matchcase';FIFCASE
+'subfolders'jhckbne'sub';'subfolders';FIFSUBDIR
+jhbr
+'what'   jht FIFWHAT;20
 'find'   jhb'Find'
-jhbr
-'context'jhsel('zero';'one';'two';'three';'four');1;0
-jhbr
-'type'   jhsel('zero';'one';'two';'three';'four');1;0
-jhbr
-'where'  jhsel('zero';'one';'two';'three';'four');1;0
-jhbr
-'nameonly'jhckb'File names only';'nameonly';0
-jhbr
-'flags'  jhh''
-'area'   jhec'<RESULT>'
+'area'   jhdiv''
 )
 
+NB. regex option not supported in UI, but could be
+
 create=: 3 : 0
-'jfif'jhr'RESULT';y
+fifinit''
+JHSFILTERS=: {."1 FIFFILTERS
+JHSFOLDERS=: {."1 FIFFOLDERS
+'jfif'jhr''
 )
 
 jev_get=: create
 
-NB.! ev_find_click=: 3 : 'jhrajax ":>:6?49'
-
 ev_find_click=: 3 : 0
-fifinit''
-flags=. ".getv'flags'
-FIFWHAT=: getv'what'
-FIFTYPE=: 'All' NB. etype
-FIFDIR=: 'temp'   NB. edir
-FIFCONTEXTNDX=: 0 NB. ". econtext_select
-FIFCASE=: 0       NB. ". case
-FIFNAMEONLY=: {.flags
-FIFREGEX=: 0      NB. ". regex
-FIFSUBDIR=: 0     NB. ". subdir
-
+t=. <;._2 getv'jdata'
+'FIFWHAT FIFCONTEXTNDX FIFTYPE FIFDIR FIFCASE FIFSUBDIR FIFREGEX FIFNAMEONLY'=: t
+FIFCONTEXTNDX=: ".FIFCONTEXTNDX
+FIFCASE=: ".FIFCASE
+FIFSUBDIR=: ".FIFSUBDIR
+FIFREGEX=: ".FIFREGEX
+FIFNAMEONLY=: ".FIFNAMEONLY
+FIFINFO=: ''
+JHSFOUNDFILES=: ''
 fiff_find_button''
-jhrajax jhfroma >FIFNAMEONLY{FIFFOUND;FIFFOUNDFILES
+jhrajax Q__=: FIFINFO,>FIFNAMEONLY{FIFFOUND;JHSFOUNDFILES
 )
 
-ev_nameonly_click=: 3 : 0
-FIFNAMEONLY=: ".getv'nameonly'
-create jhfroma >FIFNAMEONLY{FIFFOUND;FIFFOUNDFILES
+CSS=: 0 : 0
+*{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
 )
 
 JS=: 0 : 0
-function ev_nameonly_click(){return true;}
+function evload(){jbyid("what").focus();}
+function ev_what_enter(){jscdo("find");}
+function ev_find_click_ajax(ts){jbyid("area").innerHTML=ts[0];}
 
 function ev_find_click()
 {
- jbyid("flags").value=jbyid("nameonly").checked?1:0;
- jdoh(["what","context","type","where","flags"]);
+ var t=jform.what.value+JASEP;
+ t+=jform.context.selectedIndex+JASEP;
+ t+=jform.type.value+JASEP;
+ t+=jform.where.value+JASEP;
+ t+=(jform.matchcase.checked?1:0)+JASEP;
+ t+=(jform.subfolders.checked?1:0)+JASEP;
+ t+=0+JASEP; // regex not supported by ui
+ t+=(jform.nameonly.checked?1:0)+JASEP;
+ jdoa(t);
 }
+)
 
-function ajax(ts){jbyid("area").innerHTML=ts[0];}
+NB. ffss version for use from jijs
+NB. dat ffssijs what;contextindex;case;regex
+ffssijs=: 4 : 0
+save=. FIFWHAT;FIFCONTEXTNDX;FIFCASE
+'FIFWHAT FIFCONTEXTNDX FIFCASE'=: y
+dat=. toLF x
+fl=.  'ijs'
+fls=. ''
+
+RX=: FIFREGEX    
+
+if. FIFCASE=0 do.
+  what=. tolower FIFWHAT
+else.
+  what=. FIFWHAT
+end.
+
+if. 0=ffssinit what do. '' return. end.
+
+  dat=. termLF dat
+  if. FIFCASE do. txt=. dat else. txt=. tolower dat end.
+  if. RX do.
+    select. FIFCONTEXTNDX
+    case. 7 do.
+      m=. ; quotemask each <;.2 txt
+      txt=. m } DEL,:txt
+    case. 8 do.
+      m=. ; quotemaskx each <;.2 txt
+      txt=. m } txt ,: DEL
+    end.
+    ndx=. FIFCOMP ffmatches txt
+    if. FIFCONTEXTNDX e. 2 3 4 do.
+      ind=. FIFCOMS ffmatches txt
+      if. #ind do.
+        ndx=. /:~ ndx,ffmatchass txt;ind;what
+      end.
+    end.
+    if. (FIFCONTEXTNDX=6) *. *#ndx do.
+      prevnl=. ndx (i:&1@:>: { ])"0 1 (0) , >: I. FIFFRET = dat
+      prevnb=. ndx (i:&1@:>: { ])"0 1 (_1) , I. 'NB.' E. dat
+      ndx=. ndx #~ prevnl > prevnb
+    end.
+  else.
+    ndx=. I. what E. txt
+  end.
+  if. rws=. #ndx do.
+    ind=. (0,}:I. txt=LF) groupndx ndx
+    b=. ~: ind
+    lns=. b#ind
+  else.
+    lns=. ''
+  end.
+
+if. RX do. rxfree_jregex_ FIFCOMP,FIFCOMS end.
+
+'FIFWHAT FIFCONTEXTNDX FIFCASE'=: save
+rws;lns
 )
 
 
 NB. hacked version of j602 fif
-
 NB. defines to let jhs load fif code
 IFWINNT=: 0
+IFWIN32=: 0
+PATHSEP=: '/'
+PATHSEP_j_=: '/'
+SYSTEMFOLDERS=: SystemFolders_j_
+USERFOLDERS=: UserFolders_j_
+
+fifinit=: 3 : 0
+TABNDX=: 1
+getfoldernames''
+FIFFOLDERS=: UserFolders_j_,SystemFolders_j_
+fif_rundef''
+FIFINFO=: ''
+)
 
 NB. see override hacks at end
 
@@ -564,6 +638,7 @@ else.
 end.
 )
 ffss=: 3 : 0
+JHSFOUNDFILES=: ''
 RX=: FIFREGEX    
 
 if. FIFCASE=0 do.
@@ -620,7 +695,9 @@ while. #dr do.
   end.
   if. rws=. #ndx do.
     msk=. msk,1
-    fnd=. fnd,LF,fl,' (',(":#ndx),')'
+    t=. jhsfixfl fl
+    fnd=. fnd,t,' (',(":#ndx),')'
+    JHSFOUNDFILES=: JHSFOUNDFILES,t
     txt=. dat
     ind=. (0,}:I. txt=LF) groupndx ndx
     b=. ~: ind
@@ -628,14 +705,14 @@ while. #dr do.
     hit=. hit, <b#ndx
     lns=. lns, <ind
     txt=. ; ind { <;.2 txt
-    fnd=. fnd,LF,txt
+    fnd=. fnd,jhsfixtxt txt
   else.
     msk=. msk,0
   end.
 end.
 
 if. RX do. rxfree_jregex_ FIFCOMP,FIFCOMS end.
-fnd=. termdelLF toJ }. fnd
+NB. JHS fnd=. termdelLF toJ }. fnd
 fnd;lns;hit;msk;<fls
 )
 ffmatchass=: 3 : 0
@@ -970,8 +1047,8 @@ wd 'pshow;ptop ',":PTOP
 fif_rundef=: 3 : 0
 0!:0 :: ] <FIFCFGFILE
 fifgetfilters''
-FIFTYPE=: 0 pick {.FIFFILTERS,a:
-FIFDIR=: 0 pick {.FIFFOLDERS,a:
+NB. JHS FIFTYPE=: 0 pick {.FIFFILTERS,a:
+NB. JHS FIFDIR=: 0 pick {.FIFFOLDERS,a:
 FIFHELP=: 'Dictionary' 
 fifgetproj''
 NOPROJ=: 0=#PROJECTFILE
@@ -1196,6 +1273,8 @@ if. #FIFWHAT do.
   else.
     finfo 'No match found'
   end.
+else.
+ finfo 'Nothing to find'
 end.
 )
 fiff_nameonly_button=: 3 : 0
@@ -1536,32 +1615,43 @@ txt=. txt rplc '<';'&lt;'
 txt=. txt rplc '>';'&gt;'
 )
 
-NB. hacked defines to let jhs run fif
-IFWINNT=: 0
-IFWIN32=: 0
-PATHSEP=: '/'
-TABNDX=: 1
-
-SYSTEMFOLDERS=: SystemFolders_j_
-USERFOLDERS=: UserFolders_j_
-
-fifinit=: 3 : 0
-getfoldernames''
-FIFFOLDERS=: 2 {."1 USERFOLDERS
-FIFFOLDERS=: SystemFolders_j_
-fif_rundef''
-)
+NB. hacked overrides to let jhs run fif
 
 fifread=: 3 : 0
 ''
 )
 
 fifshowfind=: 3 : 0
-FIFFOUNDFILES=: ''
-if. 0=#FIFFOUND do. return. end.
-j=. 0, +/\ 2 + }: #&> FIFLINES
-FIFFOUNDFILES=: }: ; j {<;.2 FIFFOUND,LF
+NB. FIFFOUNDFILES=: ''
+NB. if. 0=#FIFFOUND do. return. end.
+NB. j=. 0, +/\ 2 + }: #&> FIFLINES
+NB. FIFFOUNDFILES=: }: ; j {<;.2 FIFFOUND,LF
+''
 )
 
-finfo=: smoutput
+finfo=: 3 : 0
+FIFINFO=: y
+FIFFOUND=: ''
+FIFFOUNDFILES=: ''
+JHSFOUND=: ''
+)
 
+FIFCONTEXT=: 0 : 0
+any
+name only
+assigned
+assigned =:
+assigned =.
+in NB.
+not in NB.
+in ''
+not in ''
+)
+
+jhsfixfl=: 3 : 0
+'<br><a href="jijs?mid=open&path=',(jurlencode y),'">',y,'</a>'
+)
+
+jhsfixtxt=: 3 : 0
+'<br>',jhfroma y
+)
