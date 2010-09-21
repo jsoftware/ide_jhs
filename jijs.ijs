@@ -62,8 +62,6 @@ try. d=. 1!:1<y catch. d=. 'file read failed' end.
 
 jev_get=: 3 : 0
 if. 'open'-:getv'mid' do.
- smoutput 'mid'
- smoutput getv'path'
  create getv'path' 
 else.
  create jnew''
@@ -296,7 +294,7 @@ var numbermark=[];
 
 function number()
 {
- var t,i,b,lines=0;
+ var t,i,j,b,lines=0;
  if(numberflag)
  {
   t=jtfromh(ce.innerHTML);
