@@ -469,6 +469,46 @@ function jsetcaret(id,collapse)
  }
 }
 
+// set caret in element e - collapse 0 start, 1 end
+function jsetcaretx(p,collapse)
+{
+ p.scrollIntoView(false);
+ if (window.getSelection)
+ {
+  try{window.getSelection().collapse(p,collapse);}
+  catch(e){window.getSelection().collapse(p,false);} // try for ff - delete all
+ }
+ else
+ {
+  var tst= document.selection.createRange();
+  tst.moveToElementText(p);
+  tst.collapse(!collapse);
+  tst.select();
+ }
+}
+
+// select node
+function jsetcaretn(n)
+{
+ if (window.getSelection)
+ {
+  var sel,rng;
+  n.scrollIntoView(false);
+  sel=window.getSelection();
+  sel.removeAllRanges();
+  rng=document.createRange();
+  rng.selectNode(n);
+  sel.addRange(rng);
+ }
+ else
+ {
+  var tst= document.selection.createRange();
+  tst.moveToElementText(n);
+  //! tst.collapse(!collapse);
+  tst.select();
+ }
+}
+
 /* contenteditable to/from text
 IE:
  <BR>             <-> N (\n)

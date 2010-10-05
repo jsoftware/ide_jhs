@@ -4,43 +4,40 @@ coinsert'jhs'
 
 HBS=: 0 : 0
 jhma''
-'run'      jhmg'run';1;12
- 'runw'    jhmab'run         r^'
- 'runwd'   jhmab'run display'
-'action'   jhmg'action';1;10
- 'save'    jhmab'save        s^'
- 'saveas'  jhmab'save as...'
- 'replace' jhmab'replace...'
- 'fif'     jhmab'find...     q^'
- 'refind'  jhmab'refind      w^'
- 'refindf' jhmab'refind fif  e^'
+'action'    jhmg'action';1;10
+ 'runw'     jhmab'run         r^'
+ 'runwd'    jhmab'run display'
+ 'save'     jhmab'save        s^'
+ 'saveas'   jhmab'save as...'
+ 'findd'    jhmab'find...     q^'
+ 'findfirst'jhmab'find first  w^'
+ 'findnext' jhmab'find next   e^'
+ 'replace'  jhmab'replace...'
 'option'    jhmg'option';1;8
- 'ro'      jhmab'readonly    t^'
- 'color'   jhmab'color       c^'
- 'number'  jhmab'number      n^'
+ 'ro'       jhmab'readonly    t^'
+ 'color'    jhmab'color       c^'
+ 'number'   jhmab'number      n^'
 jhjmlink''
 jhmz''
 
-'saveasdlg'   jhdivahide'save as'
- 'saveasx'    jht'';10
+'saveasdlg'    jhdivahide''
+ 'saveasdo'    jhb'save as'
+ 'saveasx'     jht'';10
   'saveasclose'jhb'X'
 '<hr></div>'
 
-'repldlg'     jhdivahide'replace'
- 'replx'      jht'';10
-  'with'
-   'reply'      jht'';10
-    'repldo'     jhb'replace'
-     'replundo'   jhb'undo'
-      'replclose'  jhb'X'
+'repldlg'      jhdivahide''
+ 'repldo'      jhb'replace all with'
+  'replnew'    jht'';10
+    'replclose'jhb'X'
 '<hr></div>'
 
-'fifdlg'     jhdivahide'find'
+'finddlg'    jhdivahide''
+ 'find'      jhb'find'
  'what'      jht'';10
  'context'   jhselne(<;._2 FIFCONTEXT_jfif_);1;0
  'matchcase' jhckbne'case';'matchcase';1
- 'find'      jhb'find'
- 'fifclose'  jhb'X'
+ 'findclose'  jhb'X'
 '<hr></div>'
 
 'rep'         jhdiv''
@@ -131,20 +128,6 @@ f=. <jpath'~temp\',a,'.ijs'
 >f
 )
 
-NB. data what contextndx case
-ev_find_click=: 3 : 0
-'data what ndx case'=. <;._2 getv'jdata'
-'c q'=. data ffssijs_jfif_ what;(".ndx);(".case) 
-jhrajax (":#q),' lines with ',(":c),' hits',JASEP,":q
-)
-
-NB. refind in data based on FiF values
-ev_refindf_click=: 3 : 0
-data=. }:getv'jdata'
-'c q'=. data ffssijs_jfif_ FIFWHAT_jfif_;FIFCONTEXT_jfif_;FIFCASE_jfif_ 
-jhrajax (":#q),' lines with ',(":c),' hits',JASEP,":q
-)
-
 NB.! p{} klduge cause IE insert <p> instead of <br> for enter
 CSS=: 0 : 0
 #rep{color:red}
@@ -154,7 +137,10 @@ p{margin:0;}
 )
 
 JS=: 0 : 0
-var ta,rep,readonly,colorflag,saveasx,replx,toid=0;
+var ta,rep,readonly,colorflag,saveasx,toid=0;
+var markcaret="&#8203;"; // \u200B
+var rwhat="";            // find regexp
+var spanmark="<span class=\"mark\" style=\"background-color:#D7D7D7\">";
 
 function evload() // body onload->jevload->evload
 {
@@ -162,9 +148,8 @@ function evload() // body onload->jevload->evload
  rep= jbyid("rep");
  ta= jbyid("textarea");
  saveasx=jbyid("saveasx");
- replx=jbyid("replx");
- reply=jbyid("reply");
  ro(0!=ce.innerHTML.length);
+ jbyid("num").setAttribute("contenteditable","false");
  if(!readonly){ce.focus();jsetcaret("ijs",0);}
  colorflag=1;
  color();
@@ -182,28 +167,30 @@ function ev_save_click() {click();}
 function ev_runw_click() {click();}
 function ev_runwd_click(){click();}
 
+function ev_saveasdo_click(){click();}
 function ev_saveasx_enter(){click();}
 function ev_saveas_click()     {jdlgshow("saveasdlg","saveasx");}
 function ev_saveasclose_click(){jhide("saveasdlg");}
 
-function ev_replx_enter(){;}
+function ev_replnew_enter(){;}
 function ev_reply_enter(){;}
-function ev_replace_click()  {jdlgshow("repldlg","replx");}
+function ev_replace_click()  {jdlgshow("repldlg","replnew");}
 function ev_replclose_click(){jhide("repldlg");}
 
-function ev_fif_click(){jdlgshow("fifdlg","what");}
+function ev_findd_click(){jdlgshow("finddlg","what");}
 
-function ev_fifclose_click(){jhide("fifdlg");}
+function ev_findclose_click(){jhide("finddlg");}
 
-function repl(x,y)
+function ev_repldo_click()
 {
- var d=jtfromh(ce.innerHTML);
- d=d.replace(RegExp(x,"g"),y);
- ce.innerHTML=jhfromt(d);
+ var t,v,r;
+ find();
+ t=ce.innerHTML;
+ v=jbyid("replnew").value;
+ r=RegExp(spanmark+"[^<]*</span>","g");
+ t=t.replace(r,v);
+ ce.innerHTML=t;
 }
-
-function ev_repldo_click()  {repl(replx.value,reply.value);}
-function ev_replundo_click(){repl(reply.value,replx.value);}
 
 function ev_ro_click(){ro(readonly= !readonly);}
 
@@ -219,25 +206,77 @@ function ev_number_click()
  number();
 }
 
-function ev_c_shortcut(){jscdo("click");}
+function ev_c_shortcut(){jscdo("color");}
 function ev_n_shortcut(){jscdo("number");}
-function ev_q_shortcut(){jscdo("fif");}
-function ev_w_shortcut(){jscdo("refind");}
-function ev_e_shortcut(){jscdo("refindf");}
+function ev_q_shortcut(){jscdo("findd");}
+function ev_w_shortcut(){jscdo("findfirst");}
+function ev_e_shortcut(){jscdo("findnext");}
 
-function colcs(d) {return "\u0001"+d+"\u0000";}  // control structure
-function colnb(d) {return "\u0002"+d+"\u0000";}  // nb
-function collit(d){return "\u0003"+d+"\u0000";} // literal
+var alphanum= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-var controls= RegExp("(assert|break|continue|for|if|do|else|elseif|end|return|select|case|fcase|throw|try|catch|while|whilest)\\.","g");
+// return 0 not assign, 1 =:, 2 =.
+function asschk(j,s)
+{
+ while(j<s.length&&" "==s.charAt(j))++j;
+ if(j==s.length||s.charAt(j)!="=")return 0;
+ if(++j==s.length)return 0;
+ var c=s.charAt(j);
+ if(c==":")return 1;
+ return(c==".")?2:0;
+}
 
-var markcaret="&#8203;"; // \u200B
+function colmark(d,i,s) // mark find
+{
+ var a=" ",b=" ",m="\u0004"+d+"\u0000";
+ var t=jbyid("context").selectedIndex;
+ if(0==t)return m;
+ if(0!=i)a=s.charAt(i-1);
+ if(s.length!=i+d.length)b=s.charAt(d.length+i);
+ if(-1!=alphanum.indexOf(a)||-1!=alphanum.indexOf(b))return d;
+ switch(t)
+ {
+  case 1: // name
+   return m;
+   break;
+  case 2: // =. or =:
+   return(0==asschk(i+d.length,s))?d:m;
+   break;
+  case 3: // =:
+   return(1==asschk(i+d.length,s))?m:d;
+   break;
+  case 4: // =.
+   return(2==asschk(i+d.length,s))?m:d;
+   break;
+ }
+}
 
-//! coloring needs lots of work
-// literals not closed - for_abc. - etc.
-// caret is preserved by
+function colhit(d) // syntax color
+{
+ var t;
+ if("'"==d[0])
+  t="\u0003";
+ else
+  if("NB."==d.substr(0,3))
+   t="\u0002";
+  else
+   if(2<d.length)
+    t="\u0001";
+   else
+    return d;
+ return t+d+"\u0000";
+}
+
+function findspan(t)
+{
+ return('string'==typeof rwhat)?t:t.replace(/\u0004/g,spanmark);
+}
+
+function findmark(t){return('string'==typeof rwhat)?t:t.replace(rwhat,colmark);}
+
+
+// caret preserved by
 //  inserting ZWSP, manipulating, ZWSP to span id, selecting span id
-// recolor or uncolor
+// rwhat global to mark finds
 function color()
 {
  var t,sel,rng,mark=0;
@@ -264,33 +303,37 @@ function color()
    mark=1;
   }catch(e){;}
  }
-
  t= ce.innerHTML;
  if(colorflag)
  {
-  t= jtfromh(t);
-  t= t.replace(/NB\..*/g, colnb)
-  t= t.replace(controls,  colcs);
-  t= t.replace(/'[^']*'/g, collit);
+  t=jtfromh(t);
+  t=findmark(t);
+  // '...' or '...LF or NB....LF or name.
+  var r="('[^'\u000A]*['\u000A])|(NB\..*)|([a-zA-Z][a-zA-Z0-9_\u200B]*[\.])";
+  t= t.replace(RegExp(r,"g"),colhit);
   t= jhfromt(t);
-  t= t.replace(/\u0009/,  "<span id=\"selection\"></span>");
   t= t.replace(/\u0000/g, "</span>");
-  t= t.replace(/\u0001/g, "<span style=\"color:red\">");
-  t= t.replace(/\u0002/g, "<span style=\"color:green\">");
-  t= t.replace(/\u0003/g, "<span style=\"color:blue\">");
+  t= t.replace(/\u0001/g, "<span class=\"color1\" style=\"color:red\">");
+  t= t.replace(/\u0002/g, "<span class=\"color2\" style=\"color:green\">");
+  t= t.replace(/\u0003/g, "<span class=\"color3\"style=\"color:blue\">");
+  t= findspan(t);
  }
  else
  {
-  t= t.replace(/<span\/?[^>]+(>|$)/gi,"");
-  t= t.replace(/<\/span>/gi,"");
+  t=jtfromh(t);
+  t=findmark(t);
+  t= jhfromt(t);
+  t=findspan(t);
+  t=t.replace(/\u0000/g, "</span>");
  }
- t= t.replace(/\u200B/,"<span id=\"caret\"></span>");
+ rwhat="";
+ t= t.replace(/\u200B/,spancaret);
  ce.innerHTML= t;
  if(mark)jsetcaret("caret",0);
 }
 
 var numberflag=0;
-var numbermark=[];
+var spancaret="<span id=\"caret\" class=\"caret\"></span>";
 
 function number()
 {
@@ -302,20 +345,15 @@ function number()
   for(i=0;i<t.length;++i)
    lines+='\n'==t[i];
   t="";
-  for(i=0;i<lines;++i)
-  {
-   b=0;
-   for(j=0;j<numbermark.length;++j)
-    b|=i==numbermark[j];
-   if(b)
-    t+="<span style=\"color:red\">"+i+":&nbsp;</span><br>";
-   else
-    t+=i+":&nbsp;<br>";
-  }
+  for(i=0;i<lines;++i)t+=i+"&nbsp;<br>";
+  jbyid("num").innerHTML=t;
+  jshow("num");
  }
  else
-  t="";
- jbyid("num").innerHTML=t;
+ {
+  jbyid("num").innerHTML="";
+  jhide("num");
+ }
 }
 
 function update()
@@ -334,40 +372,64 @@ function ev_ijs_keypress()
 
 function ev_what_enter(){jscdo("find");}
 
+function ev_refind_click(){jscdo("find");}
+
+function findzwsp(d){return d+"\u200B*";}
+
+function find()
+{
+ var t=jform.what.value;
+ if(0==t.length)return;
+ t=t.replace(/./g,findzwsp);
+ flags=(jform.matchcase.checked?1:0)?"g":"gi"
+ rwhat=RegExp(t,flags);
+ color();
+}
+
 function ev_find_click()
 {
- var t=jtfromh(ce.innerHTML)+JASEP;
- t+=jform.what.value+JASEP;
- t+=jform.context.selectedIndex+JASEP;
- t+=(jform.matchcase.check?1:0)+JASEP;
- jdoa(t); // data what contextndx case
+ //!ce.focus(); // IE needs focus before setting caret
+ //!jsetcaret("ijs",0);
+ find();
 }
 
-function ev_find_click_ajax(ts)
-{
- rep.innerHTML=ts[0];
- if(0==ts[1].length)
-  numbermark=[];
- else
+function ev_findfirst_click(){
+ var i,len,nodes;
+ find();
+ nodes= ce.getElementsByTagName("span");
+ len=nodes.length;
+ for(i=0;i<len;++i)
  {
-  var t=ts[1].split(" ");
-  numbermark=new Array(t.length);
-  for(var i=0;i<t.length;++i)
-   numbermark[i]=t[i]-0;
+  if("mark"==nodes[i].getAttribute("class"))
+  {
+   jsetcaretx(nodes[i],1);
+   return;
+  }
  }
- numberflag=1;
- number();
 }
 
-function ev_refind_click(){jscdo("find");}
-function ev_refindf_click(){jdoa(jtfromh(ce.innerHTML)+JASEP);}
-function ev_refindf_click_ajax(ts){ev_find_click_ajax(ts);}
+function ev_findnext_click()
+{
+ var i,len,nodes,c=0;
+ find();
+ nodes= ce.getElementsByTagName("span");
+ len=nodes.length;
+ for(i=0;i<len;++i)
+ {
+  if("caret"==nodes[i].getAttribute("class"))c=1;
+  if(1==c&&"mark"==nodes[i].getAttribute("class"))
+  {
+   jsetcaretx(nodes[i],1);
+   return;
+  }
+ }
+}
 
 // still used by jdoh callers - kill off
 function ajax(ts)
 {
  rep.innerHTML= ts[0];
- if(jform.jmid.value=="saveasx"&&2==ts.length)
+ if(2==ts.length&&jform.jmid.value=="saveasx"||jform.jmid.value=="saveasdo")
  {
   jhide("saveasdlg");
   jbyid("filenamed").innerHTML=ts[1];

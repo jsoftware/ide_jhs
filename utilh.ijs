@@ -457,7 +457,7 @@ NB. J ide link menu
 jhjmlink=: 3 : 0
 t=.   'jmlink'jhmg'link';1;7
 t=. t,'jijx'  jhml'ijx     j^'
-t=. t,'jfile' jhml'fileman f^'
+t=. t,'jfile' jhml'file    f^'
 t=. t,'jijs'  jhml'ijs     J^'
 t=. t,'jfif'  jhml'fif     F^'
 t=. t,'jal'   jhml'pacman'

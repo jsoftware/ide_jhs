@@ -4,18 +4,24 @@ coinsert'jhs'
 
 HBS=: 0 : 0
 jhma''
-'action'    jhmg'action';1;10
+'action'    jhmg'action';1;12
  'edit'     jhmab'edit'
  'del'      jhmab'del'
  'copy'     jhmab'copy        c^'
  'cut'      jhmab'cut         x^'
  'paste'    jhmab'paste       v^'
+ 'rename'   jhmab'rename as...'
  'newfi'    jhmab'new file'
  'newfo'    jhmab'new folder'
  jhjmlink''
 jhmz''
-'rename:'
- 'rename'   jht'';15
+
+'renamedlg'     jhdivahide''
+ 'renamedo'     jhb'rename as'
+  'renamex'     jht'';10
+   'renameclose'jhb'X'
+'<hr></div>'
+
 'report'    jhdiv'<R>'
 shorts''
 'path'      jhh'<F>'
@@ -117,11 +123,13 @@ end.
 create r;f
 )
 
+ev_renamedo_click=: ev_renamex_enter
+
 NB.! needs work - e.g. non-empty folders - bad folder name
 NB. should use host move/rename facility
-ev_rename_enter=: 3 : 0
+ev_renamex_enter=: 3 : 0
 F=. getv'path'
-n=. getv'rename'
+n=. getv'renamex'
 if. PS-:_1{F do. NB. delete folder
  try.
   smoutput F
@@ -252,6 +260,12 @@ function ev_files_click() // file select
  else
   jdoh(["path"]);
 }
+
+//! function ev_renamedo_click(){click();}
+//! function ev_renamex_enter(){click();}
+function ev_rename_click()     {jdlgshow("renamedlg","renamex");}
+function ev_renameclose_click(){jhide("renamedlg");}
+
 
 function ajax(ts)
 {

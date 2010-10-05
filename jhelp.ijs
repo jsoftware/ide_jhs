@@ -22,21 +22,29 @@ text=: 0 : 0
 J701 - Copyright 1994-2010 Jsoftware Inc.
 <br>Engine: <ENGINE>
 <br><br><span class="h">keyboard shortcuts</span><br>
-ctrl+. escapes next character to be a shortcut.<br/>
-For example, ctrl+. then j links to ijx page.<br/>
-Shortcuts are documented on the right in a menu item.<br/><br/>
+esc key escapes next key to be a shortcut.<br/>
+For example, esc j links to ijx page.<br/>
+Menu items document shortcuts on the right.<br/><br/>
 
-1 shortcut (ctrl+. then 1) sets focus on menu.<br/>
-2 shortcut sets focus to page default.
+esc 1 sets focus on menu.<br/>
+esc 2 sets focus to page default.<br/><br/>
 
-<br><br><span class="h">jijx page</span><br>
-enter J sentences (ctrl+shift+&uarr;&darr; recall)
+If esc does not work, use ctrl+. instead.
 
-<br><br><span class="h">jfile page</span><br>
+<br><br><span class="h">ijx</span>
+run J sentences (ctrl+shift+&uarr;&darr; recall)
+
+<br><br><span class="h">file</span>
 browse files for opening, editing, etc.
 
-<br><br><span class="h">jijs page</span><br>
+<br><br><span class="h">ijs</span>
 edit file
+
+<br><br><span class="h">fif</span>
+find in files utility
+
+<br><br><span class="h">pacman</span>
+addons package manager (downloadable software packages)
 
 <br><br><span class="h">Plot</span><br>
 jgc'help'  NB. plot info<br>

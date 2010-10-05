@@ -5,24 +5,27 @@ HBS=: 0 : 0
 jhma''
  jhjmlink''
 jhmz''
-'<h1>Find in Files<h1>'
+'find'   jhb'Find'
+'what'   jht FIFWHAT;10
 'context'jhselne(<;._2 FIFCONTEXT);1;FIFCONTEXTNDX
+'matchcase' jhckbne'case';'matchcase';FIFCASE
+jhbr
 'type'   jhselne JHSFILTERS;1;JHSFILTERS i. <FIFTYPE
 'where'  jhselne JHSFOLDERS;1;JHSFOLDERS i. <FIFDIR
-jhbr
-'nameonly'  jhckbne'File names only';'nameonly';FIFNAMEONLY
-'matchcase' jhckbne'case';'matchcase';FIFCASE
 'subfolders'jhckbne'sub';'subfolders';FIFSUBDIR
+'nameonly'  jhckbne'names only';'nameonly';FIFNAMEONLY
 jhbr
-'what'   jht FIFWHAT;20
-'find'   jhb'Find'
 'area'   jhdiv''
 )
 
 NB. regex option not supported in UI, but could be
 
 create=: 3 : 0
-fifinit''
+TABNDX=: 1
+getfoldernames''
+FIFFOLDERS=: UserFolders_j_,SystemFolders_j_
+fif_rundef''
+FIFINFO=: ''
 JHSFILTERS=: {."1 FIFFILTERS
 JHSFOLDERS=: {."1 FIFFOLDERS
 'jfif'jhr''
@@ -135,14 +138,6 @@ PATHSEP=: '/'
 PATHSEP_j_=: '/'
 SYSTEMFOLDERS=: SystemFolders_j_
 USERFOLDERS=: UserFolders_j_
-
-fifinit=: 3 : 0
-TABNDX=: 1
-getfoldernames''
-FIFFOLDERS=: UserFolders_j_,SystemFolders_j_
-fif_rundef''
-FIFINFO=: ''
-)
 
 NB. see override hacks at end
 
@@ -1638,14 +1633,10 @@ JHSFOUND=: ''
 
 FIFCONTEXT=: 0 : 0
 any
-name only
-assigned
-assigned =:
-assigned =.
-in NB.
-not in NB.
-in ''
-not in ''
+name
+=: or =.
+=:
+=.
 )
 
 jhsfixfl=: 3 : 0

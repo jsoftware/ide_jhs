@@ -196,6 +196,7 @@ NB. MTYOFILE	6	output 1!:2[2
 NB. x is type, y is string
 output=: 4 : 0
 logapp 'output type : ',":x
+if. 5=x do. jhrajax 'Your J HTTP Server has exited.<br/><div id="prompt" class="log">&nbsp;&nbsp;&nbsp;</div>'[PROMPT_jhs_=:'   ' end.
 try.
  s=. y NB. output string
  type=. x NB. MTYO type
