@@ -152,7 +152,7 @@ if. _1~:SKSERVER do. try. ".'urlresponse_',URL,'_ y' catch. end. end. NB. jijx
 if. _1~:SKSERVER do. jbad'' end.
 getdata'' NB. get and parse http request
 if. 1=NVDEBUG do. smoutput seebox NV end. NB. HNV,NV
-if. (0~:#PASS)*.(-.cookie-:gethv'Cookie:')*.-.LHOK*.PEER-:LOCALHOST 
+if. (0~:#PASS)*.(-.cookie-:gethv'Cookie:')*.-.LHOK*.PEER-:LOCALHOST
                        do. r=. 'jev_get_jlogin_ 0'
 elseif. 'post'-:METHOD do. r=. getv'jdo'
 elseif. '.'e.URL       do. r=. 'jev_getsrcfile_jfilesrc_ URL_jhs_'
@@ -278,8 +278,11 @@ while. 1 do.
   return.
 
  catch.
-  smoutput '*** getdata error: ',13!:12''
-  logapp 'getdata error: ',13!:12''
+  t=. 13!:12''
+  if. -.'|recv timeout:'-:14{.t do. NB. recv timeout expected
+   smoutput '*** getdata error: ',t
+  end.
+  logapp 'getdata error: ',t
  end.
 end.
 )
@@ -292,7 +295,7 @@ serror=: 4 : 0
 if. y do.
  sdclose_jsocket_ SKSERVER
  logapp x
- 'socket error'13!:8[3 
+ x 13!:8[3 
 end.
 )
 

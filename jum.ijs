@@ -196,6 +196,17 @@ end.
 
 NB. clean_jum_(t i.' '){.t=.{.show_jum_ 6 NB. clean oldest
 
+NB. cleanx y - kill y oldest users
+cleanx=: 3 : 0
+if. y>10 do. 'max 10 killed at a time' return. end.
+while. y do.
+ t=.{.show 6
+ smoutput t
+ clean(t i.' '){.t
+ y=. <:y
+end.
+)
+
 NB. clean user - kill task if any and delete folders
 clean=: 3 : 0
 user=. y

@@ -6,8 +6,9 @@ login
 '<MSG>'
 jhtaba
  jhtr 'user: '   ;'user' jht'';15
- jhtr 'pasword: ';'pass'  jhtp'';15
+ jhtr 'pasword: ';'pass' jhtp'';15
 jhtabz
+loggedin
 )
 
 login=: 0 : 0
@@ -15,8 +16,11 @@ login=: 0 : 0
 )
 
 loggedin=: 0 : 0
-<h1>Logged in</h1>
-SECURITY! Logout when you are done (close browser or press logout).<br><br>
+<br/><span style="color:red;">
+<h1>SECURITY!</h1>
+Logout when you are finished
+(close browser or menu command logout).
+</span>
 )
 
 NB. does not work
@@ -62,9 +66,8 @@ logins=: logins,u,'/',p,LF
 if. (count<:LIMIT)*.(u-:USER)*.p-:PASS do.
  count=: 0
  SETCOOKIE_jhs_=: 1
- NB.! goto'' ??? jijx page in bad state and crashes
- NB.! related to jev_get_jijx_? and leftover jlogin url?
- jhr 'jlogin';(css CSS);'';loggedin
+ PROMPT_jhs_=: '   '
+ goto''
 else.
  count=: count+METHOD-:'post'
  b=. (jhbs HBS)hrplc 'MSG';getmessage''
