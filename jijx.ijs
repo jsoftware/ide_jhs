@@ -3,6 +3,7 @@ coclass'jijx'
 coinsert'jhs'
 
 HBS=: 0 : 0
+jhresizea''
 jhma''
 'studio'   jhmg'studio';1;10
  'jdemo'   jhml'demos'
@@ -14,13 +15,14 @@ jhma''
  jhjmlink''
 jhmz''
 
-'log' jhec'<LOG>'
-
 'labsdlg'   jhdivahide'labs:'
  labsel''
  'labsclose'jhb'X'
 '</div>'
+jhresizeb''
 
+'log' jhec'<LOG>'
+jhresizez''
 )
 
 NB.! create causes problems? related to jloging goto create_jijx_
@@ -218,7 +220,8 @@ function addrecall(a)
   recs.unshift(a); reci=-1; // recalls
 }
 
-function scrollz(){window.scrollTo(0,1000000);}
+//! function scrollz(){window.scrollTo(0,1000000);}
+function scrollz(){jbyid("prompt").scrollIntoView(false);}
 
 function ev_2_shortcut(){jbyid("log").focus();scrollz();jsetcaret("prompt",1);}
 function ev_a_shortcut(){jscdo("advance");}
@@ -257,14 +260,13 @@ function evload()
 {
  jbyid("log").focus();
  newpline("   ");
+ jresize();
 }
 
 function keyp(){jbyid("kbsp").style.display= "block";scrollz();return true;} // space for screen kb
 
 function ev_up_click(){uarrow();}
 function ev_dn_click(){darrow();}
-
-function ev_log_keypress(){return true;}
 
 // log enter - contenteditable
 // run line with caret
@@ -334,7 +336,7 @@ function ev_log_enter()
 }
 
 function ev_advance_click(){jdoh([]);}
-function ev_lab_click(){jshow("labsdlg");jbyid("labsel").focus();}
+function ev_lab_click(){jdlgshow("labsdlg","labsel");}
 function ev_labsclose_click(){jhide("labsdlg");}
 
 function ev_labsel_click()

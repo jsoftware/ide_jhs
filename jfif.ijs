@@ -2,6 +2,7 @@ coclass'jfif'
 coinsert'jhs'
 
 HBS=: 0 : 0
+jhresizea''
 jhma''
  jhjmlink''
 jhmz''
@@ -15,7 +16,9 @@ jhbr
 'subfolders'jhckbne'sub';'subfolders';FIFSUBDIR
 'nameonly'  jhckbne'names only';'nameonly';FIFNAMEONLY
 jhbr
+jhresizeb''
 'area'   jhdiv''
+jhresizez''
 )
 
 NB. regex option not supported in UI, but could be
@@ -52,7 +55,7 @@ CSS=: 0 : 0
 )
 
 JS=: 0 : 0
-function evload(){jbyid("what").focus();}
+function evload(){jbyid("what").focus();jresize();}
 function ev_what_enter(){jscdo("find");}
 function ev_find_click_ajax(ts){jbyid("area").innerHTML=ts[0];}
 

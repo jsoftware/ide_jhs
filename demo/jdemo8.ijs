@@ -36,11 +36,11 @@ window.onresize= resize;
 function evload(){resize();} // body onload->jevload->evload
 
 function resize(){
- var a= jgpwindowh(); // window height
- a-= jgpbodymh();     // body margin h (top+bottom)
- a-= jgpdivh("a");    // div a height
- a-= jgpdivh("z");    // div z height
- a-= 2               // 1px div border (top+bottom)
+ var a= jgpwindowh();// window height
+ a-= jgpbodymh();    // body margin h (top+bottom)
+ a-= jgpdivh("a");   // div a height
+ a-= jgpdivh("z");   // div z height
+ a-= 6               // fudge to avoid outside scroll
  a=  a<0?0:a;        // negative causes problems
  jbyid("m").style.height= a+"px";
 }

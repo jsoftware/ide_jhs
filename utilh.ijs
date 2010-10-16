@@ -6,6 +6,9 @@ NB. menu position:fixed
 NB. .menu{width:100%;position:fixed;background:#eee;
 NB.  margin-top:-20px;margin-left:-10px;padding-left:10px;padding-top:3px;padding-bottom:3px;
 NB. }
+NB. .menu{width:100%;position:fixed;background:#eee;
+NB.  margin-left:-10px;padding-left:10px;padding-top:3px;padding-bottom:3px;
+NB. }
 NB. menu position scroll
 NB. .menu{width:100%;}
 
@@ -19,15 +22,12 @@ CSSCORE=: 0 : 0
 *.hmab{text-decoration:none;color:black;}
 *.hmg:hover{cursor:pointer;}
 *.hmg:visited{color:black;}
-*.hmg{color:black;}
+*.hmg{color:black;background:#eee;}
 *.hmg{text-decoration:none;}
 *.hml{color:black;}
 *.hml:visited{color:black;}
 *.hsel{background-color:buttonface;font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
 body{margin-top:0;}
-.menu{width:100%;position:fixed;background:#eee;
- margin-left:-10px;padding-left:10px;padding-top:3px;padding-bottom:3px;
-}
 .menu li{
  display:block;white-space:nowrap;
  padding:2px;color:#000;background:#eee;
@@ -40,6 +40,7 @@ body{margin-top:0;}
  position:absolute;top:100%;left:0%;display:none;
  list-style:none;border:1px black solid;margin:0;padding:0;
 }
+#jresizeb{overflow:scroll;border:solid;border-width:1px;}
 )
 
 NB. core plus page styles with config replaces
@@ -427,7 +428,7 @@ t hrplc 'ID VALUE SET CHECKED';x;value;set;checked
 )
 
 NB radio control with no event call
-jhradio=: 4 : 0
+jhradione=: 4 : 0
 'value set checked'=. y
 checked=. >checked{'';'checked="checked"'
 t=.   '<input type="radio" id="<ID>" value="<ID>" class="<CLASS>" name="<SET>" <CHECKED>'
@@ -465,6 +466,7 @@ t=. t,>(-.0-:gethv'Cookie:'){' ';'jlogin'jhml'logout'
 t=. t,'jhelp' jhml'help    h^'
 )
 
+
 NB.! replace all M... with JM... when all in HBS style
 jhma=: 3 : 0
 MSTATE=:1[MINDEX=:100
@@ -473,12 +475,16 @@ MSTATE=:1[MINDEX=:100
 
 jhmz=: 3 : 0
 MSTATE=:0
-'</ul></span></div><br><br>'
+'</ul></span></div><br>'
 )
 
 jhform=: 3 : 0
 formtmpl hrplc 'LOCALE';>coname''
 )
+
+jhresizea=: 3 : '''<div id="jresizea">'''
+jhresizeb=: 3 : '''</div><div id="jresizeb">'''
+jhresizez=: 3 : '''</div>'''
 
 jhdiva=: 4 : 0
 '<div id="',x,'">',y

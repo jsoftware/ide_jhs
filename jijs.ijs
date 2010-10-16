@@ -3,6 +3,7 @@ coclass'jijs'
 coinsert'jhs'
 
 HBS=: 0 : 0
+jhresizea''
 jhma''
 'action'    jhmg'action';1;10
  'runw'     jhmab'run         r^'
@@ -10,8 +11,6 @@ jhma''
  'save'     jhmab'save        s^'
  'saveas'   jhmab'save as...'
  'findd'    jhmab'find...     q^'
- 'findfirst'jhmab'find first  w^'
- 'findnext' jhmab'find next   e^'
  'replace'  jhmab'replace...'
 'option'    jhmg'option';1;8
  'ro'       jhmab'readonly    t^'
@@ -26,18 +25,21 @@ jhmz''
   'saveasclose'jhb'X'
 '<hr></div>'
 
-'repldlg'      jhdivahide''
- 'repldo'      jhb'replace all with'
-  'replnew'    jht'';10
-    'replclose'jhb'X'
-'<hr></div>'
-
 'finddlg'    jhdivahide''
- 'find'      jhb'find'
+ 'findtop'   jhb'Top'
+ 'findnext'  jhb 226 136 168{a.
+ 'findprev'  jhb 226 136 167{a.
  'what'      jht'';10
  'context'   jhselne(<;._2 FIFCONTEXT_jfif_);1;0
  'matchcase' jhckbne'case';'matchcase';1
- 'findclose'  jhb'X'
+ 'findclose' jhb'X'
+'<hr></div>'
+
+'repldlg'      jhdivahide''
+ 'repldo'      jhb'Replace'
+  'replforward'jhb'Replace Forward'
+   'replnew'   jht'';10
+    'replclose'jhb'X'
 '<hr></div>'
 
 'rep'         jhdiv''
@@ -45,10 +47,14 @@ jhmz''
 'filename'    jhh  '<FILENAME>'
 'filenamed'   jhdiv'<FILENAME>'
 
+jhresizeb''
+
 'num'         jhecleft''
 'ijs'         jhecright'<DATA>'
 
 'textarea'    jhh''
+
+jhresizez''
 )
 
 NB. y file
@@ -128,7 +134,7 @@ f=. <jpath'~temp\',a,'.ijs'
 >f
 )
 
-NB.! p{} klduge cause IE insert <p> instead of <br> for enter
+NB.! p{} klduge because IE inserts <p> instead of <br> for enter
 CSS=: 0 : 0
 #rep{color:red}
 #filenamed{color:blue;}
@@ -142,6 +148,7 @@ var markcaret="&#8203;"; // \u200B
 var rwhat="";            // find regexp
 var spanmark="<span class=\"mark\" style=\"background-color:#D7D7D7\">";
 
+
 function evload() // body onload->jevload->evload
 {
  ce= jbyid("ijs");
@@ -149,16 +156,21 @@ function evload() // body onload->jevload->evload
  ta= jbyid("textarea");
  saveasx=jbyid("saveasx");
  ro(0!=ce.innerHTML.length);
+ //! ro(0); //!
  jbyid("num").setAttribute("contenteditable","false");
- if(!readonly){ce.focus();jsetcaret("ijs",0);}
+ jbyid("num").style.background="#eee";
+ //! if(!readonly){ce.focus();jsetcaret("ijs",0);}
+ //ce.focus();
+ //jsetcaret("ijs",0);
  colorflag=1;
+ jresize();
  color();
 }
 
 function ro(only)
 {
  readonly= only;
- ce.setAttribute("contenteditable",readonly?"false":"true");
+ //! ce.setAttribute("contenteditable",readonly?"false":"true");
  ce.style.background= readonly?"#eee":"#fff";
 }
 
@@ -181,17 +193,6 @@ function ev_findd_click(){jdlgshow("finddlg","what");}
 
 function ev_findclose_click(){jhide("finddlg");}
 
-function ev_repldo_click()
-{
- var t,v,r;
- find();
- t=ce.innerHTML;
- v=jbyid("replnew").value;
- r=RegExp(spanmark+"[^<]*</span>","g");
- t=t.replace(r,v);
- ce.innerHTML=t;
-}
-
 function ev_ro_click(){ro(readonly= !readonly);}
 
 function ev_color_click()
@@ -209,8 +210,6 @@ function ev_number_click()
 function ev_c_shortcut(){jscdo("color");}
 function ev_n_shortcut(){jscdo("number");}
 function ev_q_shortcut(){jscdo("findd");}
-function ev_w_shortcut(){jscdo("findfirst");}
-function ev_e_shortcut(){jscdo("findnext");}
 
 var alphanum= "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
@@ -273,36 +272,25 @@ function findspan(t)
 
 function findmark(t){return('string'==typeof rwhat)?t:t.replace(rwhat,colmark);}
 
+function ev_d_shortcut()
+{
+ alert("test");
+ for(var i=0;i<50;++i)
+ {
+  color();
+ }
+ alert("done");
+}
 
 // caret preserved by
 //  inserting ZWSP, manipulating, ZWSP to span id, selecting span id
 // rwhat global to mark finds
 function color()
 {
- var t,sel,rng,mark=0;
- if(!readonly) // IE readonly caret stuff messes up menu vs border 
- {
-  ce.focus();
-  try // mark caret location with ZWSP
-  {
-   if(window.getSelection)
-   {
-    sel= window.getSelection();
-    rng= sel.getRangeAt(0);
-    rng.collapse(true);
-    sel.removeAllRanges();
-    sel.addRange(rng);
-    document.execCommand("insertHTML",false,markcaret);
-   }
-   else
-   {
-    rng= document.selection.createRange();
-    rng.collapse(true);
-    rng.pasteHTML(markcaret);
-   }
-   mark=1;
-  }catch(e){;}
- }
+ var t,sel,rng,mark;
+ ce.focus();
+ if(1||!readonly) //! not really readonly now! -  IE readonly caret stuff messes up menu vs border 
+  mark=jreplace("ijs",1,markcaret);
  t= ce.innerHTML;
  if(colorflag)
  {
@@ -364,11 +352,25 @@ function update()
 
 function ev_ijs_keypress()
 {
+ var c=jevev.keyCode;
+ if(readonly&&13==c||8==c||46==c){if(jisIE())window.event.returnValue=false; return false;}
+ //! if(readonly)alert(jevev.charCode+" "+jevev.keyCode);
  if(jsc||0==jevev.charCode) return true; // ignore shortcuts,arrows,bs,del,enter,etc.
+ if(readonly)
+ {
+  if(!(99==jevev.charCode&&jevev.ctrlKey)) // allow FF ctrl+c
+  {
+   if(jisIE())window.event.returnValue=false;
+   return false;
+  }
+ }
  if(toid!=0)clearTimeout(toid);
  if(colorflag||numberflag)toid=setTimeout(update,100);
+ //! if(colorflag)color();
  return true;
 }
+
+function ev_w_shortcut(){alert(ce.innerHTML);} // debug
 
 function ev_what_enter(){jscdo("find");}
 
@@ -386,14 +388,9 @@ function find()
  color();
 }
 
-function ev_find_click()
-{
- //!ce.focus(); // IE needs focus before setting caret
- //!jsetcaret("ijs",0);
- find();
-}
+function ev_find_click(){find();}
 
-function ev_findfirst_click(){
+function ev_findtop_click(){
  var i,len,nodes;
  find();
  nodes= ce.getElementsByTagName("span");
@@ -402,15 +399,19 @@ function ev_findfirst_click(){
  {
   if("mark"==nodes[i].getAttribute("class"))
   {
-   jsetcaretx(nodes[i],1);
+   jsetcaretn(nodes[i]);
    return;
   }
  }
 }
 
+var found;
+
 function ev_findnext_click()
 {
  var i,len,nodes,c=0;
+ found=0;
+ jcollapseselection(0);
  find();
  nodes= ce.getElementsByTagName("span");
  len=nodes.length;
@@ -419,10 +420,68 @@ function ev_findnext_click()
   if("caret"==nodes[i].getAttribute("class"))c=1;
   if(1==c&&"mark"==nodes[i].getAttribute("class"))
   {
-   jsetcaretx(nodes[i],1);
+   jsetcaretn(nodes[i]);
+   found=1;
    return;
   }
  }
+}
+
+function ev_findprev_click()
+{
+ var i,len,nodes,mark=-1;
+ jcollapseselection(1);
+ find();
+ nodes= ce.getElementsByTagName("span");
+ len=nodes.length;
+ for(i=0;i<len;++i)
+ {
+  if("caret"==nodes[i].getAttribute("class"))break;
+  if("mark"==nodes[i].getAttribute("class"))mark=i;
+ }
+ if(mark!=-1)jsetcaretn(nodes[mark]);
+}
+
+function ev_repldo_click()
+{
+ jcollapseselection(1);
+ ev_findnext_click();
+ if(found)
+ {
+  jreplace("ijs",-1,jbyid("replnew").value);
+  ev_findnext_click();
+ }
+}
+
+function ev_replforward_click()
+{
+ while(1)
+ {
+  jcollapseselection(1);
+  ev_findnext_click();
+  if(!found)break;
+  jreplace("ijs",-1,jbyid("replnew").value);
+ }
+}
+
+function undo(){alert("undo not implemented yet");}
+function redo(){alert("redo not implemented yet");}
+
+// undo z 90, redo y 89
+function ev_ijs_keydown()
+{
+ var c=jevev.keyCode,ctrl=jevev.ctrlKey,shift=jevev.shiftKey;
+ if(readonly&&c==8||c==46||(c==88&&ctrl)||(c==86&&ctrl)||(c==90&&ctrl)||(c==89&&ctrl)) // bs del cut paste undo redo
+ {
+  if(jisIE())window.event.returnValue=false;
+  return false;
+ }
+ if(ctrl&&!shift)
+ {
+  if(c==90){undo();return false;}
+  if(c==89){redo();return false;}
+ }
+ return true;
 }
 
 // still used by jdoh callers - kill off
@@ -442,5 +501,5 @@ function ev_ijs_enter(){return true;}
 function ev_t_shortcut(){jscdo("ro");}
 function ev_r_shortcut(){jscdo("runw");}
 function ev_s_shortcut(){jscdo("save");}
-function ev_2_shortcut(){ce.focus();window.scrollTo(0,0);jsetcaret("ijs",0);}
+function ev_2_shortcut(){ce.focus();}
 )

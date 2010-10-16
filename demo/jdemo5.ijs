@@ -33,4 +33,6 @@ create s;jgcimg('reset xline &chtt=',t)jgc d
 
 JS=: 0 : 0
 function evload(){jbyid("sentence").focus();}
+
+function ev_sentence_enter(){jsubmit();}
 )

@@ -4,15 +4,27 @@ NB.! core.js file should be read by src=
 NB. this would use cache and make page loads faster
 NB. doing it this way is easier for debugging (not cached)
 JSCORE=: 0 : 0
+window.onresize=jresize;
+
 // global constants
 var JASEP= '\1'; // delimit substrings in ajax response
 
 // globals onload
-var jform,jevsentence;
+var jform,jevsentence,jscrollpos=0;
 
 // event globals
 var JEV; // handler to call
 var jevev;
+
+function jresize()
+{
+ var a= jgpwindowh(); // window height
+ a-= jgpbodymh();     // body margin h (top+bottom)
+ a-= jgpdivh("jresizea"); // header height
+ a-= 6               // fudge extra
+ a=  a<0?0:a;        // negative causes problems
+ jbyid("jresizeb").style.height= a+"px";
+}
 
 // utils
 function jisChrome() {return -1!=navigator.userAgent.search(/Chrome/);}
@@ -44,6 +56,15 @@ function jev(id,type,event){
  jform.jmid.value = (-1==i)?id:id.substring(0,i);
  jform.jsid.value = (-1==i)?"":id.substring(++i,id.length);
  if(jevev.type=='keydown'&&27==jevev.keyCode)return false; //! IE ignore esc
+
+ //! keydown and not cr calls ev_id_keydown()
+ if(jevev.type=='keydown'&&13!=jevev.keyCode)
+ {
+  type="keydown";
+  jform.jtype.value=type;
+  return jevdo(id);
+ } 
+
  if(type=='enter'&&13!=jevev.keyCode) return true;
  return jevdo(id);
 }
@@ -51,13 +72,10 @@ function jev(id,type,event){
 function jevdo()
 {
  JEV= "ev_"+jform.jmid.value+"_"+jform.jtype.value;
- // if js handler not defined, call j handler with jsubmit
- try{eval(JEV)}catch(ex){jsubmit();return false;}
+ try{eval(JEV)}catch(ex){return true;} // return true if handler not defined
  try{var r= eval(JEV+"();")}
  catch(ex){alert(JEV+" failed: "+ex);return false;}
  if('undefined'!=typeof r) return r;
- //! var t= jbyid(id).type;
- //! if(t=='submit') return false;
  return false;
 }
 
@@ -190,7 +208,7 @@ function getpostargs(ids)
 
 // app keyboard shortcuts
 
-document.onkeyup= kup;
+document.onkeyup= keyup; // bad things happen if this is keydown
 document.onkeypress= keypress;
 
 var jsc= 0;
@@ -204,6 +222,7 @@ function jdostdsc(c)
  switch(c)
  {
   case '1': jactivatemenu('1'); break;
+  // case '2': window.scrollTo(0,jscrollpos);break;
   case 'j': location="jijx";  break;
   case 'f': location="jfile"; break;
   case 'h': location="jhelp"; break;
@@ -225,7 +244,7 @@ function keypress(ev)
  return false;
 }
 
-function kup(ev)
+function keyup(ev)
 {
  var e=window.event||ev;
  var c=e.keyCode;
@@ -351,6 +370,7 @@ function jmenunavinfo(m,n)
 // activate menu group n
 function jactivatemenu(n)
 {
+ jscrollpos=document.body.scrollTop;
  jmenuhide();
  //! window.scrollTo(0,0);
  var node= jfindmenu(n);
@@ -455,6 +475,7 @@ function jmenukeyup(ev)
 function jsetcaret(id,collapse)
 {
  var p= jbyid(id);
+ //! p.scrollIntoView(false); //!
  if (window.getSelection)
  {
   try{window.getSelection().collapse(p,collapse);}
@@ -504,9 +525,59 @@ function jsetcaretn(n)
  {
   var tst= document.selection.createRange();
   tst.moveToElementText(n);
-  //! tst.collapse(!collapse);
   tst.select();
  }
+}
+
+function jcollapseselection(d)
+{
+ try
+ {
+  if (window.getSelection)
+  {
+   var sel,rng;
+   sel=window.getSelection();
+   rng=sel.getRangeAt(0);
+   sel.removeAllRanges();
+   rng.collapse(d);
+   sel.addRange(rng);
+  }
+  else
+  {
+   var tst;
+   tst=document.selection.createRange();
+   tst.collapse(d);
+   tst.select();
+  }
+ }catch(e){;}
+}
+
+// replace selection with val
+// collapse -1 none, 0 end, 1 start
+function jreplace(id,collapse,val)
+{
+  //! jbyid(id).focus();
+  try // mark caret location with ZWSP
+  {
+   if(window.getSelection)
+   {
+    var sel,rng;
+    sel=window.getSelection();
+    rng=sel.getRangeAt(0);
+    if(collapse!=-1)rng.collapse(collapse);
+    sel.removeAllRanges();
+    sel.addRange(rng);
+    document.execCommand("insertHTML",false,val);
+   }
+   else
+   {
+    var rng;
+    rng= document.selection.createRange();
+    if(collapse!=-1)rng.collapse(collapse);
+    rng.pasteHTML(val);
+   }
+   return 1;
+  }catch(e){return 0;}
 }
 
 /* contenteditable to/from text
@@ -538,26 +609,19 @@ Portable rules (all case insensitive):
  &lt;...         <-> < > & space
 */
 
-// text from html - what about <br/>?
+// text from html
 function jtfromh(d)
 {
- //! t=d;
- d= d.replace(/\r|\n/g,"");
+ d= d.replace(/\r|\n/g,""); // IE requires
  d= d.replace(/<\/?[sS]\/?[^>]+(>|$)/g,""); // remove <span...> </span> tags
  d= d.replace(/<br><div>/gi,"<div>"); //! chrome - kludge
- d= d.replace(/<p>&nbsp;<\/p>|<div><br><\/div>|<br>|<\/p>|<div>/gi,"\n");
- // d= d.replace(/<p>&nbsp;<\/p>/gi,"\n");
- // d= d.replace(/<div><br><\/div>/gi,"\n");
- // d= d.replace(/<br>/gi,"\n");
- // d= d.replace(/<\/p>/gi,"\n");
- // d= d.replace(/<div>/gi,"\n");
+ d= d.replace(/<p>&nbsp;<\/p>|<div><br><\/div>|<br[^>]*>|<\/p>|<div>/gi,"\n");
  d= d.replace(/<\/?[^>]+(>|$)/g,""); // remove all remaining tags
  d= d.replace(/&lt;/g,"<");
  d= d.replace(/&gt;/g,">");
  d= d.replace(/&amp;/g,"&");
  d= d.replace(/&nbsp;/g," ");
  if('\n'!=d[d.length-1]){d=d+"\n";}
- //! alert(t+"\nX\n"+d);
  return d
 }
 
@@ -572,8 +636,8 @@ function jhfromt(d)
  return d
 }
 
-function jshow(id){jbyid(id).style.display="block";}
-function jhide(id){jbyid(id).style.display="none";}
+function jshow(id){jbyid(id).style.display="block";jresize();}
+function jhide(id){jbyid(id).style.display="none";jresize();}
 
 function jdlgshow(id,focus)
 {

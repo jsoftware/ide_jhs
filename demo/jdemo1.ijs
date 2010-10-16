@@ -39,3 +39,7 @@ and the page is small so there is not much data sloshing.
 But in a real app it could be lots and the app could be sluggish,
 especially over a network.
 )
+
+JS=: 0 : 0
+function ev_roll_click(){jsubmit();} // submits form - calls J ev_roll_click
+)
