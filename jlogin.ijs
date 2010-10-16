@@ -39,7 +39,7 @@ logins=: ''
 
 jev_get=: create
 
-ev_password_enter=: create
+ev_pass_enter=: create
 
 invalid=: 0 : 0
 <span style="color:red;">Invalid login (<COUNT>).<br>
@@ -79,4 +79,5 @@ end.
 
 JS=: 0 : 0
 function evload(){try{jform.user.focus();}catch(ex){;}}
+function ev_pass_enter(){jsubmit();}
 )

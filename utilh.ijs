@@ -444,10 +444,11 @@ t hrplc 'ID VALUE SIZE';x;y
 )
 
 jhtp=: 4 : 0
-t=. '<input type="password" id="<ID>" name="<ID>" class="ht"',jeditatts,'value="<VALUE>" size="<SIZE>" onkeydown="return jev(''<ID>'',''enter'',event)" >'
+t=.   '<input type="password" id="<ID>" name="<ID>" class="ht"',jeditatts,'value="<VALUE>" size="<SIZE>"'
+t=. t,' onkeydown="return jev(''<ID>'',''enter'',event)"'
+t=. t,'>'
 t hrplc 'ID VALUE SIZE';x;y
 )
-
 
 jhtarea=: 4 : 0
 t=. '<textarea id="<ID>" name="<ID>" class="htarea" wrap="off" rows="1" cols="1"',jeditatts,'><DATA></textarea>'
