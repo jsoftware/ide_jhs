@@ -278,6 +278,12 @@ function ev_rename_click()     {jdlgshow("renamedlg","renamex");}
 function ev_renameclose_click(){jhide("renamedlg");}
 
 function ev_edit_click(){jsubmit();}
+function ev_del_click(){jsubmit();}
+function ev_copy_click(){jsubmit();}
+function ev_cut_click(){jsubmit();}
+function ev_paste_click(){jsubmit();}
+function ev_newfi_click(){jsubmit();}
+function ev_newfo_click(){jsubmit();}
 
 function ajax(ts)
 {

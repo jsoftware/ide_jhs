@@ -350,23 +350,22 @@ function update()
  if(numberflag)number();
 }
 
+// ctrl+x comes here for ff, but not for others
 function ev_ijs_keypress()
 {
- var c=jevev.keyCode;
- if(readonly&&13==c||8==c||46==c){if(jisIE())window.event.returnValue=false; return false;}
- //! if(readonly)alert(jevev.charCode+" "+jevev.keyCode);
- if(jsc||0==jevev.charCode) return true; // ignore shortcuts,arrows,bs,del,enter,etc.
+ var k=jevev.keyCode;c=jevev.charCode;ctrl=jevev.ctrlKey;
+ if(readonly&&(13==k||8==k||46==k)){if(jisIE())window.event.returnValue=false; return false;}
  if(readonly)
  {
-  if(!(99==jevev.charCode&&jevev.ctrlKey)) // allow FF ctrl+c
+  if(!(99==c&&ctrl)) // allow FF ctrl+c
   {
    if(jisIE())window.event.returnValue=false;
    return false;
   }
  }
+ if(jsc||0==c||ctrl)return true; // ignore shortcuts,arrows,bs,del,enter,ctrls,etc.
  if(toid!=0)clearTimeout(toid);
  if(colorflag||numberflag)toid=setTimeout(update,100);
- //! if(colorflag)color();
  return true;
 }
 
@@ -471,7 +470,7 @@ function redo(){alert("redo not implemented yet");}
 function ev_ijs_keydown()
 {
  var c=jevev.keyCode,ctrl=jevev.ctrlKey,shift=jevev.shiftKey;
- if(readonly&&c==8||c==46||(c==88&&ctrl)||(c==86&&ctrl)||(c==90&&ctrl)||(c==89&&ctrl)) // bs del cut paste undo redo
+ if(readonly&&(c==8||c==46||(c==88&&ctrl)||(c==86&&ctrl)||(c==90&&ctrl)||(c==89&&ctrl))) // bs del cut paste undo redo
  {
   if(jisIE())window.event.returnValue=false;
   return false;
