@@ -143,7 +143,7 @@ p{margin:0;}
 )
 
 JS=: 0 : 0
-var ta,rep,readonly,colorflag,saveasx,toid=0;
+var ta,rep,readonly,colorflag,saveasx,toid=0,undotoid=0;
 var markcaret="&#8203;"; // \u200B
 var rwhat="";            // find regexp
 var spanmark="<span class=\"mark\" style=\"background-color:#D7D7D7\">";
@@ -156,15 +156,12 @@ function evload() // body onload->jevload->evload
  ta= jbyid("textarea");
  saveasx=jbyid("saveasx");
  ro(0!=ce.innerHTML.length);
- //! ro(0); //!
  jbyid("num").setAttribute("contenteditable","false");
  jbyid("num").style.background="#eee";
- //! if(!readonly){ce.focus();jsetcaret("ijs",0);}
- //ce.focus();
- //jsetcaret("ijs",0);
  colorflag=1;
  jresize();
  color();
+ undoadd();
 }
 
 function ro(only)
@@ -289,8 +286,7 @@ function color()
 {
  var t,sel,rng,mark;
  ce.focus();
- if(1||!readonly) //! not really readonly now! -  IE readonly caret stuff messes up menu vs border 
-  mark=jreplace("ijs",1,markcaret);
+ mark=jreplace("ijs",1,markcaret);
  t= ce.innerHTML;
  if(colorflag)
  {
@@ -350,20 +346,67 @@ function update()
  if(numberflag)number();
 }
 
+var undos=[];
+var undoslen=0;
+var undosn=0;
+var undostate=0;
+
+function undoadd()
+{
+ if(readonly)return;
+ var t=ce.innerHTML;
+ if(t==undos[undos.length-1])return;
+ while(undoslen>300000) //!
+ {
+  undoslen-=undos.shift().length;
+ }
+
+ undos[undos.length]=t;
+ undoslen+=t.length;
+ undosn=undos.length;
+}
+
+function doset()
+{ 
+ rep.innerHTML="undo "+undosn+" of "+(undos.length-1)+" ("+undoslen+" bytes)";
+ var t=undos[undosn];
+ ce.innerHTML=t;
+ jsetcaret("caret",0);
+}
+
+function undo()
+{
+ var t;
+ if(readonly)return;
+ if(!undostate){undoadd();undosn=undos.length;undostate=1;}
+ --undosn;
+ if(undosn>=0)
+  doset();
+ else
+  undosn=0;
+}
+
+function redo()
+{
+ if(readonly)return;
+ if(!undostate)return;
+ ++undosn;
+ if(undosn<undos.length)
+  doset();
+ else
+  undosn=undos.length-1;
+}
+
 // ctrl+x comes here for ff, but not for others
 function ev_ijs_keypress()
 {
  var k=jevev.keyCode;c=jevev.charCode;ctrl=jevev.ctrlKey;
- if(readonly&&(13==k||8==k||46==k)){if(jisIE())window.event.returnValue=false; return false;}
- if(readonly)
- {
-  if(!(99==c&&ctrl)) // allow FF ctrl+c
-  {
-   if(jisIE())window.event.returnValue=false;
-   return false;
-  }
- }
+ var f=k>36&&k<41; // left up right down 37 38 39 40
+ f=f||ctrl&&c==99; // ctrl+c
+ if(readonly&&!ctrl&&!f){if(jisIE())window.event.returnValue=false; return false;}
  if(jsc||0==c||ctrl)return true; // ignore shortcuts,arrows,bs,del,enter,ctrls,etc.
+ if(undotoid!=0)clearTimeout(undotoid);
+ undotoid=setTimeout(undoadd,3000); //!
  if(toid!=0)clearTimeout(toid);
  if(colorflag||numberflag)toid=setTimeout(update,100);
  return true;
@@ -463,14 +506,11 @@ function ev_replforward_click()
  }
 }
 
-function undo(){alert("undo not implemented yet");}
-function redo(){alert("redo not implemented yet");}
-
 // undo z 90, redo y 89
 function ev_ijs_keydown()
 {
  var c=jevev.keyCode,ctrl=jevev.ctrlKey,shift=jevev.shiftKey;
- if(readonly&&(c==8||c==46||(c==88&&ctrl)||(c==86&&ctrl)||(c==90&&ctrl)||(c==89&&ctrl))) // bs del cut paste undo redo
+ if(readonly&&(c==8||c==46||(ctrl&&c==88)||(ctrl&&c==86))) // bs del cut paste undo redo
  {
   if(jisIE())window.event.returnValue=false;
   return false;
@@ -480,6 +520,7 @@ function ev_ijs_keydown()
   if(c==90){undo();return false;}
   if(c==89){redo();return false;}
  }
+ if(undostate){undostate=0;rep.innerHTML="";}
  return true;
 }
 
