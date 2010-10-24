@@ -11,7 +11,7 @@ jhma''
  'lab'     jhmab'labs...'
 'action'   jhmg'action';1;15
  'projman' jhmab'project manager'
- 'debug'   jhmab'Debug'
+ debugmenu''
  jhjmlink''
 jhmz''
 
@@ -65,7 +65,7 @@ create=: 3 : 0
 iphone=. 0<#('iPhone'ss t),'iPod'ss t=. gethv_jhs_ 'User-Agent:'
 IP=: iphone NB.! IP global used in BIS for up dn
 NB.! pass js parameters through html jhh elements!
-JS=: js=.  JSCORE,jsx hrplc 'PROMPT KBSPACE NOARROWS RECALLS';y;iphone;iphone;recalls''
+JS=: js=.  JSCORE,jsdebug,~jsx hrplc 'PROMPT KBSPACE NOARROWS RECALLS';y;iphone;iphone;recalls''
 'jijx' jhr 'LOG';LOG
 )
 
@@ -151,10 +151,6 @@ labopen ".getv'jsid'
 
 ev_projman_click=: 3 : 0
 'Project Manager not implemented yet.'
-)
-
-ev_debug_click=: 3 : 0
-'Debug not implemented yet.'
 )
 
 CSS=: 0 : 0

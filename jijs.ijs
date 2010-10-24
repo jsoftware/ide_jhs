@@ -106,6 +106,8 @@ end.
 
 ev_runwd_click=: ev_runw_click
 
+ev_saveasdo_click=:ev_saveasx_enter
+
 NB.! saveas replace cancel option if file already exists
 ev_saveasx_enter=: 3 : 0
 f=. getv'filename'

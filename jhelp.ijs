@@ -32,7 +32,8 @@ esc 2 sets focus to page default.<br/><br/>
 If esc does not work, use ctrl+. instead.
 
 <br><br><span class="h">ijx</span>
-run J sentences (ctrl+shift+&uarr;&darr; recall)
+run J sentences (ctrl+shift+&uarr;&darr; recall)<br>
+<a href="#debug">debug (ijx menu)</a>
 
 <br><br><span class="h">file</span>
 browse files for opening, editing, etc.
@@ -46,25 +47,58 @@ find in files utility
 <br><br><span class="h">pacman</span>
 addons package manager (downloadable software packages)
 
-<br><br><span class="h">Plot</span><br>
-jgc'help'  NB. plot info<br>
-jgcx''     NB. examples<br>
-plot 10?10 NB. default line plot
+<br><br><span class="h">Plot</span>
+<pre>   jgc'help'  NB. plot info
+   jgcx''     NB. examples
+   plot 10?10 NB. default line plot
+</pre>
 
-<br><br><span class="h">Viewmat</span><br>
-jvm ?20 20$2<br>
-jvm */~ i:9
+<span class="h">Viewmat</span>
+<pre>
+   jvm ?20 20$2
+   jvm */~ i:9
+</pre>
 
-<br><br><span class="h">utils</span><br>
-jbd 1 NB. boxdraw +|-<br>
-jlog y NB. 0 clears and _ restores log<br>
-jfe_jhs_ y NB. toggle console/browser<br> 
-jhtml'&lt;font style="color:red;"&gt;A&lt;/font&gt;'
+<span class="h">utils</span>
+<pre>   jbd 1 NB. boxdraw +|-
+   jlog y NB. 0 clears and _ restores log
+   jfe_jhs_ y NB. toggle console/browser
+   jhtml'&lt;font style="color:red;"&gt;A&lt;/font&gt;'
+</pre>
 
-<br><br><span class="h">configuration</span><br>
+<span class="h">configuration</span><br>
 JHS initializes based on configuration files. See file<br>
 &nbsp;&nbsp;<CONFIG><br>
 for info on changing JHS configuration
+
+<br><br>
+<a name="debug">
+<span class="h">debug (ijx menu)</span><br>
+With debug on, execution suspends at an error or a stop.
+<pre>
+   dbsm'name'      - display numbered definition lines
+   dbsm'name ...'  - add stops
+   dbsm'name :...' - add dyadic stops
+   dbsm'~...'      - remove stops starting with ...
+   dbsm''          - display stops
+</pre>
+
+Try the following:
+<pre>
+   dbsm'calendar'   NB. numbered explicit defn
+   dbsm'calendar 0' NB. stop monadic line 0
+menu debug|on
+   calendar 1
+study stack display - note 6 blank prompt
+   y
+menu debug|step in
+stepped into dyadic call of calendar
+   x,y
+menu debug|step - step to line 1
+   a
+menu debug|run - run to error or stop
+(runs to end as no error or stops)
+</pre>
 </div>
 )
 
