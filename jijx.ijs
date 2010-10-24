@@ -9,8 +9,9 @@ jhma''
  'jdemo'   jhml'demos'
  'advance' jhmab'advance a^'
  'lab'     jhmab'labs...'
-'action'   jhmg'action';1;15
- 'projman' jhmab'project manager'
+NB. 'action'   jhmg'action';1;15
+NB. 'projman' jhmab'project manager'
+ actionmenu''
  debugmenu''
  jhjmlink''
 jhmz''
@@ -24,6 +25,29 @@ jhresizeb''
 'log' jhec'<LOG>'
 jhresizez''
 )
+
+NB.! try. catch. !
+actionmenu=: 3 : 0
+try.
+ load'~user/projects/ja/ja.ijs'
+ amenu=: <;._2 ja_menu
+ t=. 'action'   jhmg'action';1;10
+ for_i. i.#amenu do.
+  t=. t,('action',":i)jhmab >i{amenu
+ end.
+catch.
+ ''
+end. 
+)
+
+action=: 3 : 0
+".'''''',~'ja_',(>y{amenu),'_base_'
+)
+
+ev_action0_click=: 3 : 'action 0'
+ev_action1_click=: 3 : 'action 1'
+ev_action2_click=: 3 : 'action 2'
+ev_action3_click=: 3 : 'action 3'
 
 NB.! create causes problems? related to jloging goto create_jijx_
 jev_get=: 3 : 'i.0 0'
@@ -344,6 +368,10 @@ function ev_labsel_click()
 
 function ev_projman_click(){jdoh([]);}
 function ev_debug_click(){jdoh([])}
+
+function ev_action0_click(){jdoh([]);}
+function ev_action1_click(){jdoh([]);}
+function ev_action2_click(){jdoh([]);}
 
 )
 
