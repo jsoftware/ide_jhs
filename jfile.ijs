@@ -7,7 +7,8 @@ jhresizea''
 jhma''
 'action'    jhmg'action';1;12
  'edit'     jhmab'edit'
- 'del'      jhmab'del'
+ 'del'      jhmab'delete'
+ 'deltemps' jhmab'delete temps'
  'copy'     jhmab'copy        c^'
  'cut'      jhmab'cut         x^'
  'paste'    jhmab'paste       v^'
@@ -62,7 +63,7 @@ end.
 )
 
 shorts=: 3 : 0
-buttons 'paths';(2#<{."1 SystemFolders_j_),<' '
+buttons 'paths';(2#<{."1 UserFolders_j_,SystemFolders_j_),<' '
 )
 
 ev_paths_click=: 3 : 0
@@ -193,6 +194,15 @@ else.
 end.
 )
 
+ev_deltemps_click=: 3 : 0
+t=.{."1[1!:0 jpath'~temp/*ijs'
+n=. (_4}.each t)-.each<'0123456789'
+t=.(-.n~:<'')#t
+t=. (<jpath'~temp/'),each t
+for_f. t do. 1!:55 f end. 
+create '&nbsp;';jpath'~temp\'
+)
+
 NB.! folder dblclick??? not a problem, but is puzzling
 ev_files_dblclick=: ev_edit_click
 
@@ -279,6 +289,7 @@ function ev_renameclose_click(){jhide("renamedlg");}
 
 function ev_edit_click(){jsubmit();}
 function ev_del_click(){jsubmit();}
+function ev_deltemps_click(){jsubmit();}
 function ev_copy_click(){jsubmit();}
 function ev_cut_click(){jsubmit();}
 function ev_paste_click(){jsubmit();}

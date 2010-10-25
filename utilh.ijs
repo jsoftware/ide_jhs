@@ -451,7 +451,8 @@ t hrplc 'ID VALUE SIZE';x;y
 )
 
 jhtarea=: 4 : 0
-t=. '<textarea id="<ID>" name="<ID>" class="htarea" wrap="off" rows="1" cols="1"',jeditatts,'><DATA></textarea>'
+t=.   '<textarea id="<ID>" name="<ID>" class="htarea" wrap="off" rows="1" cols="1" '
+t=. t,'onkeydown="return jev(''<ID>'',''keydown'',event)"',jeditatts,'><DATA></textarea>'
 t hrplc 'ID DATA';x;y
 )
 
@@ -574,7 +575,7 @@ p=. jpath'~addons/ide/jhs/',t,c
 t=. '<hr/>'
 t=. t,'jijx' jhref'ijx'
 t=. t,' ','jdemo'  jhref'jdemo'
-for_i. >:i.8 do.
+for_i. >:i.9 do.
  d=. 'jdemo',":i
  t=.t,' ',d jhref d
 end.

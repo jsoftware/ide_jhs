@@ -7,14 +7,15 @@ NB. html document body built from HBS sentences
 HBS=: 0 : 0
 jhma''
  'demo'     jhmg'demo';1;12
-  'jdemo1'  jhml'Roll submit'
-  'jdemo2'  jhml'Roll ajax'
-  'jdemo3'  jhml'Flip ajax'
-  'jdemo4'  jhml'Controls/JS/CSS'
-  'jdemo5'  jhml'Plot'
-  'jdemo6'  jhml'Grid editor'
-  'jdemo7'  jhml'Table layout'
-  'jdemo8'  jhml'Dynamic resize'
+  'jdemo1'  jhml'1 Roll submit'
+  'jdemo2'  jhml'2 Roll ajax'
+  'jdemo3'  jhml'3 Flip ajax'
+  'jdemo4'  jhml'4 Controls/JS/CSS'
+  'jdemo5'  jhml'5 Plot'
+  'jdemo6'  jhml'6 Grid editor'
+  'jdemo7'  jhml'7 Table layout'
+  'jdemo8'  jhml'8 Dynamic resize'
+  'jdemo9'  jhml'9 Multiple frames'
  jhjmlink''
 jhmz''
 jhh1'JHS demos'
@@ -66,12 +67,8 @@ create=: 3 : 0 NB. create page and send to browser
 )
 
 loadall=: 3 : 0
-load PATH,'demo/jdemo1.ijs'
-load PATH,'demo/jdemo2.ijs'
-load PATH,'demo/jdemo3.ijs'
-load PATH,'demo/jdemo4.ijs'
-load PATH,'demo/jdemo5.ijs'
-load PATH,'demo/jdemo6.ijs'
-load PATH,'demo/jdemo7.ijs'
-load PATH,'demo/jdemo8.ijs'
+d=. (<'.ijs'),~each (<'jdemo'),each ":each >:i.9
+d=. (<jpath'~addons/ide/jhs/demo/'),each d
+failed=. loader d
+if. 0~:#failed do. smoutput 'load failed: ',LF,failed end.
 )

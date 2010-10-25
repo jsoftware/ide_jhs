@@ -18,6 +18,8 @@ var jevev;
 
 function jresize()
 {
+ //! IE resize multiple frames sometimes gets id as null
+ if(jbyid("jresizea")==null||jbyid("jresizeb")==null)return;
  var a= jgpwindowh(); // window height
  a-= jgpbodymh();     // body margin h (top+bottom)
  a-= jgpdivh("jresizea"); // header height
@@ -479,7 +481,7 @@ function jsetcaret(id,collapse)
  if (window.getSelection)
  {
   try{window.getSelection().collapse(p,collapse);}
-  catch(e){window.getSelection().collapse(p,false);} // try for ff - delete all
+  catch(e){;} //!! FF sometimes failstry for ff
  }
  else
  {
@@ -692,7 +694,22 @@ function jgpbodymh()
 }
 
 // get pixel div height - IE/FF bugs vs <h1>
-function jgpdivh(id){return document.getElementById(id).offsetHeight;}
+function jgpdivh(id){return jbyid(id).offsetHeight;}
+
+//! IE8 jbyid returns null 
+/*
+function jgpdivh(id)
+{
+ var e=jbyid(id);
+ if(e==null)return 50;
+ //alert(e+" "+id);
+ // alert(e.offsetHeight);
+ //return jbyid(id).offsetHeight;
+ var v=e.offsetHeight;
+ //alert(id+" "+v);
+ return v;
+}
+*/
 
 // get pixel end
 

@@ -6,7 +6,7 @@ HBS=: 0 : 0
 jhma''
  jhjmlink''
 jhmz''
-text
+text rplc '<PAREN>';')'
 )
 
 jev_get=: 3 : 0
@@ -33,13 +33,15 @@ If esc does not work, use ctrl+. instead.
 
 <br><br><span class="h">ijx</span>
 run J sentences (ctrl+shift+&uarr;&darr; recall)<br>
-<a href="#debug">debug (ijx menu)</a>
+<a href="#action">action menu</a>
+<a href="#project">project manager</a>
+<a href="#debug">debug menu</a>
 
 <br><br><span class="h">file</span>
 browse files for opening, editing, etc.
 
 <br><br><span class="h">ijs</span>
-edit file
+edit file (ctrl+z/y for undo/redo)
 
 <br><br><span class="h">fif</span>
 find in files utility
@@ -47,13 +49,13 @@ find in files utility
 <br><br><span class="h">pacman</span>
 addons package manager (downloadable software packages)
 
-<br><br><span class="h">Plot</span>
+<br><br><span class="h">plot</span>
 <pre>   jgc'help'  NB. plot info
    jgcx''     NB. examples
    plot 10?10 NB. default line plot
 </pre>
 
-<span class="h">Viewmat</span>
+<span class="h">viewmat</span>
 <pre>
    jvm ?20 20$2
    jvm */~ i:9
@@ -66,15 +68,39 @@ addons package manager (downloadable software packages)
    jhtml'&lt;font style="color:red;"&gt;A&lt;/font&gt;'
 </pre>
 
-<span class="h">configuration</span><br>
-JHS initializes based on configuration files. See file<br>
-&nbsp;&nbsp;<CONFIG><br>
-for info on changing JHS configuration
+<a name="action">
+<span class="h">ijx action menu</span><br>
+A script defines action menu items and the verbs to run
+when clicked. The following is a sample file you can
+define and then modify:<br><br>
+<tt>
+*** script ~user/projects/ja/ja.ijs ***<br>
+coclass'z'<br><br>
+ja_menu=: 0 : 0<br>
+aaa<br>
+bbb<br>
+<PAREN><br><br>
 
-<br><br>
+ja_aaa=: 3 : 0<br>
+'aaa clicked'<br>
+<PAREN><br><br>
+
+ja_bbb=: 3 : 0<br>
+'bbb clicked'<br>
+<PAREN><br>
+***<br><br>
+</tt>
+
+<a name="project">
+<span class="h">ijx project manager</span><br>
+An ijx action menu item can provide a simple project manager.
+A menu click can load/reload the project files.
+This can be especially helpful if an external editor
+is used.<br><br>
+
 <a name="debug">
-<span class="h">debug (ijx menu)</span><br>
-With debug on, execution suspends at an error or a stop.
+<span class="h">ijx debug menu</span><br>
+With debug on (ijx menu debug), execution suspends at an error or a stop.
 <pre>
    dbsm'name'      - display numbered definition lines
    dbsm'name ...'  - add stops
@@ -99,6 +125,12 @@ menu debug|step - step to line 1
 menu debug|run - run to error or stop
 (runs to end as no error or stops)
 </pre>
+
+<span class="h">configuration</span><br>
+JHS initializes based on configuration files. See file<br>
+&nbsp;&nbsp;<CONFIG><br>
+for info on changing JHS configuration
+
 </div>
 )
 

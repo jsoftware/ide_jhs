@@ -23,30 +23,11 @@ smoutput'debug off'
 dboff''
 )
 
-ev_dbstep_click=: 3 : 0
-dbstep''
-i.0 0
-)
-
-ev_dbstepin_click=: 3 : 0
-dbstepin''
-i.0 0
-)
-
-ev_dbstepout_click=: 3 : 0
-dbstepout''
-i.0 0
-)
-
-ev_dbcutback_click=: 3 : 0
-dbcutback''
-i.0 0
-)
-
-ev_dbrun_click=:   3 : 0
-dbrun''
-i.0 0
-)
+ev_dbstep_click=:    3 : 'try. dbstep''''    catch. end. i.0 0'
+ev_dbstepin_click=:  3 : 'try. dbstepin''''  catch. end. i.0 0'
+ev_dbstepout_click=: 3 : 'try. dbstepout'''' catch. end. i.0 0'
+ev_dbcutback_click=: 3 : 'try. dbcutback'''' catch. end. i.0 0'
+ev_dbrun_click=:     3 : 'try. dbrun''''     catch. end. i.0 0'
 
 dbon_z_=: 3 : 0
 13!:15 'smoutput dbes dbestack_z_=:13!:18'''''
@@ -126,13 +107,26 @@ end.
 )
 
 jsdebug=: 0 : 0
-function ev_dbstep_click(){jdoh([]);}
-function ev_dbstepin_click(){jdoh([]);}
-function ev_dbstepout_click(){jdoh([]);}
-function ev_dbcutback_click(){jdoh([]);}
-function ev_dbrun_click(){jdoh([]);}
-function ev_dbon_click(){jdoh([]);}
-function ev_dboff_click(){jdoh([]);}
+function ev_dbstep_click(){jdoa("");}
+function ev_dbstep_click_ajax(ts){ajax(ts);}
+
+function ev_dbstepin_click(){jdoa("");}
+function ev_dbstepin_click_ajax(ts){ajax(ts);}
+
+function ev_dbstepout_click(){jdoa("");}
+function ev_dbstepout_click_ajax(ts){ajax(ts);}
+
+function ev_dbcutback_click(){jdoa("");}
+function ev_dbcutback_click_ajax(ts){ajax(ts);}
+
+function ev_dbrun_click(){jdoa("");}
+function ev_dbrun_click_ajax(ts){ajax(ts);}
+
+function ev_dbon_click(){jdoa("");}
+function ev_dbon_click_ajax(ts){ajax(ts)};
+
+function ev_dboff_click(){jdoa("");}
+function ev_dboff_click_ajax(ts){ajax(ts)};
 
 function ev_s_shortcut(){jscdo("dbstep");}
 function ev_i_shortcut(){jscdo("dbstepin");}

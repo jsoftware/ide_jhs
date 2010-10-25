@@ -40,9 +40,9 @@ NB. javascript code - event handlers etc.
 JS=: 0 : 0
 // event handler - send ajax request to J
 // ([]) indicates empty list argument is sent
-function ev_roll_click(){jdoh([]);}
+function ev_roll_click(){jdoa("");}
 
 // framework calls with the jhrajax argument
 // sets "result" element innerHTML with the 6 numbers
-function ajax(ts){jbyid("result").innerHTML=ts[0];}
+function ev_roll_click_ajax(ts){jbyid("result").innerHTML=ts[0];}
 )

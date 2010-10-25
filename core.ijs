@@ -608,6 +608,7 @@ NVDEBUG=: 0 NB. 1 shows NV on each input
 INPUT=: '' NB. <'   '
 NB. leading &nbsp; for Chrome delete all
 LOG=: jmarka,'<div>&nbsp;<font style="font-size:20px; color:red;" >J Http Server</font></div>',jmarkz
+if. 0~:#loadfailed do. LOG=.LOG,jhfroma 'load failed:',LF,loadfailed end.
 LOGN=: ''
 LOGFULL=: ''
 PDFOUTPUT=: 'output pdf "',(jpath'~temp\pdf\plot.pdf'),'" 480 360;'  
@@ -637,13 +638,26 @@ output_jfe_=: output_jhs_
 jfe 1
 )
 
+loader=: 3 : 0
+t=. ''
+for_n. y do.
+ try.
+  load__ >n
+ catch.
+  t=. t,LF,~>n
+ end.
+end.
+if. 0~:#t do. smoutput LF,'load failed:',LF,t end.
+t
+)
+
 NB. load rest of JHS
 t=. (<'.ijs'),~each ;:'core utilh utiljs jlogin jijx jijxdebug jijs jfile jfif jfilesrc jhelp jal jdemo jgcp'
 corefiles=: (<jpath'~addons/ide/jhs/'),each t
-load__ }.corefiles
+loadfailed=: loader }.corefiles
 
 NB.! debug stuff
-d=. (<'.ijs'),~each (<'jdemo'),each ":each >:i.8
+d=. (<'.ijs'),~each (<'jdemo'),each ":each >:i.9
 pfiles=:     (<'/users/eric/svn/addons/ide/jhs/'),each t
 dsrcfiles=:  (<'/users/eric/svn/addons/ide/jhs/demo/'),each d
 dsnkfiles=:  (<jpath'~addons/ide/jhs/demo/'),each d

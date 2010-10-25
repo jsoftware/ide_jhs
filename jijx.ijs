@@ -6,6 +6,8 @@ HBS=: 0 : 0
 jhresizea''
 jhma''
 'studio'   jhmg'studio';1;10
+ 'scratch' jhmab'scratch...'
+ 'scratchr'jhmab'scratch r^'
  'jdemo'   jhml'demos'
  'advance' jhmab'advance a^'
  'lab'     jhmab'labs...'
@@ -16,6 +18,10 @@ NB. 'projman' jhmab'project manager'
  jhjmlink''
 jhmz''
 
+'scratchdlg' jhdivahide''
+'scratcharea'jhtarea''
+'</div>'
+
 'labsdlg'   jhdivahide'labs:'
  labsel''
  'labsclose'jhb'X'
@@ -25,29 +31,6 @@ jhresizeb''
 'log' jhec'<LOG>'
 jhresizez''
 )
-
-NB.! try. catch. !
-actionmenu=: 3 : 0
-try.
- load'~user/projects/ja/ja.ijs'
- amenu=: <;._2 ja_menu
- t=. 'action'   jhmg'action';1;10
- for_i. i.#amenu do.
-  t=. t,('action',":i)jhmab >i{amenu
- end.
-catch.
- ''
-end. 
-)
-
-action=: 3 : 0
-".'''''',~'ja_',(>y{amenu),'_base_'
-)
-
-ev_action0_click=: 3 : 'action 0'
-ev_action1_click=: 3 : 'action 1'
-ev_action2_click=: 3 : 'action 2'
-ev_action3_click=: 3 : 'action 3'
 
 NB.! create causes problems? related to jloging goto create_jijx_
 jev_get=: 3 : 'i.0 0'
@@ -173,9 +156,49 @@ ev_labsel_click=: 3 : 0
 labopen ".getv'jsid'
 )
 
-ev_projman_click=: 3 : 0
-'Project Manager not implemented yet.'
+jloadnoun__=: 0!:100
+
+ev_scratchr_click=: 3 : 0
+try. jloadnoun__ getv'scratcharea' catch. 13!:12'' end.
 )
+
+actionmenu=: 3 : 0
+try.
+ load'~user/projects/ja/ja.ijs'
+ amenu=: <;._2 ja_menu
+ t=. 'action'   jhmg'action';1;10
+ for_i. i.#amenu do.
+  t=. t,('action',":i)jhmab(>i{amenu),>(i<3){'';' ',(i{'qwe       '),'^'
+ end.
+catch.
+ t=. 'action'   jhmg'action';1;10
+ t=. t,'action'jhmab'action'
+end. 
+)
+
+
+ev_action_click=:  3 : 0
+smoutput 'see help ijx menu action for customization info'
+)
+
+action=: 3 : 0
+".'''''',~'ja_',(>y{amenu),'_base_'
+)
+
+ev_action0_click=: 3 : 'action 0'
+ev_action1_click=: 3 : 'action 1'
+ev_action2_click=: 3 : 'action 2'
+ev_action3_click=: 3 : 'action 3'
+ev_action4_click=: 3 : 'action 4'
+ev_action5_click=: 3 : 'action 5'
+ev_action6_click=: 3 : 'action 6'
+ev_action7_click=: 3 : 'action 7'
+ev_action8_click=: 3 : 'action 8'
+ev_action9_click=: 3 : 'action 9'
+
+ev_q_shortcut=: ev_action0_click
+ev_w_shortcut=: ev_action1_click
+ev_e_shortcut=: ev_action2_click
 
 CSS=: 0 : 0
 *{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
@@ -216,6 +239,9 @@ function updatelog(t)
   if(0==parent.childNodes.length) parent.parentNode.removeChild(parent);
  }
  jbyid("log").appendChild(n);
+
+ jbyid("log").focus(); //! required by FF ???
+
  jsetcaret("prompt",1);
  setTimeout(scrollz,1); // allow doc to update
 }
@@ -240,10 +266,10 @@ function addrecall(a)
   recs.unshift(a); reci=-1; // recalls
 }
 
-//! function scrollz(){window.scrollTo(0,1000000);}
 function scrollz(){jbyid("prompt").scrollIntoView(false);}
 
 function ev_2_shortcut(){jbyid("log").focus();scrollz();jsetcaret("prompt",1);}
+function ev_3_shortcut(){jbyid("scratcharea").focus();}
 function ev_a_shortcut(){jscdo("advance");}
 
 function newpline(t)
@@ -278,6 +304,8 @@ function darrow()
 
 function evload()
 {
+ jbyid("scratcharea").style.width="100%";
+ jbyid("scratcharea").setAttribute("rows","8");
  jbyid("log").focus();
  newpline("   ");
  jresize();
@@ -355,24 +383,53 @@ function ev_log_enter()
  }
 }
 
-function ev_advance_click(){jdoh([]);}
+function ev_advance_click(){jdoa("");}
+function ev_advance_click_ajax(ts){ajax(ts);}
+
 function ev_lab_click(){jdlgshow("labsdlg","labsel");}
 function ev_labsclose_click(){jhide("labsdlg");}
+
+function ev_scratch_click(){jdlgshow("scratchdlg","scratcharea");}
+function ev_scratchclose_click(){jhide("scratchdlg");}
+
+function ev_scratchr_click(){jdoh(["scratcharea"]);}
+function ev_scratchr_click_ajax(ts){ajax(ts);}
+
+function ev_r_shortcut(){jscdo("scratchr");}
 
 function ev_labsel_click()
 {
  jhide("labsdlg");
  jform.jsid.value= jbyid("labsel").selectedIndex;
- jdoh([]);
+ jdoa("");
 }
 
-function ev_projman_click(){jdoh([]);}
-function ev_debug_click(){jdoh([])}
+function ev_labsel_click_ajax(ts){ajax(ts);}
 
-function ev_action0_click(){jdoh([]);}
-function ev_action1_click(){jdoh([]);}
-function ev_action2_click(){jdoh([]);}
+function ev_action0_click(){jdoa("");}
+function ev_action0_click_ajax(ts){ajax(ts);}
+function ev_action1_click(){jdoa("");}
+function ev_action1_click_ajax(ts){ajax(ts);}
+function ev_action2_click(){jdoa("");}
+function ev_action2_click_ajax(ts){ajax(ts);}
+function ev_action3_click(){jdoa("");}
+function ev_action3_click_ajax(ts){ajax(ts);}
+function ev_action4_click(){jdoa("");}
+function ev_action4_click_ajax(ts){ajax(ts);}
+function ev_action5_click(){jdoa("");}
+function ev_action5_click_ajax(ts){ajax(ts);}
+function ev_action6_click(){jdoa("");}
+function ev_action6_click_ajax(ts){ajax(ts);}
+function ev_action7_click(){jdoa("");}
+function ev_action7_click_ajax(ts){ajax(ts);}
+function ev_action8_click(){jdoa("");}
+function ev_action8_click_ajax(ts){ajax(ts);}
+function ev_action9_click(){jdoa("");}
+function ev_action9_click_ajax(ts){ajax(ts);}
 
+function ev_q_shortcut(){jscdo("action0");}
+function ev_w_shortcut(){jscdo("action1");}
+function ev_e_shortcut(){jscdo("action2");}
 )
 
 
