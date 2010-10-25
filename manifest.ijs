@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.33'
+VERSION=: '1.0.34'
 
 FILES=: 0 : 0
 history.txt
@@ -36,6 +36,7 @@ demo/jdemo5.ijs
 demo/jdemo6.ijs
 demo/jdemo7.ijs
 demo/jdemo8.ijs
+demo/jdemo9.ijs
 )
 
 RELEASE=: 'j701'
