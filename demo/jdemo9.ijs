@@ -1,6 +1,6 @@
 coclass'jdemo9'
 coinsert'jhs'
-asdf
+
 jev_get=: 3 : 0
 address=. PEER_jhs_,':',":PORT_jhs_
 t=. html rplc '<ADDRESS>';address
