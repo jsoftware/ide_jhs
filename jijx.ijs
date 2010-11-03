@@ -17,7 +17,8 @@ jhmz''
 'scratcharea'jhtextarea''
 '</div>'
 
-'labsdlg'   jhdivadlg'labs:'
+'labsdlg'   jhdivadlg''
+ 'labrun'   jhb'run'
  labsel''
  'labsclose'jhb'X'
 '</div>'
@@ -83,7 +84,7 @@ try.
   title=. (title i.LF){.title
   title=. (>:title i.'''')}.title
   title=. (title i:''''){.title 
-  LABTITLES=: LABTITLES,<cat,': ',title
+  LABTITLES=: LABTITLES,<title NB.! cat,': ',
   end.
  end.
 catch.
@@ -144,7 +145,7 @@ ev_advance_click=: 3 : 0
 if. (<'jlab')e.conl 0 do.  labnext_jlab_'' else. labopen 0 end.
 )
 
-ev_labsel_change=: 3 : 0
+ev_labrun_click=: 3 : 0
 labopen ".getv'jsid'
 )
 
@@ -383,7 +384,7 @@ function ev_scratchr_click(){jdoajax(["scratcharea"],"");}
 
 function ev_r_shortcut(){jscdo("scratchr");}
 
-function ev_labsel_change()
+function ev_labrun_click()
 {
  jhide("labsdlg");
  jform.jsid.value= jbyid("labsel").selectedIndex;

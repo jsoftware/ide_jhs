@@ -268,7 +268,9 @@ function jev(event){
 function jevdo()
 {
  JEV= "ev_"+jform.jmid.value+"_"+jform.jtype.value;
- try{eval(JEV)}catch(ex){return true;} // return true if handler not defined
+ // undefined returns true except for click avoid submit 
+ try{eval(JEV)}
+ catch(ex){return jform.jtype.value!='click';}
  try{var r= eval(JEV+"();")}
  catch(ex){alert(JEV+" failed: "+ex);return false;}
  if('undefined'!=typeof r) return r;
