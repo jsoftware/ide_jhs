@@ -4,10 +4,10 @@ coinsert'jhs'
 HBS=: 0 : 0
 login
 '<MSG>'
-jhtaba
- jhtr 'user: '   ;'user' jht'';15
- jhtr 'pasword: ';'pass' jhtp'';15
-jhtabz
+jhtablea
+ jhtr 'user: '   ;'user' jhtext'';15
+ jhtr 'pasword: ';'pass' jhpassword'';15
+jhtablez
 loggedin
 )
 

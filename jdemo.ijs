@@ -19,7 +19,6 @@ jhma''
  jhjmlink''
 jhmz''
 jhh1'JHS demos'
-'Select demo from demo menu.'
 desc
 jhdemo''
 )
@@ -27,14 +26,15 @@ jhdemo''
 jev_get=: create NB. browser get request
 
 NB. create page and send to browser
-NB. response is built from globals CSS JS and HBS
-create=: 3 : 0 NB. create page and send to browser
-loadall'' NB. ensure demos are loaded
+NB. jhr builds response HBS CSS JS
+create=: 3 : 0
+loadall'' NB. load demo scripts
 'jdemo'jhr''
 )
 
 desc=: 0 : 0
-<br/>Demos are simple examples of JHS GUI programming.
+Select demo from demo menu.<br/><br/>
+Demos are simple examples of JHS GUI programming.
 Study them to learn how to build your own app.<br><br>
 
 JHS combines J with the power of html, css (styles),
@@ -42,7 +42,13 @@ javascript, and the ubiquity of the browser.
 J programmers can ride the coattails of www
 infrastructure and standards.<br><br>
 
-Apps are built on the JHS framework (locale jhs).<br><br>
+Apps are built with the JHS framework. A few useful utitlies:
+<div class="jcode">
+   doch_jhs_''        NB. J utilities
+   docjs_jhs_''       NB. javascript overview
+   jhbshtml_jdemo1_'' NB. see HBS and html
+   jnv_jhs_ 1         NB. toggle name/value display
+</div><br/>
 
 Apps have the following general structure.<br>
 
@@ -54,15 +60,11 @@ HBS=: ... NB. J sentences that produce html body
 CSS=: ... NB. styles
 JS=:  ... NB. javascript (event handlers)
 
-NB. CSSCORE_jhs_ - framework css
-NB. JSCORE_jhs_  - framework js
-
 jev_get=: create NB. browser get request
 
 create=: 3 : 0 NB. create page and send to browser
  ...
- 'title'jhr ...'IDS';values for body...
- ...
+ 'title'jhr...
 </div>
 )
 

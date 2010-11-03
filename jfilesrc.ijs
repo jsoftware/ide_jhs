@@ -2,7 +2,7 @@ NB. JHS - file source stuff - favicon.ico ...
 coclass'jfilesrc'
 coinsert'jhs'
 
-gsrchead=: 0 : 0
+gsrchead=: toCRLF 0 : 0
 HTTP/1.1 200 OK
 Server: JHS
 Last-Modified: Mon, 01 Mar 2010 00:23:24 GMT
@@ -40,7 +40,7 @@ favicon=: 3 : 0
 htmlresponse htmlfav,1!:1 <jpath'~bin\icons\favicon.ico'
 )
 
-htmlfav=: 0 : 0
+htmlfav=: toCRLF 0 : 0
 HTTP/1.1 200 OK
 Server: J
 Accept-Ranges: bytes

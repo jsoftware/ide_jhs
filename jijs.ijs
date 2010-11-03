@@ -3,7 +3,6 @@ coclass'jijs'
 coinsert'jhs'
 
 HBS=: 0 : 0
-jhresizea''
 jhma''
 'action'    jhmg'action';1;10
  'runw'     jhmab'run         r^'
@@ -19,42 +18,40 @@ jhma''
 jhjmlink''
 jhmz''
 
-'saveasdlg'    jhdivahide''
+'saveasdlg'    jhdivadlg''
  'saveasdo'    jhb'save as'
- 'saveasx'     jht'';10
+ 'saveasx'     jhtext'';10
   'saveasclose'jhb'X'
 '<hr></div>'
 
-'finddlg'    jhdivahide''
- 'findtop'   jhb'Top'
- 'findnext'  jhb 226 136 168{a.
- 'findprev'  jhb 226 136 167{a.
- 'what'      jht'';10
- 'context'   jhselne(<;._2 FIFCONTEXT_jfif_);1;0
- 'matchcase' jhckbne'case';'matchcase';1
+'finddlg'    jhdivadlg''
+ 'findtop'   jhb'top'
+ 'findnext'  jhb 'dn'
+ 'findprev'  jhb 'up'
+ 'what'      jhtext'';10
+ 'context'   jhselect(<;._2 FIFCONTEXT_jfif_);1;0
+ 'matchcase' jhcheckbox'case';1
  'findclose' jhb'X'
 '<hr></div>'
 
-'repldlg'      jhdivahide''
+'repldlg'      jhdivadlg''
  'repldo'      jhb'Replace'
   'replforward'jhb'Replace Forward'
-   'replnew'   jht'';10
+   'replnew'   jhtext'';10
     'replclose'jhb'X'
 '<hr></div>'
 
 'rep'         jhdiv''
 
-'filename'    jhh  '<FILENAME>'
+'filename'    jhhidden'<FILENAME>'
 'filenamed'   jhdiv'<FILENAME>'
 
-jhresizeb''
+jhresize''
 
-'num'         jhecleft''
-'ijs'         jhecright'<DATA>'
+('num'        jhec'') jhfix'float:left';'tabindex="-1"'
+'ijs'         jhec'<DATA>'
 
-'textarea'    jhh''
-
-jhresizez''
+'textarea'    jhhidden''
 )
 
 NB. y file
@@ -169,17 +166,17 @@ function evload() // body onload->jevload->evload
 function ro(only)
 {
  readonly= only;
- //! ce.setAttribute("contenteditable",readonly?"false":"true");
  ce.style.background= readonly?"#eee":"#fff";
 }
 
-function click(){ta.value= jtfromh(ce.innerHTML);jdoh(["filename","textarea","saveasx"]);}
+function click(){ta.value= jtfromh(ce.innerHTML);jdoajax(["filename","textarea","saveasx"],"");}
 function ev_save_click() {click();}
 function ev_runw_click() {click();}
 function ev_runwd_click(){click();}
 
 function ev_saveasdo_click(){click();}
-function ev_saveasx_enter(){click();}
+function ev_saveasx_enter() {click();}
+
 function ev_saveas_click()     {jdlgshow("saveasdlg","saveasx");}
 function ev_saveasclose_click(){jhide("saveasdlg");}
 
@@ -264,59 +261,50 @@ function colhit(d) // syntax color
  return t+d+"\u0000";
 }
 
-function findspan(t)
-{
- return('string'==typeof rwhat)?t:t.replace(/\u0004/g,spanmark);
-}
-
 function findmark(t){return('string'==typeof rwhat)?t:t.replace(rwhat,colmark);}
 
-function ev_d_shortcut()
-{
- alert("test");
- for(var i=0;i<50;++i)
- {
-  color();
- }
- alert("done");
-}
+// '...' or '...LF or NB....LF or name.
+var COLR=RegExp("('[^'\u000A]*['\u000A])|(NB\..*)|([a-zA-Z][a-zA-Z0-9_\u200B]*[\.])","g");
 
 // caret preserved by
 //  inserting ZWSP, manipulating, ZWSP to span id, selecting span id
 // rwhat global to mark finds
 function color()
 {
- var t,sel,rng,mark;
+ var t,mark;
  ce.focus();
  mark=jreplace("ijs",1,markcaret);
  t= ce.innerHTML;
- if(colorflag)
- {
-  t=jtfromh(t);
-  t=findmark(t);
-  // '...' or '...LF or NB....LF or name.
-  var r="('[^'\u000A]*['\u000A])|(NB\..*)|([a-zA-Z][a-zA-Z0-9_\u200B]*[\.])";
-  t= t.replace(RegExp(r,"g"),colhit);
-  t= jhfromt(t);
-  t= t.replace(/\u0000/g, "</span>");
-  t= t.replace(/\u0001/g, "<span class=\"color1\" style=\"color:red\">");
-  t= t.replace(/\u0002/g, "<span class=\"color2\" style=\"color:green\">");
-  t= t.replace(/\u0003/g, "<span class=\"color3\"style=\"color:blue\">");
-  t= findspan(t);
- }
- else
- {
-  t=jtfromh(t);
-  t=findmark(t);
-  t= jhfromt(t);
-  t=findspan(t);
-  t=t.replace(/\u0000/g, "</span>");
- }
+ t=jtfromh(t);
+ t=findmark(t);
+ if(colorflag)t=t.replace(COLR,colhit);
+ t=xhfromt(t);
  rwhat="";
- t= t.replace(/\u200B/,spancaret);
  ce.innerHTML= t;
  if(mark)jsetcaret("caret",0);
 }
+
+var XREGHFROMT=RegExp("[ \n<>&\u0000|\u0001|\u0002|\u0003|\u0004|\u200B]","g");
+
+function xhfromthit(t)
+{
+ switch(t[0])
+ {
+ case " ":      return "&nbsp;";
+ case "\n":     return "<br>";  
+ case "<":      return "&lt;";
+ case ">":      return "&gt;";
+ case "&":      return "&amp;";
+ case "\u0000": return "</span>";
+ case "\u0001": return "<span style=\"color:red\">";  
+ case "\u0002": return "<span style=\"color:green\">";
+ case "\u0003": return "<span style=\"color:blue\">";
+ case "\u0004": return spanmark;
+ case "\u200B": return spancaret;
+ }
+}
+
+function xhfromt(d){return d.replace(XREGHFROMT,xhfromthit);}
 
 var numberflag=0;
 var spancaret="<span id=\"caret\" class=\"caret\"></span>";
@@ -358,7 +346,7 @@ function undoadd()
  if(readonly)return;
  var t=ce.innerHTML;
  if(t==undos[undos.length-1])return;
- while(undoslen>300000) //!
+ while(undoslen>3000000) //!
  {
   undoslen-=undos.shift().length;
  }
@@ -370,7 +358,7 @@ function undoadd()
 
 function doset()
 { 
- rep.innerHTML="undo "+undosn+" of "+(undos.length-1)+" ("+undoslen+" bytes)";
+ rep.innerHTML="undo "+undosn+" of "+(undos.length-1);
  var t=undos[undosn];
  ce.innerHTML=t;
  jsetcaret("caret",0);
@@ -405,16 +393,16 @@ function ev_ijs_keypress()
  var k=jevev.keyCode;c=jevev.charCode;ctrl=jevev.ctrlKey;
  var f=k>36&&k<41; // left up right down 37 38 39 40
  f=f||ctrl&&c==99; // ctrl+c
- if(readonly&&!ctrl&&!f){if(jisIE())window.event.returnValue=false; return false;}
+ if(readonly&&!ctrl&&!f){if(jisIE)window.event.returnValue=false; return false;}
  if(jsc||0==c||ctrl)return true; // ignore shortcuts,arrows,bs,del,enter,ctrls,etc.
  if(undotoid!=0)clearTimeout(undotoid);
- undotoid=setTimeout(undoadd,3000); //!
+ undotoid=setTimeout(undoadd,2000); //!
  if(toid!=0)clearTimeout(toid);
  if(colorflag||numberflag)toid=setTimeout(update,100);
  return true;
 }
 
-function ev_w_shortcut(){alert(ce.innerHTML);} // debug
+//! function ev_w_shortcut(){alert(ce.innerHTML);} // debug
 
 function ev_what_enter(){jscdo("find");}
 
@@ -514,7 +502,7 @@ function ev_ijs_keydown()
  var c=jevev.keyCode,ctrl=jevev.ctrlKey,shift=jevev.shiftKey;
  if(readonly&&(c==8||c==46||(ctrl&&c==88)||(ctrl&&c==86))) // bs del cut paste undo redo
  {
-  if(jisIE())window.event.returnValue=false;
+  if(jisIE)window.event.returnValue=false;
   return false;
  }
  if(ctrl&&!shift)
@@ -526,7 +514,7 @@ function ev_ijs_keydown()
  return true;
 }
 
-// still used by jdoh callers - kill off
+// called with ajax response
 function ajax(ts)
 {
  rep.innerHTML= ts[0];

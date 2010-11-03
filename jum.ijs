@@ -2,6 +2,8 @@ NB. J HTTP Server - jum app
 coclass'jum'
 coinsert'jhs'
 
+NB.! jhs.cfg should be changed to jhs.ijs
+
 NB.! jum login doesn't have logout
 
 NB. configuration

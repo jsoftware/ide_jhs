@@ -2,23 +2,21 @@ coclass'jfif'
 coinsert'jhs'
 
 HBS=: 0 : 0
-jhresizea''
 jhma''
  jhjmlink''
 jhmz''
 'find'   jhb'Find'
-'what'   jht FIFWHAT;10
-'context'jhselne(<;._2 FIFCONTEXT);1;FIFCONTEXTNDX
-'matchcase' jhckbne'case';'matchcase';FIFCASE
+'what'   jhtext FIFWHAT;10
+'context'jhselect(<;._2 FIFCONTEXT);1;FIFCONTEXTNDX
+'matchcase' jhcheckbox'case';FIFCASE
 jhbr
-'type'   jhselne JHSFILTERS;1;JHSFILTERS i. <FIFTYPE
-'where'  jhselne JHSFOLDERS;1;JHSFOLDERS i. <FIFDIR
-'subfolders'jhckbne'sub';'subfolders';FIFSUBDIR
-'nameonly'  jhckbne'names only';'nameonly';FIFNAMEONLY
+'type'   jhselect JHSFILTERS;1;JHSFILTERS i. <FIFTYPE
+'where'  jhselect JHSFOLDERS;1;JHSFOLDERS i. <FIFDIR
+'subfolders'jhcheckbox'sub';FIFSUBDIR
+'nameonly'  jhcheckbox'names only';FIFNAMEONLY
 jhbr
-jhresizeb''
+jhresize''
 'area'   jhdiv''
-jhresizez''
 )
 
 NB. regex option not supported in UI, but could be
@@ -47,7 +45,7 @@ FIFNAMEONLY=: ".FIFNAMEONLY
 FIFINFO=: ''
 JHSFOUNDFILES=: ''
 fiff_find_button''
-jhrajax Q__=: FIFINFO,>FIFNAMEONLY{FIFFOUND;JHSFOUNDFILES
+jhrajax FIFINFO,>FIFNAMEONLY{FIFFOUND;JHSFOUNDFILES
 )
 
 CSS=: 0 : 0
@@ -69,7 +67,7 @@ function ev_find_click()
  t+=(jform.subfolders.checked?1:0)+JASEP;
  t+=0+JASEP; // regex not supported by ui
  t+=(jform.nameonly.checked?1:0)+JASEP;
- jdoa(t);
+ jdoajax([],t);
 }
 )
 

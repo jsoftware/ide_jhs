@@ -2,11 +2,11 @@ coclass'jdemo5'
 coinsert'jhs'
 
 HBS=: 0 : 0
-jhh1'Plot demo'
-'sentence' jht'<SENTENCE>';20
-jhhr
-'<PLOT>'
-jhdemo''
+           jhh1'Plot demo'
+'sentence' jhtext'<SENTENCE>';20
+           jhhr
+           '<PLOT>'
+           jhdemo''
 )
 
 create=: 3 : 0

@@ -2,8 +2,7 @@ coclass'jdemo9'
 coinsert'jhs'
 
 jev_get=: 3 : 0
-address=. PEER_jhs_,':',":PORT_jhs_
-t=. html rplc '<ADDRESS>';address
+t=. html rplc '<ADDRESS>';gethv_jhs_ 'Host:'
 smoutput info,t,'</html>',LF,'***'
 htmlresponse hrtemplate hrplc 'TITLE CSS JS BODY';'jdemo9';'';'';t
 )

@@ -3,36 +3,31 @@ coclass'jijx'
 coinsert'jhs'
 
 HBS=: 0 : 0
-jhresizea''
 jhma''
 'studio'   jhmg'studio';1;10
- 'scratch' jhmab'scratch...'
- 'scratchr'jhmab'scratch r^'
  'jdemo'   jhml'demos'
  'advance' jhmab'advance a^'
  'lab'     jhmab'labs...'
-NB. 'action'   jhmg'action';1;15
-NB. 'projman' jhmab'project manager'
  actionmenu''
  debugmenu''
  jhjmlink''
 jhmz''
 
-'scratchdlg' jhdivahide''
-'scratcharea'jhtarea''
+'scratchdlg' jhdivadlg''
+'scratcharea'jhtextarea''
 '</div>'
 
-'labsdlg'   jhdivahide'labs:'
+'labsdlg'   jhdivadlg'labs:'
  labsel''
  'labsclose'jhb'X'
 '</div>'
-jhresizeb''
+jhresize''
 
 'log' jhec'<LOG>'
-jhresizez''
+
+'recalls'jhhidden'<RECALLS>'
 )
 
-NB.! create causes problems? related to jloging goto create_jijx_
 jev_get=: 3 : 'i.0 0'
 
 NB. move new transaction(s) to log
@@ -56,31 +51,29 @@ end.
 t=. '<div id="prompt" class="log">',t,'</div>'
 d=. LOGN,t
 uplog''
-if. METHOD-:'post' do. NB. 'true'-:getv'jajax'
+if. METHOD-:'post' do.
  jhrajax d
 else.
  create''
 end.
 )
 
-
 NB. refresh response - not jajax
 NB. mac safari input text ghost images are pushed up by ajax output
 NB. kludge fix of margin:3px fixes the problem
 NB. the margin requires reducing width to 99 to avoid hitting the right edge
 create=: 3 : 0
-iphone=. 0<#('iPhone'ss t),'iPod'ss t=. gethv_jhs_ 'User-Agent:'
-IP=: iphone NB.! IP global used in BIS for up dn
-NB.! pass js parameters through html jhh elements!
-JS=: js=.  JSCORE,jsdebug,~jsx hrplc 'PROMPT KBSPACE NOARROWS RECALLS';y;iphone;iphone;recalls''
-'jijx' jhr 'LOG';LOG
+NB.! iphone=. 0<#('iPhone'ss t),'iPod'ss t=. gethv_jhs_ 'User-Agent:'
+JS=: js=.  JSCORE,jsdebug,~jsx
+'jijx' jhr 'LOG RECALLS';LOG;recalls''
 )
 
 getlabs=: 3 : 0
 LABTITLES=: LABCATS=: LABFILES=: ''
+d=. dirpath t=. jpath'~addons/labs'
+if. 1=#d do. d=. dirpath t=. jpath'~system/extras/labs' end. NB.! old location
 try.
- t=. jpath'~system/extras/labs'
- for_p. dirpath t do.
+ for_p. d do.
   for_q. 1 dir '/*.ijt',~>p do.
   LABFILES=: LABFILES,q
   cat=. (>:#t)}.>q
@@ -102,8 +95,8 @@ LABTITLES=: s{LABTITLES
 )
 
 labsel=: 3 : 0
-if. _1=nc<'LABTITLES' do. getlabs'' end.
-'labsel'jhsel LABTITLES;1;0
+getlabs''
+'labsel'jhselect LABTITLES;1;0
 )
 
 updn=: 3 : 0
@@ -126,10 +119,9 @@ jhtml ;a,.<'<br>'
 )
 
 recalls=: 3 : 0
-t=. INPUT
-t=. t rplc each <'"';'\"';'\';'\\'
-t=. t-.each <CRLF
-_2}.;'"',each t,each<'",',LF
+t=.INPUT
+t=.(0~:;#each t-.each' ')#t
+(;t,each LF)rplc <'"';'\"';'\';'\\'
 )
 
 labmsg=: 0 : 0
@@ -143,7 +135,7 @@ Menu studio|advance to advance.
 )
 
 labopen=: 3 : 0
-require__'~system/util/lab.ijs'
+require__'~addons/labs/lab.ijs'
 smselout_jijs_=: smfocus_jijs_=: [ NB.! allow introcourse to run
 labinit_jlab_ y{LABFILES
 )
@@ -152,7 +144,7 @@ ev_advance_click=: 3 : 0
 if. (<'jlab')e.conl 0 do.  labnext_jlab_'' else. labopen 0 end.
 )
 
-ev_labsel_click=: 3 : 0
+ev_labsel_change=: 3 : 0
 labopen ".getv'jsid'
 )
 
@@ -163,17 +155,20 @@ try. jloadnoun__ getv'scratcharea' catch. 13!:12'' end.
 )
 
 actionmenu=: 3 : 0
+a=. 'action'   jhmg'action';1;10
+a=. a,'scratch' jhmab'scratch...'
+a=. a,'scratchr'jhmab'scratch r^'
 try.
  load'~user/projects/ja/ja.ijs'
  amenu=: <;._2 ja_menu
- t=. 'action'   jhmg'action';1;10
+ t=. a
  for_i. i.#amenu do.
-  t=. t,('action',":i)jhmab(>i{amenu),>(i<3){'';' ',(i{'qwe       '),'^'
+  t=. t,('actionn*',":i)jhmab(>i{amenu),>(i<3){'';' ',(i{'qwe       '),'^'
  end.
 catch.
- t=. 'action'   jhmg'action';1;10
- t=. t,'action'jhmab'action'
-end. 
+ t=. a
+end.
+t 
 )
 
 
@@ -185,20 +180,9 @@ action=: 3 : 0
 ".'''''',~'ja_',(>y{amenu),'_base_'
 )
 
-ev_action0_click=: 3 : 'action 0'
-ev_action1_click=: 3 : 'action 1'
-ev_action2_click=: 3 : 'action 2'
-ev_action3_click=: 3 : 'action 3'
-ev_action4_click=: 3 : 'action 4'
-ev_action5_click=: 3 : 'action 5'
-ev_action6_click=: 3 : 'action 6'
-ev_action7_click=: 3 : 'action 7'
-ev_action8_click=: 3 : 'action 8'
-ev_action9_click=: 3 : 'action 9'
-
-ev_q_shortcut=: ev_action0_click
-ev_w_shortcut=: ev_action1_click
-ev_e_shortcut=: ev_action2_click
+ev_actionn_click=: 3 : 0
+action ".getv'jsid'
+)
 
 CSS=: 0 : 0
 *{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
@@ -214,14 +198,24 @@ NB. *#log:focus{border:1px solid red;}
 NB. *#log:focus{outline: none;} /* no focus mark in chrome */
 
 jsx=: 0 : 0
-var URL= "jijx" // page url - same as j app
+var recs;
 var reci= -1;
-var recs= [<RECALLS>];
-var kbspace= <KBSPACE>;
-var noarrows= <NOARROWS>;
-var flip= 0; // kill off
 var phead= '<div id="prompt" class="log">';
 var ptail= '</div>';
+
+function evload()
+{
+ var t=jbyid("recalls").value;
+ if(0==t.length)
+  recs=[];
+ else
+  recs=t.split("\n");
+ jbyid("scratcharea").style.width="100%";
+ jbyid("scratcharea").setAttribute("rows","8");
+ jbyid("log").focus();
+ newpline("   ");
+ jresize();
+}
 
 function updatelog(t)
 {
@@ -239,9 +233,7 @@ function updatelog(t)
   if(0==parent.childNodes.length) parent.parentNode.removeChild(parent);
  }
  jbyid("log").appendChild(n);
-
- jbyid("log").focus(); //! required by FF ???
-
+ jbyid("log").focus(); // required by FF ???
  jsetcaret("prompt",1);
  setTimeout(scrollz,1); // allow doc to update
 }
@@ -302,49 +294,46 @@ function darrow()
  newpline(t);
 }
 
-function evload()
-{
- jbyid("scratcharea").style.width="100%";
- jbyid("scratcharea").setAttribute("rows","8");
- jbyid("log").focus();
- newpline("   ");
- jresize();
-}
-
 function keyp(){jbyid("kbsp").style.display= "block";scrollz();return true;} // space for screen kb
 
 function ev_up_click(){uarrow();}
 function ev_dn_click(){darrow();}
 
 // log enter - contenteditable
-// run line with caret
-// do not know how to handle multiple-line selection - ignore selection for now
+// run or recall line with caret
+// ignore multiple-line selection for now
 function ev_log_enter()
 {
- var t,sel,rng,tst,n,a,i,p,recall=0;
- p= jbyid("prompt");
- if (window.getSelection)
+ var t,sel,rng,tst,n,i,j,k,p,q,recall=0,name;
+ if(window.getSelection)
  {
   sel= window.getSelection();
   rng= sel.getRangeAt(0);
-  t= rng.toString();
-  if(0!=t.length) return; //! ignore selection for now cause we do not get LF
-  rng.setStartBefore(rng.startContainer,0); // extend selection to line
-  rng.setEndAfter(rng.endContainer);
+  if(0!=rng.toString().length)return;
+  jdominit(jbyid("log"));
+  q=rng.commonAncestorContainer;
+
+  for(i=0;i<jdwn.length;++i) // find selection in dom
+   if(q==jdwn[i])break;
+
+  for(j=i;j>=0;--j)   // backup find start DIV/P/BR
+  {name=jdwn[j].nodeName;if(name=="DIV"||name=="BR"||name=="P")break;}
+
+  for(k=i+1;k<jdwn.length;++k) // forward to find end DIV/P/BR or end
+  {name=jdwn[k].nodeName;if(name=="DIV"||name=="BR"||name=="P")break;}
+  
+  rng.setStart(jdwn[j],0);
+  recall=!(k==jdwn.length||k==jdwn.length-1);
+  if(!k==jdwn.length)
+    rng.setEnd(jdwn[k],0);
+  else
+    rng.setEndAfter(jdwn[k-1],0)
   t= rng.toString();
   t= t.replace(/\u00A0/g," "); // &nbsp;
-
-  // last line exec vs old line recall
-  if(null!=p)
-  {
-   tst= rng.cloneRange();
-   tst.selectNode(p);
-   tst.collapse(true);
-   recall= -1!=tst.compareBoundaryPoints(tst.END_TO_END,rng);
-  }
  }
  else
  {
+  p= jbyid("prompt");
   rng= document.selection.createRange();
   t= rng.text;
   if(0!=t.length) return; // IE selection has LF, but ignore for now
@@ -362,8 +351,7 @@ function ev_log_enter()
     if(n==rng.text.length){rng.moveEnd('character',-1); break;}
   }
   t= rng.text;
-  // last line exec vs old line recall
-  if(null!=p)
+  if(null!=p)// last line exec vs old line recall
   {
    tst= document.selection.createRange();
    tst.moveToElementText(jbyid("prompt"));
@@ -379,12 +367,11 @@ function ev_log_enter()
  else
  {
   addrecall(t);
-  jdo(t,true,[]);
+  jdoajax([],"",t);
  }
 }
 
-function ev_advance_click(){jdoa("");}
-function ev_advance_click_ajax(ts){ajax(ts);}
+function ev_advance_click(){jdoajax([],"");}
 
 function ev_lab_click(){jdlgshow("labsdlg","labsel");}
 function ev_labsclose_click(){jhide("labsdlg");}
@@ -392,44 +379,22 @@ function ev_labsclose_click(){jhide("labsdlg");}
 function ev_scratch_click(){jdlgshow("scratchdlg","scratcharea");}
 function ev_scratchclose_click(){jhide("scratchdlg");}
 
-function ev_scratchr_click(){jdoh(["scratcharea"]);}
-function ev_scratchr_click_ajax(ts){ajax(ts);}
+function ev_scratchr_click(){jdoajax(["scratcharea"],"");}
 
 function ev_r_shortcut(){jscdo("scratchr");}
 
-function ev_labsel_click()
+function ev_labsel_change()
 {
  jhide("labsdlg");
  jform.jsid.value= jbyid("labsel").selectedIndex;
- jdoa("");
+ jdoajax([],"");
 }
 
-function ev_labsel_click_ajax(ts){ajax(ts);}
+function ev_actionn_click(){jdoajax([],"");}
 
-function ev_action0_click(){jdoa("");}
-function ev_action0_click_ajax(ts){ajax(ts);}
-function ev_action1_click(){jdoa("");}
-function ev_action1_click_ajax(ts){ajax(ts);}
-function ev_action2_click(){jdoa("");}
-function ev_action2_click_ajax(ts){ajax(ts);}
-function ev_action3_click(){jdoa("");}
-function ev_action3_click_ajax(ts){ajax(ts);}
-function ev_action4_click(){jdoa("");}
-function ev_action4_click_ajax(ts){ajax(ts);}
-function ev_action5_click(){jdoa("");}
-function ev_action5_click_ajax(ts){ajax(ts);}
-function ev_action6_click(){jdoa("");}
-function ev_action6_click_ajax(ts){ajax(ts);}
-function ev_action7_click(){jdoa("");}
-function ev_action7_click_ajax(ts){ajax(ts);}
-function ev_action8_click(){jdoa("");}
-function ev_action8_click_ajax(ts){ajax(ts);}
-function ev_action9_click(){jdoa("");}
-function ev_action9_click_ajax(ts){ajax(ts);}
-
-function ev_q_shortcut(){jscdo("action0");}
-function ev_w_shortcut(){jscdo("action1");}
-function ev_e_shortcut(){jscdo("action2");}
+function ev_q_shortcut(){jscdo("actionn","0");}
+function ev_w_shortcut(){jscdo("actionn","1");}
+function ev_e_shortcut(){jscdo("actionn","2");}
 )
 
 

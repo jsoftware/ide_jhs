@@ -3,7 +3,6 @@ coclass'jfile'
 coinsert'jhs'
 
 HBS=: 0 : 0
-jhresizea''
 jhma''
 'action'    jhmg'action';1;12
  'edit'     jhmab'edit'
@@ -18,23 +17,20 @@ jhma''
  jhjmlink''
 jhmz''
 
-'renamedlg'     jhdivahide''
+'renamedlg'     jhdivadlg''
  'renamedo'     jhb'rename as'
-  'renamex'     jht'';10
+  'renamex'     jhtext'';10
    'renameclose'jhb'X'
 '<hr></div>'
 
 'report'    jhdiv'<R>'
 shorts''
-'path'      jhh'<F>'
+'path'      jhhidden'<F>'
  'pathd'    jhdiv'<F>'
 
-jhresizeb''
+jhresize''
 
 'sel'       jhdiv'<FILES>'
-
-jhresizez''
-
 )
 
 NB. y - error;file
@@ -260,7 +256,7 @@ function evload(){jresize();}
 
 function repclr(){jbyid("report").innerHTML = "&nbsp;";}
 function setpath(t){jform.path.value= t;jbyid("pathd").innerHTML= t;}
-function ev_paths_click(){repclr();jdoh(["path"]);}
+function ev_paths_click(){repclr();jdoajax(["path"],'');}
 
 function ev_x_shortcut(){jscdo("cut");}
 function ev_c_shortcut(){jscdo("copy");}
@@ -277,7 +273,7 @@ function ev_files_click() // file select
   setpath(t.substring(0,++i)+jform.jsid.value);
  }
  else
-  jdoh(["path"]);
+  jdoajax(["path"],"");
 }
 
 function ev_files_dblclick(){jsubmit();}

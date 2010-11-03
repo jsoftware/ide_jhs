@@ -59,7 +59,7 @@ function gup()
  var gid= t.substring(0,t.indexOf("_"));
  jform.jtype.value= 'enter'; // change becomes enter
  jbyid(gid+"_vv").value= jbyid(gid+"_dd*"+jform.jsid.value).value;
- jdoh([gid+"_hh",gid+"_vv"]);
+ jdoajax([gid+"_hh",gid+"_vv"],"");
 }
 
 function ev_g0_dd_enter(){gup();}

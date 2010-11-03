@@ -2,12 +2,12 @@ coclass'jdemo3'
 coinsert'jhs'
 
 HBS=:  0 : 0
-jhh1'Flip - ajax args and results'
-'flip'   jhb'flipem'    
-'t1'     jht'some text';10
-'t2'     jht'more text';10
-desc  
-jhdemo''
+       jhh1'Flip - ajax args and results'
+'flip' jhb'flipem'    
+'t1'   jhtext'some text';10
+'t2'   jhtext'more text';10
+       desc  
+       jhdemo''
 )
 
 create=: 3 : 0
@@ -15,7 +15,7 @@ create=: 3 : 0
 )
 
 NB. NV_jhs_ has request name/value pairs
-NB. getv'name' returns the value for a name
+NB. getv'name' returns a names value
 NB. smoutput seebox NV can help debugging
 NB. JASEP separates ajax results
 ev_flip_click=: 3 : 0
@@ -26,14 +26,13 @@ jhrajax (8 u:|.7 u: getv't1'),JASEP,(8 u:|.7 u: getv't2')
 jev_get=: create NB. browser get request
 
 JS=: 0 : 0
-// send t1 and t2 values to J handler
-function ev_flip_click(){jdoh(["t1","t2"]);}
+// send t1 and t2 name/value pairs to J
+function ev_flip_click(){jdoajax(["t1","t2"],"");}
 
-// response is string of delimited strings
-// ts is list of string results
+// ts is list of JASEP delimited strings
 function ajax(ts)
 {
- if(2!=ts.length) alert("wrong number of ajax results");
+ if(2!=ts.length)alert("wrong number of ajax results");
  jbyid("t1").value=jtfromh(ts[0]);
  jbyid("t2").value=jtfromh(ts[1]);
 }
@@ -41,9 +40,8 @@ function ajax(ts)
 
 desc=: 0 : 0
 <br/>An ajax request sends only required data to the server.
-This could be in any form, but the JHS framework has the
-convention of sending the value data of html form elements
-that have been listed in the jdoh argument. Hidden text
+The JHS framework sends values of html form elements
+that have been listed in the jdoajax arg. Hidden text
 elements are useful for data that should not be visible to
 the user.<br><br>
 

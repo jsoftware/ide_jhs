@@ -1,20 +1,230 @@
 NB. core javascript utilities for all pages
 coclass'jhs'
-NB.! core.js file should be read by src=
-NB. this would use cache and make page loads faster
-NB. doing it this way is easier for debugging (not cached)
+NB. JS could be src= and with cache would load faster
+NB. JS is small and doing it inline (not src=) is easier
+
 JSCORE=: 0 : 0
+// framework user variables and utilities
+var JASEP= '\1'; // delimit substrings in ajax response
+var jform;       // page form
+var jevev;       // event handler event object
+var jisIE=-1!=navigator.userAgent.search(/MSIE/);
+
+function jbyid(id){return document.getElementById(id);}
+function jsubmit(s){jform.jdo.value=jevsentence;jform.submit();}
+
+function jscdo(mid,sid) // call click handler for mid [sid]
+{
+ jform.jtype.value= "click";
+ if('undefined'==typeof sid)
+ {
+  jform.jid.value= mid;
+  jform.jmid.value=mid;
+  jform.jsid.value="";
+ }
+ else
+ {
+  jform.jid.value= mid+'*'+sid;
+  jform.jmid.value=mid;
+  jform.jsid.value=sid;
+ }
+ jevdo();
+}
+
+// set caret in element id - collapse 0 start, 1 end
+function jsetcaret(id,collapse)
+{
+ var p= jbyid(id);
+ //! p.scrollIntoView(false);
+ if (window.getSelection)
+ {
+  try{window.getSelection().collapse(p,collapse);}
+  catch(e){;} //! FF can fail
+ }
+ else
+ {
+  var tst= document.selection.createRange();
+  tst.moveToElementText(p);
+  tst.collapse(!collapse);
+  tst.select();
+ }
+}
+
+function jsetcaretn(node)
+{
+ if (window.getSelection)
+ {
+  var sel,rng;
+  n.scrollIntoView(false);
+  sel=window.getSelection();
+  sel.removeAllRanges();
+  rng=document.createRange();
+  rng.selectNode(node);
+  sel.addRange(rng);
+ }
+ else
+ {
+  var tst= document.selection.createRange();
+  tst.moveToElementText(node);
+  tst.select();
+ }
+}
+
+function jcollapseselection(d)
+{
+ try
+ {
+  if (window.getSelection)
+  {
+   var sel,rng;
+   sel=window.getSelection();
+   rng=sel.getRangeAt(0);
+   sel.removeAllRanges();
+   rng.collapse(d);
+   sel.addRange(rng);
+  }
+  else
+  {
+   var tst;
+   tst=document.selection.createRange();
+   tst.collapse(d);
+   tst.select();
+  }
+ }catch(e){;}
+}
+
+// replace selection with val - collapse -1 none, 0 end, 1 start
+function jreplace(id,collapse,val)
+{
+  //! jbyid(id).focus();
+  try // mark caret location with ZWSP
+  {
+   if(window.getSelection)
+   {
+    var sel,rng;
+    sel=window.getSelection();
+    rng=sel.getRangeAt(0);
+    if(collapse!=-1)rng.collapse(collapse);
+    sel.removeAllRanges();
+    sel.addRange(rng);
+    document.execCommand("insertHTML",false,val);
+   }
+   else
+   {
+    var rng;
+    rng= document.selection.createRange();
+    if(collapse!=-1)rng.collapse(collapse);
+    rng.pasteHTML(val);
+   }
+   return 1;
+  }catch(e){return 0;}
+}
+
+function jtfromhhit(t)
+{
+ switch(t[1])
+ {
+ case "n":  return " ";
+ case "l":  return "<";
+ case "g":  return ">";
+ case "a":  return "&";
+ }
+}
+
+function jtfromh(d)
+{
+ d= d.replace(/\r|\n/g,"");          // IE requires
+ d= d.replace(/<br><div>/g,"<div>"); // chrome - kludge (not i)
+ d= d.replace(/<p>&nbsp;<\/p>|<div><br><\/div>|<br[^>]*>|<\/p>|<div>/gi,"\n");
+ d= d.replace(/<\/?[^>]+(>|$)/g,""); // remove all remaining tags
+ d= d.replace(/&nbsp;|&lt;|&gt;|&amp;/g,jtfromhhit);
+ if('\n'!=d[d.length-1]){d=d+"\n";}
+ return d
+}
+
+var JREGHFROMT=RegExp("[ \n<>&]","g");
+
+function jhfromthit(t)
+{
+ switch(t[0])
+ {
+ case " ":  return "&nbsp;";
+ case "\n": return "<br>";  
+ case "<":  return "&lt;";
+ case ">":  return "&gt;";
+ case "&":  return "&amp;";
+ }
+}
+
+function jhfromt(d){return d.replace(JREGHFROMT,jhfromthit);}
+
+//* jshow(id)
+function jshow(id){jbyid(id).style.display="block";jresize();}
+
+//* jhide(id)
+function jhide(id){jbyid(id).style.display="none";jresize();}
+
+//* jdlgshow(id,focus) - id to show and id to focus
+function jdlgshow(id,focus)
+{
+ if(jbyid(id).style.display=="block")
+  jhide(id);
+ else
+ {
+  jshow(id);
+  jbyid(focus).focus();
+ }
+}
+
+var jdwn;     // dom walk nodes
+var jdwi;     // dom walk indents
+var jdwr;     // dom walk recursion level
+
+function jdominit(node)
+{
+ jdwn=[];
+ jdwi=[];
+ jdwr=0;
+ jdomwalk(node);
+}
+
+function jdomwalk(node)
+{
+ var c,n,i;
+ ++jdwr;
+ c=node.childNodes;
+ for(i=0;i<c.length;++i)
+ {
+  n=c[i];
+  jdwi.push(jdwr);
+  jdwn.push(n);
+  jdomwalk(n);
+ }
+ --jdwr;
+}
+
+function jdomshow(node)
+{
+ var i,j,t="";
+ jdominit(node);
+ for(i=0;i<jdwn.length;++i)
+ {
+  for(j=0;j<jdwi[i];++j)t+="| ";
+  name=jdwn[i].nodeName;
+  if(name=="#text")
+   t+=name+" "+jdwn[i].nodeValue;
+  else
+   t+=name;
+  t+="\n";
+ }
+ return t;
+}
+
+// framework internals
 window.onresize=jresize;
 
-// global constants
-var JASEP= '\1'; // delimit substrings in ajax response
-
-// globals onload
-var jform,jevsentence,jscrollpos=0;
-
-// event globals
-var JEV; // handler to call
-var jevev;
+var jevsentence; // J sentence to run
+var JEV;         // js handler to call
 
 function jresize()
 {
@@ -28,17 +238,7 @@ function jresize()
  jbyid("jresizeb").style.height= a+"px";
 }
 
-// utils
-function jisChrome() {return -1!=navigator.userAgent.search(/Chrome/);}
-function jisFirefox(){return -1!=navigator.userAgent.search(/Firefox/);}
-function jisIE()     {return -1!=navigator.userAgent.search(/MSIE/);}
-function jisSafari() {return -1!=navigator.userAgent.search(/Safari/)&&-1==navigator.userAgent.search(/Chrome/);}
-function jisIE8()    {return -1!=navigator.userAgent.search(/MSIE 8/);}
-
-function jbyid(id){return document.getElementById(id);}
-function jkeycode(ev){return(window.event||ev).keyCode;}
-
-// body onload handler - calls page evload
+// body onload handler - calls evload
 function jevload()
 {
  jform= document.j;
@@ -48,26 +248,20 @@ function jevload()
  return false
 }
 
-// event handler for id type - id is mid[*sid]
-function jev(id,type,event){
- jmenuhide(event); // hide menu dropdown
+// event handler onclick etc - id is mid[*sid]
+function jev(event){
+ jmenuhide(event);
  jevev= window.event||event;
+ var type=jevev.type;
+ jform.jtype.value= type;
+ var id=(typeof jevev.target=='undefined')?jevev.srcElement.id:jevev.target.id;
  var i= id.indexOf('*');
  jform.jid.value  = id;
- jform.jtype.value= type;
  jform.jmid.value = (-1==i)?id:id.substring(0,i);
  jform.jsid.value = (-1==i)?"":id.substring(++i,id.length);
- if(jevev.type=='keydown'&&27==jevev.keyCode)return false; //! IE ignore esc
-
- //! keydown and not cr calls ev_id_keydown()
- if(jevev.type=='keydown'&&13!=jevev.keyCode)
- {
-  type="keydown";
-  jform.jtype.value=type;
-  return jevdo(id);
- } 
-
- if(type=='enter'&&13!=jevev.keyCode) return true;
+ if(type=='keydown'&&27==jevev.keyCode)return false; //! IE ignore esc
+ if(type=='keydown'&&13==jevev.keyCode&&!jevev.ctrlKey&&!jevev.shiftKey)
+  {jform.jtype.value="enter";return jevdo(id);} 
  return jevdo(id);
 }
 
@@ -79,16 +273,6 @@ function jevdo()
  catch(ex){alert(JEV+" failed: "+ex);return false;}
  if('undefined'!=typeof r) return r;
  return false;
-}
-
-// handle keyboard shortcut
-function jscdo(n)
-{
- jform.jtype.value= "click";
- jform.jid.value= n;
- jform.jmid.value= n;
- jform.jsid.value= "";
- jevdo();
 }
 
 // ajax
@@ -104,70 +288,46 @@ function newrq()
  alert("XMLHttpRequest not supported.");
 }
 
-/*
-ajax is called with ajax response split on JASEP
-jmid can be used to distinguish between ajax callers
-convention has first split string as text for report
-*/
-function jdoresult()
-{
- rqstate= rq.readyState;
- if(rqstate==4)
- {
-  if(200!=rq.status)
-   alert("ajax request failed - see jijx");
-  else
-   if('function'==typeof ajax)
-    ajax(rq.responseText.split(JASEP));
-  else
-    alert("ajax function not defined");
-  rqstate= 0;
-  busy= 0;
- }
-}
-
-// ajax request - ids is array of extra form elements (names) for post
-function jdo(sentence,log,ids)
-{
- if(0!=rqstate){alert("busy - wait for previous request to finish");return;}
- rq= newrq();
- rq.onreadystatechange= jdoresult;
- rq.open("POST",jform.jlocale.value,true); // asynch
- jform.jdo.value= sentence;
- jform.jajax.value= true;
- rq.send(getpostargs(ids));
-}
-
-//! kill off jdoh when everyone converted to jdoa
-
-// ajax standard handler as provided by framework (j and js)
-//  ev_mid_type() -> jdoa(data)
-//   -> ev_mid_type (getv'jdata') -> jhrajax (JASEP delimited responses)
-//      -> jdor -> ev_mid_type_ajax(ts)
-//       ts is array of JASEP delimited responses
-
-// send ajax request to J
+// ajax request to J
+//  ev_mid_type() -> jdoaajax(ids,data)
+//   -> ev_mid_type=:  (getv...)
+//    -> jhrajax (JASEP delimited responses)
+//      -> jdor -> ajax(ts) or ev_mid_type_ajax(ts)
+//         ts is array of JASEP delimited responses
+// ids is array of form element names (values)
 // data is JASEP delimited data to send 
-function jdoa(data)
+// sentence (usually elided to use jevsentence)
+function jdoajax(ids,data,sentence)
 {
  if(0!=rqstate){alert("busy - wait for previous request to finish");return;}
  rq= newrq();
  rq.onreadystatechange= jdor;
  rq.open("POST",jform.jlocale.value,true); // asynch
- jform.jdo.value= jevsentence;
- jform.jajax.value= true;
- var t="";
- t+="jdo="+jform.jdo.value;
- t+="&jmid="+jform.jmid.value;
- t+="&jsid="+jform.jsid.value;
- t+="&jtype="+jform.jtype.value;
- t+="&jdata="+encode(data);
- rq.send(t);
+ jform.jdo.value= sentence?sentence:jevsentence;
+ rq.send(jpostargs(ids)+"&jdata="+jencode(data));
 }
 
+// return post args from standard form ids and extra form ids
+function jpostargs(ids)
+{
+ var d,t="",s="",a=["jdo","jtype","jmid","jsid"].concat(ids);
+ for(var i=0;i<a.length;++i)
+ {
+  d= eval("jform."+a[i]+".value");
+  t+= s+a[i]+"="+jencode(d);
+  s= "&";
+ }
+ return t;
+}
+
+function jencode(d){return(encodeURIComponent(d)).replace("/%20/g","+");}
+
 // recv ajax response from J -> ev_mid_type_ajax(ts)
+// call ajax(ts) or ev_mid_type_ajax(ts)
+// ts is ajax response split on JASEP
 function jdor()
 {
+ var d,f;
  rqstate= rq.readyState;
  if(rqstate==4)
  {
@@ -175,37 +335,16 @@ function jdor()
    alert("ajax request failed - see jijx");
   else
   {
-   var d=rq.responseText.split(JASEP);
-   var f="ev_"+jform.jmid.value+"_"+jform.jtype.value+"_ajax(d)";
+   d=rq.responseText.split(JASEP);
+   if("function"==typeof ajax)
+    f="ajax(d)";
+   else
+    f="ev_"+jform.jmid.value+"_"+jform.jtype.value+"_ajax(d)";
    try{eval(f)}catch(e){alert(f+" failed");}
   }
   rqstate= 0;
   busy= 0;
  }
-}
-
-function encode(d)
-{
-  return(encodeURIComponent(d)).replace("/%20/g","+");
-}
-
-// ajax request - ids is array of form elements (names) for post
-function jdoh(ids){jdo(jevsentence,false,ids);}
-
-// submit form with jevsentence
-function jsubmit(s){jform.jdo.value=jevsentence;jform.submit();}
-
-// return post arguments from stanard form ids and extra form ids (names)
-function getpostargs(ids)
-{
- var d,t="",s="",a=["jdo","jajax","jtype","jmid","jsid"].concat(ids);
- for(var i=0;i<a.length;++i)
- {
-  d= eval("jform."+a[i]+".value");
-  t+= s+a[i]+"="+(encodeURIComponent(d)).replace("/%20/g","+");
-  s= "&";
- }
- return t;
 }
 
 // app keyboard shortcuts
@@ -224,7 +363,6 @@ function jdostdsc(c)
  switch(c)
  {
   case '1': jactivatemenu('1'); break;
-  // case '2': window.scrollTo(0,jscrollpos);break;
   case 'j': location="jijx";  break;
   case 'f': location="jfile"; break;
   case 'h': location="jhelp"; break;
@@ -271,7 +409,7 @@ function jfindmenu(n)
  for(i=0;i<len;++i)
  {
   node= nodes[i];
-  if("hmg"!=node.getAttribute("class")) continue;
+  if("jhmg"!=node.getAttribute("class")) continue;
   if(n==++cnt) return node;
   last= node;
  }
@@ -291,7 +429,7 @@ function jmenunav(tar,c)
  {
   node=nodes[i];
   cl=node.getAttribute("class");
-  if("hmg"==cl||"hml"==cl||"hmab"==cl)
+  if("jhmg"==cl||"jhml"==cl||"jhmab"==cl)
   {
    m[m.length]=node;
    if(tar==node)n=i;
@@ -317,7 +455,7 @@ function jmenunav(tar,c)
  }
  else if(c==38) // up
  {
-  if("hmg"==nc) return;
+  if("jhmg"==nc) return;
   if(jmenunavfocus(m,n-1))return;
   else
   {
@@ -329,7 +467,7 @@ function jmenunav(tar,c)
  }
  else if(c==40) // dn
  {
-  if("hmg"==nc)
+  if("jhmg"==nc)
   {
    jmenuhide();
    nn.focus();
@@ -366,13 +504,12 @@ function jmenunavfocus(m,n)
 function jmenunavinfo(m,n)
 {
  if(n==m.length)return 0;
- return ("hmg"==m[n].getAttribute("class"))?1:2
+ return ("jhmg"==m[n].getAttribute("class"))?1:2
 }
 
 // activate menu group n
 function jactivatemenu(n)
 {
- jscrollpos=document.body.scrollTop;
  jmenuhide();
  //! window.scrollTo(0,0);
  var node= jfindmenu(n);
@@ -380,7 +517,6 @@ function jactivatemenu(n)
  node.focus(); 
 }
 
-// menu
 var menublock= null; // menu ul element with display:block
 var menulast= null;  // menu ul element just hidden 
 
@@ -471,186 +607,6 @@ function jmenukeyup(ev)
  return true;
 }
 
-// menu end
-
-// set caret in element id - collapse 0 start, 1 end
-function jsetcaret(id,collapse)
-{
- var p= jbyid(id);
- //! p.scrollIntoView(false); //!
- if (window.getSelection)
- {
-  try{window.getSelection().collapse(p,collapse);}
-  catch(e){;} //!! FF sometimes failstry for ff
- }
- else
- {
-  var tst= document.selection.createRange();
-  tst.moveToElementText(p);
-  tst.collapse(!collapse);
-  tst.select();
- }
-}
-
-// set caret in element e - collapse 0 start, 1 end
-function jsetcaretx(p,collapse)
-{
- p.scrollIntoView(false);
- if (window.getSelection)
- {
-  try{window.getSelection().collapse(p,collapse);}
-  catch(e){window.getSelection().collapse(p,false);} // try for ff - delete all
- }
- else
- {
-  var tst= document.selection.createRange();
-  tst.moveToElementText(p);
-  tst.collapse(!collapse);
-  tst.select();
- }
-}
-
-// select node
-function jsetcaretn(n)
-{
- if (window.getSelection)
- {
-  var sel,rng;
-  n.scrollIntoView(false);
-  sel=window.getSelection();
-  sel.removeAllRanges();
-  rng=document.createRange();
-  rng.selectNode(n);
-  sel.addRange(rng);
- }
- else
- {
-  var tst= document.selection.createRange();
-  tst.moveToElementText(n);
-  tst.select();
- }
-}
-
-function jcollapseselection(d)
-{
- try
- {
-  if (window.getSelection)
-  {
-   var sel,rng;
-   sel=window.getSelection();
-   rng=sel.getRangeAt(0);
-   sel.removeAllRanges();
-   rng.collapse(d);
-   sel.addRange(rng);
-  }
-  else
-  {
-   var tst;
-   tst=document.selection.createRange();
-   tst.collapse(d);
-   tst.select();
-  }
- }catch(e){;}
-}
-
-// replace selection with val
-// collapse -1 none, 0 end, 1 start
-function jreplace(id,collapse,val)
-{
-  //! jbyid(id).focus();
-  try // mark caret location with ZWSP
-  {
-   if(window.getSelection)
-   {
-    var sel,rng;
-    sel=window.getSelection();
-    rng=sel.getRangeAt(0);
-    if(collapse!=-1)rng.collapse(collapse);
-    sel.removeAllRanges();
-    sel.addRange(rng);
-    document.execCommand("insertHTML",false,val);
-   }
-   else
-   {
-    var rng;
-    rng= document.selection.createRange();
-    if(collapse!=-1)rng.collapse(collapse);
-    rng.pasteHTML(val);
-   }
-   return 1;
-  }catch(e){return 0;}
-}
-
-/* contenteditable to/from text
-IE:
- <BR>             <-> N (\n)
- </P>              -> N
- <P>&nbsp;</P      -> N (can not tell emtpy from 1 blank)
- can have \r\n !
-
-Chrome:
- <br>            <-> N
- <div>            -> N
- <div><br></div>  -> N
- saw nested divs, but do not know how to get them
- starting div so break on div rather than /div
- 
-FF:
- <br>            <-> N
- has (and needs) <br> at end
-
-Portable rules (all case insensitive):
- remove \r \n
- <p>&nbsp;</p>    -> N
- <div><br></div>  -> N
- <br>            <-> N
- </p>             -> N
- </div>           -> N
- always have <br> at end (read/write)
- &lt;...         <-> < > & space
-*/
-
-// text from html
-function jtfromh(d)
-{
- d= d.replace(/\r|\n/g,""); // IE requires
- d= d.replace(/<\/?[sS]\/?[^>]+(>|$)/g,""); // remove <span...> </span> tags
- d= d.replace(/<br><div>/gi,"<div>"); //! chrome - kludge
- d= d.replace(/<p>&nbsp;<\/p>|<div><br><\/div>|<br[^>]*>|<\/p>|<div>/gi,"\n");
- d= d.replace(/<\/?[^>]+(>|$)/g,""); // remove all remaining tags
- d= d.replace(/&lt;/g,"<");
- d= d.replace(/&gt;/g,">");
- d= d.replace(/&amp;/g,"&");
- d= d.replace(/&nbsp;/g," ");
- if('\n'!=d[d.length-1]){d=d+"\n";}
- return d
-}
-
-// inverse jtfromh
-function jhfromt(d)
-{
- d= d.replace(/&/g,"&amp;");
- d= d.replace(/</g,"&lt;");
- d= d.replace(/>/g,"&gt;");
- d= d.replace(/ /g,"&nbsp;");
- d= d.replace(/\n/g,"<br>");
- return d
-}
-
-function jshow(id){jbyid(id).style.display="block";jresize();}
-function jhide(id){jbyid(id).style.display="none";jresize();}
-
-function jdlgshow(id,focus)
-{
- if(jbyid(id).style.display=="block")
-  jhide(id);
- else
- {
-  jshow(id);
-  jbyid(focus).focus();
- }
-}
 
 // get pixel... - sizing/resizing
 
@@ -723,4 +679,61 @@ function debcodes(t)
   r= r+" "+t.charCodeAt(i);
  return r;
 }
+)
+
+docjs=: 3 : 0
+docjsn
+)
+
+docjsn=: 0 : 0
+
+see ~addons/ide/jhs/utiljs.ijs for complete information
+
+html element ids are mid[*sid] (main id and optional sub id)
+
+functions defined by you:
+
+evload() - called when page loads to initialize
+ 
+ev_mid_event() - event handler - click, change, keydown, ...
+
+js event handler:
+  jevev is event object
+  event ignored if not defined
+  jsubmit() runs J ev_mid_event and response is new page
+  jdoajax([...],"...") runs J ev_mid_event
+    ajax(ts) (if defined) is run with J ajax response
+    ev_mid_event_ajax(ts) is run if ajax() not defined
+  returns true (to continue processing) or false
+)
+
+0 : 0
+/* contenteditable to/from text
+IE:
+ <BR>             <-> N (\n)
+ </P>              -> N
+ <P>&nbsp;</P      -> N (can not tell emtpy from 1 blank)
+ can have \r\n !
+
+Chrome:
+ <br>            <-> N
+ <div>            -> N
+ <div><br></div>  -> N
+ saw nested divs, but do not know how to get them
+ starting div so break on div rather than /div
+ 
+FF:
+ <br>            <-> N
+ has (and needs) <br> at end
+
+Portable rules (all case insensitive):
+ remove \r \n
+ <p>&nbsp;</p>    -> N
+ <div><br></div>  -> N
+ <br>            <-> N
+ </p>             -> N
+ </div>           -> N
+ always have <br> at end (read/write)
+ &lt;...         <-> < > & space
+*/
 )

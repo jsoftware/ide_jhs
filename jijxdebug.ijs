@@ -38,7 +38,7 @@ i.0 0
 
 dboff_z_=: 3 : 0
 13!:15 ''
-9!:27 '13!:0[1'
+9!:27 '13!:0[0'
 9!:29 [1
 i.0 0
 )
@@ -107,27 +107,13 @@ end.
 )
 
 jsdebug=: 0 : 0
-function ev_dbstep_click(){jdoa("");}
-function ev_dbstep_click_ajax(ts){ajax(ts);}
-
-function ev_dbstepin_click(){jdoa("");}
-function ev_dbstepin_click_ajax(ts){ajax(ts);}
-
-function ev_dbstepout_click(){jdoa("");}
-function ev_dbstepout_click_ajax(ts){ajax(ts);}
-
-function ev_dbcutback_click(){jdoa("");}
-function ev_dbcutback_click_ajax(ts){ajax(ts);}
-
-function ev_dbrun_click(){jdoa("");}
-function ev_dbrun_click_ajax(ts){ajax(ts);}
-
-function ev_dbon_click(){jdoa("");}
-function ev_dbon_click_ajax(ts){ajax(ts)};
-
-function ev_dboff_click(){jdoa("");}
-function ev_dboff_click_ajax(ts){ajax(ts)};
-
+function ev_dbstep_click()   {jdoajax([],"");}
+function ev_dbstepin_click() {jdoajax([],"");}
+function ev_dbstepout_click(){jdoajax([],"");}
+function ev_dbcutback_click(){jdoajax([],"");}
+function ev_dbrun_click()    {jdoajax([],"");}
+function ev_dbon_click()     {jdoajax([],"");}
+function ev_dboff_click()    {jdoajax([],"");}
 function ev_s_shortcut(){jscdo("dbstep");}
 function ev_i_shortcut(){jscdo("dbstepin");}
 function ev_o_shortcut(){jscdo("dbstepout");}

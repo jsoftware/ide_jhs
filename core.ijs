@@ -81,11 +81,12 @@ Enter in input text field caught by element keydown event handler.
 *** event overview
 Html element id has main part and optional sub part mid[*sid].
 
-<... id="mid[*sid]" ... ontype="return jev('mid[*sid]','type',event)"
+<... id="mid[*sid]" ... ontype="return jev(e)"
 
-jev(mid*sid,type,event)
+jev(event)
 {
  sets evid,evtype,evmid,evsid,evev
+ onclick is type click etc
  try eval ev_mid_type()
  returns true or false
 }
@@ -439,8 +440,6 @@ smoutput jmarka_jhs_,y,jmarkz_jhs_
 i.0 0
 )
 
-jnv__=: 3 : 'NVDEBUG_jhs_=:y' NB. toggle short NV debug display
-
 jbd__=: 3 : '9!:7[y{Boxes_j_' NB. select boxdraw (PC_BOXDRAW)
 
 NB. toggle jfe behavior
@@ -508,8 +507,6 @@ NB. adjust SystemFolders for multi-users in single account
 fixuf=: 3 : 0
 USERNAME=: y
 if. 0=#y do. return. end.
-t=. jpath'~user/jhs/',USERNAME,'/config/jhs.cfg'
-(t,' does not exist') assert fexist t
 t=. SystemFolders_j_
 a=. 'break';'config';'temp';'user'
 i=. ({."1 t)i.a
@@ -571,7 +568,8 @@ jhscfg=: 4 : 0
 fixuf y
 lcfg jpath'~addons/ide/jhs/config/jhs_default.ijs'
 if.     -.''-:t=. jpath x                                do. lcfg t
-NB.! ugh JUM uses jhs.cfg and we would prefer jhs.ijs
+elseif. fexist t=. jpath'~config/jhs.ijs'                do. lcfg t
+NB.! JUM uses jhs.cfg so we have to look there  as well
 elseif. fexist t=. jpath'~config/jhs.cfg'                do. lcfg t
 elseif. fexist t=. jpath'~addons/ide/jhs/config/jhs.ijs' do. lcfg t
 end.
@@ -597,7 +595,7 @@ if. 2~:3!:0 y do. y=. '' end. NB.! installer jhs.bat has old style call
 'already initialized' assert _1=nc<'SKLISTEN'
 x jhscfg y
 PATH=: (>:t i:'/'){.t=.jpath>(4!:4 <'VERSION_jhs_'){4!:3''
-ip=. >2{sdgethostbyname_jsocket_ >1{sdgethostname_jsocket_''
+IP=: >2{sdgethostbyname_jsocket_ >1{sdgethostname_jsocket_''
 LOCALHOST=: >2{sdgethostbyname_jsocket_'localhost'
 logappfile=: <jpath'~user/.applog.txt' NB. username
 logjhsfile=: <jpath'~user/.jhslog.txt' NB. username
@@ -624,7 +622,7 @@ sdcheck_jsocket_ r
 sdcheck_jsocket_ sdlisten_jsocket_ SKLISTEN,1
 SKSERVER_jhs_=: _1
 boxdraw_j_ PC_BOXDRAW
-remote=. >(BIND-:''){'';remoteaccess hrplc 'IPAD PORT';ip;":PORT
+remote=. >(BIND-:''){'';remoteaccess hrplc 'IPAD PORT';IP;":PORT
 smoutput console_welcome hrplc 'PORT LOCAL REMOTE';(":PORT);LOCALHOST;remote
 startupjhs''
 allowedurls=: ''
@@ -652,24 +650,28 @@ t
 )
 
 NB. load rest of JHS
-t=. (<'.ijs'),~each ;:'core utilh utiljs jlogin jijx jijxdebug jijs jfile jfif jfilesrc jhelp jal jdemo jgcp'
-corefiles=: (<jpath'~addons/ide/jhs/'),each t
+cores=: (<'.ijs'),~each ;:'core utilh utiljs jlogin jijx jijxdebug jijs jfile jfif jfilesrc jhelp jal jdemo jgcp'
+corefiles=: (<jpath'~addons/ide/jhs/'),each cores
 loadfailed=: loader }.corefiles
 
 NB.! debug stuff
+patch=: 3 : 0
 d=. (<'.ijs'),~each (<'jdemo'),each ":each >:i.9
-pfiles=:     (<'/users/eric/svn/addons/ide/jhs/'),each t
-dsrcfiles=:  (<'/users/eric/svn/addons/ide/jhs/demo/'),each d
-dsnkfiles=:  (<jpath'~addons/ide/jhs/demo/'),each d
-p__=: 3 : 0
-d=. fread each pfiles_jhs_
-d fwrite each corefiles_jhs_
-load corefiles_jhs_
-d=. fread each dsrcfiles_jhs_
-d fwrite each dsnkfiles_jhs_
-load dsnkfiles
+pfiles=:   (<'/users/eric/svn/addons/ide/jhs/'),each cores
+dsrcfiles=.(<'/users/eric/svn/addons/ide/jhs/demo/'),each d
+dsnkfiles=.(<jpath'~addons/ide/jhs/demo/'),each d
+d=. fread  each pfiles
+d   fwrite each corefiles
+jreload''
+d=. fread each dsrcfiles
+d fwrite each dsnkfiles
+load__ dsnkfiles
 i.0 0
 )                         
+
+jreload=: 3 : 0
+load__ corefiles_jhs_
+)
 
 NB.! kill off - use init_jhs_ in next installer
 jhs_z_=: init_jhs_
@@ -724,7 +726,7 @@ h;d
 jwget_z_=: wget_jhs_
 
 NB. jwget template
-gettemplate=: 0 : 0
+gettemplate=: toCRLF 0 : 0
 GET /FILE HTTP/1.1 
 Host: 127.0.0.1
 Accept: image/gif,image/png,*/*  

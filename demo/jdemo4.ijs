@@ -2,27 +2,27 @@ coclass'jdemo4'
 coinsert'jhs'
 
 HBS=: 0 : 0
-jhma''
-'abc'    jhmg'Abc';1;8
- 'foo'   jhmab'do foo  d^' NB. d keyboard shortcut
+jhma''                    NB. menu start
+'abc'    jhmg'Abc';1;8    NB. menu group
+ 'foo'   jhmab'do foo'    NB. menu item
 'def'    jhmg'Def';1;8
  'goo'   jhmab'do goo'
 'ghi'    jhmg'More stuff';1;8
- 'moo'   jhmab'do moo'
+ 'moo'   jhmab'do moo d^' NB. d keyboard shortcut 
  'koo'   jhmab'do koo'
-jhmz''
+jhmz''                    NB. menu end  
 
 jhh1'Controls with javascript and CSS'
 'javascript:'
 'which' jhspan''
 jhbr,jhbr
-'cb0'   jhckb'checkbox 0';'cbgroup';0
-'cb1'   jhckb'checkbox 1';'cbgroup';1
+'cb0'   jhcheckbox'checkbox 0';0
+'cb1'   jhcheckbox'checkbox 1';1
 jhbr
-'rad0'  jhradio'radio one';'radgroup';1
-'rad1'  jhradio'radio two';'radgroup';0
+'rad0'  jhradio'radio one';1;'radgroup'
+'rad1'  jhradio'radio two';0;'radgroup'
 jhbr
-'sel'   jhsel ('zero';'one';'two';'three';'four');1;0
+'sel'   jhselect ('zero';'one';'two';'three';'four');1;0
 jhbr
 text
 jhbr
@@ -56,7 +56,6 @@ span.mark{color:green;}
 JS=: 0 : 0
 function show(){jbyid("which").innerHTML= JEV;}
 
-// menu commands
 function ev_foo_click(){show();}
 function ev_goo_click(){show();}
 function ev_moo_click(){show();}
@@ -85,7 +84,7 @@ function ev_rad1_click(){show();return true;}
 function ev_cb0_click(){show();return true;}
 function ev_cb1_click(){show();return true;}
 
-function ev_sel_click()
+function ev_sel_change()
 {
  jbyid("which").innerHTML= JEV+" : "+jbyid("sel").selectedIndex;
 }

@@ -2,11 +2,11 @@ coclass'jdemo2'
 coinsert'jhs'
 
 HBS=: 0 : 0
-jhh1'Roll with ajax'
+         jhh1'Roll with ajax'
 'roll'   jhb'rollem'
 'result' jhspan''
-desc
-jhdemo''
+         desc
+         jhdemo''
 )
 
 create=: 3 : 0
@@ -32,17 +32,23 @@ compared to desktop apps.<br><br>
 An ajax app transaction sends only required data to the
 server, gets back only required data, and updates
 the page dynamically in place affecting only the parts
-of the display that have changed. With reasonably fast
-transmission ajax apps can rival desktop apps.
+that have changed. With reasonably fast transmission
+ajax apps can rival desktop apps.
 )
 
-NB. javascript code - event handlers etc.
-JS=: 0 : 0
+CSS=: ''   NB. styles
+
+JS=: 0 : 0 NB. javascript
 // event handler - send ajax request to J
-// ([]) indicates empty list argument is sent
-function ev_roll_click(){jdoa("");}
+// jdoajx args are
+//  list of form element names to send as name=value
+//  string to send as jdata= value
+// [] is an empty list "" is an empty string
+function ev_roll_click(){jdoajax([],"");}
 
 // framework calls with the jhrajax argument
-// sets "result" element innerHTML with the 6 numbers
+// ts is list of JASEP delimited strings
+// ts[0] is first (and in this example only) string
+// sets result element innerHTML with the 6 numbers
 function ev_roll_click_ajax(ts){jbyid("result").innerHTML=ts[0];}
 )
