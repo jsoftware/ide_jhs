@@ -43,7 +43,7 @@ d=. <;._2 seebox_jhs_ 'showupgrade'jpkg''
 D__=: d
 if. #d do.
  t=. 'upgrade'jhb'upgrade selected'
- t=. t,'<br><br>','select'jhselext d;(#d);0
+ t=. t,'<br><br>','select'jhselect d;(#d);0
  create 'Upgradeable<br><br>',t
 else.
  create 'Upgradeable<br><br>No upgrades available.'
