@@ -452,7 +452,7 @@ console_welcome=: 0 : 0
 
 J HTTP Server - init OK
 
-Requires a modern browser (later than 2004) with Javascript.
+Requires a modern browser (later than 2005) with Javascript.
 
 A : separates ip address from port. Numeric form ip can be faster than name.
 <REMOTE>

@@ -55,7 +55,7 @@ function jsetcaretn(node)
  if (window.getSelection)
  {
   var sel,rng;
-  n.scrollIntoView(false);
+  node.scrollIntoView(false); //! does this work?
   sel=window.getSelection();
   sel.removeAllRanges();
   rng=document.createRange();

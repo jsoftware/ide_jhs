@@ -284,7 +284,7 @@ function color()
  if(mark)jsetcaret("caret",0);
 }
 
-var XREGHFROMT=RegExp("[ \n<>&\u0000|\u0001|\u0002|\u0003|\u0004|\u200B]","g");
+var XREGHFROMT=RegExp("[ \n<>&\u0000\u0001\u0002\u0003\u0004\u200B]","g");
 
 function xhfromthit(t)
 {
@@ -525,6 +525,10 @@ function ajax(ts)
   jbyid("filename").value=jtfromh(ts[1]);
  }
 }
+
+//! jevdo checkbox needs to return true if not defined
+//! button click needs to return false to prevent default submit
+function ev_matchcase_click(){return true;}
 
 function ev_ijs_enter(){return true;}
 
