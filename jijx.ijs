@@ -106,20 +106,19 @@ if. IP do. hmga y else. ' ' end.
 recalls=: 3 : 0
 t=.INPUT
 t=.(0~:;#each t-.each' ')#t
-(;t,each LF)rplc <'"';'\"';'\';'\\'
+NB.! (;t,each LF)rplc '"';'\"';'\';'\\'
+(;t,each LF)rplc '&';'&amp;';'"';'&quot;';'<';'&lt;';'>';'&gt;'
 )
 
 labmsg=: 0 : 0
-Open a lab from studio menu.
-Open additional labs from link|open. 
-
-Warning: labs not updated for J7
- and may fail in various ways.
-
-Menu studio|advance to advance.
+<span style="color:red">
+Some labs have not been updated for J7.<br>
+Most problems are minor and can be ignored.
+</span>
 )
 
 labopen=: 3 : 0
+if. 1+.   -.(<'jlab')e.conl 0 do. jhtml labmsg end.
 require__'~addons/labs/labs/lab.ijs'
 smselout_jijs_=: smfocus_jijs_=: [ NB.! allow introcourse to run
 labinit_jlab_ y{LABFILES
@@ -359,7 +358,7 @@ function ev_log_enter()
 function ev_advance_click(){jdoajax([],"");}
 
 function ev_lab_click(){jdlgshow("labsdlg","labsel");}
-function ev_labsclose_click(){jhide("labsdlg");}
+function ev_labsclose_click(){jhide("labsdlg");ev_2_shortcut();}
 
 function ev_scratch_click(){jdlgshow("scratchdlg","scratcharea");}
 function ev_scratchclose_click(){jhide("scratchdlg");}
