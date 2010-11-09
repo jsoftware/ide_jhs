@@ -19,9 +19,10 @@ i.0 0
 )
 
 NB. x... nouns
-xline=: '&cht=lc&chs=300x100&chds=<MIN>,<MAX>&chxt=x,y&chxr=1,<MIN>,<MAX>'
-xpie=:  '&cht=p&chs=300x100&chds=0,<MAX>'
-xpie3=: '&cht=p3&chs=300x100&chds=0,<MAX>'
+xline=:  '&cht=lc&chs=300x100&chds=<MIN>,<MAX>&chxt=x,y&chxr=1,<MIN>,<MAX>'
+xlinexy=:'&cht=lxy&chs=300x100&chds=<MIN>,<MAX>&chxt=x,y&chxr=0,<YMIN>,<YMAX>|1,<MIN>,<MAX>'
+xpie=:   '&cht=p&chs=300x100&chds=0,<MAX>'
+xpie3=:  '&cht=p3&chs=300x100&chds=0,<MAX>'
 
 NB. process blank delimited commands
 gcc=: 3 : 0 
@@ -53,11 +54,20 @@ if. ''-:y do.
 elseif. 2=3!:0 y do.
  smoutput help
  jhtml'<a href="http://code.google.com/apis/chart/">Google Charts docs and examples</a>'
+elseif. 32=3!:0 y do.
+ NB. assume dead simple 1 2 3;4 5 6
+ gcdata=: y
+ GCFDATA=: }:'t:',' ,_-'charsub ;'|',~each":each <"1 >gcdata
+ GCMIN=: '_-'charsub":<./,>{.y
+ GCMAX=: '_-'charsub":>./,>{.y
+ GCYMIN=: '_-'charsub":<./,>{:y
+ GCYMAX=: '_-'charsub":>./,>{:y
 elseif. 1 do.
  gcdata=: >(1=$$y){y;,:y
  GCFDATA=: }:'t:',' ,_-'charsub ;'|',~each":each <"1 gcdata
  GCMIN=: '_-'charsub":<./,y
  GCMAX=: '_-'charsub":>./,y
+ GCYMIN=: GCYMAX=: 0
 end.
 i.0 0
 )
@@ -82,7 +92,7 @@ gcchart=: 3 : 0
 'chs error' assert (wh>:25),(wh<:1000),300000>:*/wh
 'cht missing' assert #gca'cht'
 t=. 'chart?',gcurl,'&chd=',GCFDATA
-t hrplc_jhs_ 'MIN MAX COLORS RED BLUE';GCMIN;GCMAX;COLORS;RED;BLUE
+t hrplc_jhs_ 'MIN MAX YMIN YMAX COLORS RED BLUE';GCMIN;GCMAX;GCYMIN;GCYMAX;COLORS;RED;BLUE
 )
 
 NB. return chart file data (png)
@@ -90,8 +100,30 @@ gcfile=: 3 : 0
 >{:jwget GC;gcchart''
 )
 
+NB. limited support
+NB.  title option
+NB.  xline and xlinexy chart types
+NB.  data vector
+NB.  data matrix
+NB.  xvals;yvals
+NB. needs support for
+NB.  sin=: 1&o.
+NB.  cos=: 2&o.
+NB.  x=: 0.1 * i: 21
+NB.  plot x;>(sin x);(cos x)
 plot_z_=: 3 : 0
-'reset xline show'jgc y
+''plot y
+:
+t=. <;._2 x,';'
+b=. (<'title ')=6{.each t
+if. 0~:#;(-.b)#t do. smoutput 'unsupported plot options: ',x end.
+if. (32=3!:0 y)*.2~:#$>y do.
+ smoutput 'unsupported data complexity'
+ y=. >{:y
+end.
+t=. 6}.;b#t
+type=. >(32=3!:0 y){'xline';'xlinexy'
+('reset ',type,' &chtt=',t,' show')jgc y
 )
 
 rgb=:3 : 0
@@ -185,3 +217,110 @@ jhtml d1,d2
 )
 
 gcx=: 3 : '0!:101 examples'
+
+NB. viewmat stuff - subset borrowed from viewmat addon
+
+viewmat__=: 3 : 0
+t=. (<6#16)#: each <"0>1{''getvm_jgcp_ y
+t=. '#',each t{each <'0123456789abcdef'
+a=. (<'<font ',LF,'style="background-color:'),each t
+a=. a,each (<'; color:'),each t
+a=. a,each <';">ww</font>'
+jhtml ;a,.<'<br>'
+)
+
+finite=: x: ^: _1
+
+NB. =========================================================
+NB.*gethue v generate color from color set
+NB. x is color set
+NB. y is values from 0 to 1, selecting color
+gethue=: 4 : 0
+y=. y*<:#x
+b=. x {~ <.y
+t=. x {~ >.y
+k=. y-<.y
+(t*k) + b*-.k
+)
+
+NB. =========================================================
+NB. getvm
+NB.
+NB. form: hue getvm data [;title]
+NB.
+NB. hue may be empty, in which case a default is used
+NB. hue may be a N by 3 matrix of colors or a vector
+NB.     of RGB integers.
+NB.
+NB. returns:
+NB.   original data
+NB.   scaled data matrix
+NB.   angle (if any)
+NB.   title
+getvm=: 4 : 0
+'dat tit'=. 2 {. boxopen y
+tit=. ": tit
+tit=. tit, (0=#tit) # 'viewmat'
+'mat ang'=. x getvm1 dat
+dat ; mat ; ang ; tit
+)
+
+NB. =========================================================
+getvm1=: 4 : 0
+hue=. x
+mat=. y
+ang=. ''
+
+NB. ---------------------------------------------------------
+if. 2 > #$hue do.
+  hue=. |."1 [ 256 256 256 #: ,hue
+end.
+
+NB. ---------------------------------------------------------
+select. 3!:0 mat
+case. 2;32 do.
+  mat=. (, i. ]) mat
+case. 16 do.
+  ang=. * mat
+  mat=. delinf | mat
+case. do.
+  mat=. finite mat
+end.
+
+NB. ---------------------------------------------------------
+select. #$mat
+case. 0 do.
+  mat=. 1 1$mat
+case. 1 do.
+  mat=. citemize mat
+case. 3 do.
+  'mat ang'=. mat
+end.
+
+NB. ---------------------------------------------------------
+if. */ (,mat) e. 0 1 do.
+  if. #hue do.
+    h=. <. 0 _1 { hue
+  else.
+    h=. 0 ,: 255 255 255
+  end.
+  mat=. mat { h
+
+else.
+  if. #hue do.
+    h=. hue
+  else.
+    h=. 255 * #: 7 | 3^i.6
+  end.
+  val=. ,mat
+  max=. >./ val
+  min=. <./ val
+  mat=. <. h gethue (mat - min) % max - min
+end.
+
+mat=. mat +/ .* 65536 256 1
+
+mat ; ang
+
+)
+

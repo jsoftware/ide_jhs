@@ -103,21 +103,6 @@ updn=: 3 : 0
 if. IP do. hmga y else. ' ' end.
 )
 
-jvm__=: 3 : 0
-try. require'viewmat'
-catch. 
- 'Viewmat not installed. Use JAl to install:',LF,' graphics/viewmat and graphics/bmp'
- return.
-end.
-ifRGB_jviewmat_=: 0 NB.!
-t=. (<6#16)#: each <"0>1{''getvm_jviewmat_ y
-t=. '#',each t{each <'0123456789abcdef'
-a=. (<'<font ',LF,'style="background-color:'),each t
-a=. a,each (<'; color:'),each t
-a=. a,each <';">ww</font>'
-jhtml ;a,.<'<br>'
-)
-
 recalls=: 3 : 0
 t=.INPUT
 t=.(0~:;#each t-.each' ')#t
