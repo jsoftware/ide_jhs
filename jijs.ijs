@@ -141,6 +141,19 @@ CSS=: 0 : 0
 p{margin:0;}
 )
 
+0 : 0
+browser keyboard keydown keypress keyup info
+
+ie+chrome - bs/del/etc not keypress
+ff - bs/del/etc are keypress 
+
+    keypress event (charcode,keycode)
+        ie      chrome   ff
+return  13 13   und 13   0 13
+bs      x       x        0 8
+del     x       x        0 46
+)
+
 JS=: 0 : 0
 var ta,rep,readonly,colorflag,saveasx,toid=0,undotoid=0;
 var markcaret="&#8203;"; // \u200B
@@ -525,10 +538,6 @@ function ajax(ts)
   jbyid("filename").value=jtfromh(ts[1]);
  }
 }
-
-//! jevdo checkbox needs to return true if not defined
-//! button click needs to return false to prevent default submit
-function ev_matchcase_click(){return true;}
 
 function ev_ijs_enter(){return true;}
 

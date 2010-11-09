@@ -373,7 +373,7 @@ jhcheckbox=: 4 : 0
 'value checked'=. y
 checked=. >checked{'';'checked="checked"'
 t=.   '<input type="checkbox" id="<ID>" value="<ID>" class="jhcheckbox" <CHECKED>'
-t=. t,' onclick="return jev(event)"/><label for="<ID>"><VALUE></label>'
+t=. t,' name="<ID>" onclick="return jev(event)"/><label for="<ID>"><VALUE></label>'
 t hrplc 'ID VALUE CHECKED';x;value;checked
 )
 
@@ -637,7 +637,7 @@ if. _1=nc <'JS'  do. JS=: '' end.
 tmpl=. hrtemplate
 if. SETCOOKIE do.
  SETCOOKIE_jhs_=: 0
- tmpl=. tmpl rplc (LF,LF);LF,'Set-Cookie: ',cookie,LF,LF
+ tmpl=. tmpl rplc (CRLF,CRLF);CRLF,'Set-Cookie: ',cookie,CRLF,CRLF
 end.
 htmlresponse tmpl hrplc 'TITLE CSS JS BODY';x;(css CSS);(js JS);(jhbs HBS)hrplc y
 )

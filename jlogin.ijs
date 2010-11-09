@@ -53,7 +53,6 @@ getmessage=: 3 : 0
 
 expires=: 'jcookie=; Mon, 1-Jan-2000 00:00:00 GMT;'
 
-
 NB. called from core input if cookie required and not set
 NB. valid login   - goes to page and does SetCookie
 NB. invalid login - shows page with setcookie expires and no-cache

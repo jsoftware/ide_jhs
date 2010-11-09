@@ -8,6 +8,7 @@ JSCORE=: 0 : 0
 var JASEP= '\1'; // delimit substrings in ajax response
 var jform;       // page form
 var jevev;       // event handler event object
+var jevtarget;   // event handler target object
 var jisIE=-1!=navigator.userAgent.search(/MSIE/);
 
 function jbyid(id){return document.getElementById(id);}
@@ -252,9 +253,10 @@ function jevload()
 function jev(event){
  jmenuhide(event);
  jevev= window.event||event;
+ jevtarget=(typeof jevev.target=='undefined')?jevev.srcElement:jevev.target;
  var type=jevev.type;
  jform.jtype.value= type;
- var id=(typeof jevev.target=='undefined')?jevev.srcElement.id:jevev.target.id;
+ var id=jevtarget.id;
  var i= id.indexOf('*');
  jform.jid.value  = id;
  jform.jmid.value = (-1==i)?id:id.substring(0,i);
@@ -268,9 +270,9 @@ function jev(event){
 function jevdo()
 {
  JEV= "ev_"+jform.jmid.value+"_"+jform.jtype.value;
- // undefined returns true except for click avoid submit 
+ // undefined returns true except to avoid default submit 
  try{eval(JEV)}
- catch(ex){return jform.jtype.value!='click';}
+ catch(ex){return jevtarget.type!="submit";} //!return jform.jtype.value!='click';}
  try{var r= eval(JEV+"();")}
  catch(ex){alert(JEV+" failed: "+ex);return false;}
  if('undefined'!=typeof r) return r;

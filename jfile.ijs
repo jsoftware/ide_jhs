@@ -23,6 +23,12 @@ jhmz''
    'renameclose'jhb'X'
 '<hr></div>'
 
+'deletedlg'    jhdivadlg''
+ 'deletedo'    jhb'delete'
+ 'deletename'  jhspan''
+ 'deleteclose' jhb'X'
+'<hr></div>'
+
 'report'    jhdiv'<R>'
 shorts''
 'path'      jhhidden'<F>'
@@ -37,7 +43,7 @@ NB. y - error;file
 create=: 3 : 0
 'r f'=. y
 if. 0=#1!:0<(-PS={:f)}.f do. f=. jpath'~temp\' end. NB. ensure valid f
-'jfile' jhr 'R F FILES';r;f;(buttons 'files';(2#<folderinfo remlev f),<'<br>') 
+'jfile' jhr 'R F FILES';r;(shortname f);(buttons 'files';(2#<folderinfo remlev f),<'<br>') 
 )
 
 NB. get file with mid/path opens the file
@@ -65,13 +71,13 @@ buttons 'paths';(2#<{."1 UserFolders_j_,SystemFolders_j_),<' '
 ev_paths_click=: 3 : 0
 sid=. getv'jsid'
 f=. jpath'~',sid,'/'
-jhrajax f,JASEP,buttons 'files';(2#<folderinfo remlev f),<'<br>'
+jhrajax (shortname f),JASEP,buttons 'files';(2#<folderinfo remlev f),<'<br>'
 )
 
 NB. folder clicked (file click handled in js)
 ev_files_click=: 3 : 0
 sid=. getv'jsid'
-path=. getv'path'
+path=. jpath getv'path'
 sid=. sid-.PS
 sid=. 6}.sid NB. drop markfolder prefix
 if. sid-:'..' do.
@@ -79,7 +85,7 @@ if. sid-:'..' do.
 else.
  f=. (remlev path),PS,sid,PS
 end.
-jhrajax f,JASEP,buttons 'files';(2#<folderinfo remlev f),<'<br>'
+jhrajax (shortname f),JASEP,buttons 'files';(2#<folderinfo remlev f),<'<br>'
 )
 
 nsort=: 3 : 0
@@ -100,7 +106,7 @@ NFI=: 'newfile'
 NFO=: 'newfolder'
 
 ev_newfi_click=: 3 : 0
-F=. getv'path'
+F=. jpath getv'path'
 f=. (remlev F),PS,NFI
 if. fexist f do.
  r=. NFI,' already exists'
@@ -116,7 +122,7 @@ create r;f
 )
 
 ev_newfo_click=: 3 : 0
-F=. getv'path'
+F=. jpath getv'path'
 f=. (remlev F),PS,NFO,PS
 try.
  1!:5<f
@@ -129,63 +135,53 @@ create r;f
 
 ev_renamedo_click=: ev_renamex_enter
 
-NB.! needs work - e.g. non-empty folders - bad folder name
-NB. should use host move/rename facility
 ev_renamex_enter=: 3 : 0
-F=. getv'path'
+F=. jpath getv'path'
 n=. getv'renamex'
-if. PS-:_1{F do. NB. delete folder
- try.
-  smoutput F
-  f=. (remlev remlev F),PS,n,PS
-  smoutput f
-  1!:55 <}:F
-  1!:5  <}:f
-  r=. n,' new name for folder'
-  F=. f
- catch.
-  r=. n,' new name for folder failed (folder must be empty)'
- end.
-else. NB. delete file
- f=. jpath n
- if. -.PS e. f do. f=. (remlev F),PS,f end.
- if. fexist f do.
-  r=. n,' already exists'
- else.
-  try.
-   d=. 1!:1<F NB. read old
-   d 1!:2<f   NB. write new
-   1!:55<F    NB. erase old
-   r=. n,' new name for file'
-   F=. f
-  catch.
-   r=. n,' new name for file failed'
-  end.
- end.
-end. 
-create r;F
+if. PS-:{:F do.
+ f=. (remlev remlev F),PS,n,PS
+else.
+ f=. (remlev F),PS,n
+end.
+if. f frename F do.
+ create'Rename: ok';f
+else.
+ create'Rename: failed';F
+end.
 )
 
-ev_del_click=: 3 : 0
+ev_deletedo_click=: 3 : 0
 f=. jgetfile F=. jpath getv'path'
-if. PS={:F do.
- NB. delete folder
- try.
-  1!:55 <}:F
-  create'Deleted folder.';PS,~remlev remlev F
- catch.
-  create'Delete folder failed (folder must be empty).';F
+newf=. PS,~remlev F
+t=. jpath'~temp/deleted/'
+if. PS={:F do. NB. delete folder 
+ srcfolder=. F
+ snkfolder=. jpath'~temp/deleted/',jgetfile remlev srcfolder
+ if. t-:(#t){.srcfolder do.
+  deletefolder }:srcfolder
+  create ('Delete: deleted ',shortname srcfolder);newf
+  return.
  end.
-else.
- NB. delete file
+ deletefolder snkfolder
+ 1!:5<snkfolder
+ copyfiles (srcfolder,'*');snkfolder
+ deletefolder }:srcfolder
+ create ('Delete: folder saved as ',shortname snkfolder);newf 
+ return.
+else. NB. delete file
  try.
+  if. t-:(#t){.F do.
+   1!:55 <F
+   create ('Delete: deleted ',shortname F);newf
+   return.
+  end.
   d=. 1!:1<jpath F
   1!:5 :: [ <jpath'~temp/deleted'
   d 1!:2    <jpath'~temp/deleted/',jgetfile F
   1!:55 <F
-  create ('Deleted file saved as "',('~temp/deleted/',f),'".');PS,~remlev F
+  create ('Delete: file saved as ~temp/deleted/',f);newf
  catch.
-  create ('Delete "',f,'" failed.');F
+  create ('Delete "',f,'" failed.');newf
  end.
 end.
 )
@@ -203,7 +199,7 @@ NB.! folder dblclick??? not a problem, but is puzzling
 ev_files_dblclick=: ev_edit_click
 
 ev_edit_click=: 3 : 0
-f=. jgetfile F=. getv'path'
+f=. jgetfile F=. jpath getv'path'
 if. f-:'' do.
  create'No file selected to edit.';F
 else.
@@ -215,18 +211,35 @@ copy=: _1 NB. _1 not ready, 0 copy, 1 cut
 
 copycut=: 3 : 0
 copy=: y
-srcfile=: getv'path'
+srcfile=: jpath getv'path'
 create 'Ready for paste';srcfile
 )
 
 ev_copy_click=: 3 : 'copycut 0'
 ev_cut_click=:  3 : 'copycut 1'
 
-NB.! paste folder support
 ev_paste_click=: 3 : 0
 F=. jpath getv'path'
 f=. jgetfile srcfile
-if. ''-:f                do. create 'Paste: folder not implemented.';F  return. end.
+if. ''-:f do.
+ folder=. jgetfile remlev srcfile
+ srcfolder=. srcfile
+ snkfolder=. F,jgetfile remlev srcfile
+ if. srcfile-:(#srcfile){.snkfolder do.
+  create 'Paste: destination can not be in source';F
+  return.
+ end.
+ try.
+  1!:5<snkfolder
+ catch.
+  create 'Paste: folder already exists';F
+  return.
+ end.
+ copyfiles (srcfile,'*');snkfolder
+ if. copy=1 do. deletefolder }:srcfile end.
+ create ('Paste: created folder ',shortname snkfolder);F  
+ return.
+end.
 d=. fread srcfile
 i=. f i: '.'
 a=. i{.f
@@ -236,11 +249,96 @@ while. fexist snkfile=. (remlev F),PS,f do.
  c=. >:c
  f=. a,'-Copy(',(":c),')',z
 end.
-if. _1=copy              do. create 'Paste: no copy or cut.';F          return. end.
-if. _1-:d                do. create 'Paste: read source file failed.';F return. end.
-if. _1-:d fwrite snkfile do. create 'Paste: write newfile failed.';F    return. end.
+if. _1=copy              do. create 'Paste: no copy or cut';F          return. end.
+if. _1-:d                do. create 'Paste: read source file failed';F return. end.
+if. _1-:d fwrite snkfile do. create 'Paste: write newfile failed';F    return. end.
 if. copy=1 do. try. 1!:55 <srcfile catch. end. end.
-create ('Paste: ',f,' created.');F
+create ('Paste: created file ',f);F
+)
+
+NB. createfolder path - ensure path y exists
+createfolder=: 3 : 0
+for_n. (PS=t)#i.#t=. jpath y,'\'  do.
+ 1!:5 :: [ <n{.jpath y
+end.
+i.0 0
+)
+
+NB. copyfiles src;snk
+NB. src ends with \fspec which can have wildcards
+copyfiles=: 3 : 0
+'src snk'=. y
+src=. jpath src
+snk=. jpath snk
+i=. src i:PS
+fspec=. (>:i)}.src
+src=. i{.src
+createfolder snk
+ns=. 1!:0 <jpath src,'\',fspec
+for_n. ns do.
+ pn=. jpath'\',>{.n
+ srcpn=.src,pn
+ snkpn=.snk,pn
+ if. 'd'~:4{>4{n do.
+  t=. 1!:1<srcpn
+  p=. 1!:7<srcpn
+  t 1!:2<snkpn
+  p 1!:7<snkpn NB. permissions
+ else.
+  if. -.srcpn-:snk do.
+   1!:5 :: [ <snkpn
+   copyfiles (srcpn,'\*');snkpn
+  end.
+ end.
+end.
+i.0 0
+)
+
+NB. deletefolder y
+deletefolder=: 3 : 0
+p=. <jpath y
+if. 1=#1!:0 p do.
+ if. 'd'=4{,>4{"1 (1!:0) p do.
+  deleterecursive y
+  1!:55 p
+ end.
+end.
+i.0 0
+)
+
+NB. deletesub y
+deleterecursive=: 3 : 0
+assert. 3<+/PS=jpath y
+ns=. 1!:0 <jpath y,'\*'
+for_n. ns do.
+ s=. jpath y,'\',>{.n
+ if. 'd'=4{>4{n do.
+  deleterecursive s
+ end.
+ 1!:55<s
+end.
+)
+
+NB. ~name from full name
+shortname=: 3 : 0
+p=. <jpath y
+'a b'=.<"1 |:UserFolders_j_,SystemFolders_j_
+c=. #each b
+f=. p=jpath each ('~',each a),each c}.each p
+if.-.+./f do. >p return. end.
+q=. >./>#each f#b
+f=. f*.c=<q
+'~',(;f#a),q}.>p
+)
+
+NB. newname frename oldname - return 1 if rename ok
+frename=: 4 : 0
+if. x -: y do. return. end.
+if. IFUNIX do.
+  0=>{.((find_dll'c'),' rename i *c *c') 15!:0 y;x
+else.
+  >{.'kernel32 MoveFileA i *c *c' 15!:0 y;x
+end.
 )
 
 remlev=: 3 : '(y i: PS){.y'    NB. remove level from path
@@ -284,7 +382,18 @@ function ev_rename_click()     {jdlgshow("renamedlg","renamex");}
 function ev_renameclose_click(){jhide("renamedlg");}
 
 function ev_edit_click(){jsubmit();}
-function ev_del_click(){jsubmit();}
+// function ev_del_click(){jsubmit();}
+
+function ev_del_click()
+{
+ jbyid("deletename").innerHTML=jform.path.value;
+ jdlgshow("deletedlg","deleteclose");
+}
+
+function ev_deletedo_click(){jhide("deletedlg");jsubmit();}
+
+function ev_deleteclose_click(){jhide("deletedlg");}
+
 function ev_deltemps_click(){jsubmit();}
 function ev_copy_click(){jsubmit();}
 function ev_cut_click(){jsubmit();}

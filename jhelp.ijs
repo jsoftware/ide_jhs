@@ -107,7 +107,11 @@ You can user ctrl+. instead of esc.
 run J sentences (ctrl+shift+&uarr;&darr; recall)
 
 <br><br><span class="h">file</span>
-browse files for opening, editing, etc.
+browse files for editing, etc.<br><br>
+
+Adequate for simple IDE use and for a remote server.
+For more complicated requirements use host facilities such
+as Windows Explorer or Mac Finder.
 
 <br><br><span class="h">ijs</span>
 edit file (ctrl+z/y for undo/redo)

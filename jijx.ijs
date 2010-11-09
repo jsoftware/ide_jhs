@@ -71,8 +71,7 @@ JS=: js=.  JSCORE,jsdebug,~jsx
 
 getlabs=: 3 : 0
 LABTITLES=: LABCATS=: LABFILES=: ''
-d=. dirpath t=. jpath'~addons/labs'
-if. 1=#d do. d=. dirpath t=. jpath'~system/extras/labs' end. NB.! old location
+d=. dirpath t=. jpath'~addons/labs/labs'
 try.
  for_p. d do.
   for_q. 1 dir '/*.ijt',~>p do.
@@ -84,7 +83,7 @@ try.
   title=. (title i.LF){.title
   title=. (>:title i.'''')}.title
   title=. (title i:''''){.title 
-  LABTITLES=: LABTITLES,<title NB.! cat,': ',
+  LABTITLES=: LABTITLES,<cat,': ',title
   end.
  end.
 catch.
@@ -136,7 +135,7 @@ Menu studio|advance to advance.
 )
 
 labopen=: 3 : 0
-require__'~addons/labs/lab.ijs'
+require__'~addons/labs/labs/lab.ijs'
 smselout_jijs_=: smfocus_jijs_=: [ NB.! allow introcourse to run
 labinit_jlab_ y{LABFILES
 )
