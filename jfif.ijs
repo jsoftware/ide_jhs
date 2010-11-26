@@ -53,7 +53,7 @@ CSS=: 0 : 0
 )
 
 JS=: 0 : 0
-function evload(){jbyid("what").focus();jresize();}
+function ev_body_load(){jbyid("what").focus();jresize();}
 function ev_what_enter(){jscdo("find");}
 function ev_find_click_ajax(ts){jbyid("area").innerHTML=ts[0];}
 

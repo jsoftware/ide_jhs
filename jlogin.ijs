@@ -70,13 +70,15 @@ if. (count<:LIMIT)*.(u-:USER)*.p-:PASS do.
 else.
  count=: count+METHOD-:'post'
  b=. (jhbs HBS)hrplc 'MSG';getmessage''
- t=. hrtemplate rplc (LF,LF);LF,'Cache-Control: no-cache',LF,LF
+ t=. hrtemplate rplc (CRLF,CRLF);CRLF,'Cache-Control: no-cache',CRLF,CRLF
  t=. t rplc (LF,LF);LF,'Set-Cookie: ',expires,LF,LF
  htmlresponse t hrplc'TITLE CSS JS BODY';'jlogin';(css CSS);(js JS);b
 end.
 )
 
 JS=: 0 : 0
-function evload(){try{jform.user.focus();}catch(ex){;}}
-function ev_pass_enter(){jsubmit();}
+function ev_body_load(){try{jform.user.focus();}catch(ex){;}}
+
+// jsubmit done by default only for buttons (no state change)
+function ev_pass_enter(){jsubmit();} 
 )

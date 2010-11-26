@@ -115,15 +115,10 @@ create '';r rplc LF;'<br>'
 )
 
 JS=: 0 : 0
-function evload(){if(jform.select) jform.select.focus();jresize();}
-function ev_status_click() {jsubmit();}
-function ev_update_click() {jsubmit();}
-function ev_notin_click()  {jsubmit();}
-function ev_inst_click()   {jsubmit();}
-function ev_upable_click() {jsubmit();}
-function ev_remable_click(){jsubmit();}
-function ev_install_click(){jsubmit();}
-function ev_desc_click()   {jsubmit();}
-function ev_upgrade_click(){jsubmit();}
-function ev_remove_click() {jsubmit();}
+function ev_body_load()
+{
+ var n=document.getElementsByTagName("input");
+ for(var i=0;i<n.length;++i)
+  if("checkbox"==n[i].getAttribute("type")){n[i].focus();break;}
+ jresize();}
 )

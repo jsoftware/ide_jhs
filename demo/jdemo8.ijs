@@ -33,7 +33,7 @@ Div m is resized to fill the window.
 JS=: 0 : 0
 window.onresize= resize;
 
-function evload(){resize();} // body onload->jevload->evload
+function ev_body_load(){resize();}
 
 function resize(){
  var a= jgpwindowh();// window height

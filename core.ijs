@@ -737,3 +737,21 @@ User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; WOW64; SLCC1; .NE
 Connection: Keep-Alive
 
 )
+
+getgtkide_z_=: 3 :0
+load 'pacman'
+'update' jpkg ''
+'install' jpkg 'ide/gtk gui/gtk'
+if. IFWIN do.
+smoutput'getting windows gtk binaries - will take several minutes'
+ if. IF64 do.
+   f=. 'http://ftp.gnome.org/pub/gnome/binaries/win64/gtk+/2.22/gtk+-bundle_2.22.0-20101016_win64.zip'
+ else.
+   f=. 'http://ftp.gnome.org/pub/gnome/binaries/win32/gtk+/2.22/gtk+-bundle_2.22.0-20101016_win32.zip'
+ end.
+ 1!:44 jpath '~temp'
+ _1&fork_jtask_`(2!:0)@.IFUNIX (jpath '~tools/ftp/wget'), ' --no-proxy -O gtk.zip ',f
+ _1&fork_jtask_`(2!:0)@.IFUNIX (jpath '~tools/zip/unzip'), ' -o gtk.zip -d ', jpath '~install/gtk'
+end.
+'Exit, and then run gtk frontend by "jconsole gtkide"'
+)

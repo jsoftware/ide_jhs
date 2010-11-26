@@ -41,7 +41,7 @@ jhmz''
     'replclose'jhb'X'
 '<hr></div>'
 
-'rep'         jhdiv''
+'rep'         jhdiv'<REP>'
 
 'filename'    jhhidden'<FILENAME>'
 'filenamed'   jhdiv'<FILENAME>'
@@ -54,10 +54,17 @@ jhresize''
 'textarea'    jhhidden''
 )
 
+FNMS=: ''
+
 NB. y file
 create=: 3 : 0
-try. d=. 1!:1<y catch. d=. 'file read failed' end.
-(jgetfile y) jhr 'FILENAME DATA';y;jhfroma d
+rep=. >(FNMS e.~<y){'';'WARNING: file already open!' 
+FNMS=: FNMS,<y
+try. d=. 1!:1<y catch.
+ d=. ''
+ rep=. 'WARNING: file read failed!'
+end.
+(jgetfile y) jhr Q__=: 'FILENAME REP DATA';y;rep;jhfroma d
 )
 
 jev_get=: 3 : 0
@@ -73,7 +80,14 @@ if. #USERNAME do.
  fu=. jpath'~user'
  'save only allowed to ~user paths' assert fu-:(#fu){.y
 end.
-assert -._1-:(toHOST getv'textarea')fwrite <y
+new=. toHOST getv'textarea'
+old=. toHOST fread y
+if. new-:old do.
+ smoutput'jijs not saved (unchanged): ',y
+else.
+ smoutput'jijs saved: ',y
+end. 
+new  fwrite y
 )
 
 ev_save_click=: 3 : 0
@@ -123,6 +137,13 @@ catch.
 end.
 )
 
+ev_body_unload=: 3 : 0
+f=. getv'filename'
+save f
+FNMS=:(-.(i.#FNMS)=(FNMS=<f)i.1)#FNMS
+jhrajax''
+)
+
 NB. new ijs temp filename
 jnew=: 3 : 0
 d=. 1!:0 jpath '~temp\*.ijs'
@@ -161,7 +182,7 @@ var rwhat="";            // find regexp
 var spanmark="<span class=\"mark\" style=\"background-color:#D7D7D7\">";
 
 
-function evload() // body onload->jevload->evload
+function ev_body_load()
 {
  ce= jbyid("ijs");
  rep= jbyid("rep");
@@ -174,6 +195,12 @@ function evload() // body onload->jevload->evload
  jresize();
  color();
  undoadd();
+}
+
+function ev_body_unload()
+{
+ ta.value= jtfromh(ce.innerHTML);
+ jdoajax(["filename","textarea","saveasx"],"");
 }
 
 function ro(only)

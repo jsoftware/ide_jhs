@@ -319,7 +319,7 @@ pass=. 'jumjum'
 )
 
 JS=: 0 : 0
-function evload(){jform.name.focus();}
+function ev_body_load(){jform.name.focus();}
 )
 
 NB. windows createprocess stuff for windows testing

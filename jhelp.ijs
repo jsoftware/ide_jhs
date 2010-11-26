@@ -122,21 +122,23 @@ find in files utility
 <br><br><span class="h">pacman</span>
 addons package manager (downloadable software packages)
 
-<br><br><span class="h">plot</span>
-<pre>   jgc'help'  NB. plot info
+<br><br><span class="h">plot</span> <a href="http://code.google.com/apis/chart/">Google Charts</a>
+<pre class="jcode">
+   jgc'help'  NB. plot info
    jgcx''     NB. examples
    plot 10?10 NB. default line plot
 </pre>
 
 <span class="h">viewmat</span>
-<pre>
-   jvm ?20 20$2
-   jvm */~ i:9
+<pre class="jcode">
+   viewmat ?20 20$2
+   viewmat */~ i:9
 </pre>
 
 <span class="h">utils</span>
-<pre>   jbd 1 NB. boxdraw +|-
-   jlog y NB. 0 clears and _ restores log
+<pre class="jcode">
+   jbd 1      NB. boxdraw +|-
+   jlog y     NB. 0 clears and _ restores log
    jfe_jhs_ y NB. toggle console/browser
    jhtml'&lt;font style="color:red;"&gt;A&lt;/font&gt;'
 </pre>
@@ -144,24 +146,24 @@ addons package manager (downloadable software packages)
 <span class="h">ijx action menu</span><br>
 A script defines action menu items and the verbs to run
 when clicked. The following is a sample file you can
-define and then modify:<br><br>
-<tt>
-*** script ~user/projects/ja/ja.ijs ***<br>
-coclass'z'<br><br>
-ja_menu=: 0 : 0<br>
-aaa<br>
-bbb<br>
-<PAREN><br><br>
+define and then modify:
+<pre class="jcode">
+*** script ~user/projects/ja/ja.ijs ***
+coclass'z'
+ja_menu=: 0 : 0
+aaa
+bbb
+<PAREN>
 
-ja_aaa=: 3 : 0<br>
-'aaa clicked'<br>
-<PAREN><br><br>
+ja_aaa=: 3 : 0
+'aaa clicked'
+<PAREN>
 
-ja_bbb=: 3 : 0<br>
-'bbb clicked'<br>
-<PAREN><br>
-***<br><br>
-</tt>
+ja_bbb=: 3 : 0
+'bbb clicked'
+<PAREN>
+***
+</pre>
 
 <span class="h">ijx project manager</span><br>
 An ijx action menu item can provide a simple project manager.
@@ -171,7 +173,7 @@ is used.<br><br>
 
 <span class="h">ijx debug menu</span><br>
 With debug on (ijx menu debug), execution suspends at an error or a stop.
-<pre>
+<pre class="jcode">
    dbsm'name'      - display numbered definition lines
    dbsm'name ...'  - add stops
    dbsm'name :...' - add dyadic stops
@@ -180,7 +182,7 @@ With debug on (ijx menu debug), execution suspends at an error or a stop.
 </pre>
 
 Try the following:
-<pre>
+<pre class="jcode">
    dbsm'calendar'   NB. numbered explicit defn
    dbsm'calendar 0' NB. stop monadic line 0
 menu debug|on
@@ -294,5 +296,5 @@ span.h{color:red;}
 )
 
 JS=: 0 : 0
-function evload(){jresize();}
+function ev_body_load(){jresize();}
 )

@@ -53,7 +53,6 @@ gcd=: 3 : 0
 if. ''-:y do.
 elseif. 2=3!:0 y do.
  smoutput help
- jhtml'<a href="http://code.google.com/apis/chart/">Google Charts docs and examples</a>'
 elseif. 32=3!:0 y do.
  NB. assume dead simple 1 2 3;4 5 6
  gcdata=: y
@@ -153,6 +152,7 @@ COLORS=: }.;',',._6[\BLUE,RED,GREEN,PURPLE,FUCHSIA,OLIVE,TEAL,YELLOW,TAN,AQUA,BR
 
 help=: 0 : 0
 JHS plots with Google Charts (GC).
+See code.google.com/apis/chart for info.
 
 chart?... in a url defines a plot.
 The url from GC returns a png file.
@@ -180,6 +180,8 @@ Use + instead of blank in &ch.. commands!
    jgcchart'' NB. get chart?...
    jgcimg''   NB. get img tag
    jgcfile''  NB. get png file
+
+
 )
 
 examples=: 0 : 0

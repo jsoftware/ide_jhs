@@ -196,6 +196,7 @@ create '&nbsp;';jpath'~temp\'
 )
 
 NB.! folder dblclick??? not a problem, but is puzzling
+
 ev_files_dblclick=: ev_edit_click
 
 ev_edit_click=: 3 : 0
@@ -350,7 +351,7 @@ CSS=: 0 : 0
 )
 
 JS=: 0 : 0
-function evload(){jresize();}
+function ev_body_load(){jresize();}
 
 function repclr(){jbyid("report").innerHTML = "&nbsp;";}
 function setpath(t){jform.path.value= t;jbyid("pathd").innerHTML= t;}
@@ -374,15 +375,8 @@ function ev_files_click() // file select
   jdoajax(["path"],"");
 }
 
-function ev_files_dblclick(){jsubmit();}
-
-function ev_renamedo_click(){jsubmit();}
-function ev_renamex_enter(){jsubmit();}
 function ev_rename_click()     {jdlgshow("renamedlg","renamex");}
 function ev_renameclose_click(){jhide("renamedlg");}
-
-function ev_edit_click(){jsubmit();}
-// function ev_del_click(){jsubmit();}
 
 function ev_del_click()
 {
@@ -390,16 +384,7 @@ function ev_del_click()
  jdlgshow("deletedlg","deleteclose");
 }
 
-function ev_deletedo_click(){jhide("deletedlg");jsubmit();}
-
 function ev_deleteclose_click(){jhide("deletedlg");}
-
-function ev_deltemps_click(){jsubmit();}
-function ev_copy_click(){jsubmit();}
-function ev_cut_click(){jsubmit();}
-function ev_paste_click(){jsubmit();}
-function ev_newfi_click(){jsubmit();}
-function ev_newfo_click(){jsubmit();}
 
 function ajax(ts)
 {

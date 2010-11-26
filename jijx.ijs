@@ -96,7 +96,7 @@ LABTITLES=: s{LABTITLES
 
 labsel=: 3 : 0
 getlabs''
-'labsel'jhselect LABTITLES;1;0
+>(0~:#LABTITLES){'';'labsel'jhselect LABTITLES;1;0
 )
 
 updn=: 3 : 0
@@ -108,13 +108,6 @@ t=.INPUT
 t=.(0~:;#each t-.each' ')#t
 NB.! (;t,each LF)rplc '"';'\"';'\';'\\'
 (;t,each LF)rplc '&';'&amp;';'"';'&quot;';'<';'&lt;';'>';'&gt;'
-)
-
-labmsg=: 0 : 0
-<span style="color:red">
-Some labs have not been updated for J7.<br>
-Most problems are minor and can be ignored.
-</span>
 )
 
 labopen=: 3 : 0
@@ -155,7 +148,6 @@ end.
 t 
 )
 
-
 ev_action_click=:  3 : 0
 smoutput 'see help ijx menu action for customization info'
 )
@@ -166,6 +158,22 @@ action=: 3 : 0
 
 ev_actionn_click=: 3 : 0
 action ".getv'jsid'
+)
+
+labmsg=: 0 : 0
+No labs installed.
+Do pacman studio/labs install and try again.
+
+Labs are interactive tutorials and are a good
+way to learn J.
+
+Labs are not always current with the latest system
+and may run with minor errors that can be ignored.
+)
+
+NB. here because no labs to select
+ev_lab_click=: 3 : 0
+smoutput labmsg
 )
 
 CSS=: 0 : 0
@@ -187,7 +195,9 @@ var reci= -1;
 var phead= '<div id="prompt" class="log">';
 var ptail= '</div>';
 
-function evload()
+function ev_body_focus(){jbyid("log").focus();}
+
+function ev_body_load()
 {
  var t=jbyid("recalls").value;
  if(0==t.length)
@@ -357,7 +367,14 @@ function ev_log_enter()
 
 function ev_advance_click(){jdoajax([],"");}
 
-function ev_lab_click(){jdlgshow("labsdlg","labsel");}
+function ev_lab_click()
+{
+ if(null==jbyid("labsel"))
+  jdoajax([],"");
+ else
+ jdlgshow("labsdlg","labsel");
+}
+
 function ev_labsclose_click(){jhide("labsdlg");ev_2_shortcut();}
 
 function ev_scratch_click(){jdlgshow("scratchdlg","scratcharea");}

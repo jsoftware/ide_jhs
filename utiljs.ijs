@@ -14,9 +14,9 @@ var jisIE=-1!=navigator.userAgent.search(/MSIE/);
 function jbyid(id){return document.getElementById(id);}
 function jsubmit(s){jform.jdo.value=jevsentence;jform.submit();}
 
-function jscdo(mid,sid) // call click handler for mid [sid]
+function jscdo(mid,sid,type) // call click handler for mid [sid]
 {
- jform.jtype.value= "click";
+ jform.jtype.value= type?type:"click";
  if('undefined'==typeof sid)
  {
   jform.jid.value= mid;
@@ -36,7 +36,6 @@ function jscdo(mid,sid) // call click handler for mid [sid]
 function jsetcaret(id,collapse)
 {
  var p= jbyid(id);
- //! p.scrollIntoView(false);
  if (window.getSelection)
  {
   try{window.getSelection().collapse(p,collapse);}
@@ -97,7 +96,6 @@ function jcollapseselection(d)
 // replace selection with val - collapse -1 none, 0 end, 1 start
 function jreplace(id,collapse,val)
 {
-  //! jbyid(id).focus();
   try // mark caret location with ZWSP
   {
    if(window.getSelection)
@@ -239,15 +237,16 @@ function jresize()
  jbyid("jresizeb").style.height= a+"px";
 }
 
-// body onload handler - calls evload
 function jevload()
 {
  jform= document.j;
  jevsentence= "jev_"+jform.jlocale.value+"_ 0"; 
- try{eval("evload")}catch(ex){return false;}
- evload();
+ jscdo("body","","load");
  return false
 }
+
+function jevunload(){jscdo("body","","unload");return false;}
+function jevfocus(){jscdo("body","","focus");return false;}
 
 // event handler onclick etc - id is mid[*sid]
 function jev(event){
@@ -263,16 +262,24 @@ function jev(event){
  jform.jsid.value = (-1==i)?"":id.substring(++i,id.length);
  if(type=='keydown'&&27==jevev.keyCode)return false; //! IE ignore esc
  if(type=='keydown'&&13==jevev.keyCode&&!jevev.ctrlKey&&!jevev.shiftKey)
-  {jform.jtype.value="enter";return jevdo(id);} 
- return jevdo(id);
+  {jform.jtype.value="enter";return jevdo();} 
+ return jevdo();
 }
 
-function jevdo()
+function jevdo(s)
 {
- JEV= "ev_"+jform.jmid.value+"_"+jform.jtype.value;
- // undefined returns true except to avoid default submit 
+ if(!s)
+  JEV= "ev_"+jform.jmid.value+"_"+jform.jtype.value;
+ else
+  JEV= s;
  try{eval(JEV)}
- catch(ex){return jevtarget.type!="submit";} //!return jform.jtype.value!='click';}
+ catch(ex)
+ {
+  // undef returns true or does jsubmit for buttons 
+  var c=jevtarget.getAttribute("class");
+  if(c=="jhb"||c=="jhab"||c=="jhmab")jsubmit();
+  return true;
+ }
  try{var r= eval(JEV+"();")}
  catch(ex){alert(JEV+" failed: "+ex);return false;}
  if('undefined'!=typeof r) return r;
@@ -426,7 +433,6 @@ function jfindmenu(n)
 function jmenunav(tar,c)
 {
  var i,n,nn,nc,node,cnt=0,last,len,cl,m=[];
- //! alert(tar.id+" "+" "+tar.getAttribute("class")+" "+c);
  var nodes=document.getElementsByTagName("a");
  len=nodes.length
  for(i=0;i<len;++i)
@@ -515,7 +521,6 @@ function jmenunavinfo(m,n)
 function jactivatemenu(n)
 {
  jmenuhide();
- //! window.scrollTo(0,0);
  var node= jfindmenu(n);
  if('undefined'==typeof node) return;
  node.focus(); 
@@ -615,7 +620,7 @@ function jmenukeyup(ev)
 // get pixel... - sizing/resizing
 
 // window.onresize= resize; // required for resize
-// and resize should be called in evload
+// and resize should be called in ev_body_load
 
 // the ...h functions need simple changes to
 // become the corresponding set of w functions
@@ -697,8 +702,10 @@ html element ids are mid[*sid] (main id and optional sub id)
 
 functions defined by you:
 
-evload() - called when page loads to initialize
- 
+ev_body_load()   - page load (open)
+ev_body_unload() - page unload (close)
+ev_body_focus()  - page focus
+  
 ev_mid_event() - event handler - click, change, keydown, ...
 
 js event handler:

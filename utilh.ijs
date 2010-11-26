@@ -111,7 +111,6 @@ NB. output starting with jmarka and ending with jmarkv,LF
 NB.  is assumed to be html and is not touched
 jhtmlfroma=: 3 : 0
 if. (jmarka-:jmarkc{.y)*.jmarkz-:(-jmarkc){.}:y do. y return. end.
-NB.! y=. y rplc '<';'&lt;';'>';'&gt;';'&';'&amp;';'"';'&quot;';CRLF;'<br>';LF;'<br>';CR;'<br>';' ';'&nbsp;'
 jhfroma y
 )
 
@@ -288,7 +287,7 @@ i=. 1 i.~'</div><div id="jresizeb">'E.t
 if. i~:#t do.
  t=. '<div id="jresizea">',t,'</div>'
 end.
-'<body onload="jevload();">',(jhform''),t,'</body></form>'
+'<body onload="jevload();" onunload="jevunload();" onfocus="jevfocus();">',(jhform''),t,'</body></form>'
 )
 
 jhbsex=: 3 : 0
@@ -538,7 +537,7 @@ t=. t,'jijx'  jhml'ijx     j^'
 t=. t,'jfile' jhml'file    f^'
 t=. t,'jijs'  jhml'ijs     J^'
 t=. t,'jfif'  jhml'fif     F^'
-t=. t,'jal'   jhml'pacman'
+t=. t,(0=#USERNAME)#'jal'   jhml'pacman'
 t=. t,>(-.0-:gethv'Cookie:'){' ';'jlogin'jhml'logout'
 t=. t,'jhelp' jhml'help    h^'
 )
