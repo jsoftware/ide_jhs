@@ -392,6 +392,5 @@ function ajax(ts)
  setpath(ts[0]);
  jbyid("sel").innerHTML= ts[1];
 }
-
 )
 

@@ -8,14 +8,16 @@ JSCORE=: 0 : 0
 var JASEP= '\1'; // delimit substrings in ajax response
 var jform;       // page form
 var jevev;       // event handler event object
-var jevtarget;   // event handler target object
+var jevtarget=null;   // event handler target object
 var jisIE=-1!=navigator.userAgent.search(/MSIE/);
 
 function jbyid(id){return document.getElementById(id);}
 function jsubmit(s){jform.jdo.value=jevsentence;jform.submit();}
 
-function jscdo(mid,sid,type) // call click handler for mid [sid]
+// convert to event for mid [sid=""] [type="click"]
+function jscdo(mid,sid,type) // click handler for mid [sid] type
 {
+ jevtarget=null; 
  jform.jtype.value= type?type:"click";
  if('undefined'==typeof sid)
  {
@@ -246,7 +248,13 @@ function jevload()
 }
 
 function jevunload(){jscdo("body","","unload");return false;}
-function jevfocus(){jscdo("body","","focus");return false;}
+function jevfocus()
+{
+ // return false; // IE onfocus before onload
+ if(jform=="")return false;
+ jscdo("body","","focus");
+ return false;
+}
 
 // event handler onclick etc - id is mid[*sid]
 function jev(event){
@@ -266,16 +274,15 @@ function jev(event){
  return jevdo();
 }
 
-function jevdo(s)
+function jevdo()
 {
- if(!s)
-  JEV= "ev_"+jform.jmid.value+"_"+jform.jtype.value;
- else
-  JEV= s;
- try{eval(JEV)}
- catch(ex)
+ JEV= "ev_"+jform.jmid.value+"_"+jform.jtype.value;
+ //try{eval(JEV)}
+ //catch(ex)
+ if('undefined'==eval("typeof "+JEV))
  {
   // undef returns true or does jsubmit for buttons 
+  if(null==jevtarget)return true;
   var c=jevtarget.getAttribute("class");
   if(c=="jhb"||c=="jhab"||c=="jhmab")jsubmit();
   return true;
@@ -308,14 +315,17 @@ function newrq()
 // ids is array of form element names (values)
 // data is JASEP delimited data to send 
 // sentence (usually elided to use jevsentence)
-function jdoajax(ids,data,sentence)
+// asynch is true for asynch and false for synch (elided is true)
+function jdoajax(ids,data,sentence,async)
 {
  if(0!=rqstate){alert("busy - wait for previous request to finish");return;}
+ async=('undefined'==typeof async)?true:async;
  rq= newrq();
  rq.onreadystatechange= jdor;
- rq.open("POST",jform.jlocale.value,true); // asynch
- jform.jdo.value= sentence?sentence:jevsentence;
+ rq.open("POST",jform.jlocale.value,async); // true for async call
+ jform.jdo.value= ('undefined'==typeof sentence)?jevsentence:sentence;
  rq.send(jpostargs(ids)+"&jdata="+jencode(data));
+ if(!async)jdor();
 }
 
 // return post args from standard form ids and extra form ids

@@ -737,8 +737,8 @@ User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; WOW64; SLCC1; .NE
 Connection: Keep-Alive
 
 )
-
-getgtkide_z_=: 3 :0
+NB.! kill off
+xxxgetgtkide_z_=: 3 :0
 load 'pacman'
 'update' jpkg ''
 'install' jpkg 'ide/gtk gui/gtk'

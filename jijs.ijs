@@ -200,7 +200,7 @@ function ev_body_load()
 function ev_body_unload()
 {
  ta.value= jtfromh(ce.innerHTML);
- jdoajax(["filename","textarea","saveasx"],"");
+ jdoajax(["filename","textarea","saveasx"],"",jevsentence,false);
 }
 
 function ro(only)

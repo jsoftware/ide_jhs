@@ -195,7 +195,7 @@ var reci= -1;
 var phead= '<div id="prompt" class="log">';
 var ptail= '</div>';
 
-function ev_body_focus(){jbyid("log").focus();}
+function ev_body_focus(){setTimeout(ev_2_shortcut,100);}
 
 function ev_body_load()
 {
@@ -254,7 +254,12 @@ function addrecall(a)
 
 function scrollz(){jbyid("prompt").scrollIntoView(false);}
 
-function ev_2_shortcut(){jbyid("log").focus();scrollz();jsetcaret("prompt",1);}
+function ev_2_shortcut()
+{
+ if(null==jbyid("prompt"))return; // FF
+ jbyid("log").focus();scrollz();
+ jsetcaret("prompt",1);
+}
 function ev_3_shortcut(){jbyid("scratcharea").focus();}
 function ev_a_shortcut(){jscdo("advance");}
 
