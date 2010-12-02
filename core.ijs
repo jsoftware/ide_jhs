@@ -143,6 +143,7 @@ is unigue and name is the same across a set of radio buttons.
 )
 
 JZWSPU8=: 226 128 139{a. NB. empty prompt kludge - &#8203; \200B
+OKURL=: '' NB. URL allowed without login
 
 NB. J needs input - y is prompt - '' '   ' '      '
 input=: 3 : 0
@@ -153,7 +154,7 @@ if. _1~:SKSERVER do. try. ".'urlresponse_',URL,'_ y' catch. end. end. NB. jijx
 if. _1~:SKSERVER do. jbad'' end.
 getdata'' NB. get and parse http request
 if. 1=NVDEBUG do. smoutput seebox NV end. NB. HNV,NV
-if. (0~:#PASS)*.(-.cookie-:gethv'Cookie:')*.-.LHOK*.PEER-:LOCALHOST
+if. (-.OKURL-:URL)*.(0~:#PASS)*.(-.cookie-:gethv'Cookie:')*.-.LHOK*.PEER-:LOCALHOST
                        do. r=. 'jev_get_jlogin_ 0'
 elseif. 'post'-:METHOD do. r=. getv'jdo'
 elseif. '.'e.URL       do. r=. 'jev_getsrcfile_jfilesrc_ URL_jhs_'
@@ -161,23 +162,6 @@ elseif. 1              do. r=. 'jev_get_',URL,'_'''''
 end.
 logjhs'sentence'
 logapp 'jhs sentence: ',r
-
-NB.! what about jfilesrc? security! 
-NB. enforce app restrictions - must be event in allowedurls
-if. #allowedurls do.
- try.
-  'v n'=. ;:r         NB. 2 tokens
-  assert 3=nc<v       NB. v must be verb
-  assert 'jev_'-:4{.v NB. must have handler prefix
-  smoutput v
-  smoutput     ((}:v)i:'_')}.v
-  smoutput (<}.}:((}:v)i:'_')}.v)
-  assert   (<}.}:((}:v)i:'_')}.v) e. allowedurls 
- catch.
-  smoutput 'sentence not allowed: ',r
-  r=. 'jbad_jhs_ 0'
- end.
-end.
 if. JZWSPU8-:3{.r do. r=. 3}.r end. NB. empty prompt kludge
 r NB. J sentence to run
 
@@ -388,10 +372,9 @@ i=. (0{"1 NV)i.<,y
 >1{i{NV,0;''
 )
 
-NB. 0 if name not in NV and 1 if it is
-getvq=: 3 : 0
-i=. (0{"1 NV)i.<y
-i<#NV
+NB. get values for names
+getvs=: 3 : 0
+((0{"1 NV)i.;:y){(1{"1 NV),<''
 )
 
 logclear=: 3 : ''''' 1!:2 logappfile'
@@ -625,7 +608,6 @@ boxdraw_j_ PC_BOXDRAW
 remote=. >(BIND-:''){'';remoteaccess hrplc 'IPAD PORT';IP;":PORT
 smoutput console_welcome hrplc 'PORT LOCAL REMOTE';(":PORT);LOCALHOST;remote
 startupjhs''
-allowedurls=: ''
 if. 0~:#PASS do.
  cookie=: 'jcookie=',0j4":{:6!:0''
 else.
@@ -736,22 +718,4 @@ Accept-Encoding: gzip, deflate
 User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; WOW64; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; .NET CLR 3.5.30729; .NET CLR 3.0.30729)
 Connection: Keep-Alive
 
-)
-NB.! kill off
-xxxgetgtkide_z_=: 3 :0
-load 'pacman'
-'update' jpkg ''
-'install' jpkg 'ide/gtk gui/gtk'
-if. IFWIN do.
-smoutput'getting windows gtk binaries - will take several minutes'
- if. IF64 do.
-   f=. 'http://ftp.gnome.org/pub/gnome/binaries/win64/gtk+/2.22/gtk+-bundle_2.22.0-20101016_win64.zip'
- else.
-   f=. 'http://ftp.gnome.org/pub/gnome/binaries/win32/gtk+/2.22/gtk+-bundle_2.22.0-20101016_win32.zip'
- end.
- 1!:44 jpath '~temp'
- _1&fork_jtask_`(2!:0)@.IFUNIX (jpath '~tools/ftp/wget'), ' --no-proxy -O gtk.zip ',f
- _1&fork_jtask_`(2!:0)@.IFUNIX (jpath '~tools/zip/unzip'), ' -o gtk.zip -d ', jpath '~install/gtk'
-end.
-'Exit, and then run gtk frontend by "jconsole gtkide"'
 )

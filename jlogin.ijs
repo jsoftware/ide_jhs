@@ -5,8 +5,8 @@ HBS=: 0 : 0
 login
 '<MSG>'
 jhtablea
- jhtr 'user: '   ;'user' jhtext'';15
- jhtr 'pasword: ';'pass' jhpassword'';15
+ jhtr 'user: '    ;'user' jhtext'';15
+ jhtr 'password: ';'pass' jhpassword'';15
 jhtablez
 loggedin
 )

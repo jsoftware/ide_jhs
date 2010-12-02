@@ -2,35 +2,66 @@ NB. J HTTP Server - jum app
 coclass'jum'
 coinsert'jhs'
 
-NB.! jhs.cfg should be changed to jhs.ijs
-
-NB.! jum login doesn't have logout
-
-NB. configuration
-HOSTNAME=: >('alicia'-:>{:sdgethostname_jsocket_''){'localhost';'www.jsoftware.com'
+NB. ALLPORTS integer ports used by jum
+NB. HOSTNAME localhost or www.jsoftware.com or ...
+NB. JUMPASS  jum password
+startjum=: 3 : 0
+'ALLPORTS HOSTNAME JUMPASS'=:y
+OKURL_jhs_=:'jum' NB. jum no login
 HOSTIP=: >2{sdgethostbyname_jsocket_ HOSTNAME NB. is 202.67.223.49 faster than www.jsoftware.com ?
-VALIDNAMECHARS=:'-_',((i.26)+a.i.'a'){a.
 JHS=: (>:JHS i:'/'){.JHS=:jpath'~user'
+VALIDNAMECHARS=:'-_',((i.26)+a.i.'a'){a.
+i.0 0
+)
 
-NB.! with password it might be better to use consecutive ports
-NB. return all valid ports - private range 49152 to 65535
-allports=: 3 : '50248+123*i.60'
+startjum_localhost=: 3 : 0
+startjum (65002+i.3);'localhost';'jumjum'
+)
 
-NB. validate user
-NB. y 0 new user, 1 old user
-NB. path or '' (response has been sent for '')
-validate=: 3 : 0
-user=. getv'name'
-if. (0=#user)+.#user-.VALIDNAMECHARS do.
- ''[create user,' must be 1 or more chars from ',VALIDNAMECHARS
-else.
- p=. JHS,user
- d=. 'd'e.>4{5{.,1!:0<p NB. 1 if folder
- if. y=d do.
-  p
- else.
-  ''[create user,>d{' is not a user';' is already a user' 
- end.
+startjum_jsoftware=: 3 : 0
+startjum (50248+123*i.60);'www.jsoftware.com';'jumjum'
+)
+
+HBS=: 0 : 0
+jhh1'J User Manager'
+'msg'jhdiv' '
+jhhr
+jhh1'manage your account'
+jhtablea
+ jhtr 'user: ';'user' jhtext'';15
+ jhtr 'pass: ';'pass' jhpassword'';15
+jhtablez
+'status' jhb'status'
+'attn'   jhb'attn'
+'kill'   jhb'kill'
+'start'  jhb'start'
+'go'     jhb'go'
+jhhr
+jhh1'create your account'
+jhtablea
+ jhtr 'user: '       ;'usern' jhtext'';15
+ jhtr 'pass: '       ;'passn' jhpassword'';15
+ jhtr 'repeat pass: ';'repeat'jhpassword'';15
+ jhtr 'jum pass:  '  ;'jum'jhpassword'';15
+jhtablez
+'new'    jhb'new'
+)
+
+nopid=: ,'0'
+invalid=: 'invalid user/pass'
+
+NB. check user;pass
+NB. return 0 invalid, 1 valid user/pass
+check=: 3 : 0
+'user pass'=. y
+try.
+ t=. fread jpath JHS,user,'/config/jhs.ijs'
+ t=. (1 i.~'PASS=:'E. t)}.t
+ t=. (>:t i.'''')}.t
+ t=. (t i.''''){.t
+ >(pass-:t){0;1
+catch.
+0
 end.
 )
 
@@ -43,29 +74,34 @@ but=. >(0-:but){(6{._7}.but);'status'
 logapp_jhs_ but,' ; ',s
 )
 
-NB. return 1 if y is valid pid, else 0
-NB. pid is char string of numbers
-ispid=: 3 : 0
-if. 0=".y do. 0 return. end.
+validatepids=: 3 : 0
 if. IFUNIX do.
- 1:@(2!:0) :: 0: 'kill -s 18 ',y NB. SIGCONT
+ for_n. y do. 
+  f=. JHS,(>n),'/.jhspid'
+  pid=. fread f
+  r=. 1:@(2!:0) :: 0: 'kill -s 18 ',pid NB. SIGCONT
+  if. -.r do. nopid fwrite f end.
+ end.
 else.
- 1 NB. windows testing pretends all pids are valid
+ f=. jpath'~temp/tasklist.txt'
+ doscmd'tasklist /FI "IMAGENAME eq jconsole.exe">',f
+ 6!:3[0.25 NB. ugh - give doscmd a chance finish
+ t=. <;._2 fread f
+ pids=.>1{each 0".each((<'jconsole.exe')=12{.each t)#t
+ r=. ;0".each fread each y,each <'/.jhspid'
+ ps=. (-.r e. pids,0)#y
+ (<nopid)fwrite each ps,each<'/.jhspid' NB. write dead pids
 end.
 )
 
-NB. y is user
-NB. return valid pid or '0' (invalid pid reset to '0')
-getpid=: 3 : 0
-p=. <JHS,y,'/.jhspid'
-pid=.  (1!:1) :: ('0'&[) p
-if. ispid pid do. pid return. end.
-'0'[pid0 y NB. clear out dead pid
+getpids=: 3 : 0
+fread each y,each<'/.jhspid'
 )
 
 NB. y is user
-pid0=: 3 : 0
-'0' 1!:2 <JHS,y,'/.jhspid' NB. clear out dead pid
+getpid=: 3 : 0
+validatepids getupaths''
+p=. fread JHS,y,'/.jhspid'
 )
 
 NB. y is user
@@ -81,73 +117,32 @@ end.
 NB. & at end of command is critical
 unixshell=: 3 : 0
 smoutput y
-if. IFUNIX do. 2!:0 y end.
+2!:0 y
 )
 
-jev_get=: 3 : 0
-if. 'ebi'-:getv'escape' do. allowedurls_jhs_=: '' end.
-create''
-)
+jev_get=: create
 
-Nlogin=: 0 : 0
-<h1>J User Manager login<h1>
-SECURITY! Logout when you are done (close browser or press logout).<br><br>
-)
-
-NB. override of jlogin defaults
-startjum=: 3 : 0
-'already started' assert 0=#allowedurls
-Nlogin_jlogin_=: Nlogin
-goto_jlogin_=: 3 : 'create_jum_'''''
-LIMIT_jlogin_=: _
-allowedurls_jhs_=: 'jum';'jlogin'
-i.0 0
-)
-
-stopjum=: 3 : 0
-'not started' assert 1=#allowedurls
-allowedurls_jhs_=: ''
-i.0 0
-)
-
-
-B=: 0 : 0
-'<h1>J HTTP Server : User Manager</h1>'
-'user: ' name ^^
-status new attn kill start users ^^
-'<MSG>'
-)
-
-BIS=: 0 : 0
-name   ht'<PROMPT>';15
-status hb'status'
-new    hb'new'
-attn   hb'attn'
-kill   hb'kill'
-start  hb'start'
-users  hb'users'
+CSS=: 0 : 0
+#msg{color:red;}
 )
 
 NB. y is MSG for the html result
 create=: 3 : 0
-if. #y do.
- log y
- prompt=. getv'name'
- else.
- prompt=. ''
-end.
 if. -.'jum'-:_3{.jpath'~user' do. y=. '<h1>WARNING: not running as jum!</h1>',y end.
-hr 'jum';(css'');(js JS);(B getbody BIS)hrplc'PROMPT MSG';prompt;y
+'jum'jhr''
 )
-
-ev_name_enter=: ev_status_click
 
 ev_status_click=: 3 : 0
-user=. getv'name'
-p=. validate 1
-if. ''-:p do. return. end.
-create user report p
+'user pass'=. getvs'user pass'
+if. check user;pass do.
+ r=. report user
+else.
+ r=. invalid
+end.
+jhrajax (getv'jmid'),': ',r
 )
+
+ev_go_click=: ev_status_click
 
 jhscfg=: 0 : 0
 PORT=: <PORT>
@@ -160,40 +155,79 @@ new=: 0 : 0
 <div style="color:red"><PASS> is your password and is required to login.</div>
 )
 
-NB. validate name, create folder, create task
+ev_usern_enter=:  ev_new_click
+ev_passn_enter=:  ev_new_click
+ev_repeat_enter=: ev_new_click
+ev_jum_enter=:    ev_new_click
+
+ev_jum_enter=: ev_new_click
+
+NB. create new user
 ev_new_click=: 3 : 0
-user=. getv'name'
-p=. validate 0
-if. ''-:p do. return. end.
-ports=. ;_1".each 1{"1 usertable'' NB. user ports 
-port=. {.(allports'')-.ports
-if. 0=port do. create user,' no ports available' return. end.
-1!:5 <p NB. create new user folders
-1!:5 <jpath p,'/break'
-1!:5 <jpath p,'/config'
-1!:5 <jpath p,'/projects'
-1!:5 <jpath p,'/temp'
-pass=. _4{.'.'-.~0j3":{:6!:0''
-(jhscfg hrplc 'PASS PORT';pass;":port) fwrite p,'/config/jhs.cfg'
-create new hrplc 'PASS';pass
+'usern passn repeat jum'=.getvs'usern passn repeat jum'
+ports=. ;_1".each 1{"1 usertable'' NB. ports in use
+port=. {.ALLPORTS-.ports           NB. first free port
+if. 0=port do. cleanx 1 end.       NB. free 'oldest' port
+ports=. ;_1".each 1{"1 usertable''
+port=. {.ALLPORTS-.ports
+if.     -.jum-:JUMPASS do. r=.'invalid jum pass (check with JUM admin)'
+elseif. (4>#usern)+.#usern-.VALIDNAMECHARS do. r=. 'user must be at least 4 chars from ',VALIDNAMECHARS
+elseif. (<usern)e.{."1 usertable'' do. r=. 'user already exists'
+elseif. 4>#passn do. r=. 'pass must be at least 4 chars'
+elseif. -.passn-:repeat do. r=. 'repeat not the same as pass'
+elseif. 0=port do. r=. 'no ports available'
+elseif. 1 do.
+ try.
+  p=. JHS,usern
+  1!:5 <p NB. create new user folders
+  1!:5 <jpath p,'/break'
+  1!:5 <jpath p,'/config'
+  1!:5 <jpath p,'/projects'
+  1!:5 <jpath p,'/temp'
+  (jhscfg hrplc 'PASS PORT';passn;":port) fwrite p,'/config/jhs.ijs'
+  r=. 'user created'
+ catch.
+  r=. 'create new user failed'
+ end.
+end.
+jhrajax 'new: ',r
 )
 
-signal=: 3 : 0
-user=. getv'name'
-p=. validate 1
-if. ''-:p do. return. end.
+signal_attn=: 3 : 0
+:
+if. IFUNIX do.
+ unixshell 'kill -s 2 ',y
+else.
+ smoutput'not supported in windows: ','kill -s 2 ',y
+end.
+)
+
+signal_kill=: 3 : 0
+:
+nopid 1!:2 <JHS,x,'/.jhspid' NB. clear out dead pid
+if. IFUNIX do.
+ unixshell 'kill -s 9 ',y
+else.
+ doscmd 'taskkill /f /t /pid ',y
+end.
+)
+
+signal=: 4 : 0
+'user pass'=. getvs'user pass'
+r=. check user;pass
+if. -.r do. jhrajax x,invalid return. end.
 pid=. getpid user
-if. '0'-:pid do.
- create user,' task not running'
+if. nopid-:pid do.
+ r=. 'task not running'
 else.
  if. y-:'SIGINT' do.
-  unixshell 'kill -s 2 ',pid
+  user signal_attn pid
  else.
-  unixshell 'kill -s 9 ',pid
-  pid0 user
+  user signal_kill pid
  end.
- create user,' ',y,' signaled'
+ r=. user,' ',y,' signaled'
 end.
+jhrajax x,r
 )
 
 NB. clean_jum_(t i.' '){.t=.{.show_jum_ 6 NB. clean oldest
@@ -212,38 +246,68 @@ end.
 NB. clean user - kill task if any and delete folders
 clean=: 3 : 0
 user=. y
+if. user-:'jum' do. smoutput'will not delete jum' return. end.
 pid=. getpid user
-if. '0'-:pid do.
+if. nopid-:pid do.
  smoutput'task was not running'
 else.
  smoutput'killing task: ',pid 
- unixshell 'kill -s 9 ',pid
- pid0 user
+ user signal_kill pid
 end.
+6!:3[2 NB. give kill a chance so deletefolder will work
 p=. JHS,user
 smoutput 'destroying folder: ',p
-unixshell 'rm -r ',p
+'suspicious path for delete folder'assert 16<#p
+deletefolder p
+)
+
+NB. deletefolder y
+deletefolder=: 3 : 0
+p=. <jpath y
+if. 1=#1!:0 p do.
+ if. 'd'=4{,>4{"1 (1!:0) p do.
+  deleterecursive y
+  1!:55 p
+ end.
+end.
+i.0 0
+)
+
+NB. deletesub y
+deleterecursive=: 3 : 0
+assert. 3<+/PATHSEP_j_=jpath y
+ns=. 1!:0 <jpath y,'\*'
+for_n. ns do.
+ s=. jpath y,'\',>{.n
+ if. 'd'=4{>4{n do.
+  deleterecursive s
+ end.
+ 1!:55<s
+end.
 )
 
 ev_attn_click=: 3 : 0
-signal 'SIGINT'
+'attn: 'signal'SIGINT'
 )
 
 ev_kill_click=: 3 : 0
-signal 'SIGKILL'
+'kill: 'signal'SIGKILL'
 )
 
 ev_start_click=: 3 : 0
-user=. getv'name'
-p=. validate 1
-if. ''-:p do. return. end.
-pid=. getpid user
-if. '0'-:pid do.
- create user,' task started'
- starttask user NB. must be after browser result - else browser hangs
+'user pass'=. getvs'user pass'
+if. -.check user;pass do.
+ r=. invalid
 else.
- create user,' task already running'
+ pid=. getpid user
+ if. nopid-:pid do.
+  starttask user
+  r=. user,' task started'
+ else.
+  r=. ' task already running'
+ end.
 end.
+jhrajax 'start: ',r
 )
 
 ev_users_click=: 3 : 0
@@ -257,25 +321,32 @@ b=. (<'PORT=:')=6{.each d
 )
 
 getports=: 3 : 0
-q=. y,each<'/config/jhs.cfg'
+q=. y,each<'/config/jhs.ijs'
 c=. ":each fread each q
 portline each c
 )
 
+getupaths=: 3 : 0
+d=. 1!:0 <JHS,'*'
+jpath each (<JHS),each('d'=4{"1 >4{"1 d)#,{."1 d
+)
+
+getusers=: 3 : '(#JHS)}.each y'
+
 NB. return table of users ports pids starts input busy last
 usertable=: 3 : 0
-d=. 1!:0 <JHS,'*'
-if. 0=#d do. 0 3$'' return. end. 
-f=. ('d'=4{"1 >4{"1 d)#,{."1 d
-p=. jpath each (<JHS),each f
-port=. getports p
-r=. jpath each p,each<'/.jhslog.txt'
+ps=. getupaths''
+validatepids ps
+ports=. getports ps
+pids=. getpids ps
+users=. getusers ps
+r=. jpath each ps,each<'/.jhslog.txt'
 r=. 1!:1 :: ((,LF)&[) each <each r
 starts=. +/each (<'start') E.each r
 inputs=. +/each (<'prompt') E.each r
 last=. ;each{: each <;._2 each r
 busy=: +/each(<'sentence')E.each last
-f,.port,.(getpid each f),.starts,.inputs,.busy,.last
+users,.ports,.pids,.starts,.inputs,.busy,.last
 )
 
 NB. y is col to sort by
@@ -287,39 +358,83 @@ c=. 2+>./ >#each a
 )
 
 NB. HOSTNAME used instead of HOSTIP - wonder if HOSTIP would be faster
-report=: 4 : 0
+report=: 3 : 0
 t=. usertable''
-port=. ":>1{(({."1 t)i.<x){t
-pid=.  getpid x
+t=. (({."1 t)i.<y){t
+port=. ":>1{t
+pid=.  ":>2{t
 t=. >(0~:".pid){' task not running';userreport rplc '<HOSTIP>';HOSTNAME;'<PORT>';port
 )
 
 userreport=: 0 : 0
-Link to jijx:<br> 
 <a href="http://<HOSTIP>:<PORT>/jijx">http://<HOSTIP>:<PORT>/jijx</a>
 )
 
 NB. create jum multi-user folder
 NB. insist on virgin install - that is, jhs folder is empty
+NB. y is port to serve and password
 createjum=: 3 : 0
 'not running as normal j701-user' assert 'j701-user'-:_9{.jpath'~user'
+'port pass'=. y
 1!:5 :: [ <jpath'~user/jhs'
 p=. jpath'~user/jhs/jum'
 d=. 1!:0 <jpath'~user/jhs/*'
 'jhs folder not empty' assert 0=#d
-port=. 50001
 1!:5 <p NB. create jum folders
 1!:5 <jpath p,'/break'
 1!:5 <jpath p,'/config'
 1!:5 <jpath p,'/projects'
 1!:5 <jpath p,'/temp'
-pass=. 'jumjum'
-(jhscfg hrplc 'PASS PORT';pass;":port) fwrite p,'/config/jhs.cfg'
+(jhscfg hrplc 'PASS PORT';pass;":port) fwrite p,'/config/jhs.ijs'
 (":port),' ',pass
 )
 
 JS=: 0 : 0
-function ev_body_load(){jform.name.focus();}
+function ev_body_load(){jbyid("user").focus();}
+function ev_status_click(){jdoajax(["user","pass"],"");}
+function ev_attn_click(){jdoajax(["user","pass"],"");}
+function ev_kill_click(){jdoajax(["user","pass"],"");}
+function ev_start_click(){jdoajax(["user","pass"],"");}
+function ev_go_click(){jdoajax(["user","pass"],"");}
+
+function ev_usern_enter() {ev_new_click();}
+function ev_passn_enter() {ev_new_click();}
+function ev_repeat_enter(){ev_new_click();}
+function ev_jum_enter()   {ev_new_click();}
+function ev_new_click(){jdoajax(["usern","passn","jum","repeat"],"");}
+
+function ajax(ts)
+{
+ var i,t;
+ jbyid("msg").innerHTML=ts[0];
+ if("new: user created"==ts[0]) // created new user
+ {
+  jbyid("user").value=jbyid("usern").value;
+  jbyid("pass").value=jbyid("passn").value;
+  jbyid("usern").value="";
+  jbyid("passn").value="";
+  jbyid("repeat").value="";
+  jbyid("jum").value="";
+ }
+ if("click"==jform.jtype.value)
+ {
+  if("go"==jform.jmid.value)
+  {
+   i=ts[0].indexOf("http://");
+   if(-1==i)
+    jbyid("user").focus()
+   else
+   {
+    t=ts[0].substr(i);
+    location=t.substr(0,t.indexOf("\""));
+   }  
+  }
+  else if("new"==jform.jmid.value)
+   jbyid("usern").focus();
+  else
+   jbyid("user").focus();
+ }
+}
 )
 
 NB. windows createprocess stuff for windows testing

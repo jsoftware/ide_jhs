@@ -270,9 +270,8 @@ A desktop application front end, built with GTK, is also
 available for J. It provides a powerful IDE and allows
 development of state of the art GUI desktop applications.
 
-See Jsoftware web site for information on the GTK
-front end. You can use JHS pacman to install the GTK
-front end.
+Run jgtk from jconsole with sentence:
+<pre class="jcode">   load'gtkide'</pre>
 
 <a name="web"><h1>Jsofware links</h1></a>
 <a href="http://www.jsoftware.com/help">www.jsoftware.com/help</a>
