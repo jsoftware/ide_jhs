@@ -74,13 +74,13 @@ but=. >(0-:but){(6{._7}.but);'status'
 logapp_jhs_ but,' ; ',s
 )
 
+NB. y is paths to jum user folders
 validatepids=: 3 : 0
 if. IFUNIX do.
  for_n. y do. 
-  f=. JHS,(>n),'/.jhspid'
-  pid=. fread f
+  pid=. readpid >n
   r=. 1:@(2!:0) :: 0: 'kill -s 18 ',pid NB. SIGCONT
-  if. -.r do. nopid fwrite f end.
+  if. -.r do. nopid writepid >n end.
  end.
 else.
  f=. jpath'~temp/tasklist.txt'
@@ -88,20 +88,35 @@ else.
  6!:3[0.25 NB. ugh - give doscmd a chance finish
  t=. <;._2 fread f
  pids=.>1{each 0".each((<'jconsole.exe')=12{.each t)#t
- r=. ;0".each fread each y,each <'/.jhspid'
+ r=. ;0".each getpids y
  ps=. (-.r e. pids,0)#y
- (<nopid)fwrite each ps,each<'/.jhspid' NB. write dead pids
+ (<nopid)writepid each ps NB. write dead pids
 end.
 )
 
+NB. y paths to user folders
 getpids=: 3 : 0
-fread each y,each<'/.jhspid'
+readpid each y
+)
+
+NB. y path to user folder
+readpid=: 3 : 0
+f=. y,'/.jhspid'
+t=. fread f
+if. _1-:t do. (t=.nopid)fwrite f end.
+t 
+)
+
+NB. pid writepid userfolder
+writepid=: 3 : 0
+:
+x fwrite y,'/.jhspid'
 )
 
 NB. y is user
 getpid=: 3 : 0
 validatepids getupaths''
-p=. fread JHS,y,'/.jhspid'
+readpid JHS,y
 )
 
 NB. y is user
@@ -180,7 +195,6 @@ elseif. 1 do.
  try.
   p=. JHS,usern
   1!:5 <p NB. create new user folders
-  1!:5 <jpath p,'/break'
   1!:5 <jpath p,'/config'
   1!:5 <jpath p,'/projects'
   1!:5 <jpath p,'/temp'
@@ -195,16 +209,18 @@ jhrajax 'new: ',r
 
 signal_attn=: 3 : 0
 :
-if. IFUNIX do.
- unixshell 'kill -s 2 ',y
-else.
- smoutput'not supported in windows: ','kill -s 2 ',y
+smoutput 'break ',x,' ',y
+try.
+ f=. <jpath (_4}.JHS),'break/',y,'.default'
+ v=. 2<.>:a.i.1!:11 f,<0 1
+ (v{a.) 1!:12 f,<0 NB. 12 not 2
+catch.
 end.
 )
 
 signal_kill=: 3 : 0
 :
-nopid 1!:2 <JHS,x,'/.jhspid' NB. clear out dead pid
+nopid writepid JHS,x NB. clear out dead pid
 if. IFUNIX do.
  unixshell 'kill -s 9 ',y
 else.
@@ -220,7 +236,7 @@ pid=. getpid user
 if. nopid-:pid do.
  r=. 'task not running'
 else.
- if. y-:'SIGINT' do.
+ if. y-:'BREAK' do.
   user signal_attn pid
  else.
   user signal_kill pid
@@ -287,7 +303,7 @@ end.
 )
 
 ev_attn_click=: 3 : 0
-'attn: 'signal'SIGINT'
+'attn: 'signal'BREAK'
 )
 
 ev_kill_click=: 3 : 0
@@ -381,7 +397,6 @@ p=. jpath'~user/jhs/jum'
 d=. 1!:0 <jpath'~user/jhs/*'
 'jhs folder not empty' assert 0=#d
 1!:5 <p NB. create jum folders
-1!:5 <jpath p,'/break'
 1!:5 <jpath p,'/config'
 1!:5 <jpath p,'/projects'
 1!:5 <jpath p,'/temp'
