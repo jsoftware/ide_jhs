@@ -2,7 +2,7 @@ NB. J HTTP Server - jum app
 coclass'jum'
 coinsert'jhs'
 
-NB. ALLPORTS integer ports used by jum
+NB. ALLPORTS jum ports
 NB. HOSTNAME localhost or www.jsoftware.com or ...
 NB. JUMPASS  jum password
 startjum=: 3 : 0
@@ -21,6 +21,8 @@ startjum (65002+i.3);'localhost';'jumjum'
 startjum_jsoftware=: 3 : 0
 startjum (50248+123*i.60);'www.jsoftware.com';'jumjum'
 )
+
+SIGCONT=: >('Darwin'-:UNAME){'18';'19'
 
 HBS=: 0 : 0
 jhh1'J User Manager'
@@ -79,7 +81,7 @@ validatepids=: 3 : 0
 if. IFUNIX do.
  for_n. y do. 
   pid=. readpid >n
-  r=. 1:@(2!:0) :: 0: 'kill -s 18 ',pid NB. SIGCONT
+  r=. 1:@(2!:0) :: 0: 'kill -s ',SIGCONT,' ',pid NB. SIGCONT
   if. -.r do. nopid writepid >n end.
  end.
 else.
@@ -317,8 +319,9 @@ if. -.check user;pass do.
 else.
  pid=. getpid user
  if. nopid-:pid do.
-  starttask user
-  r=. user,' task started'
+  jhrajax 'start: ',user,'task started'
+  starttask user NB. must do jhrajax first else hangs
+  return.
  else.
   r=. ' task already running'
  end.
