@@ -532,14 +532,14 @@ jhh1=: 3 : 0
 
 NB.* jhjmlink*jhjmlink'' - ide link menu
 jhjmlink=: 3 : 0
-t=.   'jmlink'jhmg'link';1;7
+t=.   'jmlink'jhmg'link';1;8
 t=. t,'jijx'  jhml'ijx     j^'
 t=. t,'jfile' jhml'file    f^'
 t=. t,'jijs'  jhml'ijs     J^'
 t=. t,'jfif'  jhml'fif     F^'
 t=. t,(0=#USERNAME)#'jal'   jhml'pacman'
 t=. t,>(-.0-:gethv'Cookie:'){' ';'jlogin'jhml'logout'
-t=. t,'jhelp' jhml'help    h^'
+t=. t,'jhelp' jhml'help'
 )
 
 NB.* jhma*jhma'' - menu start

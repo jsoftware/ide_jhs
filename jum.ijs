@@ -230,6 +230,14 @@ else.
 end.
 )
 
+killallexceptjum=: 3 : 0
+validatepids''
+users=. ({."1 usertable'')-.<'jum'
+pids=. getpid each users
+users=. (-.pids=<,'0')#users
+users signal_kill each getpid each users
+)
+
 signal=: 4 : 0
 'user pass'=. getvs'user pass'
 r=. check user;pass
@@ -397,14 +405,15 @@ createjum=: 3 : 0
 'port pass'=. y
 1!:5 :: [ <jpath'~user/jhs'
 p=. jpath'~user/jhs/jum'
-d=. 1!:0 <jpath'~user/jhs/*'
-'jhs folder not empty' assert 0=#d
-1!:5 <p NB. create jum folders
-1!:5 <jpath p,'/config'
-1!:5 <jpath p,'/projects'
-1!:5 <jpath p,'/temp'
+try.
+ 1!:5 <p NB. create jum folders
+ 1!:5 <jpath p,'/config'
+ 1!:5 <jpath p,'/projects'
+ 1!:5 <jpath p,'/temp'
+catch. end.
 (jhscfg hrplc 'PASS PORT';pass;":port) fwrite p,'/config/jhs.ijs'
 (":port),' ',pass
+i.0 0
 )
 
 JS=: 0 : 0

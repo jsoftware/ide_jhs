@@ -8,11 +8,11 @@ jhma''
 jhmz''
 jumps
 jhresize''
-text rplc '<PAREN>';')'
+text hrplc 'PAREN CONFIG JVERSION';')';'~addons/ide/jhs/config/jhs_default.ijs';JVERSION
 )
 
 jev_get=: 3 : 0
-'jhelp' jhr 'ENGINE CONFIG';(9!:14'');jpath'~addons/ide/jhs/config/jhs_default.ijs'
+'jhelp'jhr''
 )
 
 jumps=: 0 : 0
@@ -24,7 +24,6 @@ jumps=: 0 : 0
 <a href="#jum">JUM</a>&nbsp;
 <a href="#config">Config</a>&nbsp;
 <a href="#gtk">GTK</a>&nbsp;
-<a href="#web">Jsoftware</a>&nbsp;
 <a href="#about">About</a>
 )
 
@@ -32,9 +31,14 @@ text=: 0 : 0
 <div>
 
 <a name="help"><h1>Help</h1>
-This document links to a great deal of information, but is
+This document links to lots of information, but is
 itself quite short and can be skimmed in a few minutes.
-A bit of time here will pay off down the road.
+A bit of time here will pay off down the road.<br><br>
+
+For complete documentation see:<br>
+<a href="http://www.jsoftware.com/help/help701/index.htm">www.jsoftware.com/help/help701/index.htm</a>
+<br>or if you have installed local help with pacman see:<br>
+<a href="~addons/docs/help/index.htm">~addons/docs/help/index.htm</a>
 
 <a name="j7"><h1>J701</h1></a>
 J701 is a release of the J programming language.
@@ -94,7 +98,7 @@ appropriate, it is easy to include any additional toolkit
 with the JHS framework and have the best of all worlds
 in developing your browser app.
  
-<a name="ide"><h1>IDE</h1></a>
+<a name="ide"><h1>IDE (Interactive Development Environment)</h1></a>
 <span class="h">keyboard shortcuts</span><br>
 esc key escapes next key to be a shortcut.<br/>
 For example, esc j links to ijx page.<br/>
@@ -226,10 +230,11 @@ and there are significant rewards along the way.
 Everything you learn is applicable not just to J,
 but to every aspect of the incredible world of web programming.
 
-<a name="jum"><h1>JUM - J User Manager</h1>
+<a name="jum"><h1>JUM (J User Manager)</h1>
 JUM is a JHS application that runs on a web server
-that provides JHS servers to J users. The JUM users share
-a single user account on the server.<br><br>
+that provides JHS servers to J users. JUM users share
+a single user account on the server and your files are
+accessible to other users.<br><br>
 
 To provide a JUM service you install J701 on a web server
 and run the JHS JUM application. Users can access the JUM
@@ -237,32 +242,29 @@ web page and can manage their own JHS server.
 The JUM sevice should be provided in a secure environment.
 In a Linux server this is done with a jail account.
 <br><br>
-JUM needs work and the current interface is awkward.
-It might still be worth an early look.
-<br><br>
-
 Jsoftware currently hosts JUM as a courtesy to
 users who want a taste of the new.
-The Jsoftware JUM service can be discontinued or 
+Jsoftware JUM can be discontinued or 
 disrupted at any time without notice. JUM is a shared
-service and in particular your files are accessbile
-to other users.
+service and your files are accessbile to other users.
 <br><br>
-
-&emsp;&bull;&emsp;browse to: http://www.jsoftware.com:50001/jum<br>
-&emsp;&bull;&emsp;J login is: jumjum<br>
-&emsp;&bull;&emsp;follow link at top to: J User Manager<br><br>
-
-&emsp;&bull;&emsp;enter user name you want and press new<br>
-&emsp;&bull;&emsp;<span class="h">remember name and password!</span><br>
-&emsp;&bull;&emsp;press start to start your task<br>
-&emsp;&bull;&emsp;press status<br>
-&emsp;&bull;&emsp;follow link to login page for your task<br>
+&nbsp;&nbsp;&nbsp<a href="http://www.jsoftware.com:50001/jum">www.jsoftware.com:50001/jum</a>
+ (jum pass to create account is jumjum)<br><br>
+Study script ~addons/ide/jhs/jum.ijs to learn how to run your own JUM service.
+A rough sketch of the steps are:
+<pre class="jcode">
+   start jconsole task
+   load'~addons/ide/jhs/core.ijs'
+   load'~addons/ide/jhs/jum.ijs'
+   createjum_jum_ 65002;'1234' NB. only if new PORT or PASS
+   init_jhs_'jum'
+   browse to jum task /jijx and login 
+   startjum_jum_ 65003 65004 65005;'localhost';'buzz'
+   browse to jum task /jum and create new account
+</pre>
 
 <a name="config"><h1>Config</h1>
-JHS initializes based on configuration files. See file<br>
-&nbsp;&nbsp;<CONFIG><br>
-for info on changing JHS configuration
+For info on changing JHS config see file: <CONFIG>
 
 <a name="gtk"><h1>GTK</h1>
 
@@ -273,18 +275,11 @@ development of state of the art GUI desktop applications.
 Run jgtk from jconsole with sentence:
 <pre class="jcode">   load'gtkide'</pre>
 
-<a name="web"><h1>Jsofware links</h1></a>
-<a href="http://www.jsoftware.com/help">www.jsoftware.com/help</a>
-&nbsp;
-<a href="http://www.jsoftware.com">www.jsoftware.com</a><br><br>
-
-(help link is for J602 - it will be updated - but
-most is relevant to J701) 
-
 <a name="about"><h1>About</h1></a>
-J701 - Copyright 1994-2010 Jsoftware Inc.
-<br>Engine: <ENGINE>
-
+<pre class="jcode">
+   JVERSION
+<JVERSION>
+</pre>
 </div>
 )
 
