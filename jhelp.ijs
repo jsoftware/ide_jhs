@@ -110,9 +110,14 @@ You can user ctrl+. instead of esc.
 <br><br><span class="h">ijx</span>
 run J sentences (ctrl+shift+&uarr;&darr; recall)
 
-<br><br><span class="h">file</span>
-browse files for editing, etc.<br><br>
+<br><br><span class="h">jijxm</span>
+jijx and related pages require advanced browser features
+(javascript, style sheets, contenteditable divs, ajax, ...).
+Page jijxm has a simpler interface that runs in older browsers
+and requires only basic html features.
 
+<br><br><span class="h">file</span>
+browse files for editing, etc.
 Adequate for simple IDE use and for a remote server.
 For more complicated requirements use host facilities such
 as Windows Explorer or Mac Finder.
