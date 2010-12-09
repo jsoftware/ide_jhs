@@ -8,8 +8,7 @@ body=: 0 : 0
 <div id="log"><LOG></div>
 &nbsp;&nbsp;&nbsp;<input type="text" id="jdo" name="jdo" size="<COLS>"
  style="font-family:courier new,courier,monospace;"
- autocapitalize="off" spellcheck="false">
-<input type="submit" id="run" name="" value="" tabindex="-1">
+ autocapitalize="off" spellcheck="false"><input type="submit" id="run" name="" value="&crarr;" tabindex="-1">
 <BODYTA>
 </font></form></body>
 )
