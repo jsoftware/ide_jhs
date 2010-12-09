@@ -31,6 +31,7 @@ jhmz''
 
 'report'    jhdiv'<R>'
 shorts''
+jhhr
 'path'      jhhidden'<F>'
  'pathd'    jhdiv'<F>'
 
@@ -325,11 +326,12 @@ shortname=: 3 : 0
 p=. <jpath y
 'a b'=.<"1 |:UserFolders_j_,SystemFolders_j_
 c=. #each b
-f=. p=jpath each ('~',each a),each c}.each p
+f=. p=(jpath each b,each'/'),each (>:each c)}.each p
 if.-.+./f do. >p return. end.
-q=. >./>#each f#b
-f=. f*.c=<q
-'~',(;f#a),q}.>p
+d=. >#each f#b
+m=. >./d
+f=. >{.(d=m)#f#a
+'~',f,m}.>p
 )
 
 NB. newname frename oldname - return 1 if rename ok
@@ -357,7 +359,7 @@ function ev_body_load(){jresize();}
 
 function repclr(){jbyid("report").innerHTML = "&nbsp;";}
 function setpath(t){jform.path.value= t;jbyid("pathd").innerHTML= t;}
-function ev_paths_click(){repclr();jdoajax(["path"],'');}
+function ev_paths_click(){repclr();jdoajax(["path"]);}
 
 function ev_x_shortcut(){jscdo("cut");}
 function ev_c_shortcut(){jscdo("copy");}
@@ -374,7 +376,7 @@ function ev_files_click() // file select
   setpath(t.substring(0,++i)+jform.jsid.value);
  }
  else
-  jdoajax(["path"],"");
+  jdoajax(["path"]);
 }
 
 function ev_rename_click()     {jdlgshow("renamedlg","renamex");}

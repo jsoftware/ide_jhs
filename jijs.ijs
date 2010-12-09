@@ -209,7 +209,7 @@ function ro(only)
  ce.style.background= readonly?"#eee":"#fff";
 }
 
-function click(){ta.value= jtfromh(ce.innerHTML);jdoajax(["filename","textarea","saveasx"],"");}
+function click(){ta.value= jtfromh(ce.innerHTML);jdoajax(["filename","textarea","saveasx"]);}
 function ev_save_click() {click();}
 function ev_runw_click() {click();}
 function ev_runwd_click(){click();}

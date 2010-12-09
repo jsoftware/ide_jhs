@@ -36,7 +36,7 @@ itself quite short and can be skimmed in a few minutes.
 A bit of time here will pay off down the road.<br><br>
 
 For complete documentation see:<br>
-<a href="http://www.jsoftware.com/help/help701/index.htm">www.jsoftware.com/help/help701/index.htm</a>
+<a href="http://www.jsoftware.com/docs/help701/index.htm">www.jsoftware.com/docs/help701/index.htm</a>
 <br>or if you have installed local help with pacman see:<br>
 <a href="~addons/docs/help/index.htm">~addons/docs/help/index.htm</a>
 

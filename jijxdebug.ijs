@@ -107,13 +107,13 @@ end.
 )
 
 jsdebug=: 0 : 0
-function ev_dbstep_click()   {jdoajax([],"");}
-function ev_dbstepin_click() {jdoajax([],"");}
-function ev_dbstepout_click(){jdoajax([],"");}
-function ev_dbcutback_click(){jdoajax([],"");}
-function ev_dbrun_click()    {jdoajax([],"");}
-function ev_dbon_click()     {jdoajax([],"");}
-function ev_dboff_click()    {jdoajax([],"");}
+function ev_dbstep_click()   {jdoajax([]);}
+function ev_dbstepin_click() {jdoajax([]);}
+function ev_dbstepout_click(){jdoajax([]);}
+function ev_dbcutback_click(){jdoajax([]);}
+function ev_dbrun_click()    {jdoajax([]);}
+function ev_dbon_click()     {jdoajax([]);}
+function ev_dboff_click()    {jdoajax([]);}
 function ev_s_shortcut(){jscdo("dbstep");}
 function ev_i_shortcut(){jscdo("dbstepin");}
 function ev_o_shortcut(){jscdo("dbstepout");}

@@ -3,7 +3,6 @@
 NB. JHS - core services
 require 'socket'
 coclass'jhs'
-VERSION=: '3.1'
 
 0 : 0
 *** Cache-Control: no-cache
@@ -142,6 +141,7 @@ is unigue and name is the same across a set of radio buttons.
 9. autocomplete and wrap fail validator - but are necessary
 )
 
+PROMPT=: '   '
 JZWSPU8=: 226 128 139{a. NB. empty prompt kludge - &#8203; \200B
 OKURL=: '' NB. URL allowed without login
 
@@ -577,7 +577,7 @@ init=: 3 : 0
 if. 2~:3!:0 y do. y=. '' end. NB.! installer jhs.bat has old style call
 'already initialized' assert _1=nc<'SKLISTEN'
 x jhscfg y
-PATH=: (>:t i:'/'){.t=.jpath>(4!:4 <'VERSION_jhs_'){4!:3''
+PATH=: jpath'~addons/ide/jhs/'
 IP=: >2{sdgethostbyname_jsocket_ >1{sdgethostname_jsocket_''
 LOCALHOST=: >2{sdgethostbyname_jsocket_'localhost'
 logappfile=: <jpath'~user/.applog.txt' NB. username
@@ -632,7 +632,7 @@ t
 )
 
 NB. load rest of JHS
-cores=: (<'.ijs'),~each ;:'core utilh utiljs jlogin jijx jijxdebug jijs jfile jfif jfilesrc jhelp jal jdemo jgcp'
+cores=: (<'.ijs'),~each ;:'core utilh utiljs jlogin jijx jijxdebug jijs jfile jfif jfilesrc jhelp jal jdemo jgcp jijxm'
 corefiles=: (<jpath'~addons/ide/jhs/'),each cores
 loadfailed=: loader }.corefiles
 

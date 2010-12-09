@@ -370,7 +370,7 @@ function ev_log_enter()
  }
 }
 
-function ev_advance_click(){jdoajax([],"");}
+function ev_advance_click(){jdoajax([]);}
 
 function ev_lab_click()
 {
@@ -385,7 +385,7 @@ function ev_labsclose_click(){jhide("labsdlg");ev_2_shortcut();}
 function ev_scratch_click(){jdlgshow("scratchdlg","scratcharea");}
 function ev_scratchclose_click(){jhide("scratchdlg");}
 
-function ev_scratchr_click(){jdoajax(["scratcharea"],"");}
+function ev_scratchr_click(){jdoajax(["scratcharea"]);}
 
 function ev_r_shortcut(){jscdo("scratchr");}
 
@@ -396,7 +396,7 @@ function ev_labrun_click()
  jdoajax([],"");
 }
 
-function ev_actionn_click(){jdoajax([],"");}
+function ev_actionn_click(){jdoajax([]);}
 
 function ev_q_shortcut(){jscdo("actionn","0");}
 function ev_w_shortcut(){jscdo("actionn","1");}

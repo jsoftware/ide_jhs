@@ -319,7 +319,10 @@ function newrq()
 function jdoajax(ids,data,sentence,async)
 {
  if(0!=rqstate){alert("busy - wait for previous request to finish");return;}
- async=('undefined'==typeof async)?true:async;
+ async=async||true;
+ sentence=sentence||jevsentence;
+ data=data||"";
+ ids=ids||[];
  rq= newrq();
  rq.onreadystatechange= jdor;
  rq.open("POST",jform.jlocale.value,async); // true for async call

@@ -76,7 +76,6 @@ NB. form template - form, hidden handler sentence, hidden button for form enter 
 formtmpl=: 0 : 0 -. LF
 <form id="j" name="j" method="post" action="<LOCALE>">
 <input type="hidden" name="jdo"     value="">
-<input type="hidden" name="jajax"   value="false">
 <input type="hidden" name="jlocale" value="<LOCALE>">
 <input type="hidden" name="jid"     value="">
 <input type="hidden" name="jtype"   value="">
@@ -287,7 +286,7 @@ i=. 1 i.~'</div><div id="jresizeb">'E.t
 if. i~:#t do.
  t=. '<div id="jresizea">',t,'</div>'
 end.
-'<body onload="jevload();" onunload="jevunload();" onfocus="jevfocus();">',(jhform''),t,'</body></form>'
+'<body onload="jevload();" onunload="jevunload();" onfocus="jevfocus();">',(jhform''),t,'</form></body>'
 )
 
 jhbsex=: 3 : 0

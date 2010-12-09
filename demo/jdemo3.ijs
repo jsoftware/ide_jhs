@@ -15,12 +15,13 @@ create=: 3 : 0
 )
 
 NB. NV_jhs_ has request name/value pairs
-NB. getv'name' returns a names value
+NB. getvs't1 t2' returns values for names t1 and t2
 NB. smoutput seebox NV can help debugging
 NB. JASEP separates ajax results
 ev_flip_click=: 3 : 0
 smoutput seebox NV
-jhrajax (8 u:|.7 u: getv't1'),JASEP,(8 u:|.7 u: getv't2')
+'t1 t2'=. getvs't1 t2'
+jhrajax (8 u:|.7 u: t1),JASEP,(8 u:|.7 u: t2)
 )
 
 jev_get=: create NB. browser get request

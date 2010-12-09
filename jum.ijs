@@ -418,17 +418,17 @@ i.0 0
 
 JS=: 0 : 0
 function ev_body_load(){jbyid("user").focus();}
-function ev_status_click(){jdoajax(["user","pass"],"");}
-function ev_attn_click(){jdoajax(["user","pass"],"");}
-function ev_kill_click(){jdoajax(["user","pass"],"");}
-function ev_start_click(){jdoajax(["user","pass"],"");}
-function ev_go_click(){jdoajax(["user","pass"],"");}
+function ev_status_click(){jdoajax(["user","pass"]);}
+function ev_attn_click(){jdoajax(["user","pass"]);}
+function ev_kill_click(){jdoajax(["user","pass"]);}
+function ev_start_click(){jdoajax(["user","pass"]);}
+function ev_go_click(){jdoajax(["user","pass"]);}
 
 function ev_usern_enter() {ev_new_click();}
 function ev_passn_enter() {ev_new_click();}
 function ev_repeat_enter(){ev_new_click();}
 function ev_jum_enter()   {ev_new_click();}
-function ev_new_click(){jdoajax(["usern","passn","jum","repeat"],"");}
+function ev_new_click(){jdoajax(["usern","passn","jum","repeat"]);}
 
 function ajax(ts)
 {
