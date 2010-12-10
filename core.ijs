@@ -247,6 +247,7 @@ while. 1 do.
   parseheader h
   if. 'POST '-:5{.h do.
    len=.".gethv'Content-Length:'
+   d=. (len<.#d){.d
    while. len~:#d do.
     d=. d,srecv''
    end.
@@ -362,7 +363,7 @@ end.
 )
 
 gethv=: 3 : 0
-i=. (0{"1 HNV)i.<y
+i=. (toupper&.>0{"1 HNV)i.<toupper y
 >1{i{HNV,0;0
 )
 
