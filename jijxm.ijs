@@ -1,6 +1,8 @@
 coclass'jijxm'
 coinsert'jhs'
 
+redirecturl=: ''  NB. used by browse_j_
+
 body=: 0 : 0
 <body onload="document.j.jdo.focus();">
 <font face="courier new,courier,monospace">
@@ -45,8 +47,13 @@ end.
 )
 
 create=: 3 : 0
-b=. body hrplc 'COLS LOG BODYTA';(xmcols-6);(lop LOG);bodyta''
-htmlresponse hrtemplate hrplc 'TITLE CSS JS BODY';'jijxm';'';'';b
+if. #redirecturl_jijxm_ do.
+  htmlresponse html301 hrplc 'NEWURL';redirecturl_jijxm_
+  redirecturl_jijxm_=: ''
+else.
+  b=. body hrplc 'COLS LOG BODYTA';(xmcols-6);(lop LOG);bodyta''
+  htmlresponse hrtemplate hrplc 'TITLE CSS JS BODY';'jijxm';'';'';b
+end.
 )
 
 help=: 0 : 0
