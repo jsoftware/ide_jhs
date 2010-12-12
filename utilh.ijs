@@ -256,6 +256,18 @@ Content-Type: text/html; charset=utf-8
 
 )
 
+NB. html 301 response (redirect to another url)
+html301=: toCRLF 0 : 0
+HTTP/1.1 301 Permanently moved
+Location: <NEWURL>
+Cache-Control: no-cache
+Pragma: no-cache
+Expires: 0
+
+
+)
+
+
 NB. html 404 response (url not found)
 html404=: toCRLF 0 : 0
 HTTP/1.1 404 OK
