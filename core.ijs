@@ -577,6 +577,7 @@ init=: 3 : 0
 :
 if. 2~:3!:0 y do. y=. '' end. NB.! installer jhs.bat has old style call
 'already initialized' assert _1=nc<'SKLISTEN'
+IFJHS_z_=: 1
 x jhscfg y
 PATH=: jpath'~addons/ide/jhs/'
 IP=: >2{sdgethostbyname_jsocket_ >1{sdgethostname_jsocket_''
