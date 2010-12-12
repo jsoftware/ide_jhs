@@ -72,6 +72,7 @@ xmx_z_=: 3 : 0
 NB. read ta from file
 xmr_z_=: 3 : 0
 NV_jhs_=:('ta';fread y),NV_jhs_
+EMPTY
 )
 
 NB. write ta to file
