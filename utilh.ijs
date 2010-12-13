@@ -508,11 +508,11 @@ t=. t,'>'
 t hrplc 'ID VALUE SIZE';x;y
 )
 
-NB.* jhtextarea*id jhtextarea text - rows 1 cols 1 - must be sized
+NB.* jhtextarea*id jhtextarea text;rows;ccols
 jhtextarea=: 4 : 0
-t=.   '<textarea id="<ID>" name="<ID>" class="jhtextarea" wrap="off" rows="1" cols="1" '
+t=.   '<textarea id="<ID>" name="<ID>" class="jhtextarea" wrap="off" rows="<ROWS>" cols="<COLS>" '
 t=. t,'onkeydown="return jev(event)"',jeditatts,'><DATA></textarea>'
-t hrplc 'ID DATA';x;y
+t hrplc 'ID DATA ROWS COLS';x;y
 )
 
 NB.* 

@@ -14,7 +14,7 @@ jhma''
 jhmz''
 
 'scratchdlg' jhdivadlg''
-'scratcharea'jhtextarea''
+'scratcharea'jhtextarea'';1;1
 '</div>'
 
 'labsdlg'   jhdivadlg''

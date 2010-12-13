@@ -44,7 +44,7 @@ NB. y - error;file
 create=: 3 : 0
 'r f'=. y
 if. 0=#1!:0<(-PS={:f)}.f do. f=. jpath'~temp\' end. NB. ensure valid f
-'jfile' jhr 'R F FILES';r;(shortname f);(buttons 'files';(2#<folderinfo remlev f),<'<br>') 
+'jfile' jhr 'R F FILES';r;(jshortname f);(buttons 'files';(2#<folderinfo remlev f),<'<br>') 
 )
 
 NB. get file with mid/path opens the file
@@ -72,7 +72,7 @@ buttons 'paths';(2#<{."1 UserFolders_j_,SystemFolders_j_),<' '
 ev_paths_click=: 3 : 0
 sid=. getv'jsid'
 f=. jpath'~',sid,'/'
-jhrajax (shortname f),JASEP,buttons 'files';(2#<folderinfo remlev f),<'<br>'
+jhrajax (jshortname f),JASEP,buttons 'files';(2#<folderinfo remlev f),<'<br>'
 )
 
 NB. folder clicked (file click handled in js)
@@ -86,7 +86,7 @@ if. sid-:'..' do.
 else.
  f=. (remlev path),PS,sid,PS
 end.
-jhrajax (shortname f),JASEP,buttons 'files';(2#<folderinfo remlev f),<'<br>'
+jhrajax (jshortname f),JASEP,buttons 'files';(2#<folderinfo remlev f),<'<br>'
 )
 
 nsort=: 3 : 0
@@ -160,20 +160,20 @@ if. PS={:F do. NB. delete folder
  snkfolder=. jpath'~temp/deleted/',jgetfile remlev srcfolder
  if. t-:(#t){.srcfolder do.
   deletefolder }:srcfolder
-  create ('Delete: deleted ',shortname srcfolder);newf
+  create ('Delete: deleted ',jshortname srcfolder);newf
   return.
  end.
  deletefolder snkfolder
  1!:5<snkfolder
  copyfiles (srcfolder,'*');snkfolder
  deletefolder }:srcfolder
- create ('Delete: folder saved as ',shortname snkfolder);newf 
+ create ('Delete: folder saved as ',jshortname snkfolder);newf 
  return.
 else. NB. delete file
  try.
   if. t-:(#t){.F do.
    1!:55 <F
-   create ('Delete: deleted ',shortname F);newf
+   create ('Delete: deleted ',jshortname F);newf
    return.
   end.
   d=. 1!:1<jpath F
@@ -239,7 +239,7 @@ if. ''-:f do.
  end.
  copyfiles (srcfile,'*');snkfolder
  if. copy=1 do. deletefolder }:srcfile end.
- create ('Paste: created folder ',shortname snkfolder);F  
+ create ('Paste: created folder ',jshortname snkfolder);F  
  return.
 end.
 d=. fread srcfile
@@ -319,19 +319,6 @@ for_n. ns do.
  end.
  1!:55<s
 end.
-)
-
-NB. ~name from full name
-shortname=: 3 : 0
-p=. <jpath y
-'a b'=.<"1 |:UserFolders_j_,SystemFolders_j_
-c=. #each b
-f=. p=(jpath each b,each'/'),each (>:each c)}.each p
-if.-.+./f do. >p return. end.
-d=. >#each f#b
-m=. >./d
-f=. >{.(d=m)#f#a
-'~',f,m}.>p
 )
 
 NB. newname frename oldname - return 1 if rename ok

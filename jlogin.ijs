@@ -7,6 +7,7 @@ login
 jhtablea
  jhtr 'user: '    ;'user' jhtext'';15
  jhtr 'password: ';'pass' jhpassword'';15
+ jhtr 'app: '     ;'app'  jhtext'jijx';15
 jhtablez
 loggedin
 )
@@ -23,9 +24,8 @@ Logout when you are finished
 </span>
 )
 
-NB. does not work
 goto=: 3 : 0
-create_jijx_'  '
+".'create_',(getv'app'),'_'''''
 )
 
 NB. login not allowed after LIMIT failures

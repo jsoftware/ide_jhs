@@ -378,6 +378,29 @@ getvs=: 3 : 0
 ((0{"1 NV)i.;:y){(1{"1 NV),<''
 )
 
+NB. ~name from full name
+jshortname=: 3 : 0
+p=. <jpath y
+'a b'=.<"1 |:UserFolders_j_,SystemFolders_j_
+c=. #each b
+f=. p=(jpath each b,each'/'),each (>:each c)}.each p
+if.-.+./f do. >p return. end.
+d=. >#each f#b
+m=. >./d
+f=. >{.(d=m)#f#a
+'~',f,m}.>p
+)
+
+NB. new ijs temp filename
+jnew=: 3 : 0
+d=. 1!:0 jpath '~temp\*.ijs'
+a=. 0, {.@:(0&".)@> _4 }. each {."1 d
+a=. ": {. (i. >: #a) -. a
+f=. <jpath'~temp\',a,'.ijs'
+'' 1!:2 f
+>f
+)
+
 logclear=: 3 : ''''' 1!:2 logappfile'
 
 NB. log timestamp
@@ -634,7 +657,7 @@ t
 )
 
 NB. load rest of JHS
-cores=: (<'.ijs'),~each ;:'core utilh utiljs jlogin jijx jijxdebug jijs jfile jfif jfilesrc jhelp jal jdemo jgcp jijxm'
+cores=: (<'.ijs'),~each ;:'core utilh utiljs jlogin jijx jijxdebug jijs jfile jfif jfilesrc jhelp jal jdemo jgcp jijxm jijxh'
 corefiles=: (<jpath'~addons/ide/jhs/'),each cores
 loadfailed=: loader }.corefiles
 

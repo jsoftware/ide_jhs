@@ -360,10 +360,11 @@ function jdor()
   else
   {
    d=rq.responseText.split(JASEP);
-   if("function"==typeof ajax)
-    f="ajax(d)";
+   f="ev_"+jform.jmid.value+"_"+jform.jtype.value+"_ajax";
+   if("function"==eval("typeof "+f))
+    f+="(d)";
    else
-    f="ev_"+jform.jmid.value+"_"+jform.jtype.value+"_ajax(d)";
+    f="ajax(d)";
    try{eval(f)}catch(e){alert(f+" failed");}
   }
   rqstate= 0;
