@@ -8,6 +8,7 @@ jhtablea
  jhtr 'user: '    ;'user' jhtext'';15
  jhtr 'password: ';'pass' jhpassword'';15
  jhtr 'app: '     ;'app'  jhtext'jijx';15
+ jhtr ''          ;'login'jhb'login'
 jhtablez
 loggedin
 )
@@ -39,7 +40,7 @@ logins=: ''
 
 jev_get=: create
 
-ev_pass_enter=: create
+ev_login_click=: create
 
 invalid=: 0 : 0
 <span style="color:red;">Invalid login (<COUNT>).<br>
@@ -77,8 +78,5 @@ end.
 )
 
 JS=: 0 : 0
-function ev_body_load(){try{jform.user.focus();}catch(ex){;}}
-
-// jsubmit done by default only for buttons (no state change)
-function ev_pass_enter(){jsubmit();} 
+function ev_body_load(){jform.user.focus();}
 )

@@ -51,8 +51,14 @@ if. #redirecturl_jijxm_ do.
   htmlresponse html301 hrplc 'NEWURL';redirecturl_jijxm_
   redirecturl_jijxm_=: ''
 else.
+  NB.! should be integrated to use jhr rather than dup code
   b=. body hrplc 'COLS LOG BODYTA';(xmcols-6);(lop LOG);bodyta''
-  htmlresponse hrtemplate hrplc 'TITLE CSS JS BODY';'jijxm';'';'';b
+  tmpl=. hrtemplate
+  if. SETCOOKIE do.
+   SETCOOKIE_jhs_=: 0
+   tmpl=. tmpl rplc (CRLF,CRLF);CRLF,'Set-Cookie: ',cookie,CRLF,CRLF
+  end.
+  htmlresponse tmpl hrplc 'TITLE CSS JS BODY';'jijxm';'';'';b
 end.
 )
 

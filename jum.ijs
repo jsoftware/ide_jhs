@@ -125,9 +125,7 @@ NB. y is user
 starttask=: 3 : 0
 t=. '-js "load''~addons/ide/jhs/core.ijs''" "jhs''',y,'''"'
 if. IFUNIX do.
- 6!:3[5 NB.!
  2!:1 ('"',jpath'~bin/jconsole'),'" ',t,' &'
- 6!:3[5 NB.!
 else.
  doscmd ('"',jpath'~bin/jconsole.exe'),'"  ',t
 end.
@@ -329,7 +327,8 @@ if. -.check user;pass do.
 else.
  pid=. getpid user
  if. nopid-:pid do.
-  jhrajax 'start: ',user,'task started'
+  jhrajax 'start: task started'
+  6!:3[1 NB.! too quick to new task crashes jum???
   starttask user NB. must do jhrajax first else hangs
   return.
  else.
