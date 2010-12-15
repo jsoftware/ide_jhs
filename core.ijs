@@ -56,7 +56,7 @@ URL == APP == LOCALE
 
 Browser request runs first available sentence from:
  post          - jdo
- get URL has . - jev_getsrcfile_jfilesrc_ URL_jhs_
+ get URL has . - jev_get_jfilesrc_ URL_jhs_
  get           - jev_get_URL_''
 
 Post can be submit (html for new page) or ajax (for page upates).
@@ -157,7 +157,7 @@ if. 1=NVDEBUG do. smoutput seebox NV end. NB. HNV,NV
 if. (-.OKURL-:URL)*.(0~:#PASS)*.(-.cookie-:gethv'Cookie:')*.-.LHOK*.PEER-:LOCALHOST
                        do. r=. 'jev_get_jlogin_ 0'
 elseif. 'post'-:METHOD do. r=. getv'jdo'
-elseif. '.'e.URL       do. r=. 'jev_getsrcfile_jfilesrc_ URL_jhs_'
+elseif. '.'e.URL       do. r=. 'jev_get_jfilesrc_ URL_jhs_'
 elseif. 1              do. r=. 'jev_get_',URL,'_'''''
 end.
 logjhs'sentence'
@@ -427,7 +427,93 @@ logstdout=: 3 : 'i.0 0[(y,LF) 1!:2[4'
 
 NB. z local utilities
 
-jlog__=: 3 : 0
+dbon_z_=: 3 : 0
+13!:15 'smoutput dbes dbestack_z_=:13!:18'''''
+9!:27 '13!:0[1'
+9!:29 [1
+i.0 0
+)
+
+dboff_z_=: 3 : 0
+13!:15 ''
+9!:27 '13!:0[0'
+9!:29 [1
+i.0 0
+)
+
+dbcutback_z_=: 13!:19
+dbstep_z_=:    13!:20
+dbstepin_z_=:  13!:21
+dbstepout_z_=: 13!:22
+
+NB. display numbered explicit defn
+dbsd_z_=: 3 : 0
+if. -.1 2 3 e.~nc<y do. 'not an explicit definition' return. end.
+raw=. 5!:5<y
+t=.<;.2 LF,~raw
+if. 1=#t do. '0 ',raw return. end.
+i=.t i.<':',LF
+if. ('3'={.raw)*.i~:#t do.
+ j=. (_1,i.<:i),_1,(i.<:<:(#t)-i),_1
+else.
+ j=. _1,(i._2+#t),_1
+end.
+n=. ":each<"0 j
+n=. a: ((n=<'_1')#i.#n)} n
+n=. <"1 ' ',.~' ',.~>n
+;n,each t
+)
+
+NB. debug stop manager
+NB. dbsm'name'     - display numbered explicit defn
+NB. dbsm'~...'     - remove stops starting with ...
+NB. dbsm'name n:n' - add stops 
+NB. dbsm''         - display stops
+dbsm_z_=: 3 : 0
+if. ('~'~:{.y)*.1=#;:y do. dbsd y return. end.
+if.'~'={.y do.
+ s=. deb each<;._2 (dbsq''),';'
+ a=. }.y
+ s=. (-.(<a)=(#a){.each s)#s
+else.
+ s=. deb each<;._2 (dbsq''),y,';'
+end.
+s=. ~./:~(s~:a:)#s
+dbss ;s,each<' ; '
+dbsq''
+)
+
+NB. show execution stack as set by last supension
+dbes_z_=: 3 : 0
+len=. >./dbestack i."1 ' '
+t=. |."2[dbestack
+r=. ''
+while. #t do.
+ d=. }.dtb{.t
+ d=. (len>.#d){.d
+ t=. }.t
+ if. ' '~:1{d do.
+  n=. dltb}.{.t
+  if. 2~:#t do. n=. n rplc '    ';'' end.
+  r=. r,<d,n
+  t=. }.t
+ else.
+  r=. r,<d rplc '    ';''
+ end.
+end.
+'_',(>coname''),'_',LF,;|.r,each LF
+)
+
+jlogoff_z_=: 3 : 'htmlresponse_jhs_ hajaxlogoff_jhs_'
+
+jshowconsole_z_=: 3 : 0
+if. -.IFWIN do. 'only supported in windows' return. end.
+t=. {.>'kernel32.dll GetConsoleWindow x'cd''
+'user32.dll ShowWindow n x i'cd t;(0-:y){5 0
+i.0 0
+)
+
+jlog_z_=: 3 : 0
 if. y-:0 do.
  LOGFULL_jhs_=: LOGFULL_jhs_,LOG_jhs_
  LOG_jhs_=:''
@@ -576,8 +662,6 @@ fixuf y
 lcfg jpath'~addons/ide/jhs/config/jhs_default.ijs'
 if.     -.''-:t=. jpath x                                do. lcfg t
 elseif. fexist t=. jpath'~config/jhs.ijs'                do. lcfg t
-NB.! JUM uses jhs.cfg so we have to look there  as well
-elseif. fexist t=. jpath'~config/jhs.cfg'                do. lcfg t
 elseif. fexist t=. jpath'~addons/ide/jhs/config/jhs.ijs' do. lcfg t
 end.
 'PORT invalid' assert (PORT>49151)*.PORT<2^16
@@ -614,7 +698,6 @@ NVDEBUG=: 0 NB. 1 shows NV on each input
 INPUT=: '' NB. <'   '
 NB. leading &nbsp; for Chrome delete all
 LOG=: jmarka,'<div>&nbsp;<font style="font-size:20px; color:red;" >J Http Server</font></div>',jmarkz
-if. 0~:#loadfailed do. LOG=.LOG,jhfroma 'load failed:',LF,loadfailed end.
 LOGN=: ''
 LOGFULL=: ''
 PDFOUTPUT=: 'output pdf "',(jpath'~temp\pdf\plot.pdf'),'" 480 360;'  
@@ -643,45 +726,27 @@ output_jfe_=: output_jhs_
 jfe 1
 )
 
-loader=: 3 : 0
-t=. ''
-for_n. y do.
- try.
-  load__ >n
- catch.
-  t=. t,LF,~>n
- end.
-end.
-if. 0~:#t do. smoutput LF,'load failed:',LF,t end.
-t
+NB. load rest of JHS core
+load__'~addons/ide/jhs/utilh.ijs'
+load__'~addons/ide/jhs/utiljs.ijs'
+load__'~addons/ide/jhs/jgcp.ijs'
+
+stub=: 3 : 0
+'jev_get y[load''~addons/ide/jhs/',y,'.ijs'''
 )
 
-NB. load rest of JHS
-cores=: (<'.ijs'),~each ;:'core utilh utiljs jlogin jijx jijxdebug jijs jfile jfif jfilesrc jhelp jal jdemo jgcp jijxm jijxh'
-corefiles=: (<jpath'~addons/ide/jhs/'),each cores
-loadfailed=: loader }.corefiles
-
-NB.! debug stuff
-patch=: 3 : 0
-d=. (<'.ijs'),~each (<'jdemo'),each ":each >:i.9
-pfiles=:   (<'/users/eric/svn/addons/ide/jhs/'),each cores
-dsrcfiles=.(<'/users/eric/svn/addons/ide/jhs/demo/'),each d
-dsnkfiles=.(<jpath'~addons/ide/jhs/demo/'),each d
-d=. fread  each pfiles
-d   fwrite each corefiles
-jreload''
-d=. fread each dsrcfiles
-d fwrite each dsnkfiles
-load__ dsnkfiles
-i.0 0
-)                         
-
-jreload=: 3 : 0
-load__ corefiles_jhs_
-)
-
-NB.! kill off - use init_jhs_ in next installer
-jhs_z_=: init_jhs_
+NB. app stubs to load app file
+jev_get_jijx_=:    3 : (stub'jijx')
+jev_get_jfile_=:   3 : (stub'jfile')
+jev_get_jijs_=:    3 : (stub'jijs')
+jev_get_jfif_=:    3 : (stub'jfif')
+jev_get_jal_=:     3 : (stub'jal')
+jev_get_jhelp_=:   3 : (stub'jhelp')
+jev_get_jdemo_=:   3 : (stub'jdemo')
+jev_get_jlogin_=:  3 : (stub'jlogin')
+jev_get_jijxh_=:   3 : (stub'jijxh')
+jev_get_jijxm_=:   3 : (stub'jijxm')
+jev_get_jfilesrc_=:3 : (stub'jfilesrc')
 
 NB. simple wget with sockets - used to get google charts png
 

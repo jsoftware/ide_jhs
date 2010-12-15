@@ -29,7 +29,7 @@ jhmz''
  'findnext'  jhb 'dn'
  'findprev'  jhb 'up'
  'what'      jhtext'';10
- 'context'   jhselect(<;._2 FIFCONTEXT_jfif_);1;0
+ 'context'   jhselect(<;._2 FIFCONTEXT);1;0
  'matchcase' jhcheckbox'case';1
  'findclose' jhb'X'
 '<hr></div>'
@@ -153,6 +153,16 @@ f=. <jpath'~temp\',a,'.ijs'
 '' 1!:2 f
 >f
 )
+
+NB. same as in jfif
+FIFCONTEXT=: 0 : 0
+any
+name
+=: or =.
+=:
+=.
+)
+
 
 NB.! p{} klduge because IE inserts <p> instead of <br> for enter
 CSS=: 0 : 0

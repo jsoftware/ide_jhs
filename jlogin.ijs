@@ -19,14 +19,14 @@ login=: 0 : 0
 
 loggedin=: 0 : 0
 <br/><span style="color:red;">
-<h1>SECURITY!</h1>
-Logout when you are finished
-(close browser or menu command logout).
+SECURITY! logout when finished<br/>
+close all browser windows or run sentence<br/>
+<tt>&nbsp;&nbsp;&nbsp;jlogoff 0</tt>
 </span>
 )
 
 goto=: 3 : 0
-".'create_',(getv'app'),'_'''''
+".'jev_get_',(getv'app'),'_'''''
 )
 
 NB. login not allowed after LIMIT failures

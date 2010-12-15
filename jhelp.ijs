@@ -23,6 +23,7 @@ jumps=: 0 : 0
 <a href="#gui">GUI</a>&nbsp;
 <a href="#jum">JUM</a>&nbsp;
 <a href="#config">Config</a>&nbsp;
+<a href="#console">Console</a>&nbsp;
 <a href="#gtk">GTK</a>&nbsp;
 <a href="#about">About</a>
 )
@@ -37,7 +38,7 @@ A bit of time here will pay off down the road.<br><br>
 
 For complete documentation see:<br>
 <a href="http://www.jsoftware.com/docs/help701/index.htm">www.jsoftware.com/docs/help701/index.htm</a>
-<br>or if you have installed local help with pacman see:<br>
+<br>or if you have installed local help with jal see:<br>
 <a href="~addons/docs/help/index.htm">~addons/docs/help/index.htm</a>
 
 <a name="j7"><h1>J701</h1></a>
@@ -101,35 +102,38 @@ in developing your browser app.
 <a name="ide"><h1>IDE (Interactive Development Environment)</h1></a>
 <span class="h">keyboard shortcuts</span><br>
 esc key escapes next key to be a shortcut.<br/>
-For example, esc j links to ijx page.<br/>
+For example, esc j links to jijx page.<br/>
 Menu items document shortcuts on the right.<br/>
 esc 1 sets focus on menu.<br/>
 esc 2 sets focus to page default.<br/>
 You can user ctrl+. instead of esc.
 
-<br><br><span class="h">ijx</span>
-run J sentences (ctrl+shift+&uarr;&darr; recall)
+<br><br><span class="h">jijx</span>
+Run J sentences (ctrl+shift+&uarr;&darr; recall)
+
+<br><br><span class="h">jijxh</span>
+iPhone/iTouch/iPad (and similar) support.
 
 <br><br><span class="h">jijxm</span>
+Simple browser support that requires only basic html.
 jijx and related pages require advanced browser features
 (javascript, style sheets, contenteditable divs, ajax, ...).
-Page jijxm has a simpler interface that runs in older browsers
-and requires only basic html features.
 
-<br><br><span class="h">file</span>
-browse files for editing, etc.
+<br><br><span class="h">jfile</span>
+Browse files for editing, etc.
 Adequate for simple IDE use and for a remote server.
 For more complicated requirements use host facilities such
 as Windows Explorer or Mac Finder.
 
-<br><br><span class="h">ijs</span>
+<br><br><span class="h">jijs</span>
 edit file (ctrl+z/y for undo/redo)
 
-<br><br><span class="h">fif</span>
-find in files utility
+<br><br><span class="h">jfif</span>
+find in files
 
-<br><br><span class="h">pacman</span>
-addons package manager (downloadable software packages)
+<br><br><span class="h">jal</span>
+Addons package manager (pacman) downloads and installs
+software packages
 
 <br><br><span class="h">plot</span> <a href="http://code.google.com/apis/chart/">Google Charts</a>
 <pre class="jcode">
@@ -152,7 +156,7 @@ addons package manager (downloadable software packages)
    jhtml'&lt;font style="color:red;"&gt;A&lt;/font&gt;'
 </pre>
 
-<span class="h">ijx action menu</span><br>
+<span class="h">jijx action menu</span>
 A script defines action menu items and the verbs to run
 when clicked. The following is a sample file you can
 define and then modify:
@@ -174,14 +178,14 @@ ja_bbb=: 3 : 0
 ***
 </pre>
 
-<span class="h">ijx project manager</span><br>
-An ijx action menu item can provide a simple project manager.
+<span class="h">jijx project manager</span>
+A jijx action menu item can provide a simple project manager.
 A menu click can load/reload project files.
 This can be especially helpful if an external editor
 is used.<br><br>
 
-<span class="h">ijx debug menu</span><br>
-With debug on (ijx menu debug), execution suspends at an error or a stop.
+<span class="h">jijx debug menu</span>
+With debug on (jijx menu debug), execution suspends at an error or a stop.
 <pre class="jcode">
    dbsm'name'      - display numbered definition lines
    dbsm'name ...'  - add stops
@@ -212,10 +216,10 @@ menu debug|run - run to error or stop
 GUI applications are built with J, JHS framework, html,
 javascript, and css.
 
-See ijx demos for examples of GUI applications.<br><br>
+See jijx demos for examples of GUI applications.<br><br>
 
 The IDE is built with the same facilities. See
-~addons/ide/jhs/jfile.ijs to see how the file page is
+~addons/ide/jhs/jfile.ijs to see how the jfile page is
 implemented.<br><br>
 
 You can create simple applications with just info
@@ -271,8 +275,14 @@ A rough sketch of the steps are:
 <a name="config"><h1>Config</h1>
 For info on changing JHS config see file: <CONFIG>
 
-<a name="gtk"><h1>GTK</h1>
+<a name="console"><h1>Console</h1>
+The JHS jconsole window diplays useful information.
+It can kill the JHS task in the event of problems.
+In windows you can edit the icon properties to run minimized.
+You can hide the window if you wish:
+<pre class="jcode">   jshowconsole 0 NB. 0 to hide and 1 to show</pre>
 
+<a name="gtk"><h1>GTK</h1>
 A desktop application front end, built with GTK, is also
 available for J. It provides a powerful IDE and allows
 development of state of the art GUI desktop applications.

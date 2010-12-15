@@ -10,7 +10,7 @@ jhma''
  jhjmlink''
 jhmz''
 
-'<h1>J Active Library - pacman - Package Manager<h1>'
+'J Active Library - pacman - Package Manager<br/>'
 '<a href="http://www.jsoftware.com/jwiki/addons">www.jsoftware.com/jwiki/addons</a>'
 '<hr>'
 'upable' jhb'Upgradeable'

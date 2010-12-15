@@ -25,7 +25,7 @@ d=. 1!:1<jpath '~addons/ide/jhs/src/',y
 htmlresponse d,~gsrchead rplc '<TYPE>';x;'<LENGTH>';":#d
 )
 
-jev_getsrcfile=: 3 : 0
+jev_get=: 3 : 0
 y=. jpath y
 t=. jpath'~addons/docs/help/'
 if. y-:'favicon.ico' do.

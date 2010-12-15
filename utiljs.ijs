@@ -356,7 +356,12 @@ function jdor()
  if(rqstate==4)
  {
   if(200!=rq.status)
-   alert("ajax request failed - see jijx");
+  {
+   if(403==rq.status)
+    location="jlogin";
+   else
+    alert("ajax request failed - see jijx");
+  }
   else
   {
    d=rq.responseText.split(JASEP);

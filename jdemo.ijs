@@ -71,6 +71,7 @@ create=: 3 : 0 NB. create page and send to browser
 loadall=: 3 : 0
 d=. (<'.ijs'),~each (<'jdemo'),each ":each >:i.9
 d=. (<jpath'~addons/ide/jhs/demo/'),each d
-failed=. loader d
-if. 0~:#failed do. smoutput 'load failed: ',LF,failed end.
+for_n. d do.
+ try. load__ >n catch. smoutput'load failed: ',>n end.
+end.
 )

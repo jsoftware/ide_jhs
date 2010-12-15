@@ -61,6 +61,8 @@ else.
 end.
 )
 
+NB.! iphone=. 0<#('iPhone'ss t),'iPod'ss t=. gethv_jhs_ 'User-Agent:'
+
 NB. refresh response - not jajax
 NB. mac safari input text ghost images are pushed up by ajax output
 NB. kludge fix of margin:3px fixes the problem

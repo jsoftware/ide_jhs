@@ -24,7 +24,6 @@ jijs.ijs
 jijx.ijs
 jijxh.ijs
 jijxm.ijs
-jijxdebug.ijs
 jlogin.ijs
 jum.ijs
 utilh.ijs

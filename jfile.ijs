@@ -205,7 +205,7 @@ f=. jgetfile F=. jpath getv'path'
 if. f-:'' do.
  create'No file selected to edit.';F
 else.
- create_jijs_ F
+ jev_get_jijs_ F
 end.
 )
 

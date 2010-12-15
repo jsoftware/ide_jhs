@@ -32,7 +32,7 @@ CSSCORE=: 0 : 0
 *.jhml{color:black;}
 *.jhml:visited{color:black;}
 *.jhsel{background-color:buttonface;font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
-body{margin-top:0;}
+body{margin:0;}
 .menu li{
  display:block;white-space:nowrap;
  padding:2px;color:#000;background:#eee;
@@ -45,8 +45,10 @@ body{margin-top:0;}
  position:absolute;top:100%;left:0%;display:none;
  list-style:none;border:1px black solid;margin:0;padding:0;
 }
-#jresizeb{overflow:scroll;border:solid;border-width:1px;}
+#jresizeb{overflow:scroll;border:solid;border-width:1px;clear:left;}
 )
+
+NB.! body{margin-top:0;}
 
 NB. core plus page styles with config replaces
 NB. apply outer style tags after removing inner ones
@@ -267,7 +269,6 @@ Expires: 0
 
 )
 
-
 NB. html 404 response (url not found)
 html404=: toCRLF 0 : 0
 HTTP/1.1 404 OK
@@ -275,7 +276,6 @@ Content-Type: text/html; charset=utf-8
 
 
 )
-
 
 NB. html for jajax response
 NB. no-cache critical - otherwise we get old
@@ -285,6 +285,15 @@ HTTP/1.1 200 OK
 Content-Type: text/html; charset=utf-8
 Cache-Control: no-cache
 Content-Length: <LENGTH>
+
+)
+
+hajaxlogoff=: toCRLF 0 : 0
+HTTP/1.1 403 OK
+Content-Type: text/html; charset=utf-8
+Cache-Control: no-cache
+Content-Length: 
+Set-Cookie: jcookie=0
 
 )
 
@@ -544,13 +553,12 @@ jhh1=: 3 : 0
 NB.* jhjmlink*jhjmlink'' - ide link menu
 jhjmlink=: 3 : 0
 t=.   'jmlink'jhmg'link';1;8
-t=. t,'jijx'  jhml'ijx     j^'
-t=. t,'jfile' jhml'file    f^'
-t=. t,'jijs'  jhml'ijs     J^'
-t=. t,'jfif'  jhml'fif     F^'
-t=. t,(0=#USERNAME)#'jal'   jhml'pacman'
-t=. t,>(-.0-:gethv'Cookie:'){' ';'jlogin'jhml'logout'
-t=. t,'jhelp' jhml'help'
+t=. t,'jijx'  jhml'jijx     j^'
+t=. t,'jfile' jhml'jfile    f^'
+t=. t,'jijs'  jhml'jijs     J^'
+t=. t,'jfif'  jhml'jfif     F^'
+t=. t,'jal'   jhml'jal'
+t=. t,'jhelp' jhml'jhelp'
 )
 
 NB.* jhma*jhma'' - menu start

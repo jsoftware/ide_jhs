@@ -2,6 +2,8 @@ NB. J HTTP Server - jum app
 coclass'jum'
 coinsert'jhs'
 
+JHS=: jpath'~home/j701-user/jhs/'
+
 NB. ALLPORTS jum ports
 NB. HOSTNAME localhost or www.jsoftware.com or ...
 NB. JUMPASS  jum password
@@ -9,7 +11,6 @@ startjum=: 3 : 0
 'ALLPORTS HOSTNAME JUMPASS'=:y
 OKURL_jhs_=:'jum' NB. jum no login
 HOSTIP=: >2{sdgethostbyname_jsocket_ HOSTNAME NB. is 202.67.223.49 faster than www.jsoftware.com ?
-JHS=: (>:JHS i:'/'){.JHS=:jpath'~user'
 VALIDNAMECHARS=:'-_',((i.26)+a.i.'a'){a.
 i.0 0
 )
@@ -123,7 +124,7 @@ readpid JHS,y
 
 NB. y is user
 starttask=: 3 : 0
-t=. '-js "load''~addons/ide/jhs/core.ijs''" "jhs''',y,'''"'
+t=. '-js "load''~addons/ide/jhs/core.ijs''" "init_jhs_''',y,'''"'
 if. IFUNIX do.
  2!:1 ('"',jpath'~bin/jconsole'),'" ',t,' &'
 else.
@@ -328,8 +329,10 @@ else.
  pid=. getpid user
  if. nopid-:pid do.
   jhrajax 'start: task started'
-  6!:3[1 NB.! too quick to new task crashes jum???
+  6!:3[2 NB.! too quick to new task crashes jum???
+  logjhs user,' starttask a'
   starttask user NB. must do jhrajax first else hangs
+  logjhs user,' starttask z'
   return.
  else.
   r=. ' task already running'

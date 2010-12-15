@@ -29,7 +29,7 @@ jhresize''
 'recalls'jhhidden'<RECALLS>'
 )
 
-jev_get=: 3 : 'i.0 0'
+jev_get=: create
 
 NB. move new transaction(s) to log
 uplog=: 3 : 0
@@ -64,8 +64,6 @@ NB. mac safari input text ghost images are pushed up by ajax output
 NB. kludge fix of margin:3px fixes the problem
 NB. the margin requires reducing width to 99 to avoid hitting the right edge
 create=: 3 : 0
-NB.! iphone=. 0<#('iPhone'ss t),'iPod'ss t=. gethv_jhs_ 'User-Agent:'
-JS=: js=.  JSCORE,jsdebug,~jsx
 'jijx' jhr 'LOG RECALLS';LOG;recalls''
 )
 
@@ -176,6 +174,33 @@ ev_lab_click=: 3 : 0
 smoutput labmsg
 )
 
+debugmenu=: 3 : 0
+t=.   'debug'    jhmg'debug';1;8
+t=. t,'dbstep'   jhmab'step     s^'
+t=. t,'dbstepin' jhmab'step in  i^'
+t=. t,'dbstepout'jhmab'step out o^'
+t=. t,'dbcutback'jhmab'cut back'
+t=. t,'dbrun'    jhmab'run'
+t=. t,'dbon'     jhmab'on'
+t=. t,'dboff'    jhmab'off'
+)
+
+ev_dbon_click=: 3 : 0
+smoutput'debug on'
+dbon''
+)
+
+ev_dboff_click=:   3 : 0
+smoutput'debug off'
+dboff''
+)
+
+ev_dbstep_click=:    3 : 'try. dbstep''''    catch. end. i.0 0'
+ev_dbstepin_click=:  3 : 'try. dbstepin''''  catch. end. i.0 0'
+ev_dbstepout_click=: 3 : 'try. dbstepout'''' catch. end. i.0 0'
+ev_dbcutback_click=: 3 : 'try. dbcutback'''' catch. end. i.0 0'
+ev_dbrun_click=:     3 : 'try. dbrun''''     catch. end. i.0 0'
+
 CSS=: 0 : 0
 *{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
 form{margin-top:0;margin-bottom:0;}
@@ -189,7 +214,7 @@ form{margin-top:0;margin-bottom:0;}
 NB. *#log:focus{border:1px solid red;}
 NB. *#log:focus{outline: none;} /* no focus mark in chrome */
 
-jsx=: 0 : 0
+JS=: 0 : 0
 var recs;
 var reci= -1;
 var phead= '<div id="prompt" class="log">';
@@ -401,6 +426,17 @@ function ev_actionn_click(){jdoajax([]);}
 function ev_q_shortcut(){jscdo("actionn","0");}
 function ev_w_shortcut(){jscdo("actionn","1");}
 function ev_e_shortcut(){jscdo("actionn","2");}
+
+function ev_dbstep_click()   {jdoajax([]);}
+function ev_dbstepin_click() {jdoajax([]);}
+function ev_dbstepout_click(){jdoajax([]);}
+function ev_dbcutback_click(){jdoajax([]);}
+function ev_dbrun_click()    {jdoajax([]);}
+function ev_dbon_click()     {jdoajax([]);}
+function ev_dboff_click()    {jdoajax([]);}
+function ev_s_shortcut(){jscdo("dbstep");}
+function ev_i_shortcut(){jscdo("dbstepin");}
+function ev_o_shortcut(){jscdo("dbstepout");}
 )
 
 
