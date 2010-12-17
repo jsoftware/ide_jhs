@@ -31,7 +31,7 @@ HBS=: 0 : 0
 'recalls'jhhidden'<RECALLS>'
 )
 
-jev_get=: 3 : 'i.0 0'
+jev_get=: create
 
 NB. move new transaction(s) to log
 uplog=: 3 : 0
