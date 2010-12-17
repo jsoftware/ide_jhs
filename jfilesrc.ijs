@@ -43,6 +43,10 @@ elseif. '.css'-:_4{.y do.
  y gfassert t-:(#t){.y 
  d=. fread y
  htmlresponse d,~gsrchead rplc '<TYPE>';'text/css';'<LENGTH>';":#d
+elseif. '.jpg'-:_4{.y do.
+ y gfassert t-:(#t){.y 
+ d=. fread y
+ htmlresponse d,~gsrchead rplc '<TYPE>';'image/jpeg';'<LENGTH>';":#d
 elseif. 1 do.
  smoutput 'will not get file ',y
 end. 

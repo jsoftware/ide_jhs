@@ -146,11 +146,13 @@ CSS=: 0 : 0
 
 NB. y is MSG for the html result
 create=: 3 : 0
+logapp'jum create'
 if. -.'jum'-:_3{.jpath'~user' do. y=. '<h1>WARNING: not running as jum!</h1>',y end.
 'jum'jhr''
 )
 
 ev_status_click=: 3 : 0
+logapp'jum status: ',(getv'user'),' ',(getv'jmid')
 'user pass'=. getvs'user pass'
 if. check user;pass do.
  r=. report user
@@ -182,6 +184,7 @@ ev_jum_enter=: ev_new_click
 
 NB. create new user
 ev_new_click=: 3 : 0
+logapp'jum new: ',getv'jmid'
 'usern passn repeat jum'=.getvs'usern passn repeat jum'
 ports=. ;_1".each 1{"1 usertable'' NB. ports in use
 port=. {.ALLPORTS-.ports           NB. first free port
@@ -207,11 +210,13 @@ elseif. 1 do.
   r=. 'create new user failed'
  end.
 end.
+logapp'jum new: ',r
 jhrajax 'new: ',r
 )
 
 signal_attn=: 3 : 0
 :
+logapp'jum attn: ',x
 smoutput 'break ',x,' ',y
 try.
  f=. <jpath (_4}.JHS),'break/',y,'.default'
@@ -223,6 +228,7 @@ end.
 
 signal_kill=: 3 : 0
 :
+logapp'jum kill: ',x
 nopid writepid JHS,x NB. clear out dead pid
 if. IFUNIX do.
  unixshell 'kill -s 9 ',y
@@ -322,6 +328,7 @@ ev_kill_click=: 3 : 0
 )
 
 ev_start_click=: 3 : 0
+logapp'jum start: ',getv'user'
 'user pass'=. getvs'user pass'
 if. -.check user;pass do.
  r=. invalid
@@ -339,10 +346,6 @@ else.
  end.
 end.
 jhrajax 'start: ',r
-)
-
-ev_users_click=: 3 : 0
-create  'USERS: ',;(<'<br>&nbsp;'),each a/:a=.{."1 usertable''
 )
 
 portline=: 3 : 0

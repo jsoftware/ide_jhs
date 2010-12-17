@@ -678,7 +678,7 @@ BIND=: >(BIND-:'any'){'127.0.0.1';''
 
 NB. [config_file] init USERNAME
 NB. SO_REUSEADDR allows server to kill/exit and restart immediately
-NB. FD_CLOEXEC prevents inheritance by new tasks (UM startask)
+NB. FD_CLOEXEC prevents inheritance by new tasks (JUM startask)
 init=: 3 : 0
 ''init y
 :
