@@ -26,6 +26,7 @@ htmlresponse d,~gsrchead rplc '<TYPE>';x;'<LENGTH>';":#d
 )
 
 jev_get=: 3 : 0
+smoutput'get: ',y
 y=. jpath y
 t=. jpath'~addons/docs/help/'
 if. y-:'favicon.ico' do.
@@ -40,6 +41,7 @@ elseif. '.htm'-:_4{.y do.
  y gfassert t-:(#t){.y 
  htmlresponse fread y
 elseif. '.css'-:_4{.y do.
+smoutput 'get css file: ',y
  y gfassert t-:(#t){.y 
  d=. fread y
  htmlresponse d,~gsrchead rplc '<TYPE>';'text/css';'<LENGTH>';":#d
