@@ -567,6 +567,7 @@ function ev_ijs_keydown()
 // called with ajax response
 function ajax(ts)
 {
+ alert("ijx ajax");
  rep.innerHTML= ts[0];
  if(2==ts.length&&jform.jmid.value=="saveasx"||jform.jmid.value=="saveasdo")
  {

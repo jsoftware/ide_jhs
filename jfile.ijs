@@ -205,7 +205,8 @@ f=. jgetfile F=. jpath getv'path'
 if. f-:'' do.
  create'No file selected to edit.';F
 else.
- jev_get_jijs_ F
+ require'~addons/ide/jhs/jijs.ijs' NB.! ensure loaded
+ create_jijs_ F
 end.
 )
 
@@ -383,5 +384,6 @@ function ajax(ts)
  setpath(ts[0]);
  jbyid("sel").innerHTML= ts[1];
 }
+
 )
 
