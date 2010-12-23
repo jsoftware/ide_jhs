@@ -81,7 +81,8 @@ if. #USERNAME do.
  'save only allowed to ~user paths' assert fu-:(#fu){.y
 end.
 new=. toHOST getv'textarea'
-old=. toHOST fread y
+old=. fread y
+if. -._1-:old do. old=. toHOST old end.
 if. new-:old do.
  smoutput'jijs not saved (unchanged): ',y
 else.
@@ -568,7 +569,7 @@ function ev_ijs_keydown()
 function ajax(ts)
 {
  rep.innerHTML= ts[0];
- if(2==ts.length&&jform.jmid.value=="saveasx"||jform.jmid.value=="saveasdo")
+ if(2==ts.length&&(jform.jmid.value=="saveasx"||jform.jmid.value=="saveasdo"))
  {
   jhide("saveasdlg");
   jbyid("filenamed").innerHTML=ts[1];
