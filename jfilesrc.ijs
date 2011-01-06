@@ -14,20 +14,17 @@ Content-Type: <TYPE>
 
 )
 
-gfassert=: 4 : 0
-('will not get file',x)assert y
-)
-
-NB. y is file - x is content-type
+NB. y is file name (no path) - x is content-type
+NB. for files only allowed from ~addons/ide/jhs/src
 gsrcf=: 4 : 0
-y gfassert-.'/'e.y
+('will not get file ',y)assert'/'e.y
 d=. 1!:1<jpath '~addons/ide/jhs/src/',y
 htmlresponse d,~gsrchead rplc '<TYPE>';x;'<LENGTH>';":#d
 )
 
 jev_get=: 3 : 0
 y=. jpath y
-t=. jpath'~addons/docs/help/'
+d=. fread y
 if. y-:'favicon.ico' do.
  favicon 0 
 elseif. '.js'-:_3{.y do.
@@ -36,16 +33,11 @@ elseif. '.htc'-:_4{.y do.
  'text/x-component'gsrcf y
 elseif. '.swf'-:_4{.y do.
  'application/x-shockwave-flash'gsrcf y
-elseif. '.htm'-:_4{.y do.
- y gfassert t-:(#t){.y 
- htmlresponse fread y
+elseif. ('.htm'-:_4{.y)+.'.html'-:5{.y do.
+ htmlresponse d
 elseif. '.css'-:_4{.y do.
- y gfassert t-:(#t){.y 
- d=. fread y
  htmlresponse d,~gsrchead rplc '<TYPE>';'text/css';'<LENGTH>';":#d
 elseif. '.jpg'-:_4{.y do.
- y gfassert t-:(#t){.y 
- d=. fread y
  htmlresponse d,~gsrchead rplc '<TYPE>';'image/jpeg';'<LENGTH>';":#d
 elseif. 1 do.
  smoutput 'will not get file ',y
