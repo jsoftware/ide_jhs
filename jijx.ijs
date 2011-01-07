@@ -133,15 +133,17 @@ actionmenu=: 3 : 0
 a=. 'action'   jhmg'action';1;10
 a=. a,'scratch' jhmab'scratch...'
 a=. a,'scratchr'jhmab'scratch r^'
-try.
- load'~user/projects/ja/ja.ijs'
- amenu=: <;._2 ja_menu
- t=. a
- for_i. i.#amenu do.
-  t=. t,('actionn*',":i)jhmab(>i{amenu),>(i<3){'';' ',(i{'qwe       '),'^'
+t=. a
+if. fexist'~user/projects/ja/ja.ijs' do.
+ try.
+  load'~user/projects/ja/ja.ijs'
+  amenu=: <;._2 ja_menu
+  for_i. i.#amenu do.
+   t=. t,('actionn*',":i)jhmab(>i{amenu),>(i<3){'';' ',(i{'qwe       '),'^'
+  end.
+ catch.
+  t=. a
  end.
-catch.
- t=. a
 end.
 t 
 )

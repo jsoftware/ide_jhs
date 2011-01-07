@@ -154,6 +154,9 @@ software packages
    jlog y     NB. 0 clears and _ restores log
    jfe_jhs_ y NB. toggle console/browser
    jhtml'&lt;font style="color:red;"&gt;A&lt;/font&gt;'
+
+   t=. '~addons/docs/help/index.htm'jhref_jhs_'help'
+   jhtml'&lt;div contenteditable="false"&gt;',t,'&lt;/div&gt;'
 </pre>
 
 <span class="h">jijx action menu</span>

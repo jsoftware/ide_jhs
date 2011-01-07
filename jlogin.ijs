@@ -7,9 +7,16 @@ login
 jhtablea
  jhtr 'user: '    ;'user' jhtext'';15
  jhtr 'password: ';'pass' jhpassword'';15
- jhtr 'app: '     ;'app'  jhtext'jijx';15
- jhtr ''          ;'login'jhb'login'
 jhtablez
+'jijx' jhradio'jijx';1;'radg'
+jhbr
+'jijxm'jhradio'jijxm';0;'radg'
+' (minimum - no javascript)'
+jhbr
+'jijxh'jhradio'jijxh';0;'radg'
+' (handheld - iPhone etc)'
+jhbr
+'login'jhb'login'
 loggedin
 )
 
@@ -26,7 +33,7 @@ close all browser windows or run sentence<br/>
 )
 
 goto=: 3 : 0
-".'jev_get_',(getv'app'),'_'''''
+".'jev_get_',(getv'radg'),'_'''''
 )
 
 NB. login not allowed after LIMIT failures

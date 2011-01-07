@@ -56,19 +56,31 @@ elseif. 2=3!:0 y do.
 elseif. 32=3!:0 y do.
  NB. assume dead simple 1 2 3;4 5 6
  gcdata=: y
- GCFDATA=: }:'t:',' ,_-'charsub ;'|',~each":each <"1 >gcdata
+ GCFDATA=: }:'e:',;',',~each enc each scale each gcdata
  GCMIN=: '_-'charsub":<./,>{.y
  GCMAX=: '_-'charsub":>./,>{.y
  GCYMIN=: '_-'charsub":<./,>{:y
  GCYMAX=: '_-'charsub":>./,>{:y
 elseif. 1 do.
  gcdata=: >(1=$$y){y;,:y
- GCFDATA=: }:'t:',' ,_-'charsub ;'|',~each":each <"1 gcdata
+ GCFDATA=: }:'e:',,',',~"1 enc "1 scale gcdata
  GCMIN=: '_-'charsub":<./,y
  GCMAX=: '_-'charsub":>./,y
  GCYMIN=: GCYMAX=: 0
 end.
 i.0 0
+)
+
+ac=: '-.',~((65+i.26),(97+i.26),48+i.10){a.
+
+enc=: 3 : 0
+;ac{~64 64#:y
+)
+
+scale=: 3 : 0
+a=. <./,y
+z=. >./,y
+<.0.5+4095*(y-a)%z-a
 )
 
 NB. get last y command arg
@@ -91,7 +103,9 @@ gcchart=: 3 : 0
 'chs error' assert (wh>:25),(wh<:1000),300000>:*/wh
 'cht missing' assert #gca'cht'
 t=. 'chart?',gcurl,'&chd=',GCFDATA
-t hrplc_jhs_ 'MIN MAX YMIN YMAX COLORS RED BLUE';GCMIN;GCMAX;GCYMIN;GCYMAX;COLORS;RED;BLUE
+t=. t hrplc_jhs_ 'MIN MAX YMIN YMAX COLORS RED BLUE';GCMIN;GCMAX;GCYMIN;GCYMAX;COLORS;RED;BLUE
+if. 2000<#t do. smoutput 'too much data (chart url is too large)' end.
+t
 )
 
 NB. return chart file data (png)
