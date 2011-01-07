@@ -60,9 +60,6 @@ end.
 )
 
 NB. refresh response - not jajax
-NB. mac safari input text ghost images are pushed up by ajax output
-NB. kludge fix of margin:3px fixes the problem
-NB. the margin requires reducing width to 99 to avoid hitting the right edge
 create=: 3 : 0
 'jijx' jhr 'LOG RECALLS';LOG;recalls''
 )
@@ -104,7 +101,6 @@ if. IP do. hmga y else. ' ' end.
 recalls=: 3 : 0
 t=.INPUT
 t=.(0~:;#each t-.each' ')#t
-NB.! (;t,each LF)rplc '"';'\"';'\';'\\'
 (;t,each LF)rplc '&';'&amp;';'"';'&quot;';'<';'&lt;';'>';'&gt;'
 )
 

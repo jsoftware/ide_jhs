@@ -41,7 +41,7 @@ function jsetcaret(id,collapse)
  if (window.getSelection)
  {
   try{window.getSelection().collapse(p,collapse);}
-  catch(e){;} //! FF can fail
+  catch(e){;} // FF can fail?
  }
  else
  {
@@ -57,7 +57,7 @@ function jsetcaretn(node)
  if (window.getSelection)
  {
   var sel,rng;
-  node.scrollIntoView(false); //! does this work?
+  node.scrollIntoView(false);
   sel=window.getSelection();
   sel.removeAllRanges();
   rng=document.createRange();
@@ -229,7 +229,7 @@ var JEV;         // js handler to call
 
 function jresize()
 {
- //! IE resize multiple frames sometimes gets id as null
+ // IE resize multiple frames sometimes gets id as null
  if(jbyid("jresizea")==null||jbyid("jresizeb")==null)return;
  var a= jgpwindowh(); // window height
  a-= jgpbodymh();     // body margin h (top+bottom)
@@ -268,7 +268,7 @@ function jev(event){
  jform.jid.value  = id;
  jform.jmid.value = (-1==i)?id:id.substring(0,i);
  jform.jsid.value = (-1==i)?"":id.substring(++i,id.length);
- if(type=='keydown'&&27==jevev.keyCode)return false; //! IE ignore esc
+ if(type=='keydown'&&27==jevev.keyCode)return false; // IE ignore esc
  if(type=='keydown'&&13==jevev.keyCode&&!jevev.ctrlKey&&!jevev.shiftKey)
   {jform.jtype.value="enter";return jevdo();} 
  return jevdo();
@@ -680,7 +680,6 @@ function jgpbodymh()
 // get pixel div height - IE/FF bugs vs <h1>
 function jgpdivh(id){return jbyid(id).offsetHeight;}
 
-//! IE8 jbyid returns null 
 /*
 function jgpdivh(id)
 {

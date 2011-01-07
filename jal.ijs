@@ -3,8 +3,6 @@ coclass'jal'
 coinsert'jhs'
 require'pacman'
 
-jhostpath_j_=: jpath_j_ NB.! required by remove - temp fix
-
 HBS=: 0 : 0
 jhma''
  jhjmlink''

@@ -336,7 +336,7 @@ else.
  pid=. getpid user
  if. nopid-:pid do.
   jhrajax 'start: task started'
-  6!:3[2 NB.! too quick to new task crashes jum???
+  6!:3[2 NB. too quick to new task crashes jum???
   logjhs user,' starttask a'
   starttask user NB. must do jhrajax first else hangs
   logjhs user,' starttask z'

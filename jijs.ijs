@@ -120,7 +120,7 @@ ev_runwd_click=: ev_runw_click
 
 ev_saveasdo_click=:ev_saveasx_enter
 
-NB.! saveas replace cancel option if file already exists
+NB. should have replace/cancel option if file exists
 ev_saveasx_enter=: 3 : 0
 f=. getv'filename'
 n=. getv'saveasx'
@@ -165,7 +165,7 @@ name
 )
 
 
-NB.! p{} klduge because IE inserts <p> instead of <br> for enter
+NB. p{} klduge because IE inserts <p> instead of <br> for enter
 CSS=: 0 : 0
 #rep{color:red}
 #filenamed{color:blue;}
@@ -397,11 +397,8 @@ function undoadd()
  if(readonly)return;
  var t=ce.innerHTML;
  if(t==undos[undos.length-1])return;
- while(undoslen>3000000) //!
- {
+ while(undoslen>3000000)
   undoslen-=undos.shift().length;
- }
-
  undos[undos.length]=t;
  undoslen+=t.length;
  undosn=undos.length;
@@ -447,13 +444,11 @@ function ev_ijs_keypress()
  if(readonly&&!ctrl&&!f){if(jisIE)window.event.returnValue=false; return false;}
  if(jsc||0==c||ctrl)return true; // ignore shortcuts,arrows,bs,del,enter,ctrls,etc.
  if(undotoid!=0)clearTimeout(undotoid);
- undotoid=setTimeout(undoadd,2000); //!
+ undotoid=setTimeout(undoadd,2000);
  if(toid!=0)clearTimeout(toid);
  if(colorflag||numberflag)toid=setTimeout(update,100);
  return true;
 }
-
-//! function ev_w_shortcut(){alert(ce.innerHTML);} // debug
 
 function ev_what_enter(){jscdo("find");}
 

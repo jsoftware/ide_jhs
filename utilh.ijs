@@ -1,22 +1,6 @@
 NB. html templates and utilities
 coclass'jhs'
 
-
-0 : 0
-body css affects menu
-menu position:fixed
-.menu{width:100%;position:fixed;background:#eee;
-margin-top:-20px;margin-left:-10px;padding-left:10px;padding-top:3px;padding-bottom:3px;
-}
-.menu{width:100%;position:fixed;background:#eee;
- margin-left:-10px;padding-left:10px;padding-top:3px;padding-bottom:3px;
-}
-menu position scroll
-.menu{width:100%;}
-
-menu fixed font kludges shortcut right align
-)
-
 NB.framework styles for all pages
 CSSCORE=: 0 : 0
 *{font-family:"sans-serif";font-size:<PC_FONTSIZE>}
@@ -49,14 +33,11 @@ div{padding-left:2px;}
 #jresizeb{overflow:scroll;border:solid;border-width:1px;clear:left;}
 )
 
-NB.! body{margin-top:0;}
-
 NB. core plus page styles with config replaces
 NB. apply outer style tags after removing inner ones
 css=: 3 : 0
 t=. 'PC_FONTSIZE PC_FM_COLOR PC_ER_COLOR PC_LOG_COLOR PC_SYS_COLOR PC_FILE_COLOR'
 t=. (CSSCORE,y) hrplc t;PC_FONTSIZE;PC_FM_COLOR;PC_ER_COLOR;PC_LOG_COLOR;PC_SYS_COLOR;PC_FILE_COLOR
-t=. t rplc '<style type="text/css">';'';'</style>';'' NB.! are they any inner ones to remove?
 '<style type="text/css">',t,'</style>'
 )
 
@@ -528,7 +509,7 @@ t hrplc 'ID DATA ROWS COLS';x;y
 NB.* 
 NB.* HBS verbs without id
 
-NB.! should be smarter - no style=, replace style, replace att, : vs =, ... 
+NB. should be smarter - no style=, replace style, replace att, : vs =, ... 
 NB.* jhfix*html jhfix list - add styles and attributes to html
 NB.* *html jhfix 'float:left';'tabindex="-1"';
 jhfix=: 4 : 0

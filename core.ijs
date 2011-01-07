@@ -212,22 +212,10 @@ catch.
 end.
 )
 
-NB.! clean up droplog and use it!
-droplog=: 3 : 0
- drop=. ''
- while. PC_LOG_LIMIT<#LOG do. NB. limit log size
-  t=. markinput E. LOG
-  if. 5>+/t do. break. end.   NB. keep some divs
-  drop=. '<div class="er">...</div>'
-  LOG=: (1{t#i.#t)}.LOG NB. drop up to next div
- end.
- LOG=: drop,LOG
-)
-
 NB. get/post data - headers end with LF,LF
 NB. post has Content-Length: bytes after the header
 NB. listen and read until a complete request is ready
-NB.! headers have CRLF but we do toJ in srecv
+NB. headers have CRLF but we do toJ in srecv
 NB.  the toJ in srecv in toJ might be a mistake
 getdata=: 3 : 0
 while. 1 do.
@@ -668,7 +656,7 @@ end.
 'BIND invalid' assert +./(<BIND)='any';'localhost'
 'LHOK invalid' assert +./LHOK=0 1
 'PASS invalid' assert 2=3!:0 PASS
-if. _1=nc<'USER' do. USER=: '' end. NB.! not in JUM config
+if. _1=nc<'USER' do. USER=: '' end. NB. not in JUM config
 'USER invalid' assert 2=3!:0 USER
 PASS=: ,PASS
 USER=: ,USER
@@ -682,7 +670,6 @@ NB. FD_CLOEXEC prevents inheritance by new tasks (JUM startask)
 init=: 3 : 0
 ''init y
 :
-if. 2~:3!:0 y do. y=. '' end. NB.! installer jhs.bat has old style call
 'already initialized' assert _1=nc<'SKLISTEN'
 IFJHS_z_=: 1
 x jhscfg y

@@ -2,8 +2,7 @@ NB. J HTTP Server - jijx app
 coclass'jijxh'
 coinsert'jhs'
 
-NB.! kludge override formtmpl
-NB.! get rid of jdo hidden so ours will work
+NB.override formtmpl to remove hidden jdo so ours will work
 formtmpl=: 0 : 0 -. LF
 <form id="j" name="j" method="post" action="<LOCALE>">
 <input type="hidden" name="jlocale" value="<LOCALE>">
@@ -41,8 +40,8 @@ LOGN_jhs_=: ''
 
 NB. y is J prompt - '' '   ' or '      '
 NB. called at start of input
-NB. ff/safari/chrome collapse empty div (hence bull)
-NB. empty prompt is &bull; which is removed if present from input
+NB. ff/safari/chrome collapse empty div (hence JZWSPU8)
+NB. empty prompt is JZWSPU8; which is removed from input
 urlresponse=: 3 : 0
 if. 0=#y do.
  t=. JZWSPU8
@@ -51,8 +50,7 @@ else.
  t=. (6*#y)$'&nbsp;'
  PROMPT_jhs_=: y
 end.
-NB.! t=. '<div id="prompt" class="log">',t,'</div>'
-d=. LOGN NB.! ,t
+d=. LOGN
 uplog''
 if. METHOD-:'post' do.
  jhrajax d
@@ -61,12 +59,9 @@ else.
 end.
 )
 
-NB.! iphone=. 0<#('iPhone'ss t),'iPod'ss t=. gethv_jhs_ 'User-Agent:'
+NB. iphone=. 0<#('iPhone'ss t),'iPod'ss t=. gethv_jhs_ 'User-Agent:'
 
 NB. refresh response - not jajax
-NB. mac safari input text ghost images are pushed up by ajax output
-NB. kludge fix of margin:3px fixes the problem
-NB. the margin requires reducing width to 99 to avoid hitting the right edge
 create=: 3 : 0
 'jijxh' jhr 'LOG FILE RECALLS';LOG;(jshortname jnew'');recalls''
 )
@@ -74,7 +69,6 @@ create=: 3 : 0
 recalls=: 3 : 0
 t=.INPUT
 t=.(0~:;#each t-.each' ')#t
-NB.! (;t,each LF)rplc '"';'\"';'\';'\\'
 (;t,each LF)rplc '&';'&amp;';'"';'&quot;';'<';'&lt;';'>';'&gt;'
 )
 

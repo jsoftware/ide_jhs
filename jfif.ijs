@@ -193,7 +193,7 @@ if. 1 e. msk # par do.
 end.
 new=. hdr ,each msk # ndx }. each new
 nms=. new (msk # ind) } nms
-jhostpath each nms
+jpath each nms
 )
 fullproject=: fullname @ extijp
 fullscript=: (0: < #) # fullname @ extijs

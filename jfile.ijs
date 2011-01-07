@@ -66,7 +66,7 @@ end.
 )
 
 shorts=: 3 : 0
-buttons 'paths';(2#<{."1 UserFolders_j_,SystemFolders_j_),<' '
+buttons 'paths';(2#<({."1 UserFolders_j_,SystemFolders_j_)-.<'Demos'),<' '
 )
 
 ev_paths_click=: 3 : 0
@@ -196,7 +196,7 @@ for_f. t do. 1!:55 f end.
 create '&nbsp;';jpath'~temp\'
 )
 
-NB.! folder dblclick??? not a problem, but is puzzling
+NB. folder dblclick??? not a problem, but is puzzling
 
 ev_files_dblclick=: ev_edit_click
 
@@ -205,7 +205,7 @@ f=. jgetfile F=. jpath getv'path'
 if. f-:'' do.
  create'No file selected to edit.';F
 else.
- require'~addons/ide/jhs/jijs.ijs' NB.! ensure loaded
+ require'~addons/ide/jhs/jijs.ijs' NB. ensure loaded
  create_jijs_ F
 end.
 )
