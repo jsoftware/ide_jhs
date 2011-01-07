@@ -33,6 +33,7 @@ CSSCORE=: 0 : 0
 *.jhml:visited{color:black;}
 *.jhsel{background-color:buttonface;font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
 body{margin:0;}
+div{padding-left:2px;}
 .menu li{
  display:block;white-space:nowrap;
  padding:2px;color:#000;background:#eee;
