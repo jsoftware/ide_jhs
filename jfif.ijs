@@ -412,7 +412,7 @@ FIFTYPE=: ''
 FIFFILTERS=: 0 2$''
 FIFWHAT=: ''
 
-FIFXHELP=: <jpath '~help\index\'
+FIFXHELP=: '' NB. not used in JHS
 FIFMAXSIZE=: IFWINNT { 30000 200000
 FIFMAXLINE=: 256
 
@@ -1285,24 +1285,7 @@ else.
 end.
 )
 fiff_selecttype_button=: wptype_run
-j=. <;._2 (0 : 0)
-All
-CAMN        /camn
-Dictionary  /dictionary
-Index       /index
-J for C     /jforc
-Learning J  /learning
-PCRE        /pcre
-Phrases     /phrases
-Primer      /primer
-Release     /release
-User        /user
-)
-
-ndx=. j i.&> '/'
-ids=. deb each ndx {.each j
-fls=. (jpath '~help/')&, each (ndx+1) }.each j
-FIFHELPS=: ids,.fls
+FIFHELPS=: '' NB. not suppported in JHS
 FIFH=: 0 : 0
 pc fifh;
 xywh 3 7 37 11;cc s0 static ss_right;cn "Fi&nd what:";
