@@ -61,6 +61,7 @@ end.
 
 NB. refresh response - not jajax
 create=: 3 : 0
+uplog''
 'jijx' jhr 'LOG RECALLS';LOG;recalls''
 )
 

@@ -63,6 +63,7 @@ NB. iphone=. 0<#('iPhone'ss t),'iPod'ss t=. gethv_jhs_ 'User-Agent:'
 
 NB. refresh response - not jajax
 create=: 3 : 0
+uplog''
 'jijxh' jhr 'LOG FILE RECALLS';LOG;(jshortname jnew'');recalls''
 )
 
