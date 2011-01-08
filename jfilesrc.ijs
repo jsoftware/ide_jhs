@@ -39,6 +39,8 @@ elseif. '.css'-:_4{.y do.
  htmlresponse d,~gsrchead rplc '<TYPE>';'text/css';'<LENGTH>';":#d
 elseif. '.jpg'-:_4{.y do.
  htmlresponse d,~gsrchead rplc '<TYPE>';'image/jpeg';'<LENGTH>';":#d
+elseif. '.gif'-:_4{.y do.
+ htmlresponse d,~gsrchead rplc '<TYPE>';'image/gif';'<LENGTH>';":#d
 elseif. 1 do.
  smoutput 'will not get file ',y
 end. 
