@@ -217,6 +217,7 @@ function ev_body_unload()
 function ro(only)
 {
  readonly= only;
+ ce.setAttribute("contenteditable",readonly?"false":"true");
  ce.style.background= readonly?"#eee":"#fff";
 }
 
@@ -436,6 +437,7 @@ function redo()
 }
 
 // ctrl+x comes here for ff, but not for others
+// could be simplified - readonly has contenteditable false
 function ev_ijs_keypress()
 {
  var k=jevev.keyCode;c=jevev.charCode;ctrl=jevev.ctrlKey;
@@ -543,6 +545,7 @@ function ev_replforward_click()
 }
 
 // undo z 90, redo y 89
+// could be simplified - readonly has contenteditable false
 function ev_ijs_keydown()
 {
  var c=jevev.keyCode,ctrl=jevev.ctrlKey,shift=jevev.shiftKey;
