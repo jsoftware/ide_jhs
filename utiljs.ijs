@@ -38,11 +38,9 @@ function jscdo(mid,sid,type) // click handler for mid [sid] type
 function jsetcaret(id,collapse)
 {
  var p= jbyid(id);
+ if(null==p)return;
  if (window.getSelection)
- {
-  try{window.getSelection().collapse(p,collapse);}
-  catch(e){;} // FF can fail?
- }
+  window.getSelection().collapse(p,collapse);
  else
  {
   var tst= document.selection.createRange();

@@ -64,7 +64,7 @@ try. d=. 1!:1<y catch.
  d=. ''
  rep=. 'WARNING: file read failed!'
 end.
-(jgetfile y) jhr Q__=: 'FILENAME REP DATA';y;rep;jhfroma d
+(jgetfile y) jhr 'FILENAME REP DATA';y;rep;jhfroma d
 )
 
 jev_get=: 3 : 0
