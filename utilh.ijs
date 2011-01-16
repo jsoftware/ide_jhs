@@ -105,11 +105,11 @@ NB. app did not send response - send one now
 jbad=: 3 : 0
 smoutput'*** response not sent for ',URL
 if. METHOD-:'get' do.
- htmlresponse html404 NB. URL not found
- smoutput'*** html404 (URL not found) sent'
+ htmlresponse html409 NB. conflict - not working properly - reload
+ smoutput'*** html409 Conflict'
 else.
- htmlresponse html204 NB. leave page as is
- smoutput'*** html402 (leave page as is) sent'
+ htmlresponse html409 NB. conflict - not working properly - reload
+ smoutput'*** html409 Conflict'
 end.  
 )
 
@@ -251,12 +251,16 @@ Expires: 0
 
 )
 
-NB. html 404 response (url not found)
-html404=: toCRLF 0 : 0
-HTTP/1.1 404 OK
+NB. html 409 Conflict response (J code didn't provide result)
+html409=: toCRLF 0 : 0
+HTTP/1.1 409 Conflict
 Content-Type: text/html; charset=utf-8
 
-
+get/post request failed<br>
+response code 409<br>
+application did not produce result<br>
+try browsing to url again<br>
+additional info in jijx
 )
 
 NB. html for jajax response

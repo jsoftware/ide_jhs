@@ -358,7 +358,14 @@ function jdor()
    if(403==rq.status)
     location="jlogin";
    else
-    alert("ajax request failed - see jijx");
+   {
+    var t="ajax request failed\n"
+    t+=   "response code "+rq.status+"\n";
+    t+=   "application did not produce result\n"
+    t+=   "try browsing to url again\n"
+    t+=   "additional info in jijx"
+    alert(t);
+   }
   }
   else
   {
