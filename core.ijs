@@ -492,6 +492,11 @@ end.
 '_',(>coname''),'_',LF,;|.r,each LF
 )
 
+open_z_=: 3 : 0
+t=. ('jijs?mid=open&path=',jpath y)jhref_jhs_ y
+jhtml'<div contenteditable="false">',t,'</div>'
+)
+
 jlogoff_z_=: 3 : 'htmlresponse_jhs_ hajaxlogoff_jhs_'
 
 jshowconsole_z_=: 3 : 0
