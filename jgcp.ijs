@@ -19,10 +19,11 @@ i.0 0
 )
 
 NB. x... nouns
-xline=:  '&cht=lc&chs=300x100&chds=<MIN>,<MAX>&chxt=x,y&chxr=1,<MIN>,<MAX>'
-xlinexy=:'&cht=lxy&chs=300x100&chds=<MIN>,<MAX>&chxt=x,y&chxr=0,<YMIN>,<YMAX>|1,<MIN>,<MAX>'
-xpie=:   '&cht=p&chs=300x100&chds=0,<MAX>'
-xpie3=:  '&cht=p3&chs=300x100&chds=0,<MAX>'
+xline=:       '&cht=lc&chs=300x100&chds=<MIN>,<MAX>&chxt=y,x&chxr=1,<MIN>,<MAX>'
+xlinexy=:     '&cht=lxy&chs=300x100&chds=<MIN>,<MAX>&chxt=x,y&chxr=0,<YMIN>,<YMAX>|1,<MIN>,<MAX>'
+xsticklinexy=:'&cht=lxy&chs=300x100&chds=<MIN>,<MAX>&chxt=y,x&chxr=0,<YMIN>,<YMAX>|1,<MIN>,<MAX>&chm=v,FF0000,0,::1,2'
+xpie=:        '&cht=p&chs=300x100&chds=0,<MAX>'
+xpie3=:       '&cht=p3&chs=300x100&chds=0,<MAX>'
 
 NB. process blank delimited commands
 gcc=: 3 : 0 
@@ -128,6 +129,8 @@ plot_z_=: 3 : 0
 ''plot y
 :
 t=. <;._2 x,';'
+stickline=. 'stick,line'-:>{.t
+t=. stickline}.t
 b=. (<'title ')=6{.each t
 if. 0~:#;(-.b)#t do. smoutput 'unsupported plot options: ',x end.
 if. (32=3!:0 y)*.2~:#$>y do.
@@ -136,6 +139,7 @@ if. (32=3!:0 y)*.2~:#$>y do.
 end.
 t=. 6}.;b#t
 type=. >(32=3!:0 y){'xline';'xlinexy'
+if. stickline *. type-:'xlinexy' do. type=. 'xsticklinexy' end.
 ('reset ',type,' &chtt=',t,' show')jgc y
 )
 

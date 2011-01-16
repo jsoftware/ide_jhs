@@ -106,7 +106,6 @@ t=.(0~:;#each t-.each' ')#t
 )
 
 labopen=: 3 : 0
-if. 1+.   -.(<'jlab')e.conl 0 do. jhtml labmsg end.
 require__'~addons/labs/labs/lab.ijs'
 smselout_jijs_=: smfocus_jijs_=: [ NB.! allow introcourse to run
 labinit_jlab_ y{LABFILES
@@ -168,10 +167,7 @@ Labs are not always current with the latest system
 and may run with minor errors that can be ignored.
 )
 
-NB. here because no labs to select
-ev_lab_click=: 3 : 0
-smoutput labmsg
-)
+ev_lab_click=: 3 : 'smoutput labmsg' NB. no labs to select
 
 debugmenu=: 3 : 0
 t=.   'debug'    jhmg'debug';1;8
