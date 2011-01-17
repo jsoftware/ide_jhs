@@ -3,7 +3,7 @@ coinsert'jhs'
 
 HBS=: 0 : 0
 jhma''
- jhjmlink''
+jhjmlink''
 jhmz''
 'find'   jhb'Find'
 'what'   jhtext FIFWHAT;10

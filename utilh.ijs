@@ -288,18 +288,7 @@ NB. jhbs body builders
 NB. HBS is LF delimited list of sentences
 NB. jhbs returns list of sentence results
 jhbs=: 3 : 0
-
 t=. <;._2 y
-
-NB.! move jhjmlink'' from end to front
-NB.! if desired, should be edited in each app and this code removed
-d=. <'jhjmlink'''''
-b=. d=t-.each' '
-if. +/b do.
- t=. (-.b)#t NB. remove jhjmlink from end
- t=. ({.t),d,}.t
-end.
-
 t=. ;jhbsex each t
 i=. 1 i.~'</div><div id="jresizeb">'E.t
 if. i~:#t do.

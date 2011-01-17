@@ -4,13 +4,13 @@ coinsert'jhs'
 
 HBS=: 0 : 0
 jhma''
+jhjmlink''
+actionmenu''
+debugmenu''
 'studio'   jhmg'studio';1;10
  'jdemo'   jhml'demos'
  'advance' jhmab'advance a^'
  'lab'     jhmab'labs...'
- actionmenu''
- debugmenu''
- jhjmlink''
 jhmz''
 
 'scratchdlg' jhdivadlg''

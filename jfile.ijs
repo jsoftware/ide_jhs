@@ -4,6 +4,7 @@ coinsert'jhs'
 
 HBS=: 0 : 0
 jhma''
+jhjmlink''
 'action'    jhmg'action';1;12
  'edit'     jhmab'edit'
  'del'      jhmab'delete'
@@ -14,7 +15,6 @@ jhma''
  'rename'   jhmab'rename as...'
  'newfi'    jhmab'new file'
  'newfo'    jhmab'new folder'
- jhjmlink''
 jhmz''
 
 'renamedlg'     jhdivadlg''

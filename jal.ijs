@@ -5,7 +5,7 @@ require'pacman'
 
 HBS=: 0 : 0
 jhma''
- jhjmlink''
+jhjmlink''
 jhmz''
 
 'J Active Library - pacman - Package Manager<br/>'

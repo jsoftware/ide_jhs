@@ -6,17 +6,17 @@ demo=: 'jdemo.ijs'
 NB. html document body built from HBS sentences
 HBS=: 0 : 0
 jhma''
- 'demo'     jhmg'demo';1;12
-  'jdemo1'  jhml'1 Roll submit'
-  'jdemo2'  jhml'2 Roll ajax'
-  'jdemo3'  jhml'3 Flip ajax'
-  'jdemo4'  jhml'4 Controls/JS/CSS'
-  'jdemo5'  jhml'5 Plot'
-  'jdemo6'  jhml'6 Grid editor'
-  'jdemo7'  jhml'7 Table layout'
-  'jdemo8'  jhml'8 Dynamic resize'
-  'jdemo9'  jhml'9 Multiple frames'
- jhjmlink''
+jhjmlink''
+'demo'     jhmg'demo';1;12
+ 'jdemo1'  jhml'1 Roll submit'
+ 'jdemo2'  jhml'2 Roll ajax'
+ 'jdemo3'  jhml'3 Flip ajax'
+ 'jdemo4'  jhml'4 Controls/JS/CSS'
+ 'jdemo5'  jhml'5 Plot'
+ 'jdemo6'  jhml'6 Grid editor'
+ 'jdemo7'  jhml'7 Table layout'
+ 'jdemo8'  jhml'8 Dynamic resize'
+ 'jdemo9'  jhml'9 Multiple frames'
 jhmz''
 jhh1'JHS demos'
 desc

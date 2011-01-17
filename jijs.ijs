@@ -4,6 +4,7 @@ coinsert'jhs'
 
 HBS=: 0 : 0
 jhma''
+jhjmlink''
 'action'    jhmg'action';1;10
  'runw'     jhmab'run         r^'
  'runwd'    jhmab'run display'
@@ -15,7 +16,6 @@ jhma''
  'ro'       jhmab'readonly    t^'
  'color'    jhmab'color       c^'
  'number'   jhmab'number      n^'
-jhjmlink''
 jhmz''
 
 'saveasdlg'    jhdivadlg''
