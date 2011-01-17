@@ -19,8 +19,8 @@ i.0 0
 )
 
 NB. x... nouns
-xline=:       '&cht=lc&chs=300x100&chds=<MIN>,<MAX>&chxt=y,x&chxr=1,<MIN>,<MAX>'
-xlinexy=:     '&cht=lxy&chs=300x100&chds=<MIN>,<MAX>&chxt=x,y&chxr=0,<YMIN>,<YMAX>|1,<MIN>,<MAX>'
+xline=:       '&cht=lc&chs=300x100&chds=<MIN>,<MAX>&chxt=x,y&chxr=1,<MIN>,<MAX>'
+xlinexy=:     '&cht=lxy&chs=300x100&chds=<MIN>,<MAX>&chxt=y,x&chxr=0,<YMIN>,<YMAX>|1,<MIN>,<MAX>'
 xsticklinexy=:'&cht=lxy&chs=300x100&chds=<MIN>,<MAX>&chxt=y,x&chxr=0,<YMIN>,<YMAX>|1,<MIN>,<MAX>&chm=v,FF0000,0,::1,2'
 xpie=:        '&cht=p&chs=300x100&chds=0,<MAX>'
 xpie3=:       '&cht=p3&chs=300x100&chds=0,<MAX>'
@@ -55,13 +55,16 @@ if. ''-:y do.
 elseif. 2=3!:0 y do.
  smoutput help
 elseif. 32=3!:0 y do.
- NB. assume dead simple 1 2 3;4 5 6
+ NB. assume dead simple 1 2 3;4 5 6[;x2;y2...]
  gcdata=: y
- GCFDATA=: }:'e:',;',',~each enc each scale each gcdata
+ gcdata=:  ;(;(-:#gcdata)#<0 1)#gcdata
+ GCYMIN=: '_-'charsub":<./gcdata
+ GCYMAX=: '_-'charsub":>./gcdata
+ gcdata=: scale gcdata
+ gcdata=: ,(scale each(;(-:#y)#<1 0)#y),.((#gcdata)$((#gcdata)%(-:#y)){.1)<;.1 gcdata
+ GCFDATA=: }:'e:',;',',~each enc each gcdata
  GCMIN=: '_-'charsub":<./,>{.y
  GCMAX=: '_-'charsub":>./,>{.y
- GCYMIN=: '_-'charsub":<./,>{:y
- GCYMAX=: '_-'charsub":>./,>{:y
 elseif. 1 do.
  gcdata=: >(1=$$y){y;,:y
  GCFDATA=: }:'e:',,',',~"1 enc "1 scale gcdata
@@ -133,8 +136,13 @@ stickline=. 'stick,line'-:>{.t
 t=. stickline}.t
 b=. (<'title ')=6{.each t
 if. 0~:#;(-.b)#t do. smoutput 'unsupported plot options: ',x end.
-if. (32=3!:0 y)*.2~:#$>y do.
- smoutput 'unsupported data complexity'
+if. (32=3!:0 y)*.2=#y do.
+ r=.$&.>y
+ if. 1 2-:;$&.>r do.
+  y=.,(,.(>#&.>1{y)#0{y),.><"1&.>1{y
+ end.
+elseif. (32=3!:0 y)*.2~:#$>y do.
+  smoutput 'unsupported data complexity'
  y=. >{:y
 end.
 t=. 6}.;b#t
