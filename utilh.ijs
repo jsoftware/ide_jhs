@@ -219,6 +219,7 @@ NB. BODY  - body
 hrtemplate=: toCRLF 0 : 0
 HTTP/1.1 200 OK
 Content-Type: text/html; charset=utf-8
+Connection: close
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -236,7 +237,7 @@ NB. html 204 response (leave the page as is)
 html204=: toCRLF 0 : 0
 HTTP/1.1 204 OK
 Content-Type: text/html; charset=utf-8
-
+Connection: close
 
 )
 
@@ -247,6 +248,7 @@ Location: <NEWURL>
 Cache-Control: no-cache
 Pragma: no-cache
 Expires: 0
+Connection: close
 
 
 )
@@ -255,6 +257,8 @@ NB. html 409 Conflict response (J code didn't provide result)
 html409=: toCRLF 0 : 0
 HTTP/1.1 409 Conflict
 Content-Type: text/html; charset=utf-8
+Connection: close
+
 
 get/post request failed<br>
 response code 409<br>
@@ -278,7 +282,7 @@ hajaxlogoff=: toCRLF 0 : 0
 HTTP/1.1 403 OK
 Content-Type: text/html; charset=utf-8
 Cache-Control: no-cache
-Content-Length: 
+Content-Length: <LENGTH>
 Set-Cookie: jcookie=0
 
 )

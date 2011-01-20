@@ -605,7 +605,7 @@ var tmenuid= 0;
 function jmenublur(ev)
 {
  if(tmenuid!=0) clearTimeout(tmenuid);
- tmenuid= setTimeout(jmenuhide,250)
+ tmenuid= setTimeout(jmenuhide,500)
  return true;
 }
 

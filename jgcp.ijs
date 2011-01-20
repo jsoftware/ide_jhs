@@ -184,7 +184,7 @@ chart?... in a url defines a plot.
 The url from GC returns a png file.
    jgcx'' NB. see examples
 
-jgc maganges chart state.
+jgc manages chart state.
    jgc 10?10  NB. numeric list or table
    jgc ''     NB. leaves data as is
    jgc 'help' NB. displays this help
