@@ -285,7 +285,7 @@ The JHS jconsole window diplays useful information.
 It can kill the JHS task in the event of problems.
 In windows you can edit the icon properties to run minimized.
 You can hide the window if you wish:
-<pre class="jcode">   jshowconsole 0 NB. 0 to hide and 1 to show</pre>
+<pre class="jcode">   jshowconsole_j_ 0 NB. hide/show 0/1</pre>
 
 <a name="gtk"><h1>GTK</h1>
 A desktop application front end, built with GTK, is also

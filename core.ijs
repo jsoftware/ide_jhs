@@ -499,13 +499,6 @@ jhtml'<div contenteditable="false">',t,'</div>'
 
 jlogoff_z_=: 3 : 'htmlresponse_jhs_ hajaxlogoff_jhs_'
 
-jshowconsole_z_=: 3 : 0
-if. -.IFWIN do. 'only supported in windows' return. end.
-t=. {.>'kernel32.dll GetConsoleWindow x'cd''
-'user32.dll ShowWindow n x i'cd t;(0-:y){5 0
-i.0 0
-)
-
 jlog_z_=: 3 : 0
 if. y-:0 do.
  LOGFULL_jhs_=: LOGFULL_jhs_,LOG_jhs_
