@@ -20,7 +20,7 @@ startjum (65002+i.3);'localhost';'jumjum'
 )
 
 startjum_jsoftware=: 3 : 0
-ssend_jhs_=: jum_send_jhs_
+ssend_jhs_=: jum_ssend_jhs_
 logappx'start'
 startjum (50248+123*i.60);'www.jsoftware.com';'jumjum'
 )
