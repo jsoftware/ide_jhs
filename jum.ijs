@@ -20,8 +20,35 @@ startjum (65002+i.3);'localhost';'jumjum'
 )
 
 startjum_jsoftware=: 3 : 0
+ssend_jhs_=: jum_send_jhs_
+logappx'start'
 startjum (50248+123*i.60);'www.jsoftware.com';'jumjum'
 )
+
+NB. jsoftware jum crashes occasionlly
+NB. logging extra ssend info might help catch the bug
+jum_ssend_jhs_=: 3 : 0
+logapp'send: ',":#y
+z=. sdselect_jsocket_ '';SKSERVER;'';PC_SENDTIMEOUT
+logapp'send z: ',;',',each":each z
+'send not ready' serror SKSERVER~:>2{z
+if. PC_SENDSLOW do.
+ 6!:3[0.2
+ y=. (100<.#y){.y NB. 100 byte chunks with delay
+end.
+logapp'before sdsend'
+try.
+ 'c r'=. y sdsend_jsocket_ SKSERVER,0
+catch.
+ logapp'send catch!!!!!!!!!'
+end.
+logapp'after sdsend'
+('send error: ',":c) serror 0~:c
+'send no data' serror 0=r
+logapp'send c r: ',":c,r
+r NB. bytes sent
+)
+
 
 SIGCONT=: >('Darwin'-:UNAME){'18';'19'
 
