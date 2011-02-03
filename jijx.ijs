@@ -158,7 +158,7 @@ action ".getv'jsid'
 
 labmsg=: 0 : 0
 No labs installed.
-Do pacman studio/labs install and try again.
+Do pacman labs/labs install and try again.
 
 Labs are interactive tutorials and are a good
 way to learn J.
