@@ -34,8 +34,8 @@ function ev_flip_click(){jdoajax(["t1","t2"],"");}
 function ajax(ts)
 {
  if(2!=ts.length)alert("wrong number of ajax results");
- jbyid("t1").value=jtfromh(ts[0]);
- jbyid("t2").value=jtfromh(ts[1]);
+ jbyid("t1").value=ts[0];
+ jbyid("t2").value=ts[1];
 }
 )
 

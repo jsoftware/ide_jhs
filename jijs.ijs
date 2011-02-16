@@ -571,7 +571,7 @@ function ajax(ts)
  {
   jhide("saveasdlg");
   jbyid("filenamed").innerHTML=ts[1];
-  jbyid("filename").value=jtfromh(ts[1]);
+  jbyid("filename").value=ts[1];
  }
 }
 
