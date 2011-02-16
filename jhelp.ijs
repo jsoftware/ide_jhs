@@ -163,7 +163,8 @@ software packages
 
 <span class="h">jijx action menu</span>
 A script defines action menu items and the verbs to run
-when clicked. The following is a sample file you can
+when clicked. Shortcuts wqe are hardwired to the first
+3 added menu items. The following is a sample file you can
 define and then modify:
 <pre class="jcode">
 *** script ~user/projects/ja/ja.ijs ***
