@@ -425,7 +425,9 @@ function keyup(ev)
  var c=e.keyCode;
  if(e.ctrlKey)
  {
-  if(c==190){jscset();return false;}
+  if(c==188){jscdo(e.shiftKey?"less":"comma",undefined,"ctrl");return false;}
+  if(c==190){jscdo(e.shiftKey?"larger":"dot",undefined,"ctrl");return false;}
+  if(c==191){jscdo(e.shiftKey?"query":"slash",undefined,"ctrl");return false;}
   if(c==38&&e.shiftKey&&'function'==typeof uarrow){uarrow();return false;}
   if(c==40&&e.shiftKey&&'function'==typeof darrow){darrow();return false;}
  }

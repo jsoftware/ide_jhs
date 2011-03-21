@@ -106,9 +106,22 @@ For example, esc j links to jijx page.<br/>
 Menu items document shortcuts on the right.<br/>
 esc 1 sets focus on menu.<br/>
 esc 2 sets focus to page default.<br/>
-You can user ctrl+. instead of esc.
+<br/>
+Control shortcuts are supported for ,./<>? as they
+less likely conflict with the browser.<br/><br/>
 
-<br><br><span class="h">jijx</span>
+jijx ctrl+. is lab advance.<br/><br/>
+
+Example of a custom jijx handler:
+<pre>   ev_comma_ctrl_jijx_=: 3 : 'i.5'</pre>
+
+Other pages require J and Javascript handlers. For example,
+<pre>
+ev_comma_ctrl=: 3 : 'i.5'
+function ev_comma_ctrl(){jdoajax([]);}
+</pre>
+
+<span class="h">jijx</span>
 Run J sentences (ctrl+shift+&uarr;&darr; recall)
 
 <br><br><span class="h">jijxh</span>

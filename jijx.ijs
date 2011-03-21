@@ -7,9 +7,9 @@ jhma''
 jhjmlink''
 actionmenu''
 debugmenu''
-'studio'   jhmg'studio';1;10
+'studio'   jhmg'studio';1;14
  'jdemo'   jhml'demos'
- 'advance' jhmab'advance a^'
+ 'advance' jhmab'advance ctrl+.'
  'lab'     jhmab'labs...'
 jhmz''
 
@@ -196,6 +196,14 @@ ev_dbstepout_click=: 3 : 'try. dbstepout'''' catch. end. i.0 0'
 ev_dbcutback_click=: 3 : 'try. dbcutback'''' catch. end. i.0 0'
 ev_dbrun_click=:     3 : 'try. dbrun''''     catch. end. i.0 0'
 
+NB. default ctrl+,./ handlers
+ev_comma_ctrl=:  3 : 'i.0 0'
+ev_dot_ctrl=:    ev_advance_click
+ev_slash_ctrl=:  3 : 'i.0 0'
+ev_less_ctrl=:   3 : 'i.0 0'
+ev_larger_ctrl=: 3 : 'i.0 0'
+ev_query_ctrl=:  3 : 'i.0 0'
+
 CSS=: 0 : 0
 *{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
 form{margin-top:0;margin-bottom:0;}
@@ -281,7 +289,6 @@ function ev_2_shortcut()
  jsetcaret("prompt",1);
 }
 function ev_3_shortcut(){jbyid("scratcharea").focus();}
-function ev_a_shortcut(){jscdo("advance");}
 
 function newpline(t)
 {
@@ -432,6 +439,12 @@ function ev_dboff_click()    {jdoajax([]);}
 function ev_s_shortcut(){jscdo("dbstep");}
 function ev_i_shortcut(){jscdo("dbstepin");}
 function ev_o_shortcut(){jscdo("dbstepout");}
+function ev_comma_ctrl(){jdoajax([]);}
+function ev_dot_ctrl(){jdoajax([]);}
+function ev_slash_ctrl(){jdoajax([]);}
+function ev_less_ctrl(){jdoajax([]);}
+function ev_larger_ctrl(){jdoajax([]);}
+function ev_query_ctrl(){jdoajax([]);}
 )
 
 

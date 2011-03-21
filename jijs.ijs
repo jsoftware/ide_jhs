@@ -371,7 +371,7 @@ function number()
   for(i=0;i<t.length;++i)
    lines+='\n'==t[i];
   t="";
-  for(i=0;i<lines;++i)t+=i+"&nbsp;<br>";
+  for(i=1;i<=lines;++i)t+=i+"&nbsp;<br>";
   jbyid("num").innerHTML=t;
   jshow("num");
  }
