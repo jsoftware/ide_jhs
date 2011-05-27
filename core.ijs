@@ -662,6 +662,37 @@ if. #USERNAME do. USER=:USERNAME end.
 BIND=: >(BIND-:'any'){'127.0.0.1';''
 )
 
+NB. [config_file] initbroadway USERNAME
+initbroadway=: 3 : 0
+''initbroadway y
+:
+NB. 'already initialized' assert _1=nc<'SKLISTEN'
+IFJHS_z_=: 0
+x jhscfg y
+PATH=: jpath'~addons/ide/jhs/'
+IP=: >2{sdgethostbyname_jsocket_ >1{sdgethostname_jsocket_''
+LOCALHOST=: >2{sdgethostbyname_jsocket_'localhost'
+logappfile=: <jpath'~user/.applog.txt' NB. username
+logjhsfile=: <jpath'~user/.jhslog.txt' NB. username
+NB. logjhs'start'
+config''
+SETCOOKIE=: 0
+NVDEBUG=: 0 NB. 1 shows NV on each input
+INPUT=: '' NB. <'   '
+NB. leading &nbsp; for Chrome delete all
+LOG=: jmarka,'<div>&nbsp;<font style="font-size:20px; color:red;" >J Http Server</font></div>',jmarkz
+LOGN=: ''
+LOGFULL=: ''
+PDFOUTPUT=: ''
+DATAS=: ''
+PS=: '/'
+cfgfile=. jpath'~addons/ide/jhs/config/jhs_default.ijs'
+SKSERVER_jhs_=: _1
+boxdraw_j_ PC_BOXDRAW
+cookie=: ''
+if. 3=GTKVER_j_ do. load 'gtkide' end.
+)
+
 NB. [config_file] init USERNAME
 NB. SO_REUSEADDR allows server to kill/exit and restart immediately
 NB. FD_CLOEXEC prevents inheritance by new tasks (JUM startask)
