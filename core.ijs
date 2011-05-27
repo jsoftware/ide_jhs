@@ -831,6 +831,8 @@ z=. >2{sdgethostbyname_jsocket_ >1{sdgethostname_jsocket_''
 if. ('127.0.'-:6{.z) +. '192.168.'-:8{.z do.
  if. UNAME-:'Linux' do.
   a=. , 2!:0 ::_1: 'wget -q -O - http://www.check-ip.eu'
+ elseif. UNAME-:'Darwin' do.
+  a=. , 2!:0 ::_1: 'curl -s -o - http://www.check-ip.eu'
  elseif. UNAME-:'Win' do.
   a=. , spawn_jtask_ '"',(jpath '~tools/ftp/wget.exe'),'" -q -O - http://www.check-ip.eu'
  elseif. do.
