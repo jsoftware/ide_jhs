@@ -670,7 +670,7 @@ NB. 'already initialized' assert _1=nc<'SKLISTEN'
 IFJHS_z_=: 0
 x jhscfg y
 PATH=: jpath'~addons/ide/jhs/'
-IP=: >2{sdgethostbyname_jsocket_ >1{sdgethostname_jsocket_''
+IP=: getexternalip''
 LOCALHOST=: >2{sdgethostbyname_jsocket_'localhost'
 logappfile=: <jpath'~user/.applog.txt' NB. username
 logjhsfile=: <jpath'~user/.jhslog.txt' NB. username
@@ -703,7 +703,7 @@ init=: 3 : 0
 IFJHS_z_=: 1
 x jhscfg y
 PATH=: jpath'~addons/ide/jhs/'
-IP=: >2{sdgethostbyname_jsocket_ >1{sdgethostname_jsocket_''
+IP=: getexternalip''
 LOCALHOST=: >2{sdgethostbyname_jsocket_'localhost'
 logappfile=: <jpath'~user/.applog.txt' NB. username
 logjhsfile=: <jpath'~user/.jhslog.txt' NB. username
@@ -824,4 +824,21 @@ Accept-Encoding: gzip, deflate
 User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; WOW64; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; .NET CLR 3.5.30729; .NET CLR 3.0.30729)
 Connection: Keep-Alive
 
+)
+
+getexternalip=: 3 : 0
+z=. >2{sdgethostbyname_jsocket_ >1{sdgethostname_jsocket_''
+if. ('127.0.'-:6{.z) +. '192.168.'-:8{.z do.
+ if. UNAME-:'Linux' do.
+  a=. , 2!:0 ::_1: 'wget -q -O - http://www.check-ip.eu'
+ elseif. UNAME-:'Win' do.
+  a=. , spawn_jtask_ '"',(jpath '~tools/ftp/wget.exe'),'" -q -O - http://www.check-ip.eu'
+ elseif. do.
+  a=. ,_1
+ end.
+ if. 1 e. r=. '<h2>Your IP is: <strong>' E. a do.
+  z=. ({.~ i.&'<') (24+{.I.r)}.a
+ end.
+end.
+z
 )
