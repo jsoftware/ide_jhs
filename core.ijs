@@ -667,7 +667,7 @@ initbroadway=: 3 : 0
 ''initbroadway y
 :
 NB. 'already initialized' assert _1=nc<'SKLISTEN'
-IFJHS_z_=: 0
+IFBROADWAY_z_=: 1
 x jhscfg y
 PATH=: jpath'~addons/ide/jhs/'
 IP=: getexternalip''
