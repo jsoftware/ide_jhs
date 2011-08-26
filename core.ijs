@@ -828,18 +828,18 @@ Connection: Keep-Alive
 
 getexternalip=: 3 : 0
 z=. >2{sdgethostbyname_jsocket_ >1{sdgethostname_jsocket_''
-if. ('127.0.'-:6{.z) +. '192.168.'-:8{.z do.
+if. ('255.255.255.255'-:z) +. ('127.0.'-:6{.z) +. '192.168.'-:8{.z do.
  if. UNAME-:'Linux' do.
-  a=. , 2!:0 ::_1: 'wget -q -O - http://www.check-ip.eu'
+  a=. , 2!:0 ::_1: 'wget -q -O - http://www.checkip.org/'
  elseif. UNAME-:'Darwin' do.
-  a=. , 2!:0 ::_1: 'curl -s -o - http://www.check-ip.eu'
+  a=. , 2!:0 ::_1: 'curl -s -o - http://www.checkip.org/'
  elseif. UNAME-:'Win' do.
-  a=. , spawn_jtask_ '"',(jpath '~tools/ftp/wget.exe'),'" -q -O - http://www.check-ip.eu'
+  a=. , spawn_jtask_ '"',(jpath '~tools/ftp/wget.exe'),'" -q -O - http://www.checkip.org/'
  elseif. do.
   a=. ,_1
  end.
- if. 1 e. r=. '<h2>Your IP is: <strong>' E. a do.
-  z=. ({.~ i.&'<') (24+{.I.r)}.a
+ if. 1 e. r=. '<h1>Your IP Address:' E. a do.
+   z=. ({.~ i.&'<') (}.~ [: >: i.&'>') (20+{.I.r)}.a
  end.
 end.
 z
