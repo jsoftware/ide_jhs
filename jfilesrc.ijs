@@ -33,7 +33,7 @@ elseif. '.htc'-:_4{.y do.
  'text/x-component'gsrcf y
 elseif. '.swf'-:_4{.y do.
  'application/x-shockwave-flash'gsrcf y
-elseif. ('.htm'-:_4{.y)+.'.html'-:5{.y do.
+elseif. ('.htm'-:_4{.y)+.'.html'-:_5{.y do.
  htmlresponse d
 elseif. '.css'-:_4{.y do.
  htmlresponse d,~gsrchead rplc '<TYPE>';'text/css';'<LENGTH>';":#d
