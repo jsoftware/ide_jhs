@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.91'
+VERSION=: '1.0.92'
 
 FILES=: 0 : 0
 history.txt
@@ -21,13 +21,18 @@ jfilesrc.ijs
 jgcp.ijs
 jhelp.ijs
 jijs.ijs
+jijscd.ijs
+jijsipad.ijs
 jijx.ijs
 jijxh.ijs
 jijxm.ijs
+jijxipad.ijs
 jlogin.ijs
 jum.ijs
+sp.ijs
 utilh.ijs
 utiljs.ijs
+grep.exe
 config/jhs_default.ijs
 demo/jdemo1.ijs
 demo/jdemo2.ijs
