@@ -112,8 +112,8 @@ sp 0
 )
 
 sp=: 3 : 0
-smoutput 'load: ',spf y
-load__ spf y
+smoutput 'load: ',t=.spf y
+load__ t
 )
 
 NB. spf file - shortname longname number
