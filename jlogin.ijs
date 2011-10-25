@@ -1,6 +1,8 @@
 coclass'jlogin'
 coinsert'jhs'
 
+GOURL=: 'jijx'
+
 HBS=: 0 : 0
 login
 '<MSG>'
@@ -8,14 +10,6 @@ jhtablea
  jhtr 'user: '    ;'user' jhtext'';15
  jhtr 'password: ';'pass' jhpassword'';15
 jhtablez
-'jijx' jhradio'jijx';1;'radg'
-jhbr
-'jijxm'jhradio'jijxm';0;'radg'
-' (minimum - no javascript)'
-jhbr
-'jijxh'jhradio'jijxh';0;'radg'
-' (handheld - iPhone etc)'
-jhbr
 'login'jhb'login'
 loggedin
 )
@@ -33,7 +27,8 @@ close all browser windows or run sentence<br/>
 )
 
 goto=: 3 : 0
-".'jev_get_',(getv'radg'),'_'''''
+NB. ".'jev_get_',(getv'radg'),'_'''''
+".'jev_get_',GOURL,'_'''''
 )
 
 NB. login not allowed after LIMIT failures
@@ -65,6 +60,9 @@ NB. called from core input if cookie required and not set
 NB. valid login   - goes to page and does SetCookie
 NB. invalid login - shows page with setcookie expires and no-cache
 create=: 3 : 0
+if. (-.URL-:'jlogin')*.-.URL-:'favicon.ico' do. GOURL=: URL end.
+NB.override formtmpl to stay on users desired url
+formtmpl=: formtmpl_jhs_ rplc '<LOCALE>';GOURL
 p=. PASS
 if. -.p-:PASS do. count=: 0 end. NB. new password resets count
 u=. getv'user'
@@ -80,7 +78,7 @@ else.
  b=. (jhbs HBS)hrplc 'MSG';getmessage''
  t=. hrtemplate rplc (CRLF,CRLF);CRLF,'Cache-Control: no-cache',CRLF,CRLF
  t=. t rplc (LF,LF);LF,'Set-Cookie: ',expires,LF,LF
- htmlresponse t hrplc'TITLE CSS JS BODY';'jlogin';(css CSS);(js JS);b
+ htmlresponse Q__=: t hrplc'TITLE CSS JS BODY';GOURL;(css CSS);(js JS);b
 end.
 )
 

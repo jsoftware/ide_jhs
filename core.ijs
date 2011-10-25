@@ -141,6 +141,7 @@ is unigue and name is the same across a set of radio buttons.
 9. autocomplete and wrap fail validator - but are necessary
 )
 
+JIJSAPP=: 'jijs' NB. 'jijsm' for simple jijs editor
 PROMPT=: '   '
 JZWSPU8=: 226 128 139{a. NB. empty prompt kludge - &#8203; \200B
 OKURL=: '' NB. URL allowed without login
@@ -252,10 +253,11 @@ while. 1 do.
   return.
 
  catch.
-  t=. 13!:12''
-  if. -.'|recv timeout:'-:14{.t do. NB. recv timeout expected
-   smoutput '*** getdata error: ',t
-  end.
+  NB. t=. 13!:12''
+  NB. if. -.'|recv timeout:'-:14{.t do. NB. recv timeout expected
+  NB.  smoutput '*** getdata error: ',t
+  NB. end.
+  NB. recv errors expected and are not displayed
   logapp 'getdata error: ',t
  end.
 end.
@@ -493,7 +495,7 @@ end.
 )
 
 open_z_=: 3 : 0
-t=. ('jijs?mid=open&path=',jpath y)jhref_jhs_ y
+t=. (JIJSAPP_jhs_,'?mid=open&path=',jpath y)jhref_jhs_ y
 jhtml'<div contenteditable="false">',t,'</div>'
 )
 
@@ -542,7 +544,7 @@ Start a web browser on this machine and enter URL:
 remoteaccess=: 0 : 0
 
 Access from another machine:
-   http://<IPAD>:<PORT>/jijx
+   http://SERVER_IP_ADDRESS:<PORT>/jijx
 )
 
 console_failed=: 0 : 0
@@ -703,7 +705,7 @@ init=: 3 : 0
 IFJHS_z_=: 1
 x jhscfg y
 PATH=: jpath'~addons/ide/jhs/'
-IP=: getexternalip''
+NB. IP=: getexternalip''
 LOCALHOST=: >2{sdgethostbyname_jsocket_'localhost'
 logappfile=: <jpath'~user/.applog.txt' NB. username
 logjhsfile=: <jpath'~user/.jhslog.txt' NB. username
@@ -729,7 +731,7 @@ sdcheck_jsocket_ r
 sdcheck_jsocket_ sdlisten_jsocket_ SKLISTEN,1
 SKSERVER_jhs_=: _1
 boxdraw_j_ PC_BOXDRAW
-remote=. >(BIND-:''){'';remoteaccess hrplc 'IPAD PORT';IP;":PORT
+remote=. >(BIND-:''){'';remoteaccess hrplc 'PORT';":PORT
 smoutput console_welcome hrplc 'PORT LOCAL REMOTE';(":PORT);LOCALHOST;remote
 startupjhs''
 if. 0~:#PASS do.
@@ -746,6 +748,7 @@ NB. load rest of JHS core
 load__'~addons/ide/jhs/utilh.ijs'
 load__'~addons/ide/jhs/utiljs.ijs'
 load__'~addons/ide/jhs/jgcp.ijs'
+load__'~addons/ide/jhs/sp.ijs'
 
 stub=: 3 : 0
 'jev_get y[load''~addons/ide/jhs/',y,'.ijs'''
@@ -763,6 +766,8 @@ jev_get_jlogin_=:  3 : (stub'jlogin')
 jev_get_jijxh_=:   3 : (stub'jijxh')
 jev_get_jijxm_=:   3 : (stub'jijxm')
 jev_get_jfilesrc_=:3 : (stub'jfilesrc')
+jev_get_jijxipad_=:3 : (stub'jijxipad')
+jev_get_jijsipad_=:3 : (stub'jijsipad')
 
 NB. simple wget with sockets - used to get google charts png
 

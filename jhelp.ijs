@@ -20,6 +20,7 @@ jumps=: 0 : 0
 <a href="#j7">J701</a>&nbsp;
 <a href="#jhs">JHS</a>&nbsp;
 <a href="#ide">IDE</a>&nbsp;
+<a href="#sp">SP</a>&nbsp;
 <a href="#gui">GUI</a>&nbsp;
 <a href="#jum">JUM</a>&nbsp;
 <a href="#config">Config</a>&nbsp;
@@ -132,6 +133,9 @@ Simple browser support that requires only basic html.
 jijx and related pages require advanced browser features
 (javascript, style sheets, contenteditable divs, ajax, ...).
 
+<br><br><span class="h">jijxipad</span>
+iPad and similar support.
+
 <br><br><span class="h">jfile</span>
 Browse files for editing, etc.
 Adequate for simple IDE use and for a remote server.
@@ -139,7 +143,13 @@ For more complicated requirements use host facilities such
 as Windows Explorer or Mac Finder.
 
 <br><br><span class="h">jijs</span>
-edit file (ctrl+z/y for undo/redo)
+edit file in textarea
+
+<br><br><span class="h">jijsce</span>
+edit file in contenteditable div
+
+<br><br><span class="h">jijsipad</span>
+iPad and similar edit file 
 
 <br><br><span class="h">jfif</span>
 find in files
@@ -197,12 +207,6 @@ ja_bbb=: 3 : 0
 ***
 </pre>
 
-<span class="h">jijx project manager</span>
-A jijx action menu item can provide a simple project manager.
-A menu click can load/reload project files.
-This can be especially helpful if an external editor
-is used.<br><br>
-
 <span class="h">jijx debug menu</span>
 With debug on (jijx menu debug), execution suspends at an error or a stop.
 <pre class="jcode">
@@ -229,6 +233,14 @@ menu debug|step - step to line 1
 menu debug|run - run to error or stop
 (runs to end as no error or stops)
 </pre>
+
+<a name="sp"><h1>Simple Project</h1>
+
+Noun sphelp has information on Simple Project utilities.<br><br>
+
+Using JHS locally, you might prefer desktop tools rather than the apps provided by JHS. For example, your desktop editor (notepad, gedit, emacs,..), OS file mangager (windows explorer, finder, ...), and grep might be better than JHS jijs, jfile, and jfif.<br><br>
+
+SP utilities make it easier to use your desktop tools.
 
 <a name="gui"><h1>GUI</h1>
 

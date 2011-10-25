@@ -483,6 +483,13 @@ t=. '<a href="<REF>" class="jhref" ><VALUE></a>'
 t hrplc 'REF VALUE';x;y
 )
 
+NB.* jhrefx*id jhrefx text - <a href="id" target="_blank">text</a>
+jhrefx_jhs_=: 4 : 0
+y=. boxopen y
+t=. '<a href="<REF>" target="_blank" class="jhref" ><VALUE></a>'
+t hrplc 'REF VALUE';x;y
+)
+
 NB.* jhselect*id jhselect texts;size;selected - selection control
 jhselect=: 4 : 0
 'values size sel'=. y
@@ -546,7 +553,7 @@ jhjmlink=: 3 : 0
 t=.   'jmlink'jhmg'link';1;8
 t=. t,'jijx'  jhml'jijx     j^'
 t=. t,'jfile' jhml'jfile    f^'
-t=. t,'jijs'  jhml'jijs     J^'
+t=. t,JIJSAPP jhml'jijs     J^'
 t=. t,'jfif'  jhml'jfif     F^'
 t=. t,'jal'   jhml'jal'
 t=. t,'jhelp' jhml'jhelp'

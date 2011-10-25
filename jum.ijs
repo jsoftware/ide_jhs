@@ -31,7 +31,7 @@ logappx'start'
 startjum (50248+123*i.60);'www.jsoftware.com';'jumjum'
 )
 
-NB. jsoftware jum crashes occasionlly
+NB. jsoftware jum crashes occasionally
 NB. logging extra ssend info might help catch the bug
 jum_ssend_jhs_=: 3 : 0
 logapp'send: ',":#y
@@ -72,7 +72,7 @@ jhtablez
 'kill'   jhb'kill'
 'start'  jhb'start'
 'go'     jhb'go'
-'broadway'  jhb'broadway'
+NB.! 'broadway'  jhb'broadway'
 jhhr
 jhh1'create your account'
 jhtablea
