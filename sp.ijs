@@ -173,12 +173,13 @@ seebox_jhs_ SPDN numit SPDFILES
 
 speinit=: 3 : 0
 assert. 2=#y['must give windows;unix editors'
-SPEFILES=: y
+EDITX =: >IFUNIX{y
 (;LF,~each y) fwrite spspef
 i.0 0
 )
 
 spe=: 3 : 0
+assert. 0~:#EDITX['no editor set - speinit required'
 smoutput f=. spf y
 fork_jtask_ EDITX,' "',(jpath f),'"',EDITXTAIL
 )
@@ -321,7 +322,9 @@ if. _1=nc<'initialized' do.
  SPGFOLDER  =: '~system' 
  SPXFILE    =: ''
  SEMN       =: 0
- EDITX      =: >IFUNIX{<;._2 cfile spspef
+ t=. cfile spspef
+ t=. >(''-:t){t;2#LF
+ EDITX      =: >IFUNIX{<;._2 t
  EDITXTAIL  =: >IFUNIX{'';' &'
  GREPX      =: >IFUNIX{GREPPERS
 end.
