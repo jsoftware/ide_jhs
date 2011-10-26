@@ -97,8 +97,10 @@ if. (jmarka-:jmarkc{.y)*.jmarkz-:(-jmarkc){.}:y do. y return. end.
 jhfroma y
 )
 
+bad=: 1{a. NB. this character hangs the browser
+
 jhfroma=: 3 : 0
-y rplc '<';'&lt;';'>';'&gt;';'&';'&amp;';'"';'&quot;';CRLF;'<br>';LF;'<br>';CR;'<br>';' ';'&nbsp;'
+y rplc '<';'&lt;';'>';'&gt;';'&';'&amp;';'"';'&quot;';CRLF;'<br>';LF;'<br>';CR;'<br>';' ';'&nbsp;';bad;''
 )
 
 NB. app did not send response - send one now
