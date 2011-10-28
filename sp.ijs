@@ -18,22 +18,24 @@ sprunner__=: 3 : '0!:111 y'
 sphelp__=: 0 : 0
 spoverview has additional info
 
-fr - file reference - filename or spr shortname or spr/spd/spg number
+fr - filename or shortname from spr/spd/spg
 
  spinit fr    set project and load (carried over sessions)
- sp 0         load project file
  ctrl+,       load project file
+ sp''         load project file
  sp fr        load file
  spr''        list recent files (carried over sessions)
- spf fr       fullpath
+ spf fr       filename
  spd folder   *.ijs in folder 
 
  speinit win;unix set editors (carried over sessions)
  speinit '"C:\Program Files (x86)\gedit\bin\gedit.exe"';'gedit'
  spe fr       edit file
+ spe''        edit project file
 
  spg'pattern'[;'folder']
- spg''        grep with last pattern and folder
+ spg''        last pattern and last folder
+ spg'abcd'    abcd pattern and last folder
  spgf fr      pattern lines in file
 
  spxinit fr   set script for managed execution
@@ -55,14 +57,11 @@ each with a few J sentences.
    ctrl+,               NB. run project file
    spf '~temp/b.ijs'    NB. add to recent files
    spr ''               NB. list recent files
-   spf 1000
-   spf 'abc'
-   sp  1000
-   sp  'abc'
+   spf 'b'
    spd '~temp'          NB. list ijs files in folder
-   sp  number           NB. load file from spd number
+   sp  fr               NB. add to recent files and load
 
-spr shortname and spr/spd/spg number ease file references.
+spr/spd/spg shortname ease file references.
 
 You can start the editor outside of J or from J.
 speinit sets Windows and Unix editor that J will start.
@@ -71,8 +70,7 @@ Example assumes you have installed gedit in Windows.
 NB.speinit win;unix
    speinit '"C:\Program Files (x86)\gedit\bin\gedit.exe"';'gedit'
    spe 0                NB. edit project file
-   spe 'a'              NB. edit spr shortname a 
-   spe number           NB. spr/spd/spg number
+   spe 'a'              NB. edit shortname a 
 
 Search folder ijs files with grep.
 Windows grep.exe is included in JHS package for convenience.
@@ -90,9 +88,6 @@ Create ~temp/c.ijs with NB. lines, =: lines, and multiline defns
 )
 
 MAXRECENT=: 20 NB. max recent files 
-RECENTN  =: 1000
-SPDN     =: 2000
-GREPN    =: 3000
 sprecentf=: '~temp/sp/recent.txt'
 spspf    =: '~temp/sp/sp.txt'
 spspef   =: '~temp/sp/editor.txt'
@@ -108,7 +103,7 @@ t=. spf y
 assert. (fexist t)['must exist'
 SPFILE=: t
 t fwrite spspf
-sp 0
+sp t
 )
 
 sp=: 3 : 0
@@ -116,43 +111,27 @@ smoutput 'load: ',t=.spf y
 load__ t
 )
 
-NB. spf file - shortname longname number
 spf=: 3 : 0
-if. 0-:y do. spf SPFILE return. end.
-if. 1-:y do. spf SPXFILE return. end.
-if. 4=3!:0 y do.
- assert. 1=#y['not single file number'
- if. (y>:SPDN)*.(y-SPDN)<#SPDFILES do.
-  f=. >(y-SPDN){SPDFILES
- elseif. (y>:GREPN)*.(y-GREPN)<#GREPFILES do.
-  f=. >(y-GREPN){GREPFILES
- elseif. (y>:RECENTN)*.(y-RECENTN)<#RECENTFILES do.
-  f=. >(y-RECENTN){RECENTFILES
- end.
- spf f
- return.
-end.
-assert. 2=3!:0 y['not string'
+if. ''-:y do. SPFILE return. end.
 if. +./y e.'~/.' do.
  assert. ('.ijs'-:_4{.y)['not ijs'
- t=. RECENTFILES
+ t=. SPFILES
  t=. ~.t,~<y
  t=. (MAXRECENT<.#t){.t
- RECENTFILES=: t
+ SPFILES=: t
  (;t,each LF) fwrite sprecentf
  y
+ return.
+end.
+t=. (~.(<SPFILE),(<SPXFILE),SPFILES,SPDFILES,SPGFILES)-.<''
+c=. (shorts t)=<,y
+if. 0=+/c do.
+ assert. 0['not found'
+elseif. 1<+/c do.
+ smoutput ;LF,each c#t
+ assert. 0['multiples'
 elseif. 1 do.
- s=. shorts RECENTFILES
- b=. RECENTFILES
- c=. s=<,y
- if. 0=+/c do.
-  assert. 0['shortname not found'
- elseif. 1=+/c do.
-  ,>c#b
- elseif. 1 do.
-  smoutput seebox_jhs_     (c#":each<"0 i.#t),.(c#s),.c#b
-  assert. 0['multiples'
- end.
+ ,>c#t
 end.
 )
 
@@ -162,13 +141,13 @@ _4}.each(>:>t i:each '/')}.each t
 )
 
 spr=: 3 : 0
-seebox_jhs_ RECENTN numit RECENTFILES
+seebox_jhs_ (shorts SPFILES),.SPFILES
 )
 
 spd=: 3 : 0
 if. ''-:y do. SPDFILES=: '' return. end.
 SPDFILES=: (<'/',~y),each (>:#jpath y)}.each {."1 dirtree y,'/*.ijs'
-seebox_jhs_ SPDN numit SPDFILES
+seebox_jhs_ SPDFILES,.~shorts SPDFILES
 )
 
 speinit=: 3 : 0
@@ -198,6 +177,7 @@ if. -.''-:y do.
 end.
 p=. jpath SPGFOLDER
 g=. GREPX,' ',x,' "',SPGPATTERN,'" "',p,'"'
+h=. 'grep ',x,' "',SPGPATTERN,'" "',SPGFOLDER,'"'
 try. NB. unix grep finding nothing gives interface error???
  t=. <;._2 spawn_jtask_ g
 catch.
@@ -211,14 +191,13 @@ t=. (0~:c)#t
 c=. (0~:c)#c
 s=. \:c
 t=. s{t
-GREPFILES=: t,~each'/',~each<SPGFOLDER
+SPGFILES=: t,~each'/',~each<SPGFOLDER
 c=. s{c
-c=. <"1' ',.~2j0":,.c
-t=. c,each t
-('grep',(#GREPX)}.g),LF,seebox_jhs_ GREPN numit t
+t=. (":each<"0 c),.(shorts SPGFILES),.SPGFILES
+h,LF,seebox_jhs_ t
 )
 
-spgf=: 3 : 0"0
+spgf=: 3 : 0
 f=. spf y
 t=. GREPX,' -n -F "',SPGPATTERN,'" "',(jpath f),'"'
 t=. <;.2 spawn_jtask_ t
@@ -226,10 +205,6 @@ i=. t i. each ':'
 c=. 4j0":each ".each i{.each t
 t=. (>:>i)}.each t
 f,LF,;c,each,' ',each t
-)
-
-numit=: 4 : 0
-(":each<"0 x+i.#y),.(shorts y),.y
 )
 
 spxinit=: 3 : 0
@@ -315,9 +290,9 @@ try.
 if. _1=nc<'initialized' do. 
  1!:5 :: [ <jpath '~temp/sp'
  SPFILE     =: cfile spspf
- RECENTFILES=: <;._2 cfile sprecentf
+ SPFILES    =: <;._2 cfile sprecentf
  SPDFILES   =: ''
- GREPFILES  =: ''
+ SPGFILES  =: ''
  SPGPATTERN =: ''
  SPGFOLDER  =: '~system' 
  SPXFILE    =: ''

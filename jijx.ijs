@@ -197,7 +197,7 @@ ev_dbcutback_click=: 3 : 'try. dbcutback'''' catch. end. i.0 0'
 ev_dbrun_click=:     3 : 'try. dbrun''''     catch. end. i.0 0'
 
 NB. default ctrl+,./ handlers
-ev_comma_ctrl =: 3 : 'sp__ 0'
+ev_comma_ctrl =: 3 : 'sp__'''''
 ev_dot_ctrl   =: ev_advance_click
 ev_slash_ctrl =: 3 : 'spx__'''''
 ev_less_ctrl  =: 3 : 'i.0 0'
