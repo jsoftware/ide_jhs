@@ -69,7 +69,7 @@ Example assumes you have installed gedit in Windows.
 
 NB.speinit win;unix
    speinit '"C:\Program Files (x86)\gedit\bin\gedit.exe"';'gedit'
-   spe 0                NB. edit project file
+   spe ''               NB. edit project file
    spe 'a'              NB. edit shortname a 
 
 Search folder ijs files with grep.
