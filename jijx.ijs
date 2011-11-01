@@ -112,14 +112,14 @@ labinit_jlab_ y{LABFILES
 )
 
 ev_advance_click=: 3 : 0
-if. (<'jlab')e.conl 0 do.  labnext_jlab_'' else. labopen 0 end.
+if. (<'jlab')e.conl 0 do.  labnext_jlab_'' else. smoutput 'No lab open. Do studio|labs...' end.
 )
 
 ev_labrun_click=: 3 : 0
 labopen ".getv'jsid'
 )
 
-jloadnoun__=: 0!:100
+jloadnoun_z_=: 0!:100
 
 ev_scratchr_click=: 3 : 0
 try. jloadnoun__ getv'scratcharea' catch. 13!:12'' end.
@@ -199,9 +199,9 @@ ev_dbrun_click=:     3 : 'try. dbrun''''     catch. end. i.0 0'
 NB. default ctrl+,./ handlers
 ev_comma_ctrl =: 3 : 'sp__'''''
 ev_dot_ctrl   =: ev_advance_click
-ev_slash_ctrl =: 3 : 'spx__'''''
-ev_less_ctrl  =: 3 : 'i.0 0'
-ev_larger_ctrl=: 3 : 'i.0 0'
+ev_slash_ctrl =: 3 : 'i.0 0'
+ev_less_ctrl=: 3 : 'i.0 0'
+ev_larger_ctrl  =: 3 : 'spx__'''''
 ev_query_ctrl =: 3 : 'i.0 0'
 
 CSS=: 0 : 0

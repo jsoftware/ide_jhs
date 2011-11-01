@@ -248,7 +248,7 @@ gcx=: 3 : '0!:101 examples'
 
 NB. viewmat stuff - subset borrowed from viewmat addon
 
-viewmat__=: 3 : 0
+viewmat_z_=: 3 : 0
 t=. (<6#16)#: each <"0>1{''getvm_jgcp_ y
 t=. '#',each t{each <'0123456789abcdef'
 a=. (<'<font ',LF,'style="background-color:'),each t

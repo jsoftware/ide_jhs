@@ -2,20 +2,20 @@ NB. simple project manager and related tools
 
 coclass'jsp'
 
-spinit__   =: spinit_jsp_
-sp__       =: sp_jsp_
-spf__      =: spf_jsp_
-spr__      =: spr_jsp_
-spd__      =: spd_jsp_
-speinit__  =: speinit_jsp_
-spe__      =: spe_jsp_
-spg__      =: spg_jsp_
-spgf__     =: spgf_jsp_
-spx__      =: spx_jsp_
-spxinit__  =: spxinit_jsp_
-sprunner__=: 3 : '0!:111 y'
+spinit_z_  =: spinit_jsp_
+sp_z_      =: sp_jsp_
+spf_z_     =: spf_jsp_
+spr_z_     =: spr_jsp_
+spd_z_     =: spd_jsp_
+speinit_z_ =: speinit_jsp_
+spe_z_     =: spe_jsp_
+spg_z_     =: spg_jsp_
+spgf_z_    =: spgf_jsp_
+spx_z_     =: spx_jsp_
+spxinit_z_ =: spxinit_jsp_
+sprunner_z_=: 3 : '0!:111 y'
 
-sphelp__=: 0 : 0
+sphelp_z_=: 0 : 0
 spoverview has additional info
 
 fr - filename or shortname from spr/spd/spg
@@ -39,13 +39,13 @@ fr - filename or shortname from spr/spd/spg
  spgf fr      pattern lines in file
 
  spxinit fr   set script for managed execution
- ctrl+/       advance
+ ctrl+shift+. advance
  spx''        advance
  spx 0        status
  spx n        run line n
 )
 
-spoverview__=: 0 : 0
+spoverview_z_=: 0 : 0
 sp utilties loaded when JHS starts (~addons/ide/jhs/sp.ijs).
 
 Following shows how to use sp by example.
@@ -80,10 +80,9 @@ NB.spg pattern;folder
    spgf fr              NB. search for pattern in file
 
 Managed execution of a script can be useful.
-Create ~temp/c.ijs with NB. lines, =: lines, and multiline defns
-
+Create ~temp/c.ijs with NB. lines, =: lines, and multiline defns.
    spxinit'~temp/c.ijs' NB. set script for managed execution
-   ctrl+/               NB. execute next
+   ctrl+shift+.         NB. execute next
    spx 0                NB. status
 )
 
@@ -230,7 +229,7 @@ end.
 if. (0~:$$y)+.-.(3!:0[4) e. 1 4 do. smoutput 'arg not index' return. end.
 SEMN=: y
 label_top.
-if. SEMN>:#SEM do. 'end of script' return. end.
+if. SEMN>#SEM do. 'end of script' return. end.
 ndx=. <:SEMN
 d=. >ndx{SEM
 if. 0=#d-.' ' do. SEMN=:>:SEMN goto_top. end.
@@ -257,7 +256,7 @@ if. (<'=.')e.;:t do.
 end.
 sprunner__ d
 SEMN=: 2+ndx
-SEMN=: SEMN-SEMN>#SEM
+NB.! SEMN=: SEMN-SEMN>#SEM
 if. (SEMN<#SEMN)*.'NB.'-:3{.dlb d do. goto_top. end.
 i.0 0
 )

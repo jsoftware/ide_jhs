@@ -521,7 +521,7 @@ smoutput jmarka_jhs_,y,jmarkz_jhs_
 i.0 0
 )
 
-jbd__=: 3 : '9!:7[y{Boxes_j_' NB. select boxdraw (PC_BOXDRAW)
+jbd_z_=: 3 : '9!:7[y{Boxes_j_' NB. select boxdraw (PC_BOXDRAW)
 
 NB. toggle jfe behavior
 jfe=: 3 : 0
