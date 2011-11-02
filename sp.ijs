@@ -226,28 +226,26 @@ if. -.d-:SEM do.
  smoutput'file changed!'
  return.
 end.
-if. (0~:$$y)+.-.(3!:0[4) e. 1 4 do. smoutput 'arg not index' return. end.
+if. (0~:$$y)+.-.(3!:0[4) e. 1 4 do. smoutput 'not integer line number' return. end.
+if. y<0 do. smoutput 'not valid line number' return. end.
 SEMN=: y
 label_top.
 if. SEMN>#SEM do. 'end of script' return. end.
 ndx=. <:SEMN
 d=. >ndx{SEM
 if. 0=#d-.' ' do. SEMN=:>:SEMN goto_top. end.
-
 NB. collect : lines
 if. iscolon d do.
  c=. (dltb each ndx}.SEM) i. <,')'
  d=. ;LF,~each (ndx+i.>:c){SEM
  ndx=. ndx+c
 end.
-
 NB. collect comment lines
 if. isnb d do.
  c=. (>(3{.each dltb each ndx}.SEM) -: each <'NB.')i.0
  d=. ;LF,~each (ndx+i.c){SEM
  ndx=. ndx+<:c
 end.
-
 NB.! kludge to convert =. tp =:
 i=. d i.LF
 t=. i{.d
