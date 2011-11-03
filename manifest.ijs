@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.102'
+VERSION=: '1.0.103'
 
 FILES=: 0 : 0
 history.txt
@@ -32,7 +32,6 @@ jum.ijs
 sp.ijs
 utilh.ijs
 utiljs.ijs
-grep.exe
 config/jhs_default.ijs
 demo/jdemo1.ijs
 demo/jdemo2.ijs
@@ -43,6 +42,10 @@ demo/jdemo6.ijs
 demo/jdemo7.ijs
 demo/jdemo8.ijs
 demo/jdemo9.ijs
+)
+
+FILESWIN=: 0 : 0
+grep.exe
 )
 
 RELEASE=: 'j701'
