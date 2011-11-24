@@ -14,36 +14,30 @@ Content-Type: <TYPE>
 
 )
 
-NB. y is file name (no path) - x is content-type
-NB. for files only allowed from ~addons/ide/jhs/src
 gsrcf=: 4 : 0
-('will not get file ',y)assert'/'e.y
-d=. 1!:1<jpath '~addons/ide/jhs/src/',y
-htmlresponse d,~gsrchead rplc '<TYPE>';x;'<LENGTH>';":#d
+htmlresponse y,~gsrchead rplc '<TYPE>';x;'<LENGTH>';":#y
 )
 
+NB. serves .htm .js etc pages from anywhere
+NB. possible security issues! careful on allowing other suffixes!
+NB. ~root kludge to read gnuplot js files from /usr/share/gnuplot/gnuplot/4.4/js/
 jev_get=: 3 : 0
-y=. jpath y
+if. y-:'favicon.ico' do. favicon 0 return. end.
+y=. jpath(5*'~root/'-:6{.y)}.y
 d=. fread y
-if. y-:'favicon.ico' do.
- favicon 0 
-elseif. '.js'-:_3{.y do.
- 'application/x-javascript'gsrcf y
-elseif. '.htc'-:_4{.y do.
- 'text/x-component'gsrcf y
-elseif. '.swf'-:_4{.y do.
- 'application/x-shockwave-flash'gsrcf y
-elseif. ('.htm'-:_4{.y)+.'.html'-:_5{.y do.
- htmlresponse d
+if. ('.htm'-:_4{.y)+.'.html'-:_5{.y do. htmlresponse d return. end.
+if. '.js'-:_3{.y do.
+ t=. 'application/x-javascript'
 elseif. '.css'-:_4{.y do.
- htmlresponse d,~gsrchead rplc '<TYPE>';'text/css';'<LENGTH>';":#d
+ t=. 'text/css'
 elseif. '.jpg'-:_4{.y do.
- htmlresponse d,~gsrchead rplc '<TYPE>';'image/jpeg';'<LENGTH>';":#d
+ t=. 'image/jpeg'
 elseif. '.gif'-:_4{.y do.
- htmlresponse d,~gsrchead rplc '<TYPE>';'image/gif';'<LENGTH>';":#d
-elseif. 1 do.
- smoutput 'will not get file ',y
-end. 
+ t=. 'image/gif'
+elseif. '.png'-:_4{.y do.
+ t=. 'image/png'
+elseif. 1 do. smoutput 'will not get file ',y return. end.
+t gsrcf d
 )
 
 favicon=: 3 : 0

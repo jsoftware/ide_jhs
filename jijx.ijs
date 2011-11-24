@@ -260,8 +260,31 @@ function updatelog(t)
  setTimeout(scrollz,1); // allow doc to update
 }
 
+// eval js sentences in ajax result
+function jseval(s)
+{
+ var i,j,a,z,q;
+ a= "<!-- j html output a --><!-- jseval ";
+ z= " --><!-- j html output z -->"
+
+while(0!=s.length)
+{
+  i= s.indexOf(a);
+  if(-1!=i)
+  {
+   i+= a.length;
+   j= s.indexOf(z);
+   q= s.substring(i,j);
+   try{eval(q);}catch(e){alert(e+"\n"+q);}
+   s= s.substring(j+z.length);
+  }
+  else
+   s= "";
+ }
+}
+
 // ajax update window with new output
-function ajax(ts){updatelog(ts[0]);}
+function ajax(ts){ jseval(ts[0]); updatelog(ts[0]);}
 
 // add sentence to log unless blank or same as last
 function addrecall(a)

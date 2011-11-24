@@ -20,6 +20,7 @@ jumps=: 0 : 0
 <a href="#j7">J701</a>&nbsp;
 <a href="#jhs">JHS</a>&nbsp;
 <a href="#ide">IDE</a>&nbsp;
+<a href="#plot">Plot</a>&nbsp;
 <a href="#sp">SP</a>&nbsp;
 <a href="#gui">GUI</a>&nbsp;
 <a href="#jum">JUM</a>&nbsp;
@@ -233,6 +234,46 @@ menu debug|step - step to line 1
 menu debug|run - run to error or stop
 (runs to end as no error or stops)
 </pre>
+
+<a name="plot"><h1>Plot</h1>
+
+Plots can be created with gnuplot that draw on an html canvas element. In some cases gnuplot may be preferable to Google Charts as described in the IDE section.<br><br>
+
+You need to have gnuplot installed on your machine.
+Learn about gnuplot and how to install it at 
+<a href="http://www.gnuplot.info">www.gnuplot.info</a>.<br><br>
+
+Windows install:<br>
+Follow links and download gp444win32.zip from sourceforge and unzip in your home folder.<br><br>
+
+Linux install:<br>
+Modern linux distributions can install gnuplot with (or equivalent):
+<pre class="jcode">
+...$ sudo apt-get install gnuplot
+</pre>
+
+Mac install:<br>
+Follow links and download gnuplot-4.4.4.tar.gz from sourceforge, unpack, and do:
+<pre class="jcode">
+...$ cd ..../gnuplot-4.4.4
+...$ ./configure
+...$ make
+...$ make check
+...$ make install 
+</pre>
+
+
+
+
+
+
+The following shows how to use gnuplot.
+<pre class="jcode">
+   load'~addons/ide/jhs/gnuplot.ijs'
+   load'~addons/ide/jhs/gpdemo.ijs'
+   gpdemo
+</pre>
+
 
 <a name="sp"><h1>Simple Project</h1>
 
