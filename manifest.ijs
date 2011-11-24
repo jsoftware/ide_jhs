@@ -6,12 +6,14 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.104'
+VERSION=: '1.0.105
 
 FILES=: 0 : 0
 history.txt
 readme.txt
 core.ijs
+gnuplot.ijs
+gpdemo.ijs
 jal.ijs
 jbinfo.ijs
 jdemo.ijs
