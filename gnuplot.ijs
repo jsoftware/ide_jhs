@@ -7,7 +7,7 @@ t=. '~temp/gnuplot'
 1!:5 :: 0:<jpath t
 DAT=: t,'/gnu.dat'
 PLT=: t,'/gnu.plt'
-GNU=: t,'/gnu.html'
+GNU=: t,'/gnu'
 GNUX=:t,'/gnux.html'
 ferase PLT;DAT;GNU;GNUX
 SETBUFFER=: ''
@@ -71,7 +71,6 @@ else.
 end.
 )
 
-NB. gnuplot      - main plotting function
 gpplot=: 3 : 0
 dat=. y
 cmd=. WITH
@@ -95,13 +94,16 @@ else.
     assert. 0
    end.
 end.
-
 if. -.fexist GNU do. smoutput 'error: ',GNU,' not created' assert. 0 end.
 if. 0=#fread GNU do. smoutput 'error: ',GNU,' empty' assert. 0 end.
+GNU
+)
 
-NB. massage gnu.htm
+NB. create ~temp/gnuplot/y.ijs with massaged canvas output
+gpcanvas=: 3 : 0
 d=. fread GNU
 d fwrite GNUX NB. unmodified gnuplot output
+d=. toJ d
 a=. 1 i.~ '<canvas id="gnuplot_canvas"' E. d
 z=. 9+1 i.~ '</canvas>' E. d
 n=. 1 i.~ '<table class="mbleft">' E. d
@@ -113,8 +115,8 @@ if. *./(#d)>a,z,n do.
 else.
  d=. d rplc '<table class="plot">';'<table>'   NB. remove class so canvas at left
 end.
-f=. '~temp/gnuplot','/',TITLE,'.html'
-d fwrite f
+f=. '~temp/gnuplot','/',y,'.html'
+('<!DOCTYPE html>',LF,d) fwrite f
 f
 )
 
@@ -174,9 +176,7 @@ gpsetcanvas=: 3 : 0
 assert. (4-:3!:0 wh)*.2=#wh
 wh=. (":wh)rplc' ';','
 mousing=. (1-:mousing)#'mousing'
-NB.! gpset 'term canvas standalone size ',wh,' ',mousing,' title "',title,'" jsdir "/',PATH,'/binary/share/gnuplot/4.4/js/"'
 gpset 'term canvas standalone size ',wh,' ',mousing,' title "',title,'" jsdir "/',JSDIR,'"'
-TITLE=: title
 i.0 0
 )
 
@@ -200,26 +200,13 @@ dat=. '-' (I. dat='_') } dat
 dat fwrite y
 )
 
-NB. TARGET gplink ULR
-NB. 'plot' gplink gplot 10?10
-gplink=: 4 : 0
-t=. '<a href="<REF>" target="<TARGET>" class="jhref" ><TEXT></a>'
-t=. t rplc'<TARGET>';x;'<REF>';y;'<TEXT>';y
-jhtml'<div contenteditable="false">',t,'</div>'
-)
-
-gpshow=: 4 : 0
-jhtml '<!-- jseval window.open("',y,'","',x,'"); -->'
-)
-
 gpplot_z_      =: gpplot_jgnuplot_
 gpinit_z_      =: gpinit_jgnuplot_
 gpset_z_       =: gpset_jgnuplot_
 gpsetcanvas_z_ =: gpsetcanvas_jgnuplot_
 gpsetsurface_z_=: gpsetsurface_jgnuplot_
 gpsetwith_z_   =: gpsetwith_jgnuplot_
-gplink_z_      =: gplink_jgnuplot_
-gpshow_z_      =: gpshow_jgnuplot_
+gpcanvas_z_    =: gpcanvas_jgnuplot_
 
 NB. set EXE   as path to gnuplot binary
 NB. set JSDIR as path to gnuplot javascript scripts

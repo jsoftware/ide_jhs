@@ -521,6 +521,22 @@ smoutput jmarka_jhs_,y,jmarkz_jhs_
 i.0 0
 )
 
+NB. TARGET f URL
+jhslink_z_=: 3 : 0
+'_blank' jhslink y
+:
+t=. '<a href="<REF>" target="<TARGET>" class="jhref" ><TEXT></a>'
+t=. t rplc'<TARGET>';x;'<REF>';y;'<TEXT>';y
+jhtml'<div contenteditable="false">',t,'</div>'
+)
+
+NB. TARGET f URL
+jhsshow_z_=: 3 : 0
+'_blank' jhsshow y
+:
+jhtml '<!-- jseval window.open("',y,'","',x,'"); -->'
+)
+
 jbd_z_=: 3 : '9!:7[y{Boxes_j_' NB. select boxdraw (PC_BOXDRAW)
 
 NB. toggle jfe behavior
@@ -728,7 +744,7 @@ if. r=10048 do.
  'JHS init failed'assert 0
 end.
 sdcheck_jsocket_ r
-sdcheck_jsocket_ sdlisten_jsocket_ SKLISTEN,1
+sdcheck_jsocket_ sdlisten_jsocket_ SKLISTEN,5 NB. queue length
 SKSERVER_jhs_=: _1
 boxdraw_j_ PC_BOXDRAW
 remote=. >(BIND-:''){'';remoteaccess hrplc 'PORT';":PORT

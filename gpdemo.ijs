@@ -3,13 +3,13 @@ NB. gnuplot demos
 gpdemo=: 0 : 0
 NB. requires JAL general/misc and math/misc installs
 NB. gp0 through gp5 create html plot files
-   gp0''              NB. create html plot file
-NB. gplink creates link to file
-   'abc' gplink gp0'' NB. window abc - click link to see plot
-NB. gpshow shows plot in pop up window
-NB. pop ups normally blocked - gpshow requires they are allowed
-   'abc' gpshow gp0''
-   'abc' gpshow gp2'' NB. mouse x y, left click, right zoom area
+   gp0''               NB. create html plot file
+NB. jhslink creates link to file
+   'abc' jhslink gp0'' NB. window abc - click link to see plot
+NB. jhsshow shows plot in pop up window
+NB. pop ups normally blocked - jhsshow requires they are allowed
+   'abc' jhsshow gp0''
+   'abc' jhsshow gp2'' NB. mouse x y, left click, right zoom area
 NB. gp6 has an error
    gp6''
 )
@@ -20,7 +20,8 @@ gp0=: 3 : 0
 gpinit''
 gpsetcanvas 400 200;0;'plot'
 gpsetwith'with lines'
-gpplot 10?10
+gpplot 10?10   NB. create ~temp/gnuplot/gnu as gnuplot canvas output
+gpcanvas 'gp0' NB. create ~temp/gnuplot/gp0.html from gnu
 )
 
 gp1=: 3 : 0
@@ -33,6 +34,7 @@ gpset 'ylabel "y-axis"'
 gpsetcanvas 400 200;0;'gp1' NB. width height;mousing;title
 gpsetwith 'with lines title "sin(exp)", with lines title "cos(exp)"'
 gpplot SC
+gpcanvas 'gp1'
 )
 
 gp2=: 3 : 0
@@ -45,6 +47,7 @@ gpset 'ylabel "y-axis"'
 gpsetcanvas 400 200;1;'gp2'  NB. width height;mousing;title
 gpsetwith 'with lines title "sin(exp)", with lines title "cos(exp)"'
 gpplot SC
+gpcanvas 'gp2'
 )
 
 gp3=: 3 : 0
@@ -57,6 +60,7 @@ gpinit''
 gpsetcanvas 400 200;1;'gp3'
 gpsetwith 'with lines'
 gpplot X;XY
+gpcanvas 'gp3'
 )
 
 NB. surface plot
@@ -72,6 +76,7 @@ gpsetcanvas 600 400;0;'gp4'
 gpsetwith 'with lines'
 gpsetsurface 1
 gpplot CP NB. surface plot
+gpcanvas 'gp4'
 )
 
 gp5=: 3 : 0
@@ -85,6 +90,7 @@ gpsetcanvas 500 500;0;'gp5'
 gpsetwith 'with lines'
 gpsetsurface 1
 gpplot SP NB. surface plot
+gpcanvas 'gp5'
 )
 
 NB. an error
@@ -95,4 +101,5 @@ gpset'badcommand'
 gpsetcanvas 400 200;1;'gp6' NB. width height;mousing;title
 gpsetwith 'with lines title "sin(exp)", with lines title "cos(exp)"'
 gpplot SC
+gpcanvas 'gp6'
 )
