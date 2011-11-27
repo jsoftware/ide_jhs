@@ -274,6 +274,18 @@ The following shows how to use gnuplot.
    gpdemo
 </pre>
 
+<a name="jplot"><h1>JPlot</h1>
+
+install JAL graphics/plot and graphics/afm and demos/plot packages<br>
+
+make ~Demos pointing ~addons/demos<br>
+
+The following shows how to use jplot.
+<pre class="jcode">
+   load'~addons/ide/jhs/jplotdemo.ijs'
+   jplot
+</pre>
+
 
 <a name="sp"><h1>Simple Project</h1>
 
