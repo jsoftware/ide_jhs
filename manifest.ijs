@@ -45,6 +45,7 @@ demo/jdemo6.ijs
 demo/jdemo7.ijs
 demo/jdemo8.ijs
 demo/jdemo9.ijs
+js/excanvas.js
 )
 
 FILESWIN=: 0 : 0

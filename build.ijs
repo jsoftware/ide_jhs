@@ -2,6 +2,7 @@ NB. build
 
 mkdir_j_ jpath '~addons/ide/jhs/config'
 mkdir_j_ jpath '~addons/ide/jhs/demo'
+mkdir_j_ jpath '~addons/ide/jhs/js'
 
 3 : 0''
 T=. jpath '~addons/ide/jhs/'
