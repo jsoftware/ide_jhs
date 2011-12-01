@@ -1,5 +1,3 @@
-
-
 NB. JHS - core services
 require 'socket'
 coclass'jhs'
@@ -521,12 +519,21 @@ smoutput jmarka_jhs_,y,jmarkz_jhs_
 i.0 0
 )
 
+NB. f file.png
+jhspng_z_=: 3 : 0
+d=. fread y
+w=. 256#.a.i.4{.16}.d
+h=. 256#.a.i.4{.20}.d
+t=. '<img width=<WIDTH>px height=<HEIGHT>px src="<FILE>?new=',((":6!:0'')rplc' ';'-'),'" ></img>'
+jhtml t hrplc_jhs_ 'WIDTH HEIGHT FILE';w;h;y 
+)
+
 NB. TARGET f URL
 jhslink_z_=: 3 : 0
 '_blank' jhslink y
 :
 t=. '<a href="<REF>" target="<TARGET>" class="jhref" ><TEXT></a>'
-t=. t rplc'<TARGET>';x;'<REF>';y;'<TEXT>';y
+t=. t hrplc_jhs_ 'TARGET REF TEXT';x;y;y
 jhtml'<div contenteditable="false">',t,'</div>'
 )
 
@@ -535,6 +542,10 @@ jhsshow_z_=: 3 : 0
 '_blank' jhsshow y
 :
 jhtml '<!-- jseval window.open("',y,'","',x,'"); -->'
+)
+
+jhsrefresh_z_=: 3 : 0
+y,'?refresh=',(":6!:0'')rplc' ';'-'
 )
 
 jbd_z_=: 3 : '9!:7[y{Boxes_j_' NB. select boxdraw (PC_BOXDRAW)

@@ -237,44 +237,61 @@ menu debug|run - run to error or stop
 
 <a name="plot"><h1>Plot</h1>
 
-Plots can be created with gnuplot that draw on an html canvas element. In some cases gnuplot may be preferable to Google Charts as described in the IDE section.<br><br>
-
-You need to have gnuplot installed on your machine.
-Learn about gnuplot and how to install it at 
+Plots can be created with gnuplot and in some cases may be preferable to Google Charts. Learn about gnuplot at 
 <a href="http://www.gnuplot.info">www.gnuplot.info</a>.<br><br>
 
-Windows install:<br>
-Follow links and download gp444win32.zip from sourceforge and unzip in your home folder.<br><br>
-
-Linux install:<br>
-Modern linux distributions can install gnuplot with (or equivalent):
-<pre class="jcode">
-...$ sudo apt-get install gnuplot
-</pre>
-
-Mac install:<br>
-Follow links and download gnuplot-4.4.4.tar.gz from sourceforge, unpack, and do:
-<pre class="jcode">
-...$ cd ..../gnuplot-4.4.4
-...$ ./configure
-...$ make
-...$ make check
-...$ make install 
-</pre>
-
-
-
-
-
-
-The following shows how to use gnuplot.
+After gnuplot is installed, try the following:
 <pre class="jcode">
    load'~addons/ide/jhs/gnuplot.ijs'
-   load'~addons/ide/jhs/gpdemo.ijs'
-   gpdemo
+   gpdemo''
 </pre>
 
-<a name="jplot"><h1>JPlot</h1>
+Windows gnuplot install:<br>
+Follow <a href="http://www.gnuplot.info">www.gnuplot.info</a> download links, download gp444win32.zip, and unzip in your home folder.<br><br>
+
+Linux gnuplot install:<br>
+Modern linux distributions can install gnuplot with (or equivalent):
+<pre class="jcode">
+sudo apt-get install gnuplot
+</pre>
+
+Mac gnuplot install:<br>
+You need to build libgd and gnuplot binaries and associated files from source.
+Google <b>installing gnuplot on mac brainlog</b> 
+for one of the better descriptions. 
+The following is a simplified set of steps.<br><br>
+
+Xcode developer tools are required to build from source. Install Xcode from the OSX distribution dvd or from the net.<br><br>
+
+Build libgd first so that gnuplot build will include png output.<br><br>
+
+libgd build:<br>
+Download gd-2.0.35.tar.gz. From code.google.com search for the file and download the one dated Dec 27,2007.
+
+<pre class="jcode">
+cd ~/Downloads
+tar -xf gd-2.0.35.tar 
+cd ~/Downloads/gd/2.0.35
+sudo ln -s /usr/X11R6/include/fontconfig /usr/local/include
+ln -s `which glibtool` ./libtool
+./configure --with-png=/usr/X11 --x-includes=/usr/X11/include --x-libraries=/usr/X11/lib
+sudo make clean
+sudo make
+sudo make install
+</pre>
+
+gnuplot build:<br>
+Download gnuplot-4.4.4.tar.gz. From www.gnuplot.info follow links to download from SourceForge.
+
+<pre class="jcode">
+cd ~/Downloads
+tar -xf gnuplot-4.4.4.tar 
+cd ~/Downloads/gnuplot-4.4.4
+./configure
+make clean
+make
+sudo make install
+</pre>
 
 install JAL graphics/plot and graphics/afm and demos/plot packages<br>
 

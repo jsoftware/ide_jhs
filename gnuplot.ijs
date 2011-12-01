@@ -1,15 +1,19 @@
  NB. gnuplot html canvas - based on Fraser Jackson's J601 gnuplot addon
 
+gpdemo_z_=: 3 : 0
+load'~addons/ide/jhs/gpdemo.ijs'
+gphelp
+)
+
 coclass 'jgnuplot'
 
 gpinit=: 3 : 0
-t=. '~temp/gnuplot'
+PATH=: '~temp/gnuplot/'
 1!:5 :: 0:<jpath t
-DAT=: t,'/gnu.dat'
-PLT=: t,'/gnu.plt'
-GNU=: t,'/gnu'
-GNUX=:t,'/gnux.html'
-ferase PLT;DAT;GNU;GNUX
+DAT=: PATH,'gnu.dat'
+PLT=: PATH,'gnu.plt'
+GNU=: PATH,'gnu'
+ferase PLT;DAT;GNU
 SETBUFFER=: ''
 WITH=: ''
 SURFACE=: 0
@@ -71,7 +75,7 @@ else.
 end.
 )
 
-gpplot=: 3 : 0
+gpplot=: 4 : 0
 dat=. y
 cmd=. WITH
 gpset 'output "',(jpath GNU),'"'
@@ -95,15 +99,30 @@ else.
    end.
 end.
 if. -.fexist GNU do. smoutput 'error: ',GNU,' not created' assert. 0 end.
-if. 0=#fread GNU do. smoutput 'error: ',GNU,' empty' assert. 0 end.
-GNU
+d=. fread GNU
+if. 0=#d do. smoutput 'error: ',GNU,' empty' assert. 0 end.
+NB. process output file
+r=. GNU
+if. 137 80 78 71 13 10 26 10 -: a.i.8{.d do. NB. png file
+ r=. PATH,x,'.png'
+ ferase r
+ r frename GNU
+elseif. '<html>'-:6{.d do.
+ r=. gpadjustcanvas x
+elseif. 1 do.
+end.
+r
 )
 
-NB. create ~temp/gnuplot/y.ijs with massaged canvas output
-gpcanvas=: 3 : 0
+NB. excanvas.js supported canvas in IE8 - we require IE9 and do not support IE8
+IE=: '<!--[if IE]><script type="text/javascript" src="excanvas.js"></script><![endif]-->',LF
+
+NB. create adjusted canvas output
+gpadjustcanvas=: 3 : 0
 d=. fread GNU
-d fwrite GNUX NB. unmodified gnuplot output
 d=. toJ d
+i=. (IE_jgnuplot_ E. d)i.1
+if. i<#d do. d=. (i{.d),(i+#IE)}.d end. NB. remove IE8 excanvas.js
 a=. 1 i.~ '<canvas id="gnuplot_canvas"' E. d
 z=. 9+1 i.~ '</canvas>' E. d
 n=. 1 i.~ '<table class="mbleft">' E. d
@@ -115,7 +134,7 @@ if. *./(#d)>a,z,n do.
 else.
  d=. d rplc '<table class="plot">';'<table>'   NB. remove class so canvas at left
 end.
-f=. '~temp/gnuplot','/',y,'.html'
+f=. PATH,y,'.html'
 ('<!DOCTYPE html>',LF,d) fwrite f
 f
 )
@@ -171,13 +190,12 @@ end.
 r
 )
 
-gpsetcanvas=: 3 : 0
+gpcanvas=: 3 : 0
 'wh mousing title'=. y
 assert. (4-:3!:0 wh)*.2=#wh
 wh=. (":wh)rplc' ';','
-mousing=. (1-:mousing)#'mousing'
-gpset 'term canvas standalone size ',wh,' ',mousing,' title "',title,'" jsdir "/',JSDIR,'"'
-i.0 0
+mousing=. (1-:mousing)#'mousing '
+'term canvas standalone size ',wh,' ',mousing,'title "',title,'" jsdir "/',JSDIR,'"'
 )
 
 gpsetwith=: 3 : 0
@@ -203,10 +221,9 @@ dat fwrite y
 gpplot_z_      =: gpplot_jgnuplot_
 gpinit_z_      =: gpinit_jgnuplot_
 gpset_z_       =: gpset_jgnuplot_
-gpsetcanvas_z_ =: gpsetcanvas_jgnuplot_
+gpcanvas_z_    =: gpcanvas_jgnuplot_
 gpsetsurface_z_=: gpsetsurface_jgnuplot_
 gpsetwith_z_   =: gpsetwith_jgnuplot_
-gpcanvas_z_    =: gpcanvas_jgnuplot_
 
 NB. set EXE   as path to gnuplot binary
 NB. set JSDIR as path to gnuplot javascript scripts
