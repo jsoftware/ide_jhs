@@ -115,14 +115,21 @@ r
 )
 
 NB. excanvas.js supported canvas in IE8 - we require IE9 and do not support IE8
-IE=: '<!--[if IE]><script type="text/javascript" src="excanvas.js"></script><![endif]-->',LF
+IE =: '<!--[if IE]><script type="text/javascript" src="excanvas.js"></script><![endif]-->',LF
+IE8=: '<!--[if lt IE 9]><script type="text/javascript" src="/~addons/ide/jhs/js/excanvas.js"></script><![endif]-->',LF
 
 NB. create adjusted canvas output
 gpadjustcanvas=: 3 : 0
 d=. fread GNU
 d=. toJ d
-i=. (IE_jgnuplot_ E. d)i.1
-if. i<#d do. d=. (i{.d),(i+#IE)}.d end. NB. remove IE8 excanvas.js
+
+NB. i=. (IE E. d)i.1
+NB. if. i<#d do. d=. (i{.d),IE8,(i+#IE)}.d end. NB. remove IE8 excanvas.js
+
+d=. d rplc '<!--[if IE]>';'<!--[if lt IE 9]>'
+
+d=. d rplc 'src="excanvas.js"';'src="/~addons/ide/jhs/js/excanvas.js"'
+
 a=. 1 i.~ '<canvas id="gnuplot_canvas"' E. d
 z=. 9+1 i.~ '</canvas>' E. d
 n=. 1 i.~ '<table class="mbleft">' E. d
