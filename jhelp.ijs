@@ -20,7 +20,7 @@ jumps=: 0 : 0
 <a href="#j7">J701</a>&nbsp;
 <a href="#jhs">JHS</a>&nbsp;
 <a href="#ide">IDE</a>&nbsp;
-<a href="#plot">Plot</a>&nbsp;
+<a href="#gnuplot">gnuplot</a>&nbsp;
 <a href="#sp">SP</a>&nbsp;
 <a href="#gui">GUI</a>&nbsp;
 <a href="#jum">JUM</a>&nbsp;
@@ -235,7 +235,7 @@ menu debug|run - run to error or stop
 (runs to end as no error or stops)
 </pre>
 
-<a name="plot"><h1>Plot</h1>
+<a name="gnuplot"><h1>gnuplot</h1>
 
 Plots can be created with gnuplot and in some cases may be preferable to Google Charts. Learn about gnuplot at 
 <a href="http://www.gnuplot.info">www.gnuplot.info</a>.<br><br>
@@ -293,6 +293,10 @@ make
 sudo make install
 </pre>
 
+<a name="jplot"><h1>J Plot</h1>
+
+Preliminary info on using traditional Jplot (from J602) to create plot files that draw on the html5 canvas element.<br><br>
+
 install JAL graphics/plot and graphics/afm and demos/plot packages<br>
 
 make ~Demos pointing ~addons/demos<br>
@@ -302,7 +306,6 @@ The following shows how to use jplot.
    load'~addons/ide/jhs/jplotdemo.ijs'
    jplot
 </pre>
-
 
 <a name="sp"><h1>Simple Project</h1>
 
