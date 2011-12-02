@@ -41,5 +41,5 @@ plotdef_z_=: 3 : 0
 i.0 0
 )
 
-jhsplotdef 'show';400 200
+plotdef 'show';400 200
 
