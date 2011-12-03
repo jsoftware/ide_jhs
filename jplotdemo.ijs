@@ -9,6 +9,8 @@ NB. plotdemos 0 through jplot 54 create html plot files
    plotdemos 10
    plotdef 'show';600 300 NB. jhsshow width height
    plotdemos 10
+   plotdef 'link';600 450 NB. 4:3 aspect ratio
+   plotdemos 10
    plotdef 'link';400 200 NB. jhslink
    plotdemos 25
    plotdef 'none';600 300 NB. create ~temp/plot.html without show or link
@@ -16,30 +18,10 @@ NB. plotdemos 0 through jplot 54 create html plot files
    plotdemos 54
 )
 
-require '~addons/graphics/plot/plot.ijs'
+require 'plot'
 require 'numeric trig'
 
 load '~Demos/plot/plotdemos.ijs'
 
-NB. kludge to adjust plot
-coclass'jzplot'
-
-canvas_show=: 3 : 0
-'size file ctx'=. canvas_getparms y
-res=. canvas_make size;file;ctx
-res canvas_write file;ctx
-if. IFJHS do.
- select. CANVAS_DEFSHOW 
- case. 'show' do. smoutput 'plot' jhsshow '~temp/plot.html'
- case. 'link' do. smoutput 'plot' jhslink '~temp/plot.html'
- end.
-end.
-)
-
-plotdef_z_=: 3 : 0
-'CANVAS_DEFSHOW_jzplot_ CANVAS_DEFSIZE_jzplot_'=: y
-i.0 0
-)
-
-plotdef 'show';400 200
+plotdef 'show';400 300
 

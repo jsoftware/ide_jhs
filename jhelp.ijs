@@ -297,9 +297,7 @@ sudo make install
 
 Preliminary info on using traditional Jplot (from J602) to create plot files that draw on the html5 canvas element.<br><br>
 
-install JAL graphics/plot and graphics/afm and demos/plot packages<br>
-
-make ~Demos pointing ~addons/demos<br>
+install JAL graphics/plot, graphics/afm and demos/plot packages<br>
 
 The following shows how to use jplot.
 <pre class="jcode">
