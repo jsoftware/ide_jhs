@@ -20,6 +20,8 @@ jumps=: 0 : 0
 <a href="#j7">J701</a>&nbsp;
 <a href="#jhs">JHS</a>&nbsp;
 <a href="#ide">IDE</a>&nbsp;
+<a href="#plot">plot</a>&nbsp;
+<a href="#gcplot">gcplot</a>&nbsp;
 <a href="#gnuplot">gnuplot</a>&nbsp;
 <a href="#sp">SP</a>&nbsp;
 <a href="#gui">GUI</a>&nbsp;
@@ -159,13 +161,6 @@ find in files
 Addons package manager (pacman) downloads and installs
 software packages
 
-<br><br><span class="h">plot</span> <a href="http://code.google.com/apis/chart/">Google Charts</a>
-<pre class="jcode">
-   jgc'help'  NB. plot info
-   jgcx''     NB. examples
-   plot 10?10 NB. default line plot
-</pre>
-
 <span class="h">viewmat</span>
 <pre class="jcode">
    viewmat ?20 20$2
@@ -233,6 +228,47 @@ menu debug|step - step to line 1
    a
 menu debug|run - run to error or stop
 (runs to end as no error or stops)
+</pre>
+
+<a name="plot"><h1>J plot</h1>
+
+J plot creates an html file that has the data and javascript for drawing on an html canvas element.<br><br>
+
+Use JAL to be sure following required addons are installed:
+<pre class="jcode">
+ graphics/plot
+ graphics/afm
+ demos/plot
+ general/misc
+ math/misc
+</pre>
+
+Learn about plot with the following examples. Detailed info at the wiki.
+<pre class="jcode">
+   require 'plot numeric trig'
+   plot 10?10
+   load '~Demos/plot/plotdemos.ijs' NB. more than 50 demos
+   plotdemos 0
+   plotdef 'show';200 100
+   plotdemos 1
+   plotdef 'show';600 300 NB. jhsshow width height
+   plotdemos 3
+   plotdef 'link';600 450 NB. jhslink
+   plotdemos 10
+   plotdef 'link';400 200
+   plotdemos 25
+   plotdef 'none';600 300 NB. create ~temp/plot.html without show or link
+   plotdef 30
+   plotdef 'show';600 300 NB. jhsshow
+   plotdemos 54
+</pre>
+
+<a name="gcplot"><h1><a href="http://code.google.com/apis/chart/">Google Charts</a> plot</h1>
+
+<pre class="jcode">
+   load'~addons/ide/jhs/jgcp.ijs'
+   jgc'help'  NB. plot info
+   jgcx''     NB. examples
 </pre>
 
 <a name="gnuplot"><h1>gnuplot</h1>
