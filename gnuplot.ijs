@@ -202,7 +202,7 @@ gpcanvas=: 3 : 0
 assert. (4-:3!:0 wh)*.2=#wh
 wh=. (":wh)rplc' ';','
 mousing=. (1-:mousing)#'mousing '
-'term canvas standalone size ',wh,' ',mousing,'title "',title,'" jsdir "/',JSDIR,'"'
+'term canvas size ',wh,' standalone ',mousing,'title "',title,'" jsdir "/',JSDIR,'"'
 )
 
 gpsetwith=: 3 : 0
