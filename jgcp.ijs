@@ -127,15 +127,15 @@ NB. needs support for
 NB.  sin=: 1&o.
 NB.  cos=: 2&o.
 NB.  x=: 0.1 * i: 21
-NB.  plot x;>(sin x);(cos x)
-plot_z_=: 3 : 0
-''plot y
+NB.  gcplot x;>(sin x);(cos x)
+gcplot_z_=: 3 : 0
+''gcplot y
 :
 t=. <;._2 x,';'
 stickline=. 'stick,line'-:>{.t
 t=. stickline}.t
 b=. (<'title ')=6{.each t
-if. 0~:#;(-.b)#t do. smoutput 'unsupported plot options: ',x end.
+if. 0~:#;(-.b)#t do. smoutput 'unsupported options: ',x end.
 if. (32=3!:0 y)*.2=#y do.
  r=.$&.>y
  if. 1 2-:;$&.>r do.
@@ -177,8 +177,7 @@ WHITE=:   rgb 255 255 255
 COLORS=: }.;',',._6[\BLUE,RED,GREEN,PURPLE,FUCHSIA,OLIVE,TEAL,YELLOW,TAN,AQUA,BROWN,GRAY
 
 help=: 0 : 0
-JHS plots with Google Charts (GC).
-See code.google.com/apis/chart for info.
+See code.google.com/apis/chart for Google Charts info.
 
 chart?... in a url defines a plot.
 The url from GC returns a png file.
@@ -211,7 +210,7 @@ Use + instead of blank in &ch.. commands!
 )
 
 examples=: 0 : 0
-plot ?2 10$1000
+gcplot ?2 10$1000
 
 'reset xline show'jgc 10?1000
 

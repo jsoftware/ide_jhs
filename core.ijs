@@ -774,7 +774,6 @@ jfe 1
 NB. load rest of JHS core
 load__'~addons/ide/jhs/utilh.ijs'
 load__'~addons/ide/jhs/utiljs.ijs'
-load__'~addons/ide/jhs/jgcp.ijs'
 load__'~addons/ide/jhs/sp.ijs'
 
 stub=: 3 : 0
