@@ -1,6 +1,8 @@
 coclass'jdemo5'
 coinsert'jhs'
 
+require '~addons/ide/jhs/jgcp.ijs'
+
 HBS=: 0 : 0
            jhh1'Plot demo'
 'sentence' jhtext'<SENTENCE>';20
