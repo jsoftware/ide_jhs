@@ -329,18 +329,6 @@ make
 sudo make install
 </pre>
 
-<a name="jplot"><h1>J Plot</h1>
-
-Preliminary info on using traditional Jplot (from J602) to create plot files that draw on the html5 canvas element.<br><br>
-
-install JAL graphics/plot, graphics/afm and demos/plot packages<br>
-
-The following shows how to use jplot.
-<pre class="jcode">
-   load'~addons/ide/jhs/jplotdemo.ijs'
-   jplot
-</pre>
-
 <a name="sp"><h1>Simple Project</h1>
 
 Noun sphelp has information on Simple Project utilities.<br><br>
