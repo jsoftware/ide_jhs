@@ -1,12 +1,5 @@
 NB. J HTTP Server - jijx app
 
-NB. start of kludge adjustments
-
-NB. ipad plot xline size
-xline_jgcp_=: xline_jgcp_ rplc '&chs=300x100';'&chs=400x300'
-
-NB. end of kluge adjustments
-
 coclass'jijxipad'
 coinsert'jhs'
 
@@ -100,6 +93,7 @@ function ev_body_load()
   recs=[];
  else
   recs=t.split("\n");
+ jseval(false,jbyid("log").innerHTML); // redraw canvas elements
  setTimeout(scrollz,10); // allow doc to update
 }
 
@@ -113,7 +107,7 @@ function updatelog(t)
 }
 
 // ajax update window with new output
-function ajax(ts){updatelog(ts[0]); if(2==ts.length)jbyid("ijs").value=ts[1];}
+function ajax(ts){updatelog(ts[0]);jseval(true,ts[0]);if(2==ts.length)jbyid("ijs").value=ts[1];}
 
 // add sentence to log unless blank or same as last
 function addrecall(a)
