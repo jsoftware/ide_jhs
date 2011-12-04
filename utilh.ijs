@@ -86,11 +86,14 @@ jurlencode=: 3 : 0
 ,'%',.(16 16#:a.i.y){'0123456789ABCDEF'
 )
 
+jmarkjsa=: '<!-- j js a --><!-- '
+jmarkjsz=: ' --><!-- j js z -->'
+
 jmarka=:     '<!-- j html output a -->'
 jmarkz=:     '<!-- j html output z -->'
 jmarkc=: #jmarka
 
-NB. output starting with jmarka and ending with jmarkv,LF
+NB. output starting with jmarka and ending with jmarkz,LF
 NB.  is assumed to be html and is not touched
 jhtmlfroma=: 3 : 0
 if. (jmarka-:jmarkc{.y)*.jmarkz-:(-jmarkc){.}:y do. y return. end.

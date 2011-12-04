@@ -713,6 +713,30 @@ function debcodes(t)
   r= r+" "+t.charCodeAt(i);
  return r;
 }
+
+// eval js sentences in s
+// a is true in ajax and false in refresh
+function jseval(ajax,s)
+{
+ var i,j,a,z,q;
+ a= "<!-- j html output a --><!-- j js a --><!-- ";
+ z= " --><!-- j js z --><!-- j html output z -->";
+while(0!=s.length)
+{
+  i= s.indexOf(a);
+  if(-1!=i)
+  {
+   i+= a.length;
+   j= s.indexOf(z);
+   q= s.substring(i,j);
+   if(ajax||';'!=q.charAt(0))
+    try{eval(q);}catch(e){alert(e+"\n"+q);}
+   s= s.substring(j+z.length);
+  }
+  else
+   s= "";
+ }
+}
 )
 
 docjs=: 3 : 0

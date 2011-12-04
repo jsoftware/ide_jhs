@@ -519,6 +519,13 @@ smoutput jmarka_jhs_,y,jmarkz_jhs_
 i.0 0
 )
 
+NB. jhtml javascript to be run from ajax result
+NB. javascript starting with mark /*ajax*/ is evaluated only in ajax
+NB. javascript not starting with mark is evaluated in ajax and in refresh
+jjs_z_=:3 : 0
+jhtml jmarkjsa_jhs_,y,jmarkjsz_jhs_
+)
+
 NB. f file.png
 jhspng_z_=: 3 : 0
 d=. fread y
@@ -538,10 +545,32 @@ jhtml'<div contenteditable="false">',t,'</div>'
 )
 
 NB. TARGET f URL
+NB. leading ; flags to run only in ajax and not in refresh
 jhsshow_z_=: 3 : 0
 '_blank' jhsshow y
 :
-jhtml '<!-- jseval window.open("',y,'","',x,'"); -->'
+jjs ';window.open("',y,'","',x,'");'
+)
+
+canvasnum_z_=: 1 NB.! needs to init when jhs starts
+
+jhsplot_z_=: 3 : 0
+canvasnum=: >:canvasnum
+canvasname=. 'canvas',":canvasnum
+
+d=. fread '~temp/plot.html'
+
+c=. (('<canvas 'E.d)i.1)}.d 
+c=. (9+('</canvas>'E.c)i.1){.c
+c=. c rplc 'canvas1';canvasname
+
+d=. (('function graph()'E.d)i.1)}.d
+d=. (('</script>'E.d)i.1){.d
+d=. d,'graph();'
+d=. d rplc'canvas1';canvasname
+
+jhtml c
+jjs d
 )
 
 jhsrefresh_z_=: 3 : 0
