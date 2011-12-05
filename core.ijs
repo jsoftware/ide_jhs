@@ -550,33 +550,69 @@ jhtml'<div contenteditable="false">',t,'</div>'
 )
 
 NB. TARGET f URL
-NB. leading ; flags to run only in ajax and not in refresh
 jhsshow_z_=: 3 : 0
 '_blank' jhsshow y
 :
-jjs ';window.open("',y,'","',x,'");'
+jjs 'window.open("',y,'","',x,'");'
 )
 
 canvasnum_z_=: 1 NB.! needs to init when jhs starts
 
-jhsplot_z_=: 3 : 0
+plotjijx_z_=: 3 : 0
 canvasnum=: >:canvasnum
 canvasname=. 'canvas',":canvasnum
-
-d=. fread '~temp/plot.html'
-
+d=. fread y
 c=. (('<canvas 'E.d)i.1)}.d 
 c=. (9+('</canvas>'E.c)i.1){.c
 c=. c rplc 'canvas1';canvasname
-
 d=. (('function graph()'E.d)i.1)}.d
 d=. (('</script>'E.d)i.1){.d
 d=. d,'graph();'
 d=. d rplc'canvas1';canvasname
-
 jhtml c
 jjsx d
 )
+NB. f type;window;width height
+NB. type selects case in plotcanvas
+plotdef_z_=: 3 : 0
+'CANVAS_DEFSHOW_jzplot_ CANVAS_DEFWINDOW_jzplot_ CANVAS_DEFSIZE_jzplot_'=: y
+i.0 0
+)
+
+plotcanvas_z_=: 3 : 0
+f=. '~temp/plot.html' NB. CANVAS_DEFFILE
+d=. fread f
+d=. d rplc'<h1>plot</h1>';''
+d=. d rplc'#canvas1 { margin-left:80px; margin-top:40px; }';'#canvas1{margin-left:0; margin-top:0;}'
+d fwrite f
+
+w=. CANVAS_DEFWINDOW_jzplot_
+select. CANVAS_DEFSHOW_jzplot_
+ case. 'show' do. w jhsshow f
+ case. 'link' do. w jhslink f
+ case. 'jijx' do. plotjijx f
+ case. 'none' do.
+ case.        do. plotjijx f
+end.
+i.0 0
+)
+
+NB.! kludge start until jzplot.ijs is fixed
+
+plotfix__=: 3 : 0
+load'~addons/ide/jhs/core.ijs'
+plotdef 'jijx';'plot';400 200
+)
+
+canvas_show_jzplot_=: 3 : 0
+'size file ctx'=. canvas_getparms y
+res=. canvas_make size;file;ctx
+res canvas_write file;ctx
+if. IFJHS do. plotcanvas__'' end.
+i.0 0
+)
+
+NB.! kludge end
 
 jhsrefresh_z_=: 3 : 0
 y,'?refresh=',(":6!:0'')rplc' ';'-'
@@ -816,6 +852,7 @@ stub=: 3 : 0
 
 NB. app stubs to load app file
 jev_get_jijx_=:    3 : (stub'jijx')
+jev_get_jijxaz_=:  3 : (stub'jijxaz')
 jev_get_jfile_=:   3 : (stub'jfile')
 jev_get_jijs_=:    3 : (stub'jijs')
 jev_get_jfif_=:    3 : (stub'jfif')
@@ -909,3 +946,113 @@ if. ('255.255.255.255'-:z) +. ('127.0.'-:6{.z) +. '192.168.'-:8{.z do.
 end.
 z
 )
+
+NB. viewmat - previously in jgcp - should come from addon eventually
+coclass'jgcp'
+NB. viewmat stuff - subset borrowed from viewmat addon
+
+viewmat_z_=: 3 : 0
+t=. (<6#16)#: each <"0>1{''getvm_jgcp_ y
+t=. '#',each t{each <'0123456789abcdef'
+a=. (<'<font ',LF,'style="background-color:'),each t
+a=. a,each (<'; color:'),each t
+a=. a,each <';">ww</font>'
+jhtml ;a,.<'<br>'
+)
+
+finite=: x: ^: _1
+
+NB. =========================================================
+NB.*gethue v generate color from color set
+NB. x is color set
+NB. y is values from 0 to 1, selecting color
+gethue=: 4 : 0
+y=. y*<:#x
+b=. x {~ <.y
+t=. x {~ >.y
+k=. y-<.y
+(t*k) + b*-.k
+)
+
+NB. =========================================================
+NB. getvm
+NB.
+NB. form: hue getvm data [;title]
+NB.
+NB. hue may be empty, in which case a default is used
+NB. hue may be a N by 3 matrix of colors or a vector
+NB.     of RGB integers.
+NB.
+NB. returns:
+NB.   original data
+NB.   scaled data matrix
+NB.   angle (if any)
+NB.   title
+getvm=: 4 : 0
+'dat tit'=. 2 {. boxopen y
+tit=. ": tit
+tit=. tit, (0=#tit) # 'viewmat'
+'mat ang'=. x getvm1 dat
+dat ; mat ; ang ; tit
+)
+
+NB. =========================================================
+getvm1=: 4 : 0
+hue=. x
+mat=. y
+ang=. ''
+
+NB. ---------------------------------------------------------
+if. 2 > #$hue do.
+  hue=. |."1 [ 256 256 256 #: ,hue
+end.
+
+NB. ---------------------------------------------------------
+select. 3!:0 mat
+case. 2;32 do.
+  mat=. (, i. ]) mat
+case. 16 do.
+  ang=. * mat
+  mat=. delinf | mat
+case. do.
+  mat=. finite mat
+end.
+
+NB. ---------------------------------------------------------
+select. #$mat
+case. 0 do.
+  mat=. 1 1$mat
+case. 1 do.
+  mat=. citemize mat
+case. 3 do.
+  'mat ang'=. mat
+end.
+
+NB. ---------------------------------------------------------
+if. */ (,mat) e. 0 1 do.
+  if. #hue do.
+    h=. <. 0 _1 { hue
+  else.
+    h=. 0 ,: 255 255 255
+  end.
+  mat=. mat { h
+
+else.
+  if. #hue do.
+    h=. hue
+  else.
+    h=. 255 * #: 7 | 3^i.6
+  end.
+  val=. ,mat
+  max=. >./ val
+  min=. <./ val
+  mat=. <. h gethue (mat - min) % max - min
+end.
+
+mat=. mat +/ .* 65536 256 1
+
+mat ; ang
+
+)
+
+
