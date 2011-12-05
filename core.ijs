@@ -519,11 +519,16 @@ smoutput jmarka_jhs_,y,jmarkz_jhs_
 i.0 0
 )
 
-NB. jhtml javascript to be run from ajax result
-NB. javascript starting with mark /*ajax*/ is evaluated only in ajax
-NB. javascript not starting with mark is evaluated in ajax and in refresh
+NB. eval javascript sentences
+NB. starting without ';' is evaluated only in ajax
+NB. starting with ';' is evaluated in ajax and in refresh
 jjs_z_=:3 : 0
 jhtml jmarkjsa_jhs_,y,jmarkjsz_jhs_
+)
+
+NB. eval javascript sentences - eval again in refresh
+jjsx_z_=: 3 : 0
+jjs';',y
 )
 
 NB. f file.png
@@ -570,7 +575,7 @@ d=. d,'graph();'
 d=. d rplc'canvas1';canvasname
 
 jhtml c
-jjs d
+jjsx d
 )
 
 jhsrefresh_z_=: 3 : 0
