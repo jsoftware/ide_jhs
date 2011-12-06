@@ -942,6 +942,20 @@ jhtml ;a,.<'<br>'
 )
 
 finite=: x: ^: _1
+intersect=: e. # [
+citemize=: ,: ^: (2: > #@$)
+rndint=: <.@:+&0.5
+tomatrix=: (_2 {. 1 1 , $) $ ,
+
+delinf=: 3 : 0
+if. +:/ _ __ e. ,y do. y return. end.
+sc=. 0.1
+a=. (,y) -. _ __
+max=. >./a
+min=. <./a
+ext=. sc * max - min
+(min-ext) >. y <. max+ext
+)
 
 NB. =========================================================
 NB.*gethue v generate color from color set
