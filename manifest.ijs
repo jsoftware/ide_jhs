@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.125'
+VERSION=: '1.0.126'
 
 FILES=: 0 : 0
 history.txt
@@ -26,6 +26,7 @@ jijs.ijs
 jijscd.ijs
 jijsipad.ijs
 jijx.ijs
+jijxaz.ijs
 jijxh.ijs
 jijxm.ijs
 jijxipad.ijs
