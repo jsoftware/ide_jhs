@@ -248,9 +248,6 @@ Use JAL to be sure following required addons are installed:
 Learn about plot with the following examples. Detailed info at the wiki.
 <pre class="jcode">
    require 'plot numeric trig'
-
-   plotfix'' NB.! required until changes are synched between JHS and plot
-
    plot 10?10
    load '~Demos/plot/plotdemos.ijs' NB. more than 50 demos
    plotdemos 0

@@ -556,8 +556,6 @@ jhsshow_z_=: 3 : 0
 jjs 'window.open("',y,'","',x,'");'
 )
 
-canvasnum_z_=: 1 NB.! needs to init when jhs starts
-
 plotjijx_z_=: 3 : 0
 canvasnum=: >:canvasnum
 canvasname=. 'canvas',":canvasnum
@@ -585,7 +583,6 @@ d=. fread f
 d=. d rplc'<h1>plot</h1>';''
 d=. d rplc'#canvas1 { margin-left:80px; margin-top:40px; }';'#canvas1{margin-left:0; margin-top:0;}'
 d fwrite f
-
 w=. CANVAS_DEFWINDOW_jzplot_
 select. CANVAS_DEFSHOW_jzplot_
  case. 'show' do. w jhsshow f
@@ -596,23 +593,6 @@ select. CANVAS_DEFSHOW_jzplot_
 end.
 i.0 0
 )
-
-NB.! kludge start until jzplot.ijs is fixed
-
-plotfix__=: 3 : 0
-load'~addons/ide/jhs/core.ijs'
-plotdef 'jijx';'plot';400 200
-)
-
-canvas_show_jzplot_=: 3 : 0
-'size file ctx'=. canvas_getparms y
-res=. canvas_make size;file;ctx
-res canvas_write file;ctx
-if. IFJHS do. plotcanvas__'' end.
-i.0 0
-)
-
-NB.! kludge end
 
 jhsrefresh_z_=: 3 : 0
 y,'?refresh=',(":6!:0'')rplc' ';'-'
@@ -800,6 +780,7 @@ init=: 3 : 0
 :
 'already initialized' assert _1=nc<'SKLISTEN'
 IFJHS_z_=: 1
+canvasnum_z_=: 1
 x jhscfg y
 PATH=: jpath'~addons/ide/jhs/'
 NB. IP=: getexternalip''
