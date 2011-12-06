@@ -19,6 +19,6 @@ html=: 0 : 0
 
 0 : 0
    jjs'parent.frames[1].name="fubar"'
-   jjs'parent.document.getElementById("frameset").rows="75%,*"' 
+   jjs'parent.document.getElementById("frameset").rows="75%,*"'
    jjs'parent.document.getElementById("frameset").rows="100%,*"'
-) 
+)
