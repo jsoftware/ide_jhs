@@ -39,10 +39,11 @@ fr - filename or shortname from spr/spd/spg
  spgf fr      pattern lines in file
 
  spxinit fr   set script for managed execution
- ctrl+shift+. advance
+ ctrl+.       advance
  spx''        advance
  spx 0        status
  spx n        run line n
+ spx n m      run lines n through m
 )
 
 spoverview_z_=: 0 : 0
@@ -82,7 +83,7 @@ NB.spg pattern;folder
 Managed execution of a script can be useful.
 Create ~temp/c.ijs with NB. lines, =: lines, and multiline defns.
    spxinit'~temp/c.ijs' NB. set script for managed execution
-   ctrl+shift+.         NB. execute next
+   ctrl+.               NB. execute next
    spx 0                NB. status
 )
 
@@ -207,6 +208,7 @@ f,LF,;c,each,' ',each t
 )
 
 spxinit=: 3 : 0
+ev_dot_ctrl_jijx_=: 3 : 'spx__'''''
 assert. fexist spf y['must exist'
 SPXFILE=: spf y
 SEM=: get SPXFILE
@@ -222,10 +224,21 @@ if. 0-:y do. status'' return. end.
 d=. SEM
 SEM=:get SPXFILE
 if. -.d-:SEM do.
+ smoutput'warning: file changed!'
  status''
- smoutput'file changed!'
+end.
+if. 2=#y do.
+ if. -.(3!:0[4) e. 1 4 do. smoutput 'not integer line numbers' return. end.
+ SEMN=: {.y
+ b=. ({:y)<.#SEM
+ while. SEMN<:b do.
+  spx a
+  a=. SEMN
+ end.
+ i.0 0
  return.
 end.
+
 if. (0~:$$y)+.-.(3!:0[4) e. 1 4 do. smoutput 'not integer line number' return. end.
 if. y<0 do. smoutput 'not valid line number' return. end.
 SEMN=: y

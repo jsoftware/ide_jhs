@@ -106,6 +106,7 @@ t=.(0~:;#each t-.each' ')#t
 )
 
 labopen=: 3 : 0
+ev_dot_ctrl_jijx_=: ev_advance_click
 require__'~addons/labs/labs/lab.ijs'
 smselout_jijs_=: smfocus_jijs_=: [ NB.! allow introcourse to run
 labinit_jlab_ y{LABFILES
@@ -198,10 +199,10 @@ ev_dbrun_click=:     3 : 'try. dbrun''''     catch. end. i.0 0'
 
 NB. default ctrl+,./ handlers
 ev_comma_ctrl =: 3 : 'sp__'''''
-ev_dot_ctrl   =: ev_advance_click
-ev_slash_ctrl =: 3 : 'i.0 0'
-ev_less_ctrl=: 3 : 'i.0 0'
-ev_larger_ctrl  =: 3 : 'spx__'''''
+ev_dot_ctrl   =: 3 : 'i.0 0'
+ev_slash_ctrl  =: 3 : 'i.0 0'
+ev_less_ctrl   =: 3 : 'i.0 0'
+ev_larger_ctrl =: 3 : 'i.0 0'
 ev_query_ctrl =: 3 : 'i.0 0'
 
 CSS=: 0 : 0

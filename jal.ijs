@@ -21,6 +21,8 @@ jhresize''
 'result' jhdiv'<RESULT>'
 )
 
+checkers=: ('check'jhb'Check all'),'uncheck'jhb'Uncheck all'
+
 maketable=: 3 : 0
 b=. ((<'c_'),each{."1 y)jhcheckbox each <'';0
 NB. b=. ,.(('c'),each ":each <"0 i.#y)jhcheckbox each <'';0
@@ -40,38 +42,30 @@ create '';('update'jpkg'')rplc LF;'<br>'
 ev_upable_click=: 3 : 0
 'update'jpkg'' NB. update to make current
 d=. 'showupgrade'jpkg''
-if. #d do.
- b=. 'upgrade'jhb'Upgrade Selected'
+ b=. checkers,~'upgrade'jhb'Upgrade Selected'
  t=. maketable d
  create b;t
-else.
- create '';'No upgrades available.'
-end.
 )
 
 ev_remable_click=: 3 : 0
 'update'jpkg'' NB. update to make current
 d=. 'showinstalled'jpkg''
 d=. d#~-.({."1 d) e. 'base library';'ide/jhs'
-if. #d do.
- b=. 'remove'jhb'Remove Selected'
- t=. maketable d
- create b;t
-else.
- create '';'Nothing to remove.'
-end.
+b=. checkers,~'remove'jhb'Remove Selected'
+t=. maketable d
+create b;t
 )
 
 ev_notin_click=: 3 : 0
 'update'jpkg'' NB. update to make current
-b=. 'install'jhb'Install Selected'
+b=. checkers,~'install'jhb'Install Selected'
 t=. maketable'shownotinstalled'jpkg''
 create b;t
 )
 
 ev_inst_click=: 3 : 0
 'update'jpkg'' NB. update to make current
-b=. 'upgrade'jhb'Upgrade Selected'
+b=. checkers,~'upgrade'jhb'Upgrade Selected'
 t=. maketable'showinstalled'jpkg''
 create b;t
 )
@@ -113,10 +107,26 @@ create '';r rplc LF;'<br>'
 )
 
 JS=: 0 : 0
-function ev_body_load()
+function ev_body_load(){jresize();cbfocus();}
+
+function cbfocus()
 {
  var n=document.getElementsByTagName("input");
  for(var i=0;i<n.length;++i)
   if("checkbox"==n[i].getAttribute("type")){n[i].focus();break;}
- jresize();}
+}
+
+function check(v)
+{
+ var n=document.getElementsByTagName("input");
+ for(var i=0;i<n.length;++i)
+ {
+  if("checkbox"==n[i].getAttribute("type")){n[i].checked=v;}
+ }
+ cbfocus();
+}
+
+function ev_check_click(){check("checked");}
+function ev_uncheck_click(){check("");}
+
 )
