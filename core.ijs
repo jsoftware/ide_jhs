@@ -570,10 +570,14 @@ d=. d rplc'canvas1';canvasname
 jhtml c
 jjsx d
 )
-NB. f type;window;width height
-NB. type selects case in plotcanvas
+NB. f type;window;width height[;output]
+NB. type selects case in plotcanvas/plotcairo
 plotdef_z_=: 3 : 0
-'CANVAS_DEFSHOW_jzplot_ CANVAS_DEFWINDOW_jzplot_ CANVAS_DEFSIZE_jzplot_'=: y
+if. 'cairo'-:_1{::#y=. 4{.y,<'cairo' do.
+ 'CAIRO_DEFSHOW_jzplot_ CAIRO_DEFWINDOW_jzplot_ CAIRO_DEFSIZE_jzplot_'=: }::y
+else.
+ 'CANVAS_DEFSHOW_jzplot_ CANVAS_DEFWINDOW_jzplot_ CANVAS_DEFSIZE_jzplot_'=: }::y
+end.
 i.0 0
 )
 

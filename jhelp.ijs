@@ -240,6 +240,7 @@ Use JAL to be sure following required addons are installed:
 <pre class="jcode">
  graphics/plot
  graphics/afm
+ graphics/color
  demos/plot
  general/misc
  math/misc
