@@ -573,7 +573,7 @@ jjsx d
 NB. f type;window;width height[;output]
 NB. type selects case in plotcanvas/plotcairo
 plotdef_z_=: 3 : 0
-if. 'cairo'-:_1{::y=. 4{.y,<'cairo' do.
+if. 'cairo'-:_1{::y=. 4{.y,<'canvas' do.
  'CAIRO_DEFSHOW_jzplot_ CAIRO_DEFWINDOW_jzplot_ CAIRO_DEFSIZE_jzplot_ JHSOUTPUT_jzplot_'=: y
 else.
  'CANVAS_DEFSHOW_jzplot_ CANVAS_DEFWINDOW_jzplot_ CANVAS_DEFSIZE_jzplot_ JHSOUTPUT_jzplot_'=: y
