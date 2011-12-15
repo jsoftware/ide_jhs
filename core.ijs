@@ -573,10 +573,12 @@ jjsx d
 NB. f type;window;width height[;output]
 NB. type selects case in plotcanvas/plotcairo
 plotdef_z_=: 3 : 0
-if. 'cairo'-:_1{::#y=. 4{.y,<'cairo' do.
- 'CAIRO_DEFSHOW_jzplot_ CAIRO_DEFWINDOW_jzplot_ CAIRO_DEFSIZE_jzplot_'=: }::y
+if. 'cairo'-:_1{::y=. 4{.y,<'cairo' do.
+ 'CAIRO_DEFSHOW_jzplot_ CAIRO_DEFWINDOW_jzplot_ CAIRO_DEFSIZE_jzplot_ JHSOUTPUT_jzplot_'=: y
 else.
- 'CANVAS_DEFSHOW_jzplot_ CANVAS_DEFWINDOW_jzplot_ CANVAS_DEFSIZE_jzplot_'=: }::y
+ 'CANVAS_DEFSHOW_jzplot_ CANVAS_DEFWINDOW_jzplot_ CANVAS_DEFSIZE_jzplot_ JHSOUTPUT_jzplot_'=: y
+NB. default output
+ JHSOUTPUT_jzplot_=: 'canvas'
 end.
 i.0 0
 )
@@ -594,6 +596,16 @@ select. CANVAS_DEFSHOW_jzplot_
  case. 'jijx' do. plotjijx f
  case. 'none' do.
  case.        do. plotjijx f
+end.
+i.0 0
+)
+
+plotcairo_z_=: 3 : 0
+f=. '~temp/plot.png' NB. CAIRO_DEFFILE
+w=. CAIRO_DEFWINDOW_jzplot_
+select. CAIRO_DEFSHOW_jzplot_
+ case. 'show' do. w jhsshow f
+ case. 'link' do. w jhslink f
 end.
 i.0 0
 )

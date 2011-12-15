@@ -244,6 +244,7 @@ Use JAL to be sure following required addons are installed:
  demos/plot
  general/misc
  math/misc
+ gui/gtk (required only for cairo output)
 </pre>
 
 Learn about plot with the following examples. Detailed info at the wiki.
