@@ -531,21 +531,27 @@ jjsx_z_=: 3 : 0
 jjs';',y
 )
 
+NB. somewhat unique query string - avoid cache - not quaranteed to be unigue!
+jhsuqs_z_=: 3 : 0
+canvasnum=: >:canvasnum
+'?',((":6!:0'')rplc' ';'_';'.';'_'),'_',":canvasnum
+)
+
 NB. f file.png
 jhspng_z_=: 3 : 0
 d=. fread y
 w=. 256#.a.i.4{.16}.d
 h=. 256#.a.i.4{.20}.d
-t=. '<img width=<WIDTH>px height=<HEIGHT>px src="<FILE>?new=',((":6!:0'')rplc' ';'-'),'" ></img>'
-jhtml t hrplc_jhs_ 'WIDTH HEIGHT FILE';w;h;y 
+t=. '<img width=<WIDTH>px height=<HEIGHT>px src="<FILE><UQS>" ></img>'
+jhtml t hrplc_jhs_ 'WIDTH HEIGHT FILE UQS';w;h;y;jhsuqs'' 
 )
 
 NB. TARGET f URL
 jhslink_z_=: 3 : 0
 '_blank' jhslink y
 :
-t=. '<a href="<REF>" target="<TARGET>" class="jhref" ><TEXT></a>'
-t=. t hrplc_jhs_ 'TARGET REF TEXT';x;y;y
+t=. '<a href="<REF><UQS>" target="<TARGET>" class="jhref" ><TEXT></a>'
+t=. t hrplc_jhs_ 'TARGET REF UQS TEXT';x;y;(jhsuqs'');y
 jhtml'<div contenteditable="false">',t,'</div>'
 )
 
@@ -553,7 +559,7 @@ NB. TARGET f URL
 jhsshow_z_=: 3 : 0
 '_blank' jhsshow y
 :
-jjs 'window.open("',y,'","',x,'");'
+jjs 'window.open("',(y,jhsuqs''),'","',x,'");'
 )
 
 plotjijx_z_=: 3 : 0
@@ -606,6 +612,9 @@ w=. CAIRO_DEFWINDOW_jzplot_
 select. CAIRO_DEFSHOW_jzplot_
  case. 'show' do. w jhsshow f
  case. 'link' do. w jhslink f
+ case. 'jijx' do. jhspng f
+ case. 'none' do.
+ case.        do. jhspng f
 end.
 i.0 0
 )

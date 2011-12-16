@@ -236,7 +236,7 @@ menu debug|run - run to error or stop
 
 J plot creates an html file that has the data and javascript for drawing on an html canvas element.<br><br>
 
-Use JAL to be sure following required addons are installed:
+Use JAL to be sure required addons are installed:
 <pre class="jcode">
  graphics/plot
  graphics/afm
@@ -244,7 +244,7 @@ Use JAL to be sure following required addons are installed:
  demos/plot
  general/misc
  math/misc
- gui/gtk (required only for cairo output)
+ gui/gtk (required only for cairo/png output)
 </pre>
 
 Learn about plot with the following examples. Detailed info at the wiki.
@@ -267,6 +267,16 @@ Learn about plot with the following examples. Detailed info at the wiki.
    'plot' jhsshow '~temp/plot.html' NB. show plot in window plot
    plotdef 'jijx';'';400 200
    plotdemos 54
+</pre>
+
+Plot has default output of canvas/html. It can also create cairo/png output.
+<pre class="jcode">
+   plotdef 'none';'plot';400 200;'cairo'
+   plot 10?10                       NB. create ~temp/plot.png
+   plotdef 'jijx';'plot';400 200;'cairo'
+   plot 10?10                       NB. inline in jijx
+   plotdef 'jijx';'plot';400 200;'canvas'
+   plot 10?10                       NB. create ~temp/plot.html 
 </pre>
 
 <a name="gcplot"><h1><a href="http://code.google.com/apis/chart/">Google Charts</a> plot</h1>
