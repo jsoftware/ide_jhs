@@ -44,6 +44,23 @@ elseif. '.gif'-:_4{.y do.
  t=. 'image/gif'
 elseif. '.png'-:_4{.y do.
  t=. 'image/png'
+elseif. '.bmp'-:_4{.y do.
+ t=. 'image/bmp'
+NB. more mime type
+elseif. '.txt'-:_4{.y do.
+ t=. 'text/plain'
+elseif. '.csv'-:_4{.y do.
+ t=. 'text/csv'
+elseif. '.pdf'-:_4{.y do.
+ t=. 'application/pdf'
+elseif. ('.xlsx'-:_5{.y)+.'.xls'-:_4{.y do.
+ t=. 'application/vnd.ms-excel'
+elseif. '.rtf'-:_4{.y do.
+ t=. 'application/rtf'
+elseif. '.gnumeric'-:_9{.y do.
+ t=. 'application/x-gnumeric'
+elseif. '.sc'-:_3{.y do.
+ t=. 'application/x-sc'
 elseif. 1 do. smoutput 'will not get file ',y return. end.
 t gsrcf d
 )
