@@ -34,35 +34,41 @@ y=. jpath(5*'~root/'-:6{.y)}.y
 d=. fread y
 NB. Firefox 8 requires a response header
 if. ('.htm'-:_4{.y)+.'.html'-:_5{.y do. htmlresponse d,~fsrchead rplc '<TYPE>';'text/html' return. end.
-if. '.js'-:_3{.y do.
- t=. 'application/x-javascript'
-elseif. '.css'-:_4{.y do.
- t=. 'text/css'
-elseif. '.jpg'-:_4{.y do.
- t=. 'image/jpeg'
-elseif. '.gif'-:_4{.y do.
- t=. 'image/gif'
-elseif. '.png'-:_4{.y do.
- t=. 'image/png'
-elseif. '.bmp'-:_4{.y do.
- t=. 'image/bmp'
-NB. more mime type
-elseif. '.txt'-:_4{.y do.
- t=. 'text/plain'
-elseif. '.csv'-:_4{.y do.
- t=. 'text/csv'
-elseif. '.pdf'-:_4{.y do.
- t=. 'application/pdf'
-elseif. ('.xlsx'-:_5{.y)+.'.xls'-:_4{.y do.
- t=. 'application/vnd.ms-excel'
-elseif. '.rtf'-:_4{.y do.
- t=. 'application/rtf'
-elseif. '.gnumeric'-:_9{.y do.
- t=. 'application/x-gnumeric'
-elseif. '.sc'-:_3{.y do.
- t=. 'application/x-sc'
-elseif. 1 do. smoutput 'will not get file ',y return. end.
+if. (#mimetypes) > i=. ({:"1 mimetypes) i. <@}.(}.~ i:&'.') y do.
+ t=. i{:: {."1 mimetypes
+else. smoutput 'will not get file ',y return. end.
 t gsrcf d
+)
+
+NB. common mime types
+mimetypes=: <;._1@(' '&,)@deb;._2 (0 : 0)
+application/javascript         js
+application/msword             doc
+application/msword             docx
+application/pdf                pdf
+application/postscript         eps
+application/postscript         ps
+application/rtf                rtf
+application/vnd.ms-excel       xls
+application/vnd.ms-excel       xlsx
+application/x-gnumeric         gnumeric
+application/x-gtar-compressed  tgz
+application/x-sc               sc
+application/zip                zip
+image/gif                      gif
+image/jpeg                     jpeg
+image/jpeg                     jpg
+image/png                      png
+image/tiff                     tif
+image/tiff                     tiff
+image/x-icon                   ico
+image/x-ms-bmp                 bmp
+text/css                       css
+text/csv                       csv
+text/html                      htm
+text/html                      html
+text/plain                     text
+text/plain                     txt
 )
 
 favicon=: 3 : 0
