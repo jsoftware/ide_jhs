@@ -709,6 +709,7 @@ if. 1!:4 :: 0: <f do.
   catch.
     smoutput 'An error occurred when loading startup script: ',f
   end.
+  cocurrent 'jhs'
 end.
 )
 
@@ -734,6 +735,8 @@ do. end.
 
 lcfg=: 3 : 0
 try. load jpath y catch. ('load failed: ',y) assert 0 end.
+NB. current locale possibly changed
+cocurrent 'jhs'
 )
 
 NB. config_file jhscfg username
