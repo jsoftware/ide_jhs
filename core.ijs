@@ -155,9 +155,8 @@ getdata'' NB. get and parse http request
 if. 1=NVDEBUG do. smoutput seebox NV end. NB. HNV,NV
 if. (-.OKURL-:URL)*.(0~:#PASS)*.(1~:+/cookie E. gethv'Cookie:')*.-.LHOK*.PEER-:LOCALHOST
                        do. r=. 'jev_get_jlogin_ 0'
-NB. execute jdo is a securiy issue for application servers
-elseif. IDEOK*.'post'-:METHOD       do. r=. getv'jdo'
-elseif. ('.'e.URL)*.('get'-:METHOD) do. r=. 'jev_get_jfilesrc_ URL_jhs_'
+elseif. 'post'-:METHOD do. r=. getv'jdo'
+elseif. '.'e.URL       do. r=. 'jev_get_jfilesrc_ URL_jhs_'
 elseif. 1              do. r=. 'jev_get_',URL,'_'''''
 end.
 logjhs'sentence'
