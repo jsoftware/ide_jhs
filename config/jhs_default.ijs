@@ -33,3 +33,7 @@ PASS=: ''
 NB. user for PASS
 NB. JUM ignores and sets USER to be JUM username (jhs folder)
 USER=: ''
+
+NB. 0  no ide
+NB. 1  ide ok (jijx jijxh ...)
+IDEOK=: 1
