@@ -20,6 +20,7 @@ HBS=: 0 : 0
 'up'jhb'&uarr;'
 'dn'jhb'&darr;'
 'return'jhb'&crarr;'
+'adv'jhb'.'
 'jijsipad'jhrefx '&nbsp;E&nbsp;'
 'recalls'jhhidden'<RECALLS>'
 )
@@ -65,6 +66,23 @@ recalls=: 3 : 0
 t=.INPUT
 t=.(0~:;#each t-.each' ')#t
 (;t,each LF)rplc '&';'&amp;';'"';'&quot;';'<';'&lt;';'>';'&gt;'
+)
+
+labs__=: 3 : 0
+if. _1=4!:0<'LABTITLES_jijx_' do.
+ require'~addons/ide/jhs/jijx.ijs'
+ getlabs_jijx_''
+end.
+if. 2=3!:0 y do.
+ if. ''-:y do.
+  >~.LABCATS_jijx_
+ else.
+  d=. (3j0":each<"0 i.#LABTITLES_jijx_),each (>:>LABTITLES_jijx_ i.each':')}.each LABTITLES_jijx_
+  >((LABCATS_jijx_)=<y)#d
+ end.
+else.
+ labopen_jijx_ y
+end.
 )
 
 CSS=: 0 : 0
@@ -167,4 +185,5 @@ function ev_return_click(){ev_jdo_enter();}
 function ev_bottom_click(){ jbyid("jdo").scrollIntoView(false);}
 function ev_up_click(){uarrow();}
 function ev_dn_click(){darrow();}
+function ev_adv_click(){jdoajax([],"","labnext_jlab_[0")}
 )
