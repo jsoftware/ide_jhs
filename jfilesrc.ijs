@@ -69,6 +69,8 @@ text/html                      htm
 text/html                      html
 text/plain                     text
 text/plain                     txt
+video/x-ms-wmv                 wmv
+video/x-msvideo                avi
 )
 
 favicon=: 3 : 0
