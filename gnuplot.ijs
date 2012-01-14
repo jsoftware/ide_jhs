@@ -87,11 +87,11 @@ txt=. txt, gpcommand cmd;shp;jpath DAT
 txt fwrite PLT
 t=. '"',EXE,'" "',(jpath PLT),'"'
 if. IFWIN do.
-   e=: spawn t
+   e=: spawn_jtask_ t
    if. #e do. smoutput 'error: ',e assert. 0 end.
 else.
    try.
-    spawn t
+    spawn_jtask_ t
    catch.
     smoutput 'spawn failed - for error info run following in command window'
     smoutput '...$ ',t
