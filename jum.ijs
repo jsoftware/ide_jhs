@@ -557,15 +557,15 @@ NB. use /S with quotes around complete command to preserve quotes
 NB. 2>&1 to send stderr to stdout
 
 doscmd=: 3 : 0
-WaitForSingleObject=. 'kernel32 WaitForSingleObject i i i'&cd
-CloseHandle=. 'kernel32 CloseHandle i i'&cd"0
-CreateProcess=. 'kernel32 CreateProcessA i i *c i i i  i i i *c *c'&cd
+WaitForSingleObject=. 'kernel32 WaitForSingleObject i x i'&cd
+CloseHandle=. 'kernel32 CloseHandle i x'&cd"0
+CreateProcess=. 'kernel32 CreateProcessW i x *w x x i  i x x *c *c'&cd
 CREATE_NO_WINDOW=. 16b8000000
 CREATE_NEW_CONSOLE=. 16b00000010
 f=. CREATE_NO_WINDOW
 f=. CREATE_NEW_CONSOLE
 NB. /S strips leading " and last " and leaves others alone
-c=. 'cmd /S /C "',y,'"'
+c=. uucp 'cmd /S /C "',y,'"'
 si=. (68{a.),67${.a.
 pi=. 16${.a.
 'r i1 c i2 i3 i4 f i5 i6 si pi'=. CreateProcess 0;c;0;0;0;f;0;0;si;pi
