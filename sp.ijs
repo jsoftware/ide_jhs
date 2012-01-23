@@ -223,7 +223,7 @@ i.0 0
 spx=: 3 : 0
 if. -.fexist SPXFILE do. smoutput 'not initialized - do spxinit' return. end.
 if. ''-:y do. spx SEMN return. end.
-if. 0-:y do. status'' return. end.
+if. 0={.y do. status'' return. end.
 d=. SEM
 SEM=:get SPXFILE
 if. -.d-:SEM do.
