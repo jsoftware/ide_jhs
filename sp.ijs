@@ -14,6 +14,7 @@ spgf_z_    =: spgf_jsp_
 spx_z_     =: spx_jsp_
 spxinit_z_ =: spxinit_jsp_
 sprunner_z_=: 3 : '0!:111 y'
+sptable_z_ =: sptable_jsp_
 
 sphelp_z_=: 0 : 0
 spoverview has additional info
@@ -44,6 +45,8 @@ fr - filename or shortname from spr/spd/spg
  spx 0        status
  spx n        run line n
  spx n m      run lines n through m
+
+ sptable      no boxdraw - e.g., sptable 1!:0<'*'
 )
 
 spoverview_z_=: 0 : 0
@@ -141,13 +144,13 @@ _4}.each(>:>t i:each '/')}.each t
 )
 
 spr=: 3 : 0
-seebox_jhs_ (shorts SPFILES),.SPFILES
+sptable (shorts SPFILES),.SPFILES
 )
 
 spd=: 3 : 0
 if. ''-:y do. SPDFILES=: '' return. end.
 SPDFILES=: (<'/',~y),each (>:#jpath y)}.each {."1 dirtree y,'/*.ijs'
-seebox_jhs_ SPDFILES,.~shorts SPDFILES
+sptable SPDFILES,.~shorts SPDFILES
 )
 
 speinit=: 3 : 0
@@ -194,7 +197,7 @@ t=. s{t
 SPGFILES=: t,~each'/',~each<SPGFOLDER
 c=. s{c
 t=. (":each<"0 c),.(shorts SPGFILES),.SPGFILES
-h,LF,seebox_jhs_ t
+h,LF,sptable t
 )
 
 spgf=: 3 : 0
@@ -293,6 +296,27 @@ d=. d,(LF~:{:d)#LF
 
 status=: 3 : 0
 smoutput (":SEMN),' of ',(":#SEM),' in  ',SPXFILE
+)
+
+sptable=: 3 : 0
+0 1 sptable y
+:
+assert. (32=3!:0 y)*.2=$$y
+'rows cols'=. <:x
+a=. 9!:6''
+t=. {:a.
+try.
+ 9!:7[11#{:a.
+ r=. ":y
+ m=. 0,~0,}.}:(>:rows*r-:"1[({:$r)#t)
+  r=. |:m#r
+ m=. 0,~0,}.}:(>:cols*r-:"1[({:$r)#t)
+ r=. LF,.~|:m#r
+ r=. r rplc t;' '
+catch.
+end.
+9!:7 a
+r
 )
 
 3 : 0''
