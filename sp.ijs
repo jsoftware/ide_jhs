@@ -130,11 +130,8 @@ t=. (~.(<SPFILE),(<SPXFILE),SPFILES,SPDFILES,SPGFILES)-.<''
 c=. (shorts t)=<,y
 if. 0=+/c do.
  assert. 0['not found'
-elseif. 1<+/c do.
- smoutput ;LF,each c#t
- assert. 0['multiples'
-elseif. 1 do.
- ,>c#t
+else.
+ ,>{.c#t
 end.
 )
 
@@ -144,7 +141,8 @@ _4}.each(>:>t i:each '/')}.each t
 )
 
 spr=: 3 : 0
-sptable (shorts SPFILES),.SPFILES
+t=. (~.(<SPFILE),(<SPXFILE),SPFILES)-.<''
+sptable (shorts t),.t
 )
 
 spd=: 3 : 0
@@ -270,7 +268,6 @@ if. (<'=.')e.;:t do.
 end.
 sprunner__ d
 SEMN=: 2+ndx
-NB.! SEMN=: SEMN-SEMN>#SEM
 if. (SEMN<#SEMN)*.'NB.'-:3{.dlb d do. goto_top. end.
 i.0 0
 )
@@ -302,6 +299,7 @@ sptable=: 3 : 0
 0 1 sptable y
 :
 assert. (32=3!:0 y)*.2=$$y
+if. 0=*/$y do. '' return. end.
 'rows cols'=. <:x
 a=. 9!:6''
 t=. {:a.
@@ -309,7 +307,7 @@ try.
  9!:7[11#{:a.
  r=. ":y
  m=. 0,~0,}.}:(>:rows*r-:"1[({:$r)#t)
-  r=. |:m#r
+ r=. |:m#r
  m=. 0,~0,}.}:(>:cols*r-:"1[({:$r)#t)
  r=. LF,.~|:m#r
  r=. r rplc t;' '
