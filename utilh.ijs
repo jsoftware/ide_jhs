@@ -83,7 +83,7 @@ y rplc ,t,.d
 )
 
 jurlencode=: 3 : 0
-,'%',.(16 16#:a.i.y){'0123456789ABCDEF'
+,'%',.(16 16#:a.i.,y){'0123456789ABCDEF'
 )
 
 jmarkjsa=: '<!-- j js a --><!-- '
