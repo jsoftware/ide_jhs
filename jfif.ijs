@@ -357,7 +357,7 @@ end.
 )
 fopenfile=: 4 : 0
 if. #FIFOPENFILE do.
-  wd 'winexec "',FIFOPENFILE,' ',y,'"'
+  fork_jtask_ '"',FIFOPENFILE,' ',y,'"'
 else.
   'row hit'=. x
   try.
