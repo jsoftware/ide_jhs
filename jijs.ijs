@@ -4,6 +4,10 @@ coclass'jijs'
 coinsert'jhs'
 
 HBS=: 0 : 0
+'<script src="~addons/ide/jhs/js/codemirror/codemirror.js"></script>'
+'<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/codemirror.css">'
+'<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/j/jtheme.css">'
+'<script src="~addons/ide/jhs/js/codemirror/j/j.js"></script>'
 jhma''
 jhjmlink''
 'action'    jhmg'action';1;10
@@ -11,8 +15,11 @@ jhjmlink''
  'runwd'    jhmab'run display'
  'save'     jhmab'save        s^'
  'saveas'   jhmab'save as...'
+ 'undo'     jhmab'undo        z^'
+ 'redo'     jhmab'redo        y^'
 'option'    jhmg'option';1;8
  'ro'       jhmab'readonly    t^'
+ 'numbers'  jhmab'numbers'
 jhmz''
 
 'saveasdlg'    jhdivadlg''
@@ -143,7 +150,7 @@ p{margin:0;}
 )
 
 JS=: 0 : 0
-var ta,rep,readonly,saveasx;
+var ta,rep,readonly,saveasx,cm;
 
 function ev_body_load()
 {
@@ -151,9 +158,23 @@ function ev_body_load()
  rep= jbyid("rep");
  ta= jbyid("textarea");
  saveasx=jbyid("saveasx");
+
+ //! dresize();
+ ce.focus();
+
+ cm = CodeMirror.fromTextArea(ce,
+  {lineNumbers: true,
+   mode:  "j",
+   tabSize: 1,
+   gutter: false,
+   extraKeys: {
+    "Ctrl-S": function(instance) { jscdo("save"); },
+    "Ctrl-R": function(instance) { jscdo("runw"); }
+   }
+  }
+ );
  ro(0!=ce.innerHTML.length);
  dresize();
- ce.focus();
 }
 
 window.onresize= dresize;
@@ -167,8 +188,9 @@ function dresize()
  a-= jgpdivh("jresizea"); // header height
  a-= 26               // fudge extra
  a=  a<0?0:a;        // negative causes problems
- ce.style.height= a+"px";
- ce.style.width= (jgpwindoww()-26)+"px";
+ // ce.style.height= a+"px";
+ // ce.style.width= (jgpwindoww()-26)+"px";
+ cm.setSize(jgpwindoww()-20,a+10);
 }
 
 //! should be in utiljs.ijs
@@ -186,17 +208,26 @@ function ev_body_unload()
  jdoajax(["filename","textarea","saveasx"],"",jevsentence,false);
 }
 
+function setnamed()
+{
+  jbyid("filenamed").innerHTML=(readonly?"readonly ":"")+jbyid("filename").value;
+}
+
 function ro(only)
 {
  readonly= only;
- ce.readOnly=readonly?true:false;
- ce.style.background= readonly?"#eee":"#fff";
+ cm.setOption('readOnly', readonly?true:false)
+ setnamed();
 }
 
-function click(){ta.value= ce.value;jdoajax(["filename","textarea","saveasx"]);}
+//!function click(){ta.value= ce.value;jdoajax(["filename","textarea","saveasx"]);}
+function click(){ta.value= cm.getValue().replace(/\t/g,' ');jdoajax(["filename","textarea","saveasx"]);}
 function ev_save_click() {click();}
 function ev_runw_click() {click();}
 function ev_runwd_click(){click();}
+
+function ev_undo_click(){cm.undo();}
+function ev_redo_click(){cm.redo();}
 
 function ev_saveasdo_click(){click();}
 function ev_saveasx_enter() {click();}
@@ -205,6 +236,10 @@ function ev_saveas_click()     {jdlgshow("saveasdlg","saveasx");}
 function ev_saveasclose_click(){jhide("saveasdlg");}
 
 function ev_ro_click(){ro(readonly= !readonly);}
+function ev_numbers_click()
+{
+ cm.setOption('lineNumbers',cm.getOption('lineNumbers')?false:true);
+}
 
 // called with ajax response
 function ajax(ts)
@@ -213,13 +248,16 @@ function ajax(ts)
  if(2==ts.length&&(jform.jmid.value=="saveasx"||jform.jmid.value=="saveasdo"))
  {
   jhide("saveasdlg");
-  jbyid("filenamed").innerHTML=ts[1];
   jbyid("filename").value=ts[1];
+  setnamed();
   document.title=ts[0].substring(9);
  }
 }
 
 function ev_ijs_enter(){return true;}
+
+function ev_z_shortcut(){cm.undo();}
+function ev_y_shortcut(){cm.redo();}
 
 function ev_t_shortcut(){jscdo("ro");}
 function ev_r_shortcut(){jscdo("runw");}
