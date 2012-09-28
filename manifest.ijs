@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.149'
+VERSION=: '1.0.150'
 
 FILES=: 0 : 0
 history.txt
