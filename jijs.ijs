@@ -40,12 +40,9 @@ jhresize''
 'textarea'    jhhidden''
 )
 
-FNMS=: ''
-
 NB. y file
 create=: 3 : 0
-rep=. >(FNMS e.~<y){'';'WARNING: file already open!' 
-FNMS=: FNMS,<y
+rep=.''
 try. d=. 1!:1<y catch.
  d=. ''
  rep=. 'WARNING: file read failed!'
@@ -126,14 +123,6 @@ catch.
 end.
 )
 
-ev_body_unload=: 3 : 0
-f=. getv'filename'
-save f
-smoutput'closed'
-FNMS=:(-.(i.#FNMS)=(FNMS=<f)i.1)#FNMS
-jhrajax''
-)
-
 NB. new ijs temp filename
 jnew=: 3 : 0
 d=. 1!:0 jpath '~temp\*.ijs'
@@ -153,7 +142,7 @@ p{margin:0;}
 )
 
 JS=: 0 : 0
-var ta,rep,readonly,saveasx,cm;
+var ta,rep,readonly,saveasx,cm,dirty=false;
 
 function ev_body_load()
 {
@@ -170,6 +159,7 @@ function ev_body_load()
    mode:  "j",
    tabSize: 1,
    gutter: false,
+   onChange: setdirty,
    extraKeys: {
     "Ctrl-S": function(instance) { jscdo("save"); },
     "Ctrl-R": function(instance) { jscdo("runw"); }
@@ -205,11 +195,9 @@ function jgpwindoww()
   return document.documentElement.clientWidth;
 }
 
-function ev_body_unload()
-{
- ta.value= cm.getValue().replace(/\t/g,' ');
- jdoajax(["filename","textarea","saveasx"],"",jevsentence,false);
-}
+window.onbeforeunload = confirmExit;
+function setdirty(){dirty=true;}
+function confirmExit(){return dirty?"Page has unsaved changes.":null;}
 
 function setnamed()
 {
@@ -220,10 +208,11 @@ function ro(only)
 {
  readonly= only;
  cm.setOption('readOnly', readonly?true:false)
+ cm.focus();
  setnamed();
 }
 
-function click(){ta.value= cm.getValue().replace(/\t/g,' ');jdoajax(["filename","textarea","saveasx"]);}
+function click(){ta.value= cm.getValue().replace(/\t/g,' ');jdoajax(["filename","textarea","saveasx"]);dirty=false;}
 function ev_save_click() {click();}
 function ev_runw_click() {click();}
 function ev_runwd_click(){click();}
