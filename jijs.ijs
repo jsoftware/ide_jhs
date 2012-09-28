@@ -95,9 +95,11 @@ try.
   load__ f
  else.
   loadd__ f
- end.  
- jhrajax 'ran saved without error'
+ end.
+ smoutput'ran without error'  
+ jhrajax 'ran without error'
 catch.
+ smoutput 'ran with error:',LF,13!:12''
  jhrajax 13!:12''
 end.
 )
@@ -127,6 +129,7 @@ end.
 ev_body_unload=: 3 : 0
 f=. getv'filename'
 save f
+smoutput'closed'
 FNMS=:(-.(i.#FNMS)=(FNMS=<f)i.1)#FNMS
 jhrajax''
 )
@@ -204,7 +207,7 @@ function jgpwindoww()
 
 function ev_body_unload()
 {
- ta.value= ce.value;
+ ta.value= cm.getValue().replace(/\t/g,' ');
  jdoajax(["filename","textarea","saveasx"],"",jevsentence,false);
 }
 
@@ -220,7 +223,6 @@ function ro(only)
  setnamed();
 }
 
-//!function click(){ta.value= ce.value;jdoajax(["filename","textarea","saveasx"]);}
 function click(){ta.value= cm.getValue().replace(/\t/g,' ');jdoajax(["filename","textarea","saveasx"]);}
 function ev_save_click() {click();}
 function ev_runw_click() {click();}
