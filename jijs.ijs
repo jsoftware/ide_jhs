@@ -43,7 +43,9 @@ jhresize''
 NB. y file
 create=: 3 : 0
 rep=.''
-try. d=. 1!:1<y catch.
+try.
+ d=. (1!:1<y) rplc '&';'&amp;';'<';'&lt;'
+catch.
  d=. ''
  rep=. 'WARNING: file read failed!'
 end.
@@ -134,11 +136,13 @@ f=. <jpath'~temp\',a,'.ijs'
 )
 
 NB. p{} klduge because IE inserts <p> instead of <br> for enter
+NB. codemirror needs jresizeb without scroll
 CSS=: 0 : 0
 #rep{color:red}
 #filenamed{color:blue;}
 *{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
 p{margin:0;}
+#jresizeb{overflow:visible;border:solid;border-width:1px;clear:left;}
 )
 
 JS=: 0 : 0
@@ -179,11 +183,9 @@ function dresize()
  var a= jgpwindowh(); // window height
  a-= jgpbodymh();     // body margin h (top+bottom)
  a-= jgpdivh("jresizea"); // header height
- a-= 26               // fudge extra
+ a-= 5               // fudge extra
  a=  a<0?0:a;        // negative causes problems
- // ce.style.height= a+"px";
- // ce.style.width= (jgpwindoww()-26)+"px";
- cm.setSize(jgpwindoww()-20,a+10);
+ cm.setSize(jgpwindoww()-10,a);
 }
 
 //! should be in utiljs.ijs
@@ -201,15 +203,15 @@ function confirmExit(){return dirty?"Page has unsaved changes.":null;}
 
 function setnamed()
 {
-  jbyid("filenamed").innerHTML=(readonly?"readonly ":"")+jbyid("filename").value;
+  jbyid("filenamed").innerHTML=jbyid("filename").value;
 }
 
 function ro(only)
 {
  readonly= only;
  cm.setOption('readOnly', readonly?true:false)
+ cm.getWrapperElement().style.background= readonly?"#ddd":"#fff";
  cm.focus();
- setnamed();
 }
 
 function click(){ta.value= cm.getValue().replace(/\t/g,' ');jdoajax(["filename","textarea","saveasx"]);dirty=false;}
