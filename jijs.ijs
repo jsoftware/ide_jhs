@@ -24,7 +24,7 @@ jhmz''
 
 'saveasdlg'    jhdivadlg''
  'saveasdo'    jhb'save as'
- 'saveasx'     jhtext'';10
+ 'saveasx'     jhtext'';40
   'saveasclose'jhb'X'
 '<hr></div>'
 
@@ -154,10 +154,7 @@ function ev_body_load()
  rep= jbyid("rep");
  ta= jbyid("textarea");
  saveasx=jbyid("saveasx");
-
- //! dresize();
  ce.focus();
-
  cm = CodeMirror.fromTextArea(ce,
   {lineNumbers: true,
    mode:  "j",
@@ -225,8 +222,8 @@ function ev_redo_click(){cm.redo();}
 function ev_saveasdo_click(){click();}
 function ev_saveasx_enter() {click();}
 
-function ev_saveas_click()     {jdlgshow("saveasdlg","saveasx");}
-function ev_saveasclose_click(){jhide("saveasdlg");}
+function ev_saveas_click()     {jdlgshow("saveasdlg","saveasx");dresize();}
+function ev_saveasclose_click(){jhide("saveasdlg");dresize();}
 
 function ev_ro_click(){ro(readonly= !readonly);}
 function ev_numbers_click()
@@ -245,6 +242,7 @@ function ajax(ts)
   setnamed();
   document.title=ts[0].substring(9);
  }
+ dresize();
 }
 
 function ev_ijs_enter(){return true;}
