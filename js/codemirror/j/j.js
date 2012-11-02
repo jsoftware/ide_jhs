@@ -1,5 +1,6 @@
 CodeMirror.defineMode('j', function(config) {
 
+// must clear cache to get changed file downloaded
 // jtheme.css selectors: global local control string comment
 
 var c;
