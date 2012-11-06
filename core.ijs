@@ -220,25 +220,26 @@ RAW=: 0
 while. 1 do.
  logapp 'getdata loop'
  SKSERVER_jhs_=: 0 pick sdcheck_jsocket_ sdaccept_jsocket_ SKLISTEN
+
+ NB. JHS runs blocking sockets and uses sdselect for timeouts
+ NB. sdioctl_jsocket_ SKSERVER,FIONBIO_jsocket_,1
+
  try.
   PEER=: >2{sdgetpeername_jsocket_ SKSERVER
-  t=. LF,LF
-  t=. CRLF,CRLF
-  h=. ''
+  d=. h=. ''
   while. 1 do.
    h=. h,  srecv''
-   i=. (t E. h)i.1
+   i=. (h E.~ CRLF,CRLF)i.1
    if. i<#h do. break. end.
   end.
-  d=. (i+4)}.h NB. drop CRLF,CRLF
-  h=. (>:i){.h
+  i=. 4+i
+  d=. i}.h
+  h=. i{.h
   parseheader h
   if. 'POST '-:5{.h do.
    len=.".gethv'Content-Length:'
-   d=. (len<.#d){.d
-   while. len~:#d do.
-    d=. d,srecv''
-   end.
+   while. len>#d do. d=. d,srecv'' end.
+   d=. len{.d
    METHOD=: 'post'
    seturl'POST'
    if. 3=nc<'jev_post_raw_',URL,'_' do.
@@ -285,7 +286,6 @@ NB. PC_RECVSLOW 1 gets small chunks with time delay
 
 srecv=: 3 : 0
 z=. sdselect_jsocket_ SKSERVER;'';'';PC_RECVTIMEOUT
-
 if. -.SKSERVER e.>1{z do.
  'recv timeout' serror 1  NB.0;'';'';'' is a timeout
 end.
