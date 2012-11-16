@@ -5,7 +5,11 @@ coinsert'jhs'
 
 HBS=: 0 : 0
 '<script src="~addons/ide/jhs/js/codemirror/codemirror.js"></script>'
+'<script src="~addons/ide/jhs/js/codemirror/util/search.js"></script>'
+'<script src="~addons/ide/jhs/js/codemirror/util/searchcursor.js"></script>'
+'<script src="~addons/ide/jhs/js/codemirror/util/dialog.js"></script>'
 '<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/codemirror.css">'
+'<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/util/dialog.css">'
 '<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/j/jtheme.css">'
 '<script src="~addons/ide/jhs/js/codemirror/j/j.js"></script>'
 jhma''
