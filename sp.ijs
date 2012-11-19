@@ -5,7 +5,6 @@ coclass'jsp'
 spinit_z_  =: spinit_jsp_
 sp_z_      =: sp_jsp_
 spf_z_     =: spf_jsp_
-spl_z_     =: spl_jsp_
 spr_z_     =: spr_jsp_
 spx_z_     =: spx_jsp_
 spxinit_z_ =: spxinit_jsp_
@@ -15,16 +14,15 @@ sptable_z_ =: sptable_jsp_
 sphelp_z_=: 0 : 0
 sp utilties loaded when JHS starts (~addons/ide/jhs/sp.ijs)
 sp use of an ijs file adds it to recent
-project file and recent files are carried over sessions
-fr - file / '' for project / first prefix match with spr
- sp fr        load
- spr''        recent
+project file and recent are carried over sessions
+fr - file / '' for project / recent shortname
+ sp  fr       load
  spf fr       filename
- spl fr       create link
-
+ spr ''       6 recent
+ spr 9        9 recent
+ 
  spinit fr    set project and load
  ctrl+,       load project
- sp''         load project
 
  spxinit fr   set script for managed execution
  ctrl+.       advance
@@ -41,11 +39,9 @@ create ~temp/a.ijs and ~temp/b.ijs each with a few J sentences
    sp'~temp/b.ijs'      NB. load script
    spr''                NB. list recent
    sp'b'                NB. load b from recent
-   spl'b'               NB. create link to jijs
-
-managed execution of scripts can be useful
+ 
 create ~temp/c.ijs with comments, =: lines, and multiline defns
-   spxinit'~temp/c.ijs' NB. set script for managed execution
+   spxinit'~temp/c.ijs' NB. set managed execution
    ctrl+.               NB. execute next
    spx 0                NB. status
 )
@@ -69,10 +65,9 @@ sp t
 
 sp=: 3 : 'load__ spf y'
 
-spl=: 3 : 'open spf y'
-
+NB. only add .ijs and non temp files
 addrecent=: 3 : 0
-t=. >('.ijs'-:_4{.y){'';y
+t=. >(('.ijs'-:_4{.y)*.-.*/(;shorts_jsp_ y)e.'0123456789'){'';y
 t=. ~.SPFILES,~<t
 t=. (;fexist t)#t
 SPFILES=: (MAXRECENT<.#t){.t
@@ -91,7 +86,7 @@ if. ''-:y do.
 elseif. +./y e.'~/.' do.
  r=. y
 elseif. 1 do.
- c=. ((#y){.each shorts SPFILES)=<,y
+ c=. (shorts SPFILES)=<,y
  assert. 0~:+/c['not found in recent'
   r=. ,>{.c#SPFILES
 end.
@@ -101,13 +96,23 @@ addrecent r
 )
 
 shorts=: 3 : 0
-t=. '/',each y
+t=. '/',each boxopen y
 _4}.each(>:>t i:each '/')}.each t
 )
 
 spr=: 3 : 0
-addrecent'' NB. brute force SPFILES cleanup
-sptable (shorts SPFILES),.SPFILES
+if. ''-:y do. n=. 10 end.
+n=. (#SPFILES)<.;(''-:y){y;6
+addrecent'' NB. brute force cleanup
+spopen each n{.SPFILES
+i.0 0
+)
+
+spopen=: 3 : 0
+s=. ;shorts y
+t=. (JIJSAPP_jhs_,'?mid=open&path=',jpath y)jhref_jhs_ s
+t=. t,(;(1>.20-#s)#<'&nbsp;'),y
+jhtml '<div contenteditable="false">',t,'</div>'
 )
 
 spxinit=: 3 : 0

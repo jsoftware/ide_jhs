@@ -49,6 +49,7 @@ create=: 3 : 0
 rep=.''
 try.
  d=. (1!:1<y) rplc '&';'&amp;';'<';'&lt;'
+ addrecent_jsp_ jshortname y
 catch.
  d=. ''
  rep=. 'WARNING: file read failed!'
@@ -69,29 +70,23 @@ if. #USERNAME do.
  fu=. jpath'~user'
  'save only allowed to ~user paths' assert fu-:(#fu){.y
 end.
-new=. toHOST getv'textarea'
-old=. fread y
-if. -._1-:old do. old=. toHOST old end.
-if. new-:old do.
- smoutput'jijs not saved (unchanged): ',y
-else.
- smoutput'jijs saved: ',y
-end. 
-new  fwrite y
+(toHOST getv'textarea')fwrite y
 )
 
 ev_save_click=: 3 : 0
 f=. jpath getv'filename'
+t=. _8{.timestamp''
 try.
  save f
- jhrajax 'saved without error'
+ jhrajax 'saved ',t
 catch.
- jhrajax 'save failed'
+ jhrajax 'save ',t,' failed'
 end.
 )
 
 ev_runw_click=: 3 : 0
 f=. jpath getv'filename'
+t=. _8{.timestamp''
 try.
  save f
  if. 'runw'-:getv'jmid' do.
@@ -99,11 +94,9 @@ try.
  else.
   loadd__ f
  end.
- smoutput'ran without error'  
- jhrajax 'ran without error'
+ jhrajax  'ran ',t
 catch.
- smoutput 'ran with error:',LF,13!:12''
- jhrajax 13!:12''
+ jhrajax 'ran ',t,' ',13!:12''
 end.
 )
 
@@ -244,7 +237,11 @@ function ajax(ts)
   jhide("saveasdlg");
   jbyid("filename").value=ts[1];
   setnamed();
-  document.title=ts[0].substring(9);
+  var t=ts[0].split('/');
+  if(1==t.length)
+   document.title=ts[0].substring(9);
+  else
+   document.title=t[t.length-1];
  }
  dresize();
 }
