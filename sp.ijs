@@ -101,8 +101,7 @@ _4}.each(>:>t i:each '/')}.each t
 )
 
 spr=: 3 : 0
-if. ''-:y do. n=. 10 end.
-n=. (#SPFILES)<.;(''-:y){y;6
+n=. (#SPFILES)<.;(''-:y){y;16
 addrecent'' NB. brute force cleanup
 spopen each n{.SPFILES
 i.0 0

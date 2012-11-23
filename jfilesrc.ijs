@@ -32,6 +32,7 @@ application/x-gnumeric         gnumeric
 application/x-gtar-compressed  tgz
 application/x-sc               sc
 application/zip                zip
+audio/mp3                      mp3
 image/gif                      gif
 image/jpeg                     jpeg
 image/jpeg                     jpg
@@ -48,6 +49,7 @@ text/plain                     text
 text/plain                     txt
 video/x-ms-wmv                 wmv
 video/x-msvideo                avi
+
 )
 
 favicon=: 3 : 0

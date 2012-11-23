@@ -527,6 +527,11 @@ smoutput jmarka_jhs_,y,jmarkz_jhs_
 i.0 0
 )
 
+jaudio_z_=: 3 : 0
+assert fexist y
+jhtml'<audio controls="controls"><source src="',y,'" type="audio/mp3">not supported</audio>'
+)
+
 NB. eval javascript sentences
 NB. starting without ';' is evaluated only in ajax
 NB. starting with ';' is evaluated in ajax and in refresh
