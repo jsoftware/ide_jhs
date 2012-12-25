@@ -340,7 +340,7 @@ fifplain=: ;@(,~&.> e.&'[](){}$^.*+?|\' #&.> (<PATHSEP_j_)"_)
 fullname=: fullname_j_ f.
 termdelLF=: }.~ [: - 0: i.~ LF&= @ |.
 
-wdifopen=: boxopen e. <;._2 @ (wd bind 'qp')
+wdifopen=: boxopen e. <;._2 @ wdqp
 3 : 0''
 if. IFUNIX do.
   filecase=: [
@@ -1012,7 +1012,7 @@ FIFFOLDERS=: 2 {."1 USERFOLDERS
 if. wdifopen 'fif' do.
   wd 'psel fif'
   id=. TABNDX pick 'pwhat';'what';'hwhat'
-  FIFWHAT=: id wdget wd 'qd'
+  FIFWHAT=: id wdget wdqd''
   wd 'pshow;pactive'
   fifselwhat''
   return.
