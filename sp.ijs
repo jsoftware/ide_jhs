@@ -18,8 +18,7 @@ project file and recent are carried over sessions
 fr - file / '' for project / recent shortname
  sp  fr       load
  spf fr       filename
- spr ''       6 recent
- spr 9        9 recent
+ spr ''       recent files
  
  spinit fr    set project and load
  ctrl+,       load project
@@ -46,7 +45,7 @@ create ~temp/c.ijs with comments, =: lines, and multiline defns
    spx 0                NB. status
 )
 
-MAXRECENT=: 20 NB. max recent files 
+MAXRECENT=: 40 NB. max recent files 
 sprecentf=: '~temp/sp/recent.txt'
 spspf    =: '~temp/sp/sp.txt'
 
@@ -101,9 +100,8 @@ _4}.each(>:>t i:each '/')}.each t
 )
 
 spr=: 3 : 0
-n=. (#SPFILES)<.;(''-:y){y;16
 addrecent'' NB. brute force cleanup
-spopen each n{.SPFILES
+spopen each SPFILES
 i.0 0
 )
 

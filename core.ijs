@@ -113,17 +113,8 @@ is unigue and name is the same across a set of radio buttons.
 3. Enter with only text has no button.
    Enter with buttons submits as if first button pressed.
 
-4. DOCTPTE etc. - google main page and jsoftware
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Gmail/Jsoftware</title>
-
-5. perhaps should move to DOCTYPE xhtml strict
-
-6. html pattern (modified from google mail, jsoftware)
-<DOCTYPE...>
+4. html pattern
+<!DOCTYPE html>
 <html>
  <head>
   <meta...>
@@ -136,7 +127,7 @@ is unigue and name is the same across a set of radio buttons.
  [<script>...</script>...]
 </html>
 
-9. autocomplete and wrap fail validator - but are necessary
+5. autocomplete and wrap fail validator - but are necessary
 )
 
 JIJSAPP=: 'jijs' NB. 'jijsm' for simple jijs editor

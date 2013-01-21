@@ -48,7 +48,7 @@ NB. y file
 create=: 3 : 0
 rep=.''
 try.
- d=. (1!:1<y) rplc '&';'&amp;';'<';'&lt;'
+ d=. (1!:1<jpath y) rplc '&';'&amp;';'<';'&lt;'
  addrecent_jsp_ jshortname y
 catch.
  d=. ''

@@ -1,6 +1,8 @@
 NB. html templates and utilities
 coclass'jhs'
 
+TARGET=: ' target="_blank" '
+
 NB.framework styles for all pages
 CSSCORE=: 0 : 0
 *{font-family:"sans-serif";font-size:<PC_FONTSIZE>}
@@ -226,7 +228,7 @@ HTTP/1.1 200 OK
 Content-Type: text/html; charset=utf-8
 Connection: close
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -481,7 +483,7 @@ value=. t
 text=. ((0>.JMWIDTH-#value)#' '),s
 value=. value rplc ' ';'&nbsp;'
 text=. text rplc ' ';'&nbsp;'
-t=.   '<li><a href="<REF>" class="jhml" onclick="return jmenuhide();"'
+t=.   '<li><a href="<REF>" ',TARGET,' class="jhml" onclick="return jmenuhide();"'
 t=. t,jmon''
 t=. t,'><VALUE></a><TEXT></li>'
 t hrplc 'REF VALUE TEXT';x;value;text
@@ -507,7 +509,7 @@ t hrplc 'ID VALUE SET CHECKED';x;value;set;checked
 NB.* jhref*id jhref text - <a href="id">text</a>
 jhref=: 4 : 0
 y=. boxopen y
-t=. '<a href="<REF>" class="jhref" ><VALUE></a>'
+t=. '<a href="<REF>" ',TARGET,' class="jhref" ><VALUE></a>'
 t hrplc 'REF VALUE';x;y
 )
 

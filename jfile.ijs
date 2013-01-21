@@ -370,6 +370,9 @@ function ev_files_click() // file select
   jdoajax(["path"]);
 }
 
+function ev_files_dblclick(){  window.open('jijs?mid=open&path='+jform.path.value,'_blank');}
+
+
 function ev_rename_click()     {jdlgshow("renamedlg","renamex");}
 function ev_renameclose_click(){jhide("renamedlg");}
 

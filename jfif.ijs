@@ -47,7 +47,7 @@ FIFCONTEXTNDX=: ".FIFCONTEXTNDX
 FIFCASE=: ".FIFCASE
 FIFSUBDIR=: ".FIFSUBDIR
 FIFREGEX=: ".FIFREGEX
-FIFNAMEONLY=: -.".FIFNAMEONLY
+FIFNAMEONLY=: ".FIFNAMEONLY
 FIFINFO=: ''
 JHSFOUNDFILES=: ''
 fiff_find_button''
@@ -1535,7 +1535,7 @@ htmlref=: 3 : 0
 jump=. (<: jump i. '(') {. jump
 jump=. '/' (I. jump=PATHSEP_j_) } jump
 jump=. 'file://',jump
-'<a href="' , jump , '">' , name , '</a><br>'
+'<a href="' , jump , '"',TARGET,'>' , name , '</a><br>'
 )
 htmlstriptags=: 3 : 0
 dat=. y
@@ -1631,7 +1631,7 @@ name
 )
 
 jhsfixfl=: 3 : 0
-'<br><a href="jijs?mid=open&path=',(jurlencode y),'">',y,'</a>'
+'<br><a href="jijs?mid=open&path=',(jurlencode y),'"',TARGET,'>',y,'</a>'
 )
 
 jhsfixtxt=: 3 : 0
