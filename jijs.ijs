@@ -80,6 +80,7 @@ try.
  save f
  jhrajax 'saved ',t
 catch.
+ smoutput 13!:12''
  jhrajax 'save ',t,' failed'
 end.
 )
@@ -96,6 +97,7 @@ try.
  end.
  jhrajax  'ran ',t
 catch.
+ smoutput 13!:12''
  jhrajax 'ran ',t,' ',13!:12''
 end.
 )
@@ -118,6 +120,7 @@ try.
  save new
  jhrajax ('saved as ',n),JASEP,new
 catch.
+ smoutput 13!:12''
  jhrajax 'save failed'
 end.
 )

@@ -1,8 +1,6 @@
 NB. html templates and utilities
 coclass'jhs'
 
-TARGET=: ' target="_blank" '
-
 NB.framework styles for all pages
 CSSCORE=: 0 : 0
 *{font-family:"sans-serif";font-size:<PC_FONTSIZE>}
@@ -45,7 +43,7 @@ t=. (CSSCORE,y) hrplc t;PC_FONTSIZE;PC_FM_COLOR;PC_ER_COLOR;PC_LOG_COLOR;PC_SYS_
 
 NB. core plus page js
 js=: 3 : 0
-'<script type="text/javascript">',JSCORE,y,'</script>'
+'<script type="text/javascript">',LF,'var TARGET="',TARGET,'"',LF,JSCORE,y,'</script>'
 )
 
 seebox=: 3 : 0
@@ -483,7 +481,7 @@ value=. t
 text=. ((0>.JMWIDTH-#value)#' '),s
 value=. value rplc ' ';'&nbsp;'
 text=. text rplc ' ';'&nbsp;'
-t=.   '<li><a href="<REF>" ',TARGET,' class="jhml" onclick="return jmenuhide();"'
+t=.   '<li><a href="<REF>" target="',TARGET,'" class="jhml" onclick="return jmenuhide();"'
 t=. t,jmon''
 t=. t,'><VALUE></a><TEXT></li>'
 t hrplc 'REF VALUE TEXT';x;value;text
@@ -509,7 +507,7 @@ t hrplc 'ID VALUE SET CHECKED';x;value;set;checked
 NB.* jhref*id jhref text - <a href="id">text</a>
 jhref=: 4 : 0
 y=. boxopen y
-t=. '<a href="<REF>" ',TARGET,' class="jhref" ><VALUE></a>'
+t=. '<a href="<REF>" target="',TARGET,'" class="jhref" ><VALUE></a>'
 t hrplc 'REF VALUE';x;y
 )
 
@@ -586,7 +584,7 @@ t=. t,'jfile' jhml'jfile    f^'
 t=. t,JIJSAPP jhml'jijs     J^'
 t=. t,'jfif'  jhml'jfif     F^'
 t=. t,'jal'   jhml'jal'
-t=. t,'jhelp' jhml'jhelp'
+t=. t,'jhelp' jhml'jhelp    h^'
 )
 
 NB.* jhma*jhma'' - menu start

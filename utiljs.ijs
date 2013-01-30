@@ -398,11 +398,11 @@ function jdostdsc(c)
  switch(c)
  {
   case '1': jactivatemenu('1'); break;
-  case 'j': location="jijx";  break;
-  case 'f': location="jfile"; break;
-  case 'h': location="jhelp"; break;
-  case 'J': location="jijs"; break;
-  case 'F': location="jfif"; break;
+  case 'j': window.open("jijx",TARGET);  break;
+  case 'f': window.open("jfile",TARGET); break;
+  case 'h': window.open("jhelp",TARGET); break;
+  case 'J': window.open("jijs",TARGET); break;
+  case 'F': window.open("jfif",TARGET); break;
  }
 }
 

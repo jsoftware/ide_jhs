@@ -6,6 +6,8 @@ NB.   init x arg (error if not '' and does not exist)
 NB.   ~config/jhs.ijs
 NB.   ~addons/ide/jhs/config/jhs.ijs
 
+NB. config assumed complete if PORT defined when init called
+
 NB.  if init x arg starts with PORT=: then ". instead of load
 NB.  start server on port 65011 without editing files with:
 NB.  ...jconsole ~addons/ide/jhs/core.ijs -js " 'PORT=:65011'init_jhs_'' "

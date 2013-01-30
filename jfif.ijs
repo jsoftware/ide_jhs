@@ -19,6 +19,24 @@ jhresize''
 'area'   jhdiv''
 )
 
+HBS=: 0 : 0
+jhma''
+jhjmlink''
+jhmz''
+'find'   jhb'Find'
+'what'   jhtext FIFWHAT;20
+'where'  jhtext (FIFDIR,'/',FIFTYPE);50
+'context'jhselect(<;._2 FIFCONTEXT);1;FIFCONTEXTNDX
+'matchcase' jhcheckbox'case';FIFCASE
+'subfolders'jhcheckbox'sub';FIFSUBDIR
+'nameonly'  jhcheckbox'lines';FIFNAMEONLY
+jhbr
+jhresize''
+'area'   jhdiv''
+)
+
+
+
 NB. 'wherex'  jhselect JHSFOLDERS;1;JHSFOLDERS i. <FIFDIR
 NB. 'type'   jhselect JHSFILTERS;1;JHSFILTERS i. <FIFTYPE
 
@@ -38,7 +56,7 @@ NB. JHSFOLDERS=: {."1 FIFFOLDERS
 jev_get=: create
 
 ev_find_click=: 3 : 0
-t=. <;._2 getv'jdata'
+Q__=: t=. <;._2 getv'jdata'
 'FIFWHAT FIFCONTEXTNDX FIFTYPE FIFDIR FIFCASE FIFSUBDIR FIFREGEX FIFNAMEONLY'=: t
 i=. FIFDIR i:'/'
 FIFTYPE=: (>:i)}.FIFDIR
@@ -51,7 +69,7 @@ FIFNAMEONLY=: ".FIFNAMEONLY
 FIFINFO=: ''
 JHSFOUNDFILES=: ''
 fiff_find_button''
-jhrajax FIFINFO,>FIFNAMEONLY{FIFFOUND;JHSFOUNDFILES
+jhrajax FIFINFO,>FIFNAMEONLY{JHSFOUNDFILES;FIFFOUND
 )
 
 CSS=: 0 : 0
@@ -406,7 +424,7 @@ truncate=: {. , '...'"_
 FIFCASE=: 1
 FIFCONTEXTNDX=: 0
 FIFFILES=: ''
-FIFDIR=: ''
+FIFDIR=: '~temp'
 FIFFOUND=: ''
 FIFFRET=: LF
 FIFHELP=: 'Dictionary'
@@ -415,7 +433,7 @@ FIFNAMEONLY=: 1
 FIFREGEX=: 0
 FIFSHOW=: 0           
 FIFSUBDIR=: 1
-FIFTYPE=: ''          
+FIFTYPE=: '*.ijs'          
 FIFFILTERS=: 0 2$''
 FIFWHAT=: ''
 
@@ -1535,7 +1553,7 @@ htmlref=: 3 : 0
 jump=. (<: jump i. '(') {. jump
 jump=. '/' (I. jump=PATHSEP_j_) } jump
 jump=. 'file://',jump
-'<a href="' , jump , '"',TARGET,'>' , name , '</a><br>'
+'<a href="' , jump , '" target="',TARGET,'">' , name , '</a><br>'
 )
 htmlstriptags=: 3 : 0
 dat=. y
@@ -1631,7 +1649,7 @@ name
 )
 
 jhsfixfl=: 3 : 0
-'<br><a href="jijs?mid=open&path=',(jurlencode y),'"',TARGET,'>',y,'</a>'
+'<br><a href="jijs?mid=open&path=',(jurlencode y),'" target="',TARGET,'">',y,'</a>'
 )
 
 jhsfixtxt=: 3 : 0

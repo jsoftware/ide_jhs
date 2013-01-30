@@ -133,7 +133,6 @@ is unigue and name is the same across a set of radio buttons.
 JIJSAPP=: 'jijs' NB. 'jijsm' for simple jijs editor
 PROMPT=: '   '
 JZWSPU8=: 226 128 139{a. NB. empty prompt kludge - &#8203; \200B
-OKURL=: '' NB. URL allowed without login
 
 NB. J needs input - y is prompt - '' '   ' '      '
 input=: 3 : 0
@@ -144,7 +143,7 @@ if. _1~:SKSERVER do. try. ".'urlresponse_',URL,'_ y' catch. end. end. NB. jijx
 if. _1~:SKSERVER do. jbad'' end.
 getdata'' NB. get and parse http request
 if. 1=NVDEBUG do. smoutput seebox NV end. NB. HNV,NV
-if. (-.OKURL-:URL)*.(0~:#PASS)*.(1~:+/cookie E. gethv'Cookie:')*.-.LHOK*.PEER-:LOCALHOST
+if. (-.(<URL)e.boxopen OKURL)*.(0~:#PASS)*.(1~:+/cookie E. gethv'Cookie:')*.-.LHOK*.PEER-:LOCALHOST
                        do. r=. 'jev_get_jlogin_ 0'
 elseif. 1=RAW          do. r=. 'jev_post_raw_',URL,'_'''''
 elseif. 'post'-:METHOD do. r=. getv'jdo'
@@ -745,6 +744,7 @@ NB. current locale possibly changed
 cocurrent 'jhs'
 )
 
+NB. PORT defined - assumes already configured
 NB. config_file jhscfg username
 NB. config_file 'PORT=:....' does ". instead of load
 NB. USERNAME not '' adjusts SystemFolders and does cd ~temp
@@ -759,12 +759,14 @@ NB. config sets PORT BIND LHOK PASS USER
 NB. USER used in jlogin - JUM forces USER=:USERNAME
 jhscfg=: 4 : 0
 fixuf y
-lcfg jpath'~addons/ide/jhs/config/jhs_default.ijs'
-if.     'PORT=:'-:6{.x                                   do. ".x 
-elseif.     -.''-:t=. jpath x                            do. lcfg t
-elseif. fexist t=. jpath'~config/jhs.ijs'                do. lcfg t
-elseif. fexist t=. jpath'~addons/ide/jhs/config/jhs.ijs' do. lcfg t
-end.
+if. _1=nc<'PORT' do. 
+ lcfg jpath'~addons/ide/jhs/config/jhs_default.ijs'
+ if.     'PORT=:'-:6{.x                                   do. ".x 
+ elseif.     -.''-:t=. jpath x                            do. lcfg t
+ elseif. fexist t=. jpath'~config/jhs.ijs'                do. lcfg t
+ elseif. fexist t=. jpath'~addons/ide/jhs/config/jhs.ijs' do. lcfg t
+ end.
+end. 
 'PORT invalid' assert (PORT>49151)*.PORT<2^16
 'BIND invalid' assert +./(<BIND)='any';'localhost'
 'LHOK invalid' assert +./LHOK=0 1
@@ -773,6 +775,8 @@ if. _1=nc<'USER' do. USER=: '' end. NB. not in JUM config
 'USER invalid' assert 2=3!:0 USER
 PASS=: ,PASS
 USER=: ,USER
+if. _1=nc<'TARGET' do. TARGET=: '_blank' end.
+if. _1=nc<'OKURL' do. OKURL=: '' end. NB. URL allowed without login
 if. #USERNAME do. USER=:USERNAME end.
 BIND=: >(BIND-:'any'){'127.0.0.1';''
 )

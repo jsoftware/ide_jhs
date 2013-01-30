@@ -105,7 +105,11 @@ with the JHS framework and have the best of all worlds
 in developing your browser app.
  
 <a name="ide"><h1>IDE (Interactive Development Environment)</h1></a>
-<span class="h">keyboard shortcuts</span><br>
+<span class="h">target</span><br>
+New pages target _blank (new tab but may depend on browser).
+Change TARGET_jhs_ to be _self (and refresh) to have pages open in place.
+
+<br><br><span class="h">keyboard shortcuts</span><br>
 esc key escapes next key to be a shortcut.<br/>
 For example, esc j links to jijx page.<br/>
 Menu items document shortcuts on the right.<br/>
