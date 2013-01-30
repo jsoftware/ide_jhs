@@ -56,7 +56,7 @@ NB. JHSFOLDERS=: {."1 FIFFOLDERS
 jev_get=: create
 
 ev_find_click=: 3 : 0
-Q__=: t=. <;._2 getv'jdata'
+t=. <;._2 getv'jdata'
 'FIFWHAT FIFCONTEXTNDX FIFTYPE FIFDIR FIFCASE FIFSUBDIR FIFREGEX FIFNAMEONLY'=: t
 i=. FIFDIR i:'/'
 FIFTYPE=: (>:i)}.FIFDIR

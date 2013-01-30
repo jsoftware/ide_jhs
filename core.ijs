@@ -920,7 +920,7 @@ try.
     assert i<#h
     t=. (15+i)}.h
     t=. (t i.CR){.t
-    cl=. _1".W__=:t
+    cl=. _1".t
     assert _1~:cl
    end.
   end.
