@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.165'
+VERSION=: '1.0.166'
 
 FILES=: 0 : 0
 history.txt
@@ -62,4 +62,4 @@ FILESWIN=: 0 : 0
 grep.exe
 )
 
-RELEASE=: 'j701'
+RELEASE=: 'j701 j801'
