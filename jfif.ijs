@@ -35,14 +35,13 @@ jhresize''
 'area'   jhdiv''
 )
 
-
-
 NB. 'wherex'  jhselect JHSFOLDERS;1;JHSFOLDERS i. <FIFDIR
 NB. 'type'   jhselect JHSFILTERS;1;JHSFILTERS i. <FIFTYPE
 
 NB. regex option not supported in UI, but could be
 
-create=: 3 : 0
+NB. state init
+crx=: 3 : 0
 TABNDX=: 1
 getfoldernames''
 FIFFOLDERS=: UserFolders_j_,SystemFolders_j_
@@ -50,6 +49,10 @@ fif_rundef''
 FIFINFO=: ''
 NB. JHSFILTERS=: {."1 FIFFILTERS
 NB. JHSFOLDERS=: {."1 FIFFOLDERS
+)
+
+create=: 3 : 0
+crx''
 'jfif'jhr''
 )
 
@@ -1654,4 +1657,40 @@ jhsfixfl=: 3 : 0
 
 jhsfixtxt=: 3 : 0
 '<br>',jhfroma y
+)
+
+findhelp=: 0 : 0
+   find 'what' ; 'where/*.ijs'
+   find 'what' ; 'where/*.ijs' ; 'name cs'
+options: name assign =: =. cs(case sensitive) nr(no recursion) nl(no lines)
+)
+
+find=: 3 : 0
+if. 0=L.y do. findhelp return. end.
+crx''
+'FIFWHAT FIFDIR'=: 2{.y
+'FIFCASE FIFSUBDIR FIFNAMEONLY FIFREGX'=: 0 1 1 0
+p=. deb >2{y,<''
+c=. 0
+if. 0~:#p do.
+ for_n. <;._1 ' ',p do.
+  select. >n
+  case. 'name'   do. c=. 1
+  case. 'assign' do. c=. 2
+  case. '=:'     do. c=. 3
+  case. '=.'     do. c=. 4
+  case. 'case'   do. FIFCASE=: 1
+  case. 'nr'     do. FIFSUBDIR=: 0
+  case. 'nl'     do. FIFNAMEONLY=: 0
+  case.          do. assert 0['bad option'
+  end.
+ end.
+end. 
+FIFCONTEXTNDX=: c
+i=. FIFDIR i:'/'
+FIFTYPE=: (>:i)}.FIFDIR
+FIFDIR=: i{.FIFDIR
+JHSFOUNDFILES=: ''
+fiff_find_button''
+jhtml  '<div contenteditable="false">',(>FIFNAMEONLY{JHSFOUNDFILES;FIFFOUND),'</div'
 )

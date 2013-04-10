@@ -1,5 +1,7 @@
 NB. simple project manager and related tools
 
+require'~addons/ide/jhs/jfif.ijs'
+
 coclass'jsp'
 
 spinit_z_  =: spinit_jsp_
@@ -10,6 +12,7 @@ spx_z_     =: spx_jsp_
 spxinit_z_ =: spxinit_jsp_
 sprunner_z_=: 3 : '0!:111 y'
 sptable_z_ =: sptable_jsp_
+spfind_z_=: find_jfif_
 
 sphelp_z_=: 0 : 0
 sp utilties loaded when JHS starts (~addons/ide/jhs/sp.ijs)
@@ -31,6 +34,11 @@ fr - file / '' for project / recent shortname
  spx n m      run lines n through m
 
  sptable      remove boxdraw - e.g., sptable 1!:0<'*'
+ 
+ spfind 'maxrecent';'~addons/ide/jhs/*.ijs'
+ spfind 'maxrecent';'~addons/ide/jhs/*.ijs';'=:'
+ options: name assign =: =. cs nr nl
+ cs - case sensitive ; nr - no recursion ; nl - no lines
 
 create ~temp/a.ijs and ~temp/b.ijs each with a few J sentences
    spinit '~temp/a.ijs' NB. set project file
@@ -43,6 +51,9 @@ create ~temp/c.ijs with comments, =: lines, and multiline defns
    spxinit'~temp/c.ijs' NB. set managed execution
    ctrl+.               NB. execute next
    spx 0                NB. status
+   
+It can be productive to have multiple jijx tabs.
+ 1 for running sentences ; 2 with spr ; 3 with spfind
 )
 
 MAXRECENT=: 40 NB. max recent files 
