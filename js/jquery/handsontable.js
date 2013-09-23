@@ -1,4 +1,5 @@
 /**
+ * ebi
  * Handsontable 0.9.17
  * Handsontable is a simple jQuery plugin for editable tables with basic copy-paste compatibility with Excel and Google Docs
  *
