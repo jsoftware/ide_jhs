@@ -14,13 +14,14 @@ HBS=: 0 : 0
 '<script src="~addons/ide/jhs/js/codemirror/j/j.js"></script>'
 jhma''
 jhjmlink''
-'action'    jhmg'action';1;10
- 'runw'     jhmab'run         r^'
+'action'    jhmg'action';1;11
+ 'runw'     jhmab'run     r^'
  'runwd'    jhmab'run display'
- 'save'     jhmab'save        s^'
+ 'save'     jhmab'save    s^'
  'saveas'   jhmab'save as...'
- 'undo'     jhmab'undo        z^'
- 'redo'     jhmab'redo        y^'
+ 'undo'     jhmab'undo    z^'
+ 'redo'     jhmab'redo    y^'
+ 'search'   jhmab'search/ctrls'
 'option'    jhmg'option';1;8
  'ro'       jhmab'readonly    t^'
  'numbers'  jhmab'numbers'
@@ -118,6 +119,7 @@ end.
 if. fexist new do. jhrajax 'file already exists' return. end.
 try.
  save new
+ addrecent_jsp_ jshortname new
  jhrajax ('saved as ',n),JASEP,new
 catch.
  smoutput 13!:12''
@@ -216,8 +218,16 @@ function ev_save_click() {click();}
 function ev_runw_click() {click();}
 function ev_runwd_click(){click();}
 
+var searchtxt= "<pre>             ctrl+ (cmd+)</pre>"  
+searchtxt+=    "<pre>search       f\nnext         g\nprevious     G\nreplace      F\nreplace all  R</pre>"
+searchtxt+=    "<pre>save         s\nrun          r\nundo         z\nredo         y</pre>" 
+
 function ev_undo_click(){cm.undo();}
 function ev_redo_click(){cm.redo();}
+function ev_search_click()
+{
+ jbyid("rep").innerHTML= (searchtxt==jbyid("rep").innerHTML)?"":searchtxt;
+}
 
 function ev_saveasdo_click(){click();}
 function ev_saveasx_enter() {click();}

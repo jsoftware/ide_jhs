@@ -108,6 +108,7 @@ y rplc '<';'&lt;';'>';'&gt;';'&';'&amp;';'"';'&quot;';CRLF;'<br>';LF;'<br>';CR;'
 
 NB. app did not send response - send one now
 jbad=: 3 : 0
+echo NV
 smoutput'*** response not sent for ',URL
 if. METHOD-:'get' do.
  htmlresponse html409 NB. conflict - not working properly - reload
@@ -578,13 +579,15 @@ jhh1=: 3 : 0
 
 NB.* jhjmlink*jhjmlink'' - ide link menu
 jhjmlink=: 3 : 0
-t=.   'jmlink'jhmg'link';1;8
-t=. t,'jijx'  jhml'jijx     j^'
-t=. t,'jfile' jhml'jfile    f^'
-t=. t,JIJSAPP jhml'jijs     J^'
-t=. t,'jfif'  jhml'jfif     F^'
-t=. t,'jal'   jhml'jal'
-t=. t,'jhelp' jhml'jhelp    h^'
+t=.   'jmlink' jhmg'link';1;8
+t=. t,'jijx'   jhml'jijx     j^'
+t=. t,'jfile'  jhml'jfile    f^'
+t=. t,'jfiles' jhml'jfiles   k^'
+t=. t,JIJSAPP  jhml'jijs     J^'
+t=. t,'jfif'   jhml'jfif     F^'
+t=. t,'jtable' jhml'jtable'
+t=. t,'jal'    jhml'jal'
+t=. t,'jhelp'  jhml'jhelp    h^'
 )
 
 NB.* jhma*jhma'' - menu start

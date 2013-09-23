@@ -20,6 +20,7 @@ t gsrcf d
 NB. common mime types
 mimetypes=: <;._1@(' '&,)@deb;._2 (0 : 0)
 application/javascript         js
+application/javascript         map
 application/msword             doc
 application/msword             docx
 application/pdf                pdf

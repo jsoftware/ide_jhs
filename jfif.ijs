@@ -1,5 +1,3 @@
-require'~addons/ide/jhs/jfile.ijs' NB. need LASTPATH_jfile_ etc.
-
 coclass'jfif'
 coinsert'jhs'
 
@@ -8,28 +6,12 @@ jhma''
 jhjmlink''
 jhmz''
 'find'   jhb'Find'
-'what'   jhtext FIFWHAT;20
-'where'  jhtext ((jshortname_jfile_ LASTPATH_jfile_),'*.ijs');50
-'context'jhselect(<;._2 FIFCONTEXT);1;FIFCONTEXTNDX
-'matchcase' jhcheckbox'case';FIFCASE
-'subfolders'jhcheckbox'sub';FIFSUBDIR
-'nameonly'  jhcheckbox'lines';FIFNAMEONLY
-jhbr
-jhresize''
-'area'   jhdiv''
-)
-
-HBS=: 0 : 0
-jhma''
-jhjmlink''
-jhmz''
-'find'   jhb'Find'
-'what'   jhtext FIFWHAT;20
-'where'  jhtext (FIFDIR,'/',FIFTYPE);50
-'context'jhselect(<;._2 FIFCONTEXT);1;FIFCONTEXTNDX
-'matchcase' jhcheckbox'case';FIFCASE
-'subfolders'jhcheckbox'sub';FIFSUBDIR
-'nameonly'  jhcheckbox'lines';FIFNAMEONLY
+'what'   jhtext '';20
+'where'  jhtext '';50
+'context'jhselect(<;._2 FIFCONTEXT);1;0
+'matchcase' jhcheckbox'case';0
+'subfolders'jhcheckbox'sub';0
+'nameonly'  jhcheckbox'lines';0
 jhbr
 jhresize''
 'area'   jhdiv''
@@ -61,6 +43,8 @@ jev_get=: create
 ev_find_click=: 3 : 0
 t=. <;._2 getv'jdata'
 'FIFWHAT FIFCONTEXTNDX FIFTYPE FIFDIR FIFCASE FIFSUBDIR FIFREGEX FIFNAMEONLY'=: t
+if. '/'={:FIFDIR do. FIFDIR=: }:FIFDIR end.
+if. -.'*'e.FIFDIR do. FIFDIR=: FIFDIR,'/*.ijs' end. 
 i=. FIFDIR i:'/'
 FIFTYPE=: (>:i)}.FIFDIR
 FIFDIR=: i{.FIFDIR
@@ -80,13 +64,33 @@ CSS=: 0 : 0
 )
 
 JS=: 0 : 0
-function ev_body_load(){jbyid("what").focus();jresize();}
+function ev_body_load()
+{
+ setlast("what");
+ setlast("where");
+ 
+ jform.context.selectedIndex= getls("context");
+ jform.matchcase.checked=  getlstf("matchcase");
+ jform.subfolders.checked= getlstf("subfolders");
+ jform.nameonly.checked=   getlstf("nameonly");
+ 
+ jbyid("what").focus();
+ jresize();
+}
+
 function ev_what_enter(){jscdo("find");}
 function ev_where_enter(){jscdo("find");}
 function ev_find_click_ajax(ts){jbyid("area").innerHTML=ts[0];}
 
+
 function ev_find_click()
 {
+ adrecall("what",jform.what.value,"0");
+ adrecall("where",jform.where.value,"0");
+ setls("context",   jform.context.selectedIndex);
+ setls("matchcase", jform.matchcase.checked);
+ setls("subfolders",jform.subfolders.checked);
+ setls("nameonly",  jform.nameonly.checked);
  var t=jform.what.value+JASEP;
  t+=jform.context.selectedIndex+JASEP;
  t+=0+JASEP; // type is part of where - jform.type.value+JASEP;

@@ -497,17 +497,6 @@ jhtml'<div contenteditable="false">',t,'</div>'
 
 jlogoff_z_=: 3 : 'htmlresponse_jhs_ hajaxlogoff_jhs_'
 
-jlog_z_=: 3 : 0
-if. y-:0 do.
- LOGFULL_jhs_=: LOGFULL_jhs_,LOG_jhs_
- LOG_jhs_=:''
-elseif. y-:_ do.
- LOG_jhs_=: LOGFULL_jhs_,LOG_jhs_
- LOGFULL_jhs_=: ''
-end.
-i.0 0
-)
-
 NB. one very long line as LF is <br>
 jhtml_z_=: 3 : 0
 a=. 9!:36''
@@ -801,7 +790,6 @@ INPUT=: '' NB. <'   '
 NB. leading &nbsp; for Chrome delete all
 LOG=: jmarka,'<div>&nbsp;<font style="font-size:20px; color:red;" >J Http Server</font></div>',jmarkz
 LOGN=: ''
-LOGFULL=: ''
 PDFOUTPUT=: ''
 DATAS=: ''
 PS=: '/'
@@ -835,7 +823,6 @@ INPUT=: '' NB. <'   '
 NB. leading &nbsp; for Chrome delete all
 LOG=: jmarka,'<div>&nbsp;<font style="font-size:20px; color:red;" >J Http Server</font></div>',jmarkz
 LOGN=: ''
-LOGFULL=: ''
 PDFOUTPUT=: 'output pdf "',(jpath'~temp\pdf\plot.pdf'),'" 480 360;'  
 DATAS=: ''
 PS=: '/'
@@ -875,9 +862,11 @@ NB. app stubs to load app file
 jev_get_jijx_=:    3 : (stub'jijx')
 jev_get_jijxaz_=:  3 : (stub'jijxaz')
 jev_get_jfile_=:   3 : (stub'jfile')
+jev_get_jfiles_=:  3 : (stub'jfiles')
 jev_get_jijs_=:    3 : (stub'jijs')
 jev_get_jfif_=:    3 : (stub'jfif')
 jev_get_jal_=:     3 : (stub'jal')
+jev_get_jtable_=:  3 : (stub'jtable')
 jev_get_jhelp_=:   3 : (stub'jhelp')
 jev_get_jdemo_=:   3 : (stub'jdemo')
 jev_get_jlogin_=:  3 : (stub'jlogin')

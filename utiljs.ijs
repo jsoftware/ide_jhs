@@ -4,12 +4,15 @@ NB. JS could be src= and with cache would load faster
 NB. JS is small and doing it inline (not src=) is easier
 
 JSCORE=: 0 : 0
-// framework user variables and utilities
 var JASEP= '\1'; // delimit substrings in ajax response
 var jform;       // page form
 var jevev;       // event handler event object
 var jevtarget=null;   // event handler target object
 var jisIE=-1!=navigator.userAgent.search(/MSIE/);
+var LS= location.href; // localStorage key
+var i= LS.indexOf("#");
+if(-1!=i) LS= LS.substring(0,i) // strip off # fragment
+LS+= ".";
 
 function jbyid(id){return document.getElementById(id);}
 function jsubmit(s){jform.jdo.value=jevsentence;jform.submit();}
@@ -275,6 +278,7 @@ function jev(event){
 function jevdo()
 {
  JEV= "ev_"+jform.jmid.value+"_"+jform.jtype.value;
+ // alert(JEV);
  //try{eval(JEV)}
  //catch(ex)
  if('undefined'==eval("typeof "+JEV))
@@ -313,16 +317,17 @@ function newrq()
 // ids is array of form element names (values)
 // data is JASEP delimited data to send 
 // sentence (usually elided to use jevsentence)
-// asynch is true for asynch and false for synch (elided is true)
+// async is true for asynch and false for synch
+// default is synch
 function jdoajax(ids,data,sentence,async)
 {
- if(0!=rqstate){alert("busy - wait for previous request to finish");return;}
- async=async||true;
+ if(0!=rqstate) return; // previously - alert("busy - wait for previous request to finish");
+ async= (!async)?false:async;
  sentence=sentence||jevsentence;
  data=data||"";
  ids=ids||[];
  rq= newrq();
- rq.onreadystatechange= jdor;
+ if(async) rq.onreadystatechange= jdor;
  rq.open("POST",jform.jlocale.value,async); // true for async call
  jform.jdo.value= ('undefined'==typeof sentence)?jevsentence:sentence;
  rq.send(jpostargs(ids)+"&jdata="+jencode(data));
@@ -400,6 +405,7 @@ function jdostdsc(c)
   case '1': jactivatemenu('1'); break;
   case 'j': window.open("jijx",TARGET);  break;
   case 'f': window.open("jfile",TARGET); break;
+  case 'k': window.open("jfiles",TARGET); break;
   case 'h': window.open("jhelp",TARGET); break;
   case 'J': window.open("jijs",TARGET); break;
   case 'F': window.open("jfif",TARGET); break;
@@ -706,6 +712,7 @@ function jgpdivh(id)
 // debug
 
 // numbers from unicode
+
 function debcodes(t)
 {
  r= "";
@@ -722,8 +729,8 @@ function jseval(ajax,s)
  a= "<!-- j html output a --><!-- j js a --><!-- ";
 
  z= " --><!-- j js z --><!-- j html output z -->";
-while(0!=s.length)
-{
+ while(0!=s.length)
+ {
   i= s.indexOf(a);
   if(-1!=i)
   {
@@ -737,6 +744,85 @@ while(0!=s.length)
   else
    s= "";
  }
+}
+
+// 784 adsf    das f a sdf  a sdf a sdf asdf asdf asdf a
+
+function getlstf(key)
+{
+// var t= getls(key);
+// return (t==null || t=="true")?1:0;
+ return 1;
+}
+
+function getls(key){return localStorage.getItem(LS+key);}
+
+function setls(key,v){localStorage.setItem(LS+key,v);}
+
+function adrecall(id,a,start)
+{
+ setls(id+".index",start);
+ if(0==a.length) return;
+ var t= getls(id);
+ if(t==null) t= "";
+ var i,blank=0,same=0;
+ for(i=0;i<a.length;++i)
+  blank+= ' '==a.charAt(i);
+ a= a+"\n";
+ for(i=0;i<a.length;++i)
+  same+= a.charAt(i)==t.charAt(i);
+ if(blank!=a.length && same!=a.length)
+ {
+  t= a+t;
+  if('\n'==t.charAt(t.length-1))
+   t= t.substring(0,t.length-1); // drop trailing \n so split works
+  if(1000<t.length)t= t.substring(0,t.lastIndexOf("\n"));
+  setls(id,t);
+ }
+}
+
+function uarrow(a){udarrow(a,1);}
+function darrow(a){udarrow(a,0);}
+
+function udarrow(a,up)
+{
+ var a,id,v,t,n;
+ if(a==null) a= document.activeElement;
+ if(a==null || a.type!="text")
+  id= "document";
+ else 
+  id= a.id; 
+ t= getls(id);
+ n= getls(id+".index");
+ if(t==null || n==null)return;
+ t= t.split("\n");
+ if(up)
+ {
+  if(++n>=t.length) n= t.length-1;
+  if(n==-1)
+   v= t[0];
+  else
+   v= t[n];
+ }
+ else
+ {
+  if(--n<0)
+   {n= 0; v= t[0];}
+  else
+   v= t[n];
+ }
+ setls(id+".index",n);
+ if(id=="document")
+  document_recall(v);
+ else
+  a.value= v; 
+}
+
+function setlast(id)
+{
+  var a= jbyid(id);
+  setls(id+".index","-1");
+  udarrow(a,1);
 }
 )
 
