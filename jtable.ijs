@@ -23,7 +23,6 @@ jhmz''
 ercom=: '<br/><br/>see jhelp for more info'
 
 jev_get=: 3 : 0
-EDITFLAG=: 0
 'jtable'jhr''
 )
 
@@ -42,7 +41,6 @@ try.
  if. 0=L.d do. d=. <"0 d end.
  d=. enc_json <"1 d
  if. d-:'[]' do. d=. '[[]]' end.
- EDITFLAG=: 1
 catch.
  d=. (getv'nam'),' not valid table for editing',ercom
 end. 
@@ -50,10 +48,11 @@ jhrajax d
 )
 
 ev_save_click=: 3 : 0
-if. 0=EDITFLAG do. jhrajax 'nothing to save',ercom return. end.
 try.
  n=. getnam''
- d=. _1 _1}.>dec_json getv'jdata'
+ d=. getv'jdata'
+ if. '[[]]'-:d do. jhrajax 'nothing to save',ercom return. end.
+ d=. _1 _1}.>dec_json d
  if. -.2 e. ,>3!:0 each d do. d=. >d end.
  (n)=: d
  d=. ''
@@ -106,6 +105,8 @@ function ajax(ts)
      $("#dialog").dialog("open");
      return;
  }
+ var sf= (ts[0].indexOf('"')===-1)?"numeric":null; 
+ console.log(sf);
  data= eval(ts[0]);
  $('#example').handsontable({
   data: data,
@@ -114,6 +115,7 @@ function ajax(ts)
   colHeaders: true,
   rowHeaders: true,
   contextMenu: true,
+  type: sf,
   undo: true
  });
 }
