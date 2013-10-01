@@ -3,6 +3,35 @@ coclass'jhs'
 NB. JS could be src= and with cache would load faster
 NB. JS is small and doing it inline (not src=) is easier
 
+0 : 0
+onunload/onbeforeunload events would be nice if they worked 'properly'
+would allow app to clean up client side and (ajax) server side
+there are limitations (ajax, etc.) in the handlers
+and nasty cross browser differences
+problems mostly in the ajax call
+
+chrome requires onbeforeunload with async false
+firefox requires onbeforeunload but doesn't care about async
+who knows about safari and other
+and if the server is hung then there are other problems
+
+the framework set the unload event the same way it set load event
+but it doesn't trigger and something is wrong
+
+the ajax calls with body are suspect - sid "" should probably be null to avoid body*
+
+no current pages really require client/server side cleanup
+the main requirement would be a page that required a locale to hold state
+that needed to be properly released
+
+this could probably be handled by the framework as follows:
+
+window.onbeforeunload= xxxclose;
+function xxxclose(){return dirty?""prefered way to leave this page is menu close or close button ×;null;
+
+a page could manage the dirty flag and do proper shutdown in the close handler
+)
+
 JSCORE=: 0 : 0
 var JASEP= '\1'; // delimit substrings in ajax response
 var jform;       // page form
@@ -248,7 +277,12 @@ function jevload()
  return false
 }
 
-function jevunload(){jscdo("body","","unload");return false;}
+function jevunload()
+{
+ alert("jevunload");
+ jscdo("body","","unload");return false;
+}
+ 
 function jevfocus()
 {
  // return false; // IE onfocus before onload
@@ -330,7 +364,7 @@ function jdoajax(ids,data,sentence,async)
  if(async) rq.onreadystatechange= jdor;
  rq.open("POST",jform.jlocale.value,async); // true for async call
  jform.jdo.value= ('undefined'==typeof sentence)?jevsentence:sentence;
- rq.send(jpostargs(ids)+"&jdata="+jencode(data));
+ rq.send(jpostargs(ids)+"&jdata="+jencode(data)+"&jwid="+jencode(window.name));
  if(!async)jdor();
 }
 
@@ -737,9 +771,19 @@ function jseval(ajax,s)
    i+= a.length;
    j= s.indexOf(z);
    q= s.substring(i,j);
-   if(ajax||';'==q.charAt(0))
-    try{eval(q);}catch(e){alert(e+"\n"+q);}
    s= s.substring(j+z.length);
+   
+   if('!'==q.charAt(0))
+   {
+    var cmd= q.split(" ");
+    if(4==cmd.length&&cmd[0]=="!open")
+     window.open(cmd[1]+cmd[3],cmd[2]);
+   }
+   else
+   {
+    if(ajax||';'==q.charAt(0))
+     try{eval(q);}catch(e){alert(e+"\n"+q);}
+   }  
   }
   else
    s= "";

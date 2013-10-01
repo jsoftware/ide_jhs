@@ -36,14 +36,26 @@ text=: 0 : 0
 
 <h1>Help - recent changes</h1>
 <ul>
+<li>jd3 - plots with D3/jquery! - <a target="_blank" href="http://www.d3js.org">www.d3js.org</a></li>
+<pre class="jcode">
+   jd3'p1';jd3x,jd3line,jd3data ?3 4$100
+   jd3'p2';jd3x,jd3pie, jd3data ?3$100
+   jd3x NB. parameters
+</pre>
+Currently only simple line and pie charts are supported.<br>
+Study ~addons/ide/jhs/jd3.ijs to see how it works and how easy it will be to extend.
+<pre></pre>
+<li>jtable - table editor with handsontable/jquery - <a target="_blank" href="http://www.handsontable.com">www.handsontable.com</a> </li>
+<pre class="jcode">
+   jtable 'e1';'n' [ n=: i.3 4
+   jtable 'e2';'s' [ s=: 2 2$'aa';'b';'c';'dd'
+   NB. try cut/paste, cell right-click, undo/redo
+</pre>
+
+Study ~addons/ide/jhs/jtable.ijs to see how it works and how easy it will be to extend.
+<pre></pre>
+<li>jquery javascript library easily integrates with the JHS framework - see jd3 and jtable<li>
 <li>jfiles - list recent files</li>
-<li>jtable - table editor</li>
-create table to edit (e.g.) <tt>N=: i.3 4<tt> or </tt>S=: 2 2$'aa';'b';'c';'dd'</tt><br/>
-type name in textbox and press enter (defaults to base locale)<br/> 
-edit data as desired and click save<br/>
-built with jquery handsontable (<a target="_blank" href="http://www.handsontable.com">www.handsontable.com</a> for info on features)<br/>
-try cut/paste, cell right-click, and undo/redo<br/>
-see jtable.ijs for example of jquery integration with JHS<br/>
 <li>ctrl+shift+up/down arrow recall</li>
  <ul>
  <li>jijx - recall input lines</li>

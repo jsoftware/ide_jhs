@@ -252,7 +252,11 @@ function updatelog(t)
 }
 
 // ajax update window with new output
-function ajax(ts){updatelog(ts[0]);jseval(true,ts[0]);}
+function ajax(ts)
+{
+ updatelog(ts[0]);
+ jseval(true,ts[0]);
+}
 
 function scrollz(){jbyid("prompt").scrollIntoView(false);}
 
