@@ -41,7 +41,7 @@ text=: 0 : 0
    jd3'p1';jd3x,jd3line,jd3data ?3 4$100
    jd3'p2';jd3x,jd3pie, jd3data ?3$100
    jd3'p3';jd3x,jd3bar, jd3data ?20$100
-   jd3'p3';jd3x,jd3bar, jd3data ?4 20$100 NB stacked bar
+   jd3'p3';jd3x,jd3bar, jd3data ?4 20$100 NB. stacked bar
    jd3x NB. parameters
 </pre>
 Currently only simple line and pie charts are supported.<br>
