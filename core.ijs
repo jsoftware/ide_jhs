@@ -547,8 +547,9 @@ d=. ']',~each '[',each d
 ']',~'data=[',;d,each','
 )
 
-jd3line_z_=: 'type= "line"',LF
-jd3pie_z_=:  ' type= "pie"',LF
+jd3line_z_=: 'type="line"',LF
+jd3pie_z_=:  'type="pie"',LF
+jd3bar_z_=:  'type="bar"',LF 
 
 NB. jd3'foo';jd3x,jd3line,jd3data ?3 4$100
 NB. jd3'foo';jd3x,jd3pie,jd3data ?4$100
@@ -556,17 +557,17 @@ jd3x_z_=: 0 : 0
 title="Example J D3 Plot"
 titlesize= "24pt"
 minh=50
-maxh=350
+maxh=400
 linewidth=2
+barwidth=40
 legend= ["legend zero","legend one","legend two","legend three"]
-label=["a","b","c","d"] // pie only
+label=["a","b","c","d"] // pie, bar
 $("#ahtml").html("how now<br>brown cow<hr>")
 $("#zhtml").html("<hr>one flew over")
 $("#ahtml").css({"font-size":"24pt","margin-left":50})
 $("#zhtml").css({"font-size":"24pt","margin-left":50})
 $("#legend").css({"font-size":"16pt","text-align":"center"})
 )
-
 
 NB. somewhat unique query string - avoid cache - not quaranteed to be unigue!
 jhsuqs_z_=: 3 : 0

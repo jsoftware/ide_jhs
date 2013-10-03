@@ -50,12 +50,13 @@ type= "line";
 minh= 0;
 maxh= 2000;
 linewidth= 1;
+barwidth= 40;
 legend= [];
 label= [];
 data=[[]];  // data matrix - list of lists
 
 
-window.onresize= plot;
+//window.onresize= plot;
 function color(n){return d3.scale.category20().range()[n];}
 function getlabel(i){return (i<label.length)?label[i]:i;}
 
@@ -85,6 +86,7 @@ function ajax(ts)
  }
  common1(); 
  plot();
+ window.onresize= plot; // now we can resize
 }
 
 // vars not set from J with ajax eval
@@ -101,8 +103,9 @@ function plot()
  $("#graph").html(""); // remove this to see multiple graphs
  switch(type)
  {
- case "line":  plotline(); break;
- case "pie":   plotpie(); break;
+ case "line":  plotline();break;
+ case "pie":   plotpie();break;
+ case "bar":   plotbar();break;
  case "error": break;
  default:      seterr("plot type not supported"); break;
  }
@@ -112,7 +115,10 @@ function common1()
 {
  var t= "";
  var s= "";
- for(var i=0;i<legend.length;++i)
+ console.log(data.length+" "+data[0].length);
+ 
+ var c= ("pie"==type)?data[0].length:data.length;
+ for(var i=0;i<c;++i)
  {
   t+= s+"<span style=\"color:"+color(i)+";\">"+legend[i]+"</span>";
   s= "&nbsp;&bull;&nbsp;";
@@ -230,3 +236,93 @@ function plotpie()
   
  set_title(vis,0,-(r+10),"middle",titlesize,title);
 }
+
+
+function plotbar()
+{
+common();
+
+// d3 examples often use csv file and the code depends on d3.csv data format
+// rather than unravel the code - we make the ajax data conform to that format
+var rows= data.length;
+var cols= data[0].length;
+var dat=new Array(rows);
+var s=new Array(cols);
+for(var i=0;i<rows;++i)
+{
+ dat[i] = new Array(cols);
+ s[i]= new Array(cols);
+} 
+for(var i=0;i<rows;++i)
+ for(var j=0;j<cols;++j)
+ {
+  if(i==0)
+   s[i][j]= 0;
+  else
+   s[i][j]= s[i-1][j] + data[i-1][j]; 
+  dat[i][j]= {x: getlabel(j) , y: data[i][j] , y0: s[i][j]}; 
+}
+
+w= barwidth*cols;
+var h= wh-(az+m+m+ss);
+h= (h<minh)?minh:h;
+h= (h>maxh)?maxh:h;
+
+var p= [m,m,m,m], // 20 50 30 20
+    x= d3.scale.ordinal().rangeRoundBands([0, w - p[1] - p[3]]),
+    y= d3.scale.linear().range([0, h - p[0] - p[2]])
+    z= color;
+
+var svg = d3.select("#graph")
+ .append("svg:svg")
+ .attr("width", w)
+ .attr("height", h)
+ .append("svg:g")
+ .attr("transform", "translate(" + p[3] + "," + (h - p[2]) + ")");
+
+x.domain(dat[0].map(function(d) { return d.x; }));
+y.domain([0, d3.max(dat[dat.length - 1], function(d) { return d.y0 + d.y; })]);
+
+var cause = svg.selectAll("g.cause")
+ .data(dat)
+ .enter().append("svg:g")
+ .attr("class", "cause")
+ .style("fill", function(d, i) { return z(i); })
+ .style("stroke", function(d, i) { return d3.rgb(z(i)).darker(); });
+
+var rect = cause.selectAll("rect")
+ .data(Object)
+ .enter().append("svg:rect")
+ .attr("x", function(d) { return x(d.x); })
+ .attr("y", function(d) { return -y(d.y0) - y(d.y); })
+ .attr("height", function(d) { return y(d.y); })
+.attr("width", x.rangeBand());
+      
+      
+var dolabel = svg.selectAll("text")
+ .data(x.domain())
+ .enter().append("svg:text")
+ .attr("x", function(d) { return x(d) + x.rangeBand() / 2; })
+ .attr("y", 6)
+ .attr("text-anchor", "middle")
+ .attr("dy", ".71em")
+ .text(function(d) { return d; });
+
+var rule = svg.selectAll("g.rule")
+ .data(y.ticks(5))
+ .enter().append("svg:g")
+ .attr("class", "rule")
+ .attr("transform", function(d) { return "translate(0," + -y(d) + ")"; });
+
+rule.append("svg:line")
+ .attr("x2", w - p[1] - p[3])
+ .style("stroke", function(d) { return d ? "#fff" : "#000"; })
+ .style("stroke-opacity", function(d) { return d ? .7 : null; });
+
+rule.append("svg:text")
+ .attr("x", w - p[1] - p[3] + 6)
+ .attr("dy", ".35em")
+ .text(d3.format(",d"));
+}
+
+)
