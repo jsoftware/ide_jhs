@@ -72,7 +72,6 @@ jhtablez
 'kill'   jhb'kill'
 'start'  jhb'start'
 'go'     jhb'go'
-NB.! 'broadway'  jhb'broadway'
 jhhr
 jhh1'create your account'
 jhtablea
@@ -161,19 +160,6 @@ starttask=: 3 : 0
 t=. '-js "load''~addons/ide/jhs/core.ijs''" "init_jhs_''',y,'''"'
 if. IFUNIX do.
  2!:1 ('"',jpath'~bin/jconsole'),'" ',t,' &'
-else.
- doscmd ('"',jpath'~bin/jconsole.exe'),'"  ',t
-end.
-)
-
-NB. y is user
-starttaskbroadway=: 3 : 0
-if. y-:'jum' do. starttask y return. end.
-if. 3~:GTKVER_j_ do. return. end.
-try. load p=. JHS,y,'/config/jhs.ijs' catch. return. end.
-t=. '-js "load''~addons/ide/jhs/core.ijs''" "initbroadway_jhs_''',y,'''"'
-if. IFUNIX do.
- 2!:1 (('GDK_BACKEND=broadway BROADWAY_DISPLAY=',(":PORT),' "'),jpath'~bin/jconsole'),'" ',t,' &'
 else.
  doscmd ('"',jpath'~bin/jconsole.exe'),'"  ',t
 end.
@@ -395,35 +381,6 @@ end.
 jhrajax 'start: ',r
 )
 
-ev_broadway_click=: 3 : 0
-logapp'jum start: ',getv'user'
-if. 3~:GTKVER_j_ do. 
- r=. ' GTK+ 3.2 required'
- jhrajax 'start broadway: ',r return.
-end.
-if. -. UNAME-:'Linux' do.
- r=. ' Linux only'
- jhrajax 'start broadway: ',r return.
-end.
-'user pass'=. getvs'user pass'
-if. -.check user;pass do.
- r=. invalid
-else.
- pid=. getpid user
- if. nopid-:pid do.
-  jhrajax 'start broadway: task started'
-  6!:3[2 NB. too quick to new task crashes jum???
-  logjhs user,' starttaskbroadway a'
-  starttaskbroadway user NB. must do jhrajax first else hangs
-  logjhs user,' starttaskbroadway z'
-  return.
- else.
-  r=. ' task already running'
- end.
-end.
-jhrajax 'start broadway: ',r
-)
-
 portline=: 3 : 0
 d=. <;._2 ' '-.~y,LF
 b=. (<'PORT=:')=6{.each d 
@@ -508,7 +465,6 @@ function ev_attn_click(){jdoajax(["user","pass"]);}
 function ev_kill_click(){jdoajax(["user","pass"]);}
 function ev_start_click(){jdoajax(["user","pass"]);}
 function ev_go_click(){jdoajax(["user","pass"]);}
-function ev_broadway_click(){jdoajax(["user","pass"]);}
 
 function ev_usern_enter() {ev_new_click();}
 function ev_passn_enter() {ev_new_click();}
