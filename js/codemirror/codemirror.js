@@ -6047,4 +6047,3 @@ window.CodeMirror = (function() {
 
   return CodeMirror;
 })();
-
