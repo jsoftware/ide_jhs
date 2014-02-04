@@ -99,7 +99,7 @@ if. IP do. hmga y else. ' ' end.
 labopen=: 3 : 0
 ev_dot_ctrl_jijx_=: ev_advance_click
 require__'~addons/labs/labs/lab.ijs'
-smselout_jijs_=: smfocus_jijs_=: [ NB.! allow introcourse to run
+smselout_jijs_=: smfocus_jijs_=: [ NB. allow introcourse to run
 labinit_jlab_ y{LABFILES
 )
 
@@ -217,6 +217,7 @@ NB. *#log:focus{outline: none;} /* no focus mark in chrome */
 JS=: 0 : 0
 var phead= '<div id="prompt" class="log">';
 var ptail= '</div>';
+var globalajax; // sentence for enter setTimeout ajax
 
 function ev_body_focus(){setTimeout(ev_2_shortcut,100);}
 
@@ -234,7 +235,6 @@ function updatelog(t)
 {
  var p,parent,n= document.createElement("div");
  n.innerHTML= t;
-
  // remove all prompts - normally 1 but could be none or multiples
  // remove parent it removal of prompt empties it
  while(1)
@@ -279,7 +279,7 @@ function newpline(t)
  updatelog(phead+t+ptail);
 }
 
-function keyp(){jbyid("kbsp").style.display= "block";scrollz();return true;} // space for screen kb
+// function keyp(){jbyid("kbsp").style.display= "block";scrollz();return true;} // space for screen kb
 
 function ev_up_click(){uarrow();}
 function ev_dn_click(){darrow();}
@@ -352,9 +352,13 @@ function ev_log_enter()
  else
  {
   adrecall("document",t,"-1");
-  jdoajax([],"",t);
+  globalajax= t;
+  setTimeout(TOajax,1);
  }
 }
+
+// firefox can't do ajax call withint event handler (default action runs)
+function TOajax(){jdoajax([],"",globalajax);}
 
 function document_recall(v){newpline(v);}
 

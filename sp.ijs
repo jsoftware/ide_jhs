@@ -175,7 +175,7 @@ if. isnb d do.
  d=. ;LF,~each (ndx+i.c){SEM
  ndx=. ndx+<:c
 end.
-NB.! kludge to convert =. tp =:
+NB. kludge to convert =. tp =:
 i=. d i.LF
 t=. i{.d
 if. (<'=.')e.;:t do.
@@ -190,7 +190,7 @@ i.0 0
 iscolon=: 3 : 0
 t=. ;:y
 if. (<'define')e.t do. 1 return. end.
-NB.! vstar - detect AS '(' at end of line
+NB. vstar - detect AS '(' at end of line
 if. (_2{.i.#t)-:t i.;:'AS ''(''' do. 1 return. end. 
 i=. t i. <,':'
 (,each':';'0')-:(i+0 1){t,'';''

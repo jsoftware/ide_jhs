@@ -139,12 +139,13 @@ f=. <jpath'~temp\',a,'.ijs'
 
 NB. p{} klduge because IE inserts <p> instead of <br> for enter
 NB. codemirror needs jresizeb without scroll
+NB. codemirror requires no div padding (line number vs caret) so set padding-left:0
 CSS=: 0 : 0
 #rep{color:red}
 #filenamed{color:blue;}
 *{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
-p{margin:0;}
 #jresizeb{overflow:visible;border:solid;border-width:1px;clear:left;}
+div{padding-left:0;}
 )
 
 JS=: 0 : 0
@@ -164,14 +165,17 @@ function ev_body_load()
    gutter: false,
    onChange: setdirty,
    extraKeys: {
-    "Ctrl-S": function(instance) { jscdo("save"); },
-    "Ctrl-R": function(instance) { jscdo("runw"); }
+    "Ctrl-S": function(instance){setTimeout(TOsave,1);},
+    "Ctrl-R": function(instance){setTimeout(TOrunw,1);}
    }
   }
  );
  ro(0!=ce.innerHTML.length);
  dresize();
 }
+
+function TOsave(){jscdo("save");} // firefox needs ajax outside of event
+function TOrunw(){jscdo("runw");}
 
 window.onresize= dresize;
 
@@ -187,7 +191,7 @@ function dresize()
  cm.setSize(jgpwindoww()-10,a);
 }
 
-//! should be in utiljs.ijs
+// should be in utiljs.ijs
 function jgpwindoww()
 {
  if(window.innerWidth)

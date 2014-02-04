@@ -171,7 +171,7 @@ function dresize()
  ce.style.width= (jgpwindoww()-26)+"px";
 }
 
-//! should be in utiljs.ijs
+// should be in utiljs.ijs
 function jgpwindoww()
 {
  if(window.innerWidth)
