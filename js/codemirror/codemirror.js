@@ -1,4 +1,4 @@
-// xxx CodeMirror version 3.21
+// CodeMirror version 3.21
 //
 // CodeMirror is the only global var we claim
 window.CodeMirror = (function() {
