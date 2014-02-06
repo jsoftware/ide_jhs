@@ -101,9 +101,7 @@ LASTPATH=: f
 jhrajax (jshortname f),JASEP,buttons 'files';(2#<folderinfo remlev f),<'<br>'
 )
 
-nsort=: 3 : 0
-y /: (>:;y i: each '.')}. each y
-)
+nsort=: 3 : '/:~y'
 
 markfolder=: <'&nbsp;&nbsp;&nbsp;'
 
