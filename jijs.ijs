@@ -4,7 +4,7 @@ coclass'jijs'
 coinsert'jhs'
 
 HBS=: 0 : 0
-'<script src="~addons/ide/jhs/js/codemirror/codemirror.js"></script>'
+'<script src="~addons/ide/jhs/js/codemirror/codemirror.min.js"></script>'
 '<script src="~addons/ide/jhs/js/codemirror/util/search.js"></script>'
 '<script src="~addons/ide/jhs/js/codemirror/util/searchcursor.js"></script>'
 '<script src="~addons/ide/jhs/js/codemirror/util/dialog.js"></script>'
