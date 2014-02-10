@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.183'
+VERSION=: '1.0.184'
 
 FILES=: 0 : 0
 history.txt
@@ -49,6 +49,8 @@ demo/jdemo6.ijs
 demo/jdemo7.ijs
 demo/jdemo8.ijs
 demo/jdemo9.ijs
+demo/jdemogl1.ijs
+js/webgl/glmatrix-min.js
 js/jquery-1.5.1.min.js
 js/excanvas.js
 js/codemirror/codemirror.min.js
