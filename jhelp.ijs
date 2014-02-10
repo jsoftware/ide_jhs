@@ -36,6 +36,10 @@ text=: 0 : 0
 
 <h1>Help - recent changes</h1>
 <ul>
+<li>jdemogl - webgl (opengl) 3d grahics</li>
+<pre class="jcode">
+   jdemogl 1
+</pre>
 <li>jd3 - plots with D3/jquery! - <a target="_blank" href="http://www.d3js.org">www.d3js.org</a></li>
 <pre class="jcode">
    jd3'p1';jd3x,jd3line,jd3data ?3 4$100

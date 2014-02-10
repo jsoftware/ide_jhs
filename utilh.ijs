@@ -33,6 +33,9 @@ div{padding-left:2px;}
 #jresizeb{overflow:scroll;border:solid;border-width:1px;clear:left;}
 )
 
+NB. extra html - e.g. <script .... src=...> - included after CSS and before JSCORE,JS
+HEXTRA=: '' 
+
 NB. core plus page styles with config replaces
 NB. apply outer style tags after removing inner ones
 css=: 3 : 0
@@ -233,6 +236,7 @@ Connection: close
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><TITLE></title>
 <CSS>
+<HEXTRA>
 <JS>
 </head>
 <BODY>
@@ -685,7 +689,7 @@ if. SETCOOKIE do.
  SETCOOKIE_jhs_=: 0
  tmpl=. tmpl rplc (CRLF,CRLF);CRLF,'Set-Cookie: ',cookie,CRLF,CRLF
 end.
-htmlresponse tmpl hrplc 'TITLE CSS JS BODY';x;(css CSS);(js JS);(jhbs HBS)hrplc y
+htmlresponse tmpl hrplc 'TITLE CSS HEXTRA JS BODY';x;(css CSS);HEXTRA;(js JS);(jhbs HBS)hrplc y
 )
 
 NB.* jhrajax*jhrajax data - JASEP delimited data

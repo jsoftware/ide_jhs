@@ -533,6 +533,12 @@ validate_jtable_ n
 jjs'window.open("jtable","',t,'");'
 )
 
+jdemogl_z_=: 3 : 0
+assert 1-:y
+load'~addons/ide/jhs/demo/jdemoglX.ijs'rplc'X';":y
+jjs'window.open("jdemoglX","jdemoglX")'rplc'X';":y
+)
+
 jd3_z_=: 3 : 0
 require'~addons/ide/jhs/jd3.ijs'
 't p'=. y
