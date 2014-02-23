@@ -54,7 +54,7 @@ video/x-msvideo                avi
 )
 
 favicon=: 3 : 0
-htmlresponse htmlfav,1!:1 <jpath'~bin\icons\favicon.ico'
+htmlresponse htmlfav,1!:1 <jpath'~addons/ide/jhs/favicon.ico'
 )
 
 htmlfav=: toCRLF 0 : 0

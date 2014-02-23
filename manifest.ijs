@@ -6,11 +6,12 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.192'
+VERSION=: '1.0.193'
 
 FILES=: 0 : 0
 history.txt
 readme.txt
+favicon.ico
 core.ijs
 gnuplot.ijs
 gpdemo.ijs
