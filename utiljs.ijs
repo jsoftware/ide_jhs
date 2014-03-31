@@ -277,11 +277,7 @@ function jevload()
  return false
 }
 
-function jevunload()
-{
- alert("jevunload");
- jscdo("body","","unload");return false;
-}
+function jevunload(){jscdo("body","","unload");return false;}
  
 function jevfocus()
 {
