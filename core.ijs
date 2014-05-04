@@ -102,7 +102,7 @@ name and the element will not be included in post data with just id.
 
 Javascript works with id. In general a form input element should have
 the same value for both id and name. The exception is radio where id
-is unigue and name is the same across a set of radio buttons. 
+is unique and name is the same across a set of radio buttons.
 
 ***
 1. depends on cross platform javascript and styles
@@ -182,7 +182,7 @@ try.
   if. '<br>'-:_4{.t do. t=. _4}.t end.
   LOGN=: LOGN,'<div class="',class,'">',t,'</div>'
  end.
- if. (3=type)*.(0~:#s-.' ')*.(-.s-:>{.INPUT)*.(-.'jev_'-:4{.s)*.0=+/'</script'E.tolower s do.  
+ if. (3=type)*.(0~:#s-.' ')*.(-.s-:>{.INPUT)*.(-.'jev_'-:4{.s)*.0=+/'</script'E.tolower s do.
   INPUT=: INPUT,~<s -. LF NB. labs (0!:noun) has LF???
   INPUT=: (PC_RECALL_LIMIT<.#INPUT){.INPUT
  end.
@@ -265,14 +265,14 @@ serror=: 4 : 0
 if. y do.
  sdclose_jsocket_ SKSERVER
  logapp x
- x 13!:8[3 
+ x 13!:8[3
 end.
 )
 
 NB. return SKSERVER data (toJ)
-NB. serror on 
+NB. serror on
 NB.  timeout, socket error, or no data (disconnect)
-NB. PC_RECVSLOW 1 gets small chunks with time delay 
+NB. PC_RECVSLOW 1 gets small chunks with time delay
 
 srecv=: 3 : 0
 z=. sdselect_jsocket_ SKSERVER;'';'';PC_RECVTIMEOUT
@@ -316,8 +316,8 @@ r NB. bytes sent
 
 putdata=: 3 : 0
 logapp'putdata'
-try. 
- while. #y do. y=. (ssend y)}.y end. 
+try.
+ while. #y do. y=. (ssend y)}.y end.
 catch.
  logapp 'putdata error: ',13!:12''
 end.
@@ -353,7 +353,7 @@ i=. (toupper&.>0{"1 HNV)i.<toupper y
 >1{i{HNV,0;''
 )
 
-NB. get value for name y - '' for no value 
+NB. get value for name y - '' for no value
 getv=: 3 : 0
 i=. (0{"1 NV)i.<,y
 >1{i{NV,0;''
@@ -453,7 +453,7 @@ n=. <"1 ' ',.~' ',.~>n
 NB. debug stop manager
 NB. dbsm'name'     - display numbered explicit defn
 NB. dbsm'~...'     - remove stops starting with ...
-NB. dbsm'name n:n' - add stops 
+NB. dbsm'name n:n' - add stops
 NB. dbsm''         - display stops
 dbsm_z_=: 3 : 0
 if. ('~'~:{.y)*.1=#;:y do. dbsd y return. end.
@@ -555,7 +555,7 @@ d=. ']',~each '[',each d
 
 jd3line_z_=: 'type="line"',LF
 jd3pie_z_=:  'type="pie"',LF
-jd3bar_z_=:  'type="bar"',LF 
+jd3bar_z_=:  'type="bar"',LF
 
 NB. jd3'foo';jd3x,jd3line,jd3data ?3 4$100
 NB. jd3'foo';jd3x,jd3pie,jd3data ?4$100
@@ -575,7 +575,7 @@ $("#zhtml").css({"font-size":"24pt","margin-left":50})
 $("#legend").css({"font-size":"16pt","text-align":"center"})
 )
 
-NB. somewhat unique query string - avoid cache - not quaranteed to be unigue!
+NB. somewhat unique query string - avoid cache - not quaranteed to be unique!
 jhsuqs_z_=: 3 : 0
 canvasnum_jhs_=: >:canvasnum_jhs_
 '?',((":6!:0'')rplc' ';'_';'.';'_'),'_',":canvasnum_jhs_
@@ -587,7 +587,7 @@ d=. fread y
 w=. 256#.a.i.4{.16}.d
 h=. 256#.a.i.4{.20}.d
 t=. '<img width=<WIDTH>px height=<HEIGHT>px src="<FILE><UQS>" ></img>'
-jhtml t hrplc_jhs_ 'WIDTH HEIGHT FILE UQS';w;h;y;jhsuqs'' 
+jhtml t hrplc_jhs_ 'WIDTH HEIGHT FILE UQS';w;h;y;jhsuqs''
 )
 
 NB. TARGET f URL
@@ -610,7 +610,7 @@ plotjijx_z_=: 3 : 0
 canvasnum_jhs_=: >:canvasnum_jhs_
 canvasname=. 'canvas',":canvasnum_jhs_
 d=. fread y
-c=. (('<canvas 'E.d)i.1)}.d 
+c=. (('<canvas 'E.d)i.1)}.d
 c=. (9+('</canvas>'E.c)i.1){.c
 c=. c rplc 'canvas1';canvasname
 d=. (('function graph()'E.d)i.1)}.d
@@ -695,7 +695,7 @@ Access from another machine:
 
 console_failed=: 0 : 0
 
-J HTTP Server - init failed 
+J HTTP Server - init failed
 
 Port <PORT> already in use by JHS or another service.
 
@@ -769,7 +769,7 @@ sdbind_jsocket_ SKLISTEN;AF_INET_jsocket_;y;PORT
 )
 
 nextport=: 3 : 0
-while. 
+while.
  PORT=: >:PORT
  r=.dobind y
  sdclose_jsocket_ SKLISTEN
@@ -800,14 +800,14 @@ NB. config sets PORT BIND LHOK PASS USER
 NB. USER used in jlogin - JUM forces USER=:USERNAME
 jhscfg=: 4 : 0
 fixuf y
-if. _1=nc<'PORT' do. 
+if. _1=nc<'PORT' do.
  lcfg jpath'~addons/ide/jhs/config/jhs_default.ijs'
- if.     'PORT=:'-:6{.x                                   do. ".x 
+ if.     'PORT=:'-:6{.x                                   do. ".x
  elseif.     -.''-:t=. jpath x                            do. lcfg t
  elseif. fexist t=. jpath'~config/jhs.ijs'                do. lcfg t
  elseif. fexist t=. jpath'~addons/ide/jhs/config/jhs.ijs' do. lcfg t
  end.
-end. 
+end.
 'PORT invalid' assert (PORT>49151)*.PORT<2^16
 'BIND invalid' assert +./(<BIND)='any';'localhost'
 'LHOK invalid' assert +./LHOK=0 1
@@ -830,6 +830,7 @@ init=: 3 : 0
 :
 'already initialized' assert _1=nc<'SKLISTEN'
 IFJHS_z_=: 1
+getignore_j_'' NB. ignored load/require scripts
 canvasnum_jhs_=: 1
 x jhscfg y
 PATH=: jpath'~addons/ide/jhs/'
@@ -845,7 +846,7 @@ INPUT=: '' NB. <'   '
 NB. leading &nbsp; for Chrome delete all
 LOG=: jmarka,'<div>&nbsp;<font style="font-size:20px; color:red;" >J Http Server</font></div>',jmarkz
 LOGN=: ''
-PDFOUTPUT=: 'output pdf "',(jpath'~temp\pdf\plot.pdf'),'" 480 360;'  
+PDFOUTPUT=: 'output pdf "',(jpath'~temp\pdf\plot.pdf'),'" 480 360;'
 DATAS=: ''
 PS=: '/'
 cfgfile=. jpath'~addons/ide/jhs/config/jhs_default.ijs'
@@ -949,9 +950,9 @@ jwget_z_=: wget_jhs_
 
 NB. jwget template
 gettemplate=: toCRLF 0 : 0
-GET /FILE HTTP/1.1 
+GET /FILE HTTP/1.1
 Host: 127.0.0.1
-Accept: image/gif,image/png,*/*  
+Accept: image/gif,image/png,*/*
 Accept-Language: en-ca
 UA-CPU: x86
 Accept-Encoding: gzip, deflate
@@ -1100,5 +1101,3 @@ mat=. mat +/ .* 65536 256 1
 mat ; ang
 
 )
-
-

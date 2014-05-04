@@ -64,27 +64,17 @@ uplog''
 
 getlabs=: 3 : 0
 LABTITLES=: LABCATS=: LABFILES=: ''
-d=. dirpath t=. jpath'~addons/labs/labs'
-try.
- for_p. d do.
-  for_q. 1 dir '/*.ijt',~>p do.
-  LABFILES=: LABFILES,q
-  cat=. (>:#t)}.>q
-  cat=. (cat i.'/'){.cat
-  LABCATS=:  LABCATS,<cat
-  title=. toJ fread q
-  title=. (title i.LF){.title
-  title=. (>:title i.'''')}.title
-  title=. (title i:''''){.title 
-  LABTITLES=: LABTITLES,<cat,': ',title
-  end.
- end.
-catch.
+t=. jpath'~addons/labs/labs'
+if. -.fexist t,'/lab.ijs' do.
+ smoutput 'First install the labs addon.' return.
 end.
-s=. /:LABTITLES
-LABFILES=:  s{LABFILES
-LABCATS=:   s{LABCATS
-LABTITLES=: s{LABTITLES
+require__ t,'/lab.ijs'
+labaddons_jlab_''
+labs=. sort labgetfiles_jlab_''
+labs=. labs |.~ 0 i.~ ({."1 labs)=<'Addons'
+LABCATS=: 0{"1 labs
+LABFILES=: 2{"1 labs
+LABTITLES=: LABCATS ,each (<': ') ,each 1{"1 labs
 )
 
 labsel=: 3 : 0
@@ -138,7 +128,7 @@ if. fexist'~user/projects/ja/ja.ijs' do.
   t=. a
  end.
 end.
-t 
+t
 )
 
 ev_action_click=:  3 : 0
@@ -306,7 +296,7 @@ function ev_log_enter()
 
   for(k=i+1;k<jdwn.length;++k) // forward to find end DIV/P/BR or end
   {name=jdwn[k].nodeName;if(name=="DIV"||name=="BR"||name=="P")break;}
-  
+
   rng.setStart(jdwn[j],0);
   recall=!(k==jdwn.length||k==jdwn.length-1);
   if(!k==jdwn.length)
@@ -323,13 +313,13 @@ function ev_log_enter()
   t= rng.text;
   if(0!=t.length) return; // IE selection has LF, but ignore for now
   // IE -  move left until CR or NaN - move right til no change
-  while(1) 
+  while(1)
   {
     rng.moveStart('character',-1);
     t= rng.text;
     if(t.charAt(0)=='\r'||isNaN(t.charCodeAt(0))){rng.moveStart('character',1); break;}
   }
-  while(1) 
+  while(1)
   {
     n= rng.text.length; // no size change for CRLF
     rng.moveEnd('character',1);
@@ -415,5 +405,3 @@ function ev_less_ctrl(){jdoajax([]);}
 function ev_larger_ctrl(){jdoajax([]);}
 function ev_query_ctrl(){jdoajax([]);}
 )
-
-

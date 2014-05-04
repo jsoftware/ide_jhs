@@ -8,11 +8,9 @@ mkdir_j_ jpath '~addons/ide/jhs/js'
 T=. jpath '~addons/ide/jhs/'
 S=. jpath '~Addons/ide/jhs/'
 
-
 mkdir_j_ each T&, each cutopen 'config demo'
 
 f=. {."1 dirtree S
 t=. T&, each (#S) }.each f
 empty t fcopynew each f
 )
-
