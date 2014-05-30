@@ -689,7 +689,7 @@ if. SETCOOKIE do.
  SETCOOKIE_jhs_=: 0
  tmpl=. tmpl rplc (CRLF,CRLF);CRLF,'Set-Cookie: ',cookie,CRLF,CRLF
 end.
-htmlresponse tmpl hrplc 'TITLE CSS HEXTRA JS BODY';x;(css CSS);HEXTRA;(js JS);(jhbs HBS)hrplc y
+htmlresponse tmpl hrplc 'TITLE CSS HEXTRA JS BODY';(TIPX,x);(css CSS);HEXTRA;(js JS);(jhbs HBS)hrplc y
 )
 
 NB.* jhrajax*jhrajax data - JASEP delimited data

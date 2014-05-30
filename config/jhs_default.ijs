@@ -21,6 +21,11 @@ NB. and can just change specific things
 NB. JAL or installer creates new jhs_default.ijs
 NB. with luck old later files may still work
 
+NB. createconfig creates script for starting JHS - this can be convenient
+NB.    'b.ijs' createconfig_jhs_ '65001 1 any eric secret B'
+NB.    exit''
+NB. ...> j64-801/bin/jconsole ~addons/ide/jhs/config/b.ijs
+
 NB. private port range 49152 to 65535
 PORT=: 65001
 
@@ -39,3 +44,6 @@ PASS=: ''
 NB. user for PASS
 NB. JUM ignores and sets USER to be JUM username (jhs folder)
 USER=: ''
+
+NB. browser tab title prefix - distinguish sessions
+TIPX=: ''

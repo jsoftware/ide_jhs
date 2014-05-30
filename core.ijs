@@ -816,6 +816,10 @@ if. _1=nc<'USER' do. USER=: '' end. NB. not in JUM config
 'USER invalid' assert 2=3!:0 USER
 PASS=: ,PASS
 USER=: ,USER
+if. _1=nc<'TIPX' do. TIPX=: '' end.
+TIPX=: ,TIPX
+TIPX=: TIPX,(0~:#TIPX)#'/'
+'TIPX invalid' assert 2=3!:0 TIPX
 if. _1=nc<'TARGET' do. TARGET=: '_blank' end.
 if. _1=nc<'OKURL' do. OKURL=: '' end. NB. URL allowed without login
 if. #USERNAME do. USER=:USERNAME end.
@@ -983,17 +987,23 @@ z
 
 configtemplate=: 0 : 0
 load'~addons/ide/jhs/core.ijs'
-PORT_jhs_=: port
-LHOK_jhs_=: 1
-BIND_jhs_=: 'any'
-USER_jhs_=: 'user'
-PASS_jhs_=: 'pass'
+PORT_jhs_=: <port>
+LHOK_jhs_=: <lhok>
+BIND_jhs_=: '<bind>'
+USER_jhs_=: '<user>'
+PASS_jhs_=: '<pass>'
+TIPX_jhs_=: '<tipx>'
 init_jhs_''
 )
 
-createconfig=: 3 : 0
-'port user pass'=. ;:y
-(configtemplate rplc 'port';port;'user';user;'pass';pass)fwrite f=. '~config/jhs',port,user,'.ijs'
+NB. * indicates ''
+createconfig=: 4 : 0
+'port lhok bind user pass tipx'=. <;._2 ' ',~deb y
+'must be ijs script'assert '.ijs'-:_4{.x
+f=. '~addons/ide/jhs/config/',x
+t=. configtemplate rplc '<port>';port;'<lhok>';lhok;'<bind>';bind;'<user>';user;'<pass>';pass;'<tipx>';tipx
+t=. t rplc '*';''
+t fwrite f
 'file: ',f,LF,fread f
 )
 
