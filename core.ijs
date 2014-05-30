@@ -993,7 +993,7 @@ init_jhs_''
 
 createconfig=: 3 : 0
 'port user pass'=. ;:y
-(configtemplate rplc 'port';port;'user';user;'pass';pass)fwrite f=. '~config/jhs',port,user
+(configtemplate rplc 'port';port;'user';user;'pass';pass)fwrite f=. '~config/jhs',port,user,'.ijs'
 'file: ',f,LF,fread f
 )
 
