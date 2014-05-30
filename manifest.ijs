@@ -93,4 +93,4 @@ FILESWIN=: 0 : 0
 grep.exe
 )
 
-RELEASE=: 'j802'
+RELEASE=: 'j701 j801 j802'
