@@ -980,6 +980,22 @@ end.
 z
 )
 
+configtemplate=: 0 : 0
+load'~addons/ide/jhs/core.ijs'
+PORT_jhs_=: port
+LHOK_jhs_=: 1
+BIND_jhs_=: 'any'
+USER_jhs_=: 'user'
+PASS_jhs_=: 'pass'
+init_jhs_''
+)
+
+createconfig=: 3 : 0
+'port user pass'=. ;:y
+(configtemplate rplc 'port';port;'user';user;'pass';pass)fwrite f=. '~config/jhs',port,user
+'file: ',f,LF,fread f
+)
+
 NB. viewmat - previously in jgcp - should come from addon eventually
 coclass'jgcp'
 NB. viewmat stuff - subset borrowed from viewmat addon
