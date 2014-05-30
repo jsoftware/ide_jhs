@@ -85,5 +85,6 @@ end.
 JS=: 0 : 0
 function ev_body_load(){jform.user.focus();}
 
-function ev_login_enter(){jscdo("login");}
+function ev_pass_enter(){jsubmit();}
+)
 )
