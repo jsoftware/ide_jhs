@@ -830,7 +830,8 @@ init=: 3 : 0
 :
 'already initialized' assert _1=nc<'SKLISTEN'
 IFJHS_z_=: 1
-getignore_j_'' NB. ignored load/require scripts
+NB.! getignore not defined in j801
+NB. getignore_j_'' NB. ignored load/require scripts
 canvasnum_jhs_=: 1
 x jhscfg y
 PATH=: jpath'~addons/ide/jhs/'
