@@ -1,10 +1,12 @@
 NB. html templates and utilities
 coclass'jhs'
 
+NB. font-family - font-size:<PC_FONTSIZE>
+
 NB.framework styles for all pages
 CSSCORE=: 0 : 0
-*{font-family:"sans-serif";font-size:<PC_FONTSIZE>}
-*.jcode{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;white-space:pre;}
+*{font-family:"sans-serif";}
+*.jcode{font-family:"courier new","courier","monospace";white-space:pre;}
 *.jhab:hover{cursor:pointer;color:black;background:#ddd;}
 *.jhab{text-decoration:none;}
 *.jhmab:hover{cursor:pointer;}
@@ -15,7 +17,7 @@ CSSCORE=: 0 : 0
 *.jhmg{text-decoration:none;}
 *.jhml{color:black;}
 *.jhml:visited{color:black;}
-*.jhsel{background-color:buttonface;font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
+*.jhsel{background-color:buttonface;font-family:"courier new","courier","monospace";}
 body{margin:0;}
 div{padding-left:2px;}
 .menu li{
@@ -31,6 +33,11 @@ div{padding-left:2px;}
  list-style:none;border:1px black solid;margin:0;padding:0;
 }
 #jresizeb{overflow:scroll;border:solid;border-width:1px;clear:left;}
+#status-busy{
+ position: absolute; top: 0px; left: 70%; border: thick red solid; margin: 20px; padding: 10px;
+ display: none; background: white;
+ text-align:center;
+}
 )
 
 NB. extra html - e.g. <script .... src=...> - included after CSS and before JSCORE,JS
@@ -311,6 +318,15 @@ Content-Length: <LENGTH>
 
 )
 
+NB. html for ajax response in chunks
+hajax_chunk=: toCRLF 0 : 0
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=utf-8
+Cache-Control: no-cache
+Transfer-Encoding: chunked
+
+)
+
 hajaxlogoff=: toCRLF 0 : 0
 HTTP/1.1 403 OK
 Content-Type: text/html; charset=utf-8
@@ -331,6 +347,7 @@ i=. 1 i.~'</div><div id="jresizeb">'E.t
 if. i~:#t do.
  t=. '<div id="jresizea">',t,'</div>'
 end.
+t=. '<div id="status-busy"><br>server busy<br>event ignored<br><br></div>',t
 '<body onload="jevload();" onunload="jevunload();" onfocus="jevfocus();">',(jhform''),t,'</form></body>'
 )
 
@@ -363,7 +380,8 @@ end.
 (dltb t);s
 )
 
-jeditatts=: ' autocomplete="off" autocapitalize="off" spellcheck="false" '
+NB.? autocapitalize="none"
+jeditatts=: ' autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" '
 
 jhform=: 3 : 0
 formtmpl hrplc 'LOCALE';>coname''
@@ -377,17 +395,8 @@ jgetpath=: 3 : '(>:y i: PS){.y'
 NB. standard demo html boilerplate
 jhdemo=: 3 : 0
 c=. '.ijs',~>coname''
-if. 'jdemo.ijs'-:c do. t=. '' else. t=. 'demo/' end.
-p=. jpath'~addons/ide/jhs/',t,c
-t=. '<hr/>'
-t=. t,'jijx' jhref'ijx'
-t=. t,' ','jdemo'  jhref'jdemo'
-for_i. >:i.9 do.
- d=. 'jdemo',":i
- t=.t,' ',d jhref d
-end.
-t=. t,'<br/>'
-t,'Open script: <a href="jfile?mid=open&path=',p,'">',c,'</a>'
+p=. jpath'~addons/ide/jhs/demo/',c
+'<hr>',(JIJSAPP_jhs_,'?mid=open&path=',p)jhref_jhs_ c
 )
 
 NB. jgrid - special jht for grid
@@ -438,9 +447,11 @@ jhdivadlg=: 4 : 0
 NB.* jhec*id jhec '' - contenteditable div
 jhec=: 4 : 0
 t=. '<div id="<ID>" contenteditable="true"',jeditatts
-t=. t,'style="white-space:nowrap;" '
-t=. t,'onkeydown="return jev(event)"'
-t=. t,'onkeypress="return jev(event)"'
+t=. t,' style="white-space:nowrap;" '
+t=. t,' onkeydown="return jev(event)"'
+t=. t,' onkeypress="return jev(event)"'
+t=. t,' onfocus="jecfocus();"'
+t=. t,' onblur="jecblur();"'
 t=. t,'>',y,'</div>'
 t hrplc 'ID';x
 )
@@ -466,7 +477,7 @@ jhmg=: 4 : 0
 'text dec w'=. y
 text=. text,>dec{'';'&#9660;'
 t=. >(MSTATE=1){'</ul></span>';''
-t=. t,'<span style="z-index:<INDEX>";>'
+t=. t,'<span style="z-index:<INDEX>">'
 t=. t,'<span><a href="#" id="<ID>" name="<ID>" class="jhmg"'
 t=. t,' onclick="return jmenuclick(event);"'
 t=. t,jmon''
@@ -697,6 +708,28 @@ jhrajax=: 3 : 0
 htmlresponse y,~hajax rplc '<LENGTH>';":#y
 )
 
+chunk=: 3 : 0
+if. 0=#y do.
+ ''
+else. 
+ (hfd#y),CRLF,y,CRLF
+end. 
+)
 
+NB.* jhrajax_a*jhrajax_a data - first chunk
+jhrajax_a=: 3 : 0
+putdata hajax_chunk,chunk y
+)
 
+NB.* jhrajax_b*jhrajax_b data - next chunk
+jhrajax_b=: 3 : 0
+putdata chunk y
+)
+
+NB.* jhrajax_b*jhrajax_z data - last chunk
+jhrajax_z=: 3 : 0
+putdata (chunk y),'0',CRLF,CRLF
+sdclose_jsocket_ SKSERVER
+SKSERVER_jhs_=: _1
+)
 

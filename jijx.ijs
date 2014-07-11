@@ -12,7 +12,6 @@ debugmenu''
  'advance' jhmab'advance ctrl+.'
  'lab'     jhmab'labs...'
 jhmz''
-
 'scratchdlg' jhdivadlg''
 'scratcharea'jhtextarea'';1;1
 '</div>'
@@ -50,7 +49,12 @@ t=. '<div id="prompt" class="log">',t,'</div>'
 d=. LOGN,t
 uplog''
 if. METHOD-:'post' do.
- jhrajax d
+ if. CHUNKY do.
+  CHUNKY_jhs_=: 0
+  jhrajax_z d
+ else.
+  jhrajax d
+ end. 
 else.
  create''
 end.
@@ -94,7 +98,7 @@ labinit_jlab_ y{LABFILES
 )
 
 ev_advance_click=: 3 : 0
-if. (<'jlab')e.conl 0 do.  labnext_jlab_'' else. smoutput 'No lab open. Do studio|labs...' end.
+if. #LABFILE_jlab_ do.  labnext_jlab_'' else. smoutput 'No lab open. Do studio|labs...' end.
 )
 
 ev_labrun_click=: 3 : 0
@@ -191,8 +195,10 @@ ev_less_ctrl   =: 3 : 'i.0 0'
 ev_larger_ctrl =: 3 : 'i.0 0'
 ev_query_ctrl =: 3 : 'i.0 0'
 
+NB. *{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
+
 CSS=: 0 : 0
-*{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
+*{font-family:"courier new","courier","monospace";}
 form{margin-top:0;margin-bottom:0;}
 *.fm   {color:<PC_FM_COLOR>;}
 *.er   {color:<PC_ER_COLOR>;}
@@ -208,38 +214,80 @@ JS=: 0 : 0
 var phead= '<div id="prompt" class="log">';
 var ptail= '</div>';
 var globalajax; // sentence for enter setTimeout ajax
+var TOT= 1;     // timeout time to let DOM settle before change
+//var TOT= 100; // might need more time on slow devices???
 
-function ev_body_focus(){setTimeout(ev_2_shortcut,100);}
+function ev_body_focus(){if(!jisiX)setTimeout(ev_2_shortcut,TOT);}
 
 function ev_body_load()
 {
+
  jbyid("scratcharea").style.width="100%";
  jbyid("scratcharea").setAttribute("rows","8");
  jseval(false,jbyid("log").innerHTML); // redraw canvas elements
- jbyid("log").focus();
  newpline("   ");
  jresize();
+}
+
+var setvkb = function()
+{
+ var sx = document.body.scrollLeft, sy = document.body.scrollTop;
+ var naturalHeight = window.innerHeight;
+ window.scrollTo(sx, document.body.scrollHeight);
+ VKB= naturalHeight - window.innerHeight;
+ window.scrollTo(sx, sy);
+ jresize();
+}
+
+function setfocus(){jbyid("log").focus();}
+
+// iX must get VKB and resize when log gets focus
+// iX does not call onfocus the first time - so we also do setvkb in enter
+function jecfocus()
+{
+ if(jisiX)
+ { 
+  setTimeout(setvkb(),TOT);
+  setTimeout(scrollz(),TOT);
+ }
+}
+
+// iX must get VKB and resize when log loses focus
+function jecblur(){if(jisiX)setTimeout(setvkb(),TOT);}
+
+// remove id - normally 1 but could be none or multiples
+// remove id parent if removal of id makes it empty
+function removeid(id)
+{
+ var parnt;
+ while(1)
+ {
+  p= jbyid(id);
+  if(null==p) break;
+  parnt= p.parentNode;
+  parnt.removeChild(p);
+  if(0==parnt.childNodes.length) parnt.parentNode.removeChild(parnt);
+ }
 }
 
 function updatelog(t)
 {
  var p,parent,n= document.createElement("div");
  n.innerHTML= t;
- // remove all prompts - normally 1 but could be none or multiples
- // remove parent it removal of prompt empties it
- while(1)
- {
-  p= jbyid("prompt");
-  if(null==p) break;
-  parent= p.parentNode;
-  parent.removeChild(p);
-  if(0==parent.childNodes.length) parent.parentNode.removeChild(parent);
- }
+ removeid("prompt");
  jbyid("log").appendChild(n);
- jbyid("log").focus(); // required by FF ???
- jsetcaret("prompt",1);
- setTimeout(scrollz,1); // allow doc to update
+ setTimeout(scrollz,TOT); // allow doc to update
 }
+
+function scrollz()
+{
+ setfocus(); // required by ff
+ if(null==jbyid("prompt"))return;
+ jsetcaret("prompt",1);
+ jbyid("prompt").scrollIntoView(false);
+}
+
+function scrollchunk(){jbyid("chunk").scrollIntoView(false);}
 
 // ajax update window with new output
 function ajax(ts)
@@ -248,14 +296,34 @@ function ajax(ts)
  jseval(true,ts[0]);
 }
 
-function scrollz(){jbyid("prompt").scrollIntoView(false);}
-
-function ev_2_shortcut()
+// ajax update window with new output
+function ev_log_enter_ajax()
 {
- if(null==jbyid("prompt"))return; // FF
- jbyid("log").focus();scrollz();
- jsetcaret("prompt",1);
+ updatelog(rq.responseText.substr(rqoffset));
+ jseval(true,rq.responseText.substr(rqoffset));
 }
+
+function ev_log_enter_ajax_chunk()
+{
+ // jijx echo marks end of chunk with <!-- chunk --> 
+ jbyid("log").blur();
+ var i=rq.responseText.lastIndexOf("<!-- chunk -->");
+ if(i>rqoffset) // have a chunk
+ {
+  if(rqoffset==0) removeid("prompt"); // 1st chunk contains input line so must remove original
+  rqchunk= rq.responseText.substr(rqoffset,i-rqoffset);
+  rqoffset= i+14; // skip <!-- chunk -->
+  var n= document.createElement("div");
+  removeid("chunk");
+  n.innerHTML= rqchunk+'<div id="chunk"></div>';
+  jbyid("log").appendChild(n);
+  jseval(true,rqchunk);
+  setTimeout(scrollchunk,1);
+ } 
+}
+
+function ev_2_shortcut(){scrollz();}
+
 function ev_3_shortcut(){jbyid("scratcharea").focus();}
 
 function newpline(t)
@@ -280,6 +348,7 @@ function ev_dn_click(){darrow();}
 function ev_log_enter()
 {
  var t,sel,rng,tst,n,i,j,k,p,q,recall=0,name;
+ if(jisiX)setvkb();
  if(window.getSelection)
  {
   sel= window.getSelection();
@@ -343,12 +412,12 @@ function ev_log_enter()
  {
   adrecall("document",t,"-1");
   globalajax= t;
-  setTimeout(TOajax,1);
+  setTimeout(TOajax,TOT);
  }
 }
 
 // firefox can't do ajax call withint event handler (default action runs)
-function TOajax(){jdoajax([],"",globalajax);}
+function TOajax(){jdoajax([],"",globalajax,true);}
 
 function document_recall(v){newpline(v);}
 

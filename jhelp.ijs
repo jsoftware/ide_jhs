@@ -17,40 +17,51 @@ jev_get=: 3 : 0
 
 jumps=: 0 : 0
 <a href="#help">Help</a>&nbsp;
+<a href="#recent">Recent</a>&nbsp;
 <a href="#jhs">JHS</a>&nbsp;
+<a href="#config">Config</a>&nbsp;
+<a href="#ix">iX</a>&nbsp;
 <a href="#ide">IDE</a>&nbsp;
-<a href="#viewmat">viewmat</a>&nbsp;
-<a href="#plot">plot</a>&nbsp;
-<a href="#gcplot">gcplot</a>&nbsp;
-<a href="#gnuplot">gnuplot</a>&nbsp;
+<a href="#plot">Plot</a>&nbsp;
 <a href="#sp">SP</a>&nbsp;
 <a href="#gui">GUI</a>&nbsp;
 <a href="#jum">JUM</a>&nbsp;
-<a href="#config">Config</a>&nbsp;
 <a href="#console">Console</a>&nbsp;
 <a href="#about">About</a>
 )
 
 text=: 0 : 0
 <div>
+<a name="help"><h1>Help</h1>
+This document links to lots of information, but is itself quite short.
+A bit of time here will pay off down the road.<br><br>
 
-<h1>Help - recent changes</h1>
+For complete documentation see:<br>
+<a href="http://www.jsoftware.com/docs/help802/index.htm" target="_blank">www.jsoftware.com help</a><br>
+<a href="http://www.jsoftware.com/docs/help802/dictionary/vocabul.htm" target="_blank">www.jsoftware.com vocabulary</a><br>
+<a href="http://www.jsoftware.com/help/user/library.htm" target="_blank">www.jsoftware.com standard library</a></br>
+<a href="http://www.jsoftware.com/jwiki/NuVoc" target="_blank">www.jsoftware.com wiki NuVoc</a><br>
+
+<br>if you have installed local help with jal see:<br>
+<a href="~addons/docs/help/index.htm" target="_blank">~addons/docs/help/index.htm</a>
+
+<a name="recent"><h1>Recent changes</h1>
+<h2>July 2014 update</h2>
 <ul>
-<li>jdemogl - webgl (opengl) 3d grahics</li>
-<pre class="jcode">
-   jdemogl 1
-</pre>
-<li>jd3 - plots with D3/jquery! - <a target="_blank" href="http://www.d3js.org">www.d3js.org</a></li>
-<pre class="jcode">
-   jd3'p1';jd3x,jd3line,jd3data ?3 4$100
-   jd3'p2';jd3x,jd3pie, jd3data ?3$100
-   jd3'p3';jd3x,jd3bar, jd3data ?20$100
-   jd3'p3';jd3x,jd3bar, jd3data ?4 20$100 NB. stacked bar
-   jd3x NB. parameters
-</pre>
-Currently only simple line and pie charts are supported.<br>
-Study ~addons/ide/jhs/jd3.ijs to see how it works and how easy it will be to extend.
-<pre></pre>
+<li>echo/smoutput displays immediately - http chunked transfer encoding</li>
+<li>demo 10 Ajax chunks - http chunked transfer encoiding</li>
+<li>demo 11 Ajax interval timer - similar to J602 wd timer</li>
+<li>demo 12 WebGl 3d graphics</li>
+<li>iX section has info on iPhone/iPad/... client support</li>
+<li><i>server busy - event ignored</i> for new request when waiting for response</li>
+<li>Config section expanded and an easier way to run a server configured for port etc.</li>
+<li>codemirror 4.2</li>
+<li> IE 11 HTML 5 support adequate as JHS client</li>
+</ul>
+
+<h2>Oct 2013 update</h2>
+<ul>
+<li>jd3 support added (see plot section for details)
 <li>jtable - table editor with handsontable/jquery - <a target="_blank" href="http://www.handsontable.com">www.handsontable.com</a> </li>
 <pre class="jcode">
    jtable 'e1';'n' [ n=: i.3 4
@@ -59,8 +70,7 @@ Study ~addons/ide/jhs/jd3.ijs to see how it works and how easy it will be to ext
 </pre>
 
 Study ~addons/ide/jhs/jtable.ijs to see how it works and how easy it will be to extend.
-<pre></pre>
-<li>jquery javascript library easily integrates with the JHS framework - see jd3 and jtable<li>
+<li>jquery javascript library easily integrates with the JHS framework - see jd3 and jtable</li>
 <li>jfiles - list recent files</li>
 <li>ctrl+shift+up/down arrow recall</li>
  <ul>
@@ -80,16 +90,6 @@ avoids alerts, but remember the queue - don't go click crazy when you don't see 
 <li>jlog utility removed</li>
 <li>minor bug fixes</li>
 </ul>
-
-<a name="help"><h1>Help</h1>
-This document links to lots of information, but is
-itself quite short and can be skimmed in a few minutes.
-A bit of time here will pay off down the road.<br><br>
-
-For complete documentation see:<br>
-<a href="http://www.jsoftware.com/docs/help801/index.htm">www.jsoftware.com/docs/help801/index.htm</a>
-<br>or if you have installed local help with jal see:<br>
-<a href="~addons/docs/help/index.htm">~addons/docs/help/index.htm</a>
 
 <a name="jhs"><h1>JHS (J HTTP Server)</h1></a>
 JHS is a browser interface to J and
@@ -138,7 +138,68 @@ services in these toolkits will come for free. And if
 appropriate, it is easy to include any additional toolkit
 with the JHS framework and have the best of all worlds
 in developing your browser app.
- 
+
+<a name="config"><h1>Config</h1>
+A jconsole task becomes a server when the JHS scripts are loaded, configured, and initialized.<br><br>
+
+JHS is configured to serve a port (e.g., 65001), allow any or only localhost clients,
+to require a user/pass, etc.<br><br>
+
+Study ~addons/ide/jhs/config/jhs65001.ijs to see how to start a configured JHS.<br><br>
+
+Study ~addons/ide/jhs/config/jhs_default.ijs to see another (older and more complicated)
+way to start a configured server. This is the method used in the installation shortcut.<br><br>
+
+Usually http://127.0.0.1:65001/jijx is the same as http://localhost:65001/jijx.<br><br>
+
+The JHS port must be accessible through the firewall for clients on other machines.
+Allowing access to a port varies between platforms.
+If unfamiliar with the steps, do an internet search for: your_platform firewall port access.<br><br>
+
+To access JHS from another machine you need to know the ip address of the server.
+Finding this varies between platforms.
+If unfamiliar with the steps, do an interent search for: your_platform find ip address.<br><br>
+
+If the ip address is of the form 192.168.0.? then it is a LAN ip address. This address can be used
+to access the server from other machines on the same LAN.<br><br>
+
+If the address is not a LAN ip address then you can probably access the server with it from another machine.
+An example of this would be an AWS machine that has its own unique ip address.<br><br>
+
+To access a server on a LAN from a machine that is not on the LAN you need to configure the router
+to forward the port. The first step is to find the ip address of the router (this is the ip address
+seen by the rest of the internet). You may be able to get the routers ip address with:
+<pre class="jcode">   getexternalip_jhs_''</pre>
+
+Configure the router to forward internet traffic for the server port to the server LAN ip address.
+Search the internet for info on how to configure the router. Typically you browse to 192.168.0.1
+and login with a user and password. You need to find the configuration page for port forwarding and
+change it so that traffic for your server port is forwarded to your server LAN ip address.
+
+<a name="ix"><h1>iPhone/iPad/... clients</h1></a>
+
+iX 7.0 Safari has adequate HTML 5 support to run JHS client.<br><br>
+
+Relatively few changes were required for iX support.<br><br>
+
+Resize calculations were required to handle the virtual keyboard coming and going.
+There are still rough edges but it works well enough to be usefull.
+Sometimes a resize event is not triggered and the screen won't be quite right.
+An enter will usually fix this.
+The iPhone sometimes 'squeezes' its top decorations (time, battery, address, etc) and that confuses
+resize calculations. Touch time at top to unsqueeze and do enter to get propoer sizing.<br><br>
+
+A touch stylus makes it much easier to work with these devices (especially the iPhone).<br><br>
+
+A wireless keyboard works well and is highly recommended for other than casual use.<br><br>
+
+JHS esc shortcuts are handy on iX. Virtual keyboard has no esc key and the esc key on the
+wireless keyboard does not work. Virtual keyboard pressing s and sliding to ß 
+is the esc for shortcuts. Wireless keyboard hold down option and press s for esc.<br><br>
+
+Wireless arrow keys work on jijx but do not work on jijs (codemirror). This is a known codemirror
+problem and hopefully will be fixed in a future codemirror release.
+
 <a name="ide"><h1>IDE (Interactive Development Environment)</h1></a>
 <span class="h">target</span><br>
 New pages target _blank (new tab but may depend on browser).
@@ -168,16 +229,10 @@ function ev_comma_ctrl(){jdoajax([]);}
 <span class="h">jijx</span>
 Run J sentences (ctrl+shift+&uarr;&darr; recall)
 
-<br><br><span class="h">jijxh</span>
-iPhone/iTouch/iPad (and similar) support.
-
 <br><br><span class="h">jijxm</span>
 Simple browser support that requires only basic html.
-jijx and related pages require advanced browser features
+jijx and related pages require HTML 5 features
 (javascript, style sheets, contenteditable divs, ajax, ...).
-
-<br><br><span class="h">jijxipad</span>
-iPad and similar support.
 
 <br><br><span class="h">jfile</span>
 Browse files for editing, etc.
@@ -192,12 +247,6 @@ CodeMirror (www.codemirror.net) editor. See menu action|search/ctrl for ctrl/sea
 <br><br><span class="h">jijsta</span>
 edit file in textarea
 
-<br><br><span class="h">jijsce</span>
-edit file in contenteditable div
-
-<br><br><span class="h">jijsipad</span>
-iPad and similar edit file 
-
 <br><br><span class="h">jfif</span>
 find in files
 
@@ -205,7 +254,7 @@ find in files
 Addons package manager (pacman) downloads and installs
 software packages
 
-<span class="h">utils</span>
+<br><br><span class="h">utils</span>
 <pre class="jcode">
    jbd 1      NB. boxdraw +|-
    jfe_jhs_ y NB. toggle console/browser
@@ -267,16 +316,21 @@ menu debug|run - run to error or stop
 (runs to end as no error or stops)
 </pre>
 
-<a name="viewmat"><h1>viewmat</h1>
+<a name="plot"><h1>Plot</h1>
+
+Plots (graphics) can be done in several ways: viewmat, native, jd3, webgl, gcplot, and gnuplot
+(as documented in the following sections).
+
+<h2>viewmat</h2>
 <pre class="jcode">
    load'viewmat'
    viewmat ?20 20$2
    viewmat */~ i:9
 </pre>
 
-<a name="plot"><h1>J plot</h1>
+<h2>native plot</h2>
 
-J plot creates an html file that has the data and javascript for drawing on an html canvas element.<br><br>
+Native plot creates an html file that has the data and javascript for drawing on an html canvas element.<br><br>
 
 Use JAL to be sure required addons are installed:
 <pre class="jcode">
@@ -321,7 +375,24 @@ Plot has default output of canvas/html. It can also create cairo/png output.
    plot 10?10                       NB. create ~temp/plot.html 
 </pre>
 
-<a name="gcplot"><h1><a href="http://code.google.com/apis/chart/">Google Charts</a> plot</h1>
+
+<h2>jd3 - plots with D3/jquery <a target="_blank" href="http://www.d3js.org">www.d3js.org</a></h2>
+<pre class="jcode">
+   jd3'p1';jd3x,jd3line,jd3data ?3 4$100
+   jd3'p2';jd3x,jd3pie, jd3data ?3$100
+   jd3'p3';jd3x,jd3bar, jd3data ?20$100
+   jd3'p3';jd3x,jd3bar, jd3data ?4 20$100 NB. stacked bar
+   jd3x NB. parameters
+</pre>
+Currently only simple line and pie charts are supported.
+Study ~addons/ide/jhs/jd3.ijs to see how it works and how easy it will be to extend.
+
+<h2>WebGl</h2>
+
+See studio|demos|demo|12 for an example of WebGl 3d graphics.
+
+
+<h2>gcplot <a href="http://code.google.com/apis/chart/">Google Charts</a></h2>
 
 <pre class="jcode">
    load'~addons/ide/jhs/jgcp.ijs'
@@ -329,10 +400,11 @@ Plot has default output of canvas/html. It can also create cairo/png output.
    jgcx''     NB. examples
 </pre>
 
-<a name="gnuplot"><h1>gnuplot</h1>
+<h2>gnuplot <a href="http://www.gnuplot.info">www.gnuplot.info</a></h2>
 
-Plots can be created with gnuplot and in some cases may be preferable to Google Charts. Learn about gnuplot at 
-<a href="http://www.gnuplot.info">www.gnuplot.info</a>.<br><br>
+Plots can be created with gnuplot and displayed in the browser.<br><br>
+
+The following is out of date and needs changes in order to make use of the new gnuplot addon.<br><br>
 
 After gnuplot is installed, try the following:
 <pre class="jcode">
@@ -444,44 +516,14 @@ A rough sketch of the steps are:
    browse to jum task /jum and create new account
 </pre>
 
-<a name="config"><h1>Config</h1>
-For info on changing JHS config see file: <CONFIG>
-
 <a name="console"><h1>Console</h1>
-The JHS jconsole window diplays useful information.
-It can kill the JHS task in the event of problems.
+The JHS jconsole window diplays useful information.<br><br>
+It can be used (ctrl+c) to signal break to the J task and
+it can kill the J task in the event of problems.<br><br> 
+
 In windows you can edit the icon properties to run minimized.
 You can hide the window if you wish:
 <pre class="jcode">   jshowconsole_j_ 0 NB. hide/show 0/1</pre>
-
-<a name="codemirror"><h1>CodeMirror Copyright</h1>
-
-CodeMirror code (folder ~addons/ide/jhs/js/codemirror) that provides the jijs editor is covered by the following copyright:<br><br>
-
-Copyright (C) 2012 by Marijn Haverbeke <marijnh@gmail.com><br><br>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:<br><br>
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.<br><br>
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.<br><br>
-
-
-Please note that some subdirectories of the CodeMirror distribution
-include their own LICENSE files, and are released under different
-licences.
 
 <a name="about"><h1>About</h1></a>
 <pre class="jcode">

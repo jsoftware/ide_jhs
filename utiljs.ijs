@@ -37,11 +37,18 @@ var JASEP= '\1'; // delimit substrings in ajax response
 var jform;       // page form
 var jevev;       // event handler event object
 var jevtarget=null;   // event handler target object
-var jisIE=-1!=navigator.userAgent.search(/MSIE/);
+var AGENT=navigator.userAgent;
+var jisIE=-1!=AGENT.search(/MSIE/);
+var jisiPhone= -1!=AGENT.indexOf('iPhone');
+var jisiPod  = -1!=AGENT.indexOf('iPod');
+var jisiPad  = -1!=AGENT.indexOf('iPad');
+var jisiX    = jisiPhone||jisiPod||jisiPad;
+var VKB      = 0;  // iX kb height
 var LS= location.href; // localStorage key
 var i= LS.indexOf("#");
 if(-1!=i) LS= LS.substring(0,i) // strip off # fragment
 LS+= ".";
+var logit= "";
 
 function jbyid(id){return document.getElementById(id);}
 function jsubmit(s){jform.jdo.value=jevsentence;jform.submit();}
@@ -259,13 +266,19 @@ var JEV;         // js handler to call
 
 function jresize()
 {
+ logit+= "B";
  // IE resize multiple frames sometimes gets id as null
  if(jbyid("jresizea")==null||jbyid("jresizeb")==null)return;
  var a= jgpwindowh(); // window height
+ 
+ logit+= " a"+a;
+ 
  a-= jgpbodymh();     // body margin h (top+bottom)
  a-= jgpdivh("jresizea"); // header height
  a-= 6               // fudge extra
+ a-= VKB; // virtual keyboard - does not resize but overlays 
  a=  a<0?0:a;        // negative causes problems
+ 
  jbyid("jresizeb").style.height= a+"px";
 }
 
@@ -326,7 +339,7 @@ function jevdo()
 }
 
 // ajax
-var rq,rqstate=0;
+var rq,rqchunk,rqstate=0,rqoffset=0;
 
 // xmlhttprequest not supported in kongueror 3.2.1 (c) 2003
 function newrq()
@@ -351,12 +364,18 @@ function newrq()
 // default is synch
 function jdoajax(ids,data,sentence,async)
 {
- if(0!=rqstate) return; // previously - alert("busy - wait for previous request to finish");
+ if(0!=rqstate)
+ { 
+  // return; // previously - alert("busy - wait for previous request to finish");
+  if(null!=jbyid("status-busy")) jbyid("status-busy").style.display="block";
+  return;
+ }
  async= (!async)?false:async;
  sentence=sentence||jevsentence;
  data=data||"";
  ids=ids||[];
  rq= newrq();
+ rqoffset= 0;
  if(async) rq.onreadystatechange= jdor;
  rq.open("POST",jform.jlocale.value,async); // true for async call
  jform.jdo.value= ('undefined'==typeof sentence)?jevsentence:sentence;
@@ -379,15 +398,34 @@ function jpostargs(ids)
 
 function jencode(d){return(encodeURIComponent(d)).replace("/%20/g","+");}
 
-// recv ajax response from J -> ev_mid_type_ajax(ts)
-// call ajax(ts) or ev_mid_type_ajax(ts)
-// ts is ajax response split on JASEP
+// rprocess ajax response(s) from J
+// 0 or more state 3 and then state 4
+// response header (Transfer-Encoding: chunked) indicates chunked
+
+// not chunked - call ev_mid_type_ajax(ts) - if not defined call ajax(ts)
+// ts is rq.responseText split on JASEP
+// function can use rq.responseText directly instead of ts
+
+// chunked - ev_mid_type_ajax_chunk() for each state 3 and ev_mid_type_ajax() for state 4
+// ..._ajax_chunk and ..._ajax must keep track of what parts of rq.responseText to use
+// meaningful chunk boundaries do not match with how responseText data is received
 function jdor()
 {
  var d,f;
  rqstate= rq.readyState;
+ f= "ev_"+jform.jmid.value+"_"+jform.jtype.value+"_ajax";
+ 
+ if(rqstate==3&&null!=rq.getResponseHeader("Transfer-Encoding")) // chunked
+ {
+  f+= "_chunk";
+  if("function"==eval("typeof "+f))
+    try{eval(f+"()")}catch(e){alert(f+" failed: "+e);}
+  return;
+ }
+ 
  if(rqstate==4)
  {
+  if(null!=jbyid("status-busy")) jbyid("status-busy").style.display="none";
   if(200!=rq.status)
   {
    if(403==rq.status)
@@ -405,15 +443,13 @@ function jdor()
   else
   {
    d=rq.responseText.split(JASEP);
-   f="ev_"+jform.jmid.value+"_"+jform.jtype.value+"_ajax";
    if("function"==eval("typeof "+f))
     f+="(d)";
    else
     f="ajax(d)";
-   try{eval(f)}catch(e){alert(f+" failed");}
+   try{eval(f)}catch(e){alert(f+" failed: "+e);}
   }
-  rqstate= 0;
-  busy= 0;
+  rqstate= 0; rqoffset= 0;
  }
 }
 
@@ -447,6 +483,10 @@ function keypress(ev)
 {
  var e=window.event||ev;
  var c=e.charCode||e.keyCode;
+ 
+ if(jisiX&&c==223){jsc=1;return false;}  // option+s or press letter s and slide right
+ // if(c==96){alert("???";return false;} // press ` for debug alert info
+ 
  var s= String.fromCharCode(c);
  if(!jsc)return true;
  jsc=0;
@@ -864,6 +904,7 @@ function setlast(id)
   setls(id+".index","-1");
   udarrow(a,1);
 }
+
 )
 
 docjs=: 3 : 0

@@ -6,6 +6,7 @@ NB. serves .htm .js etc pages from anywhere
 NB. possible security issues! careful on allowing other suffixes!
 NB. ~root kludge to read gnuplot js files from /usr/share/gnuplot/gnuplot/4.4/js/
 jev_get=: 3 : 0
+NB. echo 'get: ',y
 if. y-:'favicon.ico' do. favicon 0 return. end.
 y=. jpath(5*'~root/'-:6{.y)}.y
 d=. fread y

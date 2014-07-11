@@ -3,15 +3,15 @@ NB. J HTTP Server - ijs app - textarea version
 coclass'jijs'
 coinsert'jhs'
 
-HBS=: 0 : 0
-'<script src="~addons/ide/jhs/js/codemirror/codemirror.min.js"></script>'
-'<script src="~addons/ide/jhs/js/codemirror/util/search.js"></script>'
-'<script src="~addons/ide/jhs/js/codemirror/util/searchcursor.js"></script>'
-'<script src="~addons/ide/jhs/js/codemirror/util/dialog.js"></script>'
-'<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/codemirror.css">'
-'<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/util/dialog.css">'
-'<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/j/jtheme.css">'
-'<script src="~addons/ide/jhs/js/codemirror/j/j.js"></script>'
+HBS=: 0 : 0 rplc 'CMV';'4.2'
+'<script src="~addons/ide/jhs/js/codemirror/codemirror.min.CMV.js"></script>'
+'<script src="~addons/ide/jhs/js/codemirror/util/search.CMV.js"></script>'
+'<script src="~addons/ide/jhs/js/codemirror/util/searchcursor.CMV.js"></script>'
+'<script src="~addons/ide/jhs/js/codemirror/util/dialog.CMV.js"></script>'
+'<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/codemirror.CMV.css">'
+'<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/util/dialog.CMV.css">'
+'<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/j/jtheme.CMV.css">'
+'<script src="~addons/ide/jhs/js/codemirror/j/j.CMV.js"></script>'
 jhma''
 jhjmlink''
 'action'    jhmg'action';1;11
@@ -214,7 +214,7 @@ function ro(only)
  readonly= only;
  cm.setOption('readOnly', readonly?true:false)
  cm.getWrapperElement().style.background= readonly?"#ddd":"#fff";
- cm.focus();
+ ce.focus();
 }
 
 function click(){ta.value= cm.getValue().replace(/\t/g,' ');jdoajax(["filename","textarea","saveasx"]);dirty=false;}

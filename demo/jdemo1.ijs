@@ -25,7 +25,7 @@ NB. 6 numbers replace <RESULT> tag
 ev_roll_click=: 3 : 'create >:6?49'
 
 desc=: 0 : 0
-<br>Pressing rollem button:<br>
+<hr>Pressing rollem button:<br>
 calls js function ev_roll_click()<br>
 which calls jsubmit()<br>
 which calls verb ev_roll_click<br>

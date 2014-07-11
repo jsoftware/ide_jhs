@@ -115,7 +115,6 @@ function common1()
 {
  var t= "";
  var s= "";
- console.log(data.length+" "+data[0].length);
  
  var c= ("pie"==type)?data[0].length:data.length;
  for(var i=0;i<c;++i)

@@ -3,6 +3,15 @@ require 'socket'
 coclass'jhs'
 
 0 : 0
+
+*** timer - wd docs
+timer i ; set interval timer to i milliseconds.
+Event systimer occurs when time has elapsed.
+The timer keeps triggering events until the timer is turned off.
+An argument of 0 turns the timer off.
+The systimer event may be delayed if J is busy,
+and it is possible for several delayed events to be reported as a single event.
+
 *** Cache-Control: no-cache
 Browser caching can be confusing and is quite different
 from a desktop application.
@@ -161,6 +170,8 @@ catch.
 end.
 )
 
+CHUNKY_jhs_=: 0
+
 NB. J has output - x is type, y is string
 NB. MTYOFM  1 formatted result array
 NB. MTYOER  2 error
@@ -176,16 +187,32 @@ try.
  s=. y NB. output string
  type=. x NB. MTYO type
  class=. >type{'';'fm';'er';'log';'sys';'';'file'
- if. (3~:type)+.-.'jev_'-:4{.dlb s do. NB. jev_... lines not logged
+ 
+ if. (6=type)*.URL-:'jijx' do.
+  t=. jhtmlfroma s
+  if. '<br>'-:_4{.t do. t=. _4}.t end.
+  LOGN=: LOGN,'<div class="',class,'">',t,'</div><!-- chunk -->'
+  LOG_jhs_=: LOG,LOGN
+  if. -.CHUNKY do.
+   jhrajax_a LOGN
+  else.
+   jhrajax_b LOGN
+  end.
+  LOGN=: ''
+  CHUNKY_jhs_=: 1
+ 
+ elseif. (3~:type)+.-.'jev_'-:4{.dlb s do. NB. jev_... lines not logged
   if. 3=type do. s=. PROMPT,dlb s end.
   t=. jhtmlfroma s
   if. '<br>'-:_4{.t do. t=. _4}.t end.
   LOGN=: LOGN,'<div class="',class,'">',t,'</div>'
  end.
- if. (3=type)*.(0~:#s-.' ')*.(-.s-:>{.INPUT)*.(-.'jev_'-:4{.s)*.0=+/'</script'E.tolower s do.
-  INPUT=: INPUT,~<s -. LF NB. labs (0!:noun) has LF???
-  INPUT=: (PC_RECALL_LIMIT<.#INPUT){.INPUT
- end.
+
+ NB. INPUT now in LS
+ NB. if. (3=type)*.(0~:#s-.' ')*.(-.s-:>{.INPUT)*.(-.'jev_'-:4{.s)*.0=+/'</script'E.tolower s do.
+ NB.  INPUT=: INPUT,~<s -. LF NB. labs (0!:noun) has LF???
+ NB.  INPUT=: (PC_RECALL_LIMIT<.#INPUT){.INPUT
+ NB. end.
 
 catch.
  logappx'output'
@@ -257,6 +284,7 @@ while. 1 do.
 end.
 )
 
+NB. possibly interesting idea - urlmod - use modifier at end of URL to customize J/Javascript
 seturl=: 3 : 0
 URL=: jurldecode}.(<./t i.' ?'){.t=. gethv y
 )
@@ -533,12 +561,6 @@ validate_jtable_ n
 jjs'window.open("jtable","',t,'");'
 )
 
-jdemogl_z_=: 3 : 0
-assert 1-:y
-load'~addons/ide/jhs/demo/jdemoglX.ijs'rplc'X';":y
-jjs'window.open("jdemoglX","jdemoglX")'rplc'X';":y
-)
-
 jd3_z_=: 3 : 0
 require'~addons/ide/jhs/jd3.ijs'
 't p'=. y
@@ -669,6 +691,25 @@ y,'?refresh=',(":6!:0'')rplc' ';'-'
 
 jbd_z_=: 3 : '9!:7[y{Boxes_j_' NB. select boxdraw (PC_BOXDRAW)
 
+decho_z_=: echo_z_
+
+NB. JHS echo to console - should be in JHS core or even stdlib
+echoc_z_=: 3 : 0
+if. IFJHS do.
+ try.
+  jbd 1
+  jfe_jhs_ 0
+  echo y
+ catch.
+ end.
+ jfe_jhs_ 1
+ jbd 0
+else.
+ echo y
+end. 
+)
+
+dechoc_z_=: echoc_z_
 NB. toggle jfe behavior
 jfe=: 3 : 0
 15!:16 y
@@ -679,9 +720,9 @@ console_welcome=: 0 : 0
 
 J HTTP Server - init OK
 
-Requires a modern browser (later than 2005) with Javascript.
+Requires HTML 5 browser with javascript.
 
-A : separates ip address from port. Numeric form ip can be faster than name.
+A : separates ip address from port.
 <REMOTE>
 Start a web browser on this machine and enter URL:
    http://<LOCAL>:<PORT>/jijx
@@ -708,26 +749,27 @@ See file: <CFGFILE>
 for information on using another PORT.
 )
 
+NB. PC_FONTFAMILY=:   '"courier new","courier","monospace"'
+NB. PC_FONT_COLOR=:   'black'
+NB. PC_RECALL_LIMIT=: 25       NB. limit ijx recall lines
+NB. PC_LOG_LIMIT=:    20000    NB. limit ijx log size in bytes
+
 NB. html config parameters
 config=: 3 : 0
-PC_FONTFAMILY=:   '"courier new","courier","monospace"'
 PC_FONTSIZE=:     '11px'
-PC_FONT_COLOR=:   'black'
 PC_FM_COLOR=:     'black'  NB. formatted output
 PC_ER_COLOR=:     'red'    NB. error
 PC_LOG_COLOR=:    'blue'   NB. log user input
 PC_SYS_COLOR=:    'purple' NB. system error
 PC_FILE_COLOR=:   'green'  NB. 1!:! file output
+
 PC_BOXDRAW=:      0        NB. 0 utf8, 1 +-, 2 oem
-PC_RECALL_LIMIT=: 25       NB. limit ijx recall lines
-PC_LOG_LIMIT=:    20000    NB. limit ijx log size in bytes
 PC_RECVSLOW=:     0        NB. 1 simulates slow recv connection
+PC_SENDSLOW=:     0        NB. 1 simulates slow send connection
+PC_LOG=:          0        NB. 1 to log events
 PC_RECVBUFSIZE=:  10000    NB. size of recv buffer
 PC_RECVTIMEOUT=:  5000     NB. seconds for recv timeout
-PC_SENDSLOW=:     0        NB. 1 simulates slow send connection
 PC_SENDTIMEOUT=:  5000     NB. seconds for send timeout
-PC_NOJUMPS=:      0        NB. 1 to avoid jijx jumps
-PC_LOG=:          0        NB. 1 to log events
 )
 
 NB. fix userfolders for username y
@@ -834,8 +876,7 @@ init=: 3 : 0
 :
 'already initialized' assert _1=nc<'SKLISTEN'
 IFJHS_z_=: 1
-NB.! getignore not defined in j801
-NB. getignore_j_'' NB. ignored load/require scripts
+if. 3=nc<'getignore_j_' do. getignore_j_'' end. NB. not defined in 801
 canvasnum_jhs_=: 1
 x jhscfg y
 PATH=: jpath'~addons/ide/jhs/'
@@ -847,7 +888,6 @@ logjhs'start'
 config''
 SETCOOKIE=: 0
 NVDEBUG=: 0 NB. 1 shows NV on each input
-INPUT=: '' NB. <'   '
 NB. leading &nbsp; for Chrome delete all
 LOG=: jmarka,'<div>&nbsp;<font style="font-size:20px; color:red;" >J Http Server</font></div>',jmarkz
 LOGN=: ''
@@ -983,28 +1023,6 @@ if. ('255.255.255.255'-:z) +. ('127.0.'-:6{.z) +. '192.168.'-:8{.z do.
  end.
 end.
 z
-)
-
-configtemplate=: 0 : 0
-load'~addons/ide/jhs/core.ijs'
-PORT_jhs_=: <port>
-LHOK_jhs_=: <lhok>
-BIND_jhs_=: '<bind>'
-USER_jhs_=: '<user>'
-PASS_jhs_=: '<pass>'
-TIPX_jhs_=: '<tipx>'
-init_jhs_''
-)
-
-NB. * indicates ''
-createconfig=: 4 : 0
-'port lhok bind user pass tipx'=. <;._2 ' ',~deb y
-'must be ijs script'assert '.ijs'-:_4{.x
-f=. '~addons/ide/jhs/config/',x
-t=. configtemplate rplc '<port>';port;'<lhok>';lhok;'<bind>';bind;'<user>';user;'<pass>';pass;'<tipx>';tipx
-t=. t rplc '*';''
-t fwrite f
-'file: ',f,LF,fread f
 )
 
 NB. viewmat - previously in jgcp - should come from addon eventually

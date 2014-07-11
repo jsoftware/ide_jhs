@@ -46,7 +46,7 @@ create=: 3 : 0
 jev_get=: create
 
 desc=: 0 : 0
-<br/>This page has a few controls with simple javascript event handlers.
+<hr>This page has a few controls with simple javascript event handlers.
 )
 
 CSS=: 0 :0

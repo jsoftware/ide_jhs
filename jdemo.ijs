@@ -8,19 +8,21 @@ HBS=: 0 : 0
 jhma''
 jhjmlink''
 'demo'     jhmg'demo';1;12
- 'jdemo1'  jhml'1 Roll submit'
- 'jdemo2'  jhml'2 Roll ajax'
- 'jdemo3'  jhml'3 Flip ajax'
- 'jdemo4'  jhml'4 Controls/JS/CSS'
- 'jdemo5'  jhml'5 Plot'
- 'jdemo6'  jhml'6 Grid editor'
- 'jdemo7'  jhml'7 Table layout'
- 'jdemo8'  jhml'8 Dynamic resize'
- 'jdemo9'  jhml'9 Multiple frames'
+ 'jdemo1'  jhml'1  Roll submit'
+ 'jdemo2'  jhml'2  Roll ajax'
+ 'jdemo3'  jhml'3  Flip ajax'
+ 'jdemo4'  jhml'4  Controls/JS/CSS'
+ 'jdemo5'  jhml'5  Plot'
+ 'jdemo6'  jhml'6  Grid editor'
+ 'jdemo7'  jhml'7  Table layout'
+ 'jdemo8'  jhml'8  Dynamic resize'
+ 'jdemo9'  jhml'9  Multiple frames'
+ 'jdemo10' jhml'10 Ajax chunks'
+ 'jdemo11' jhml'11 Ajax interval timer'
+ 'jdemo12' jhml'12 WebGL 3d graphics'
 jhmz''
 jhh1'JHS demos'
 desc
-jhdemo''
 )
 
 jev_get=: create NB. browser get request
@@ -69,7 +71,7 @@ create=: 3 : 0 NB. create page and send to browser
 )
 
 loadall=: 3 : 0
-d=. (<'.ijs'),~each (<'jdemo'),each ":each >:i.9
+d=. (<'.ijs'),~each (<'jdemo'),each ":each >:i.12
 d=. (<jpath'~addons/ide/jhs/demo/'),each d
 for_n. d do.
  try. load__ >n catch. smoutput'load failed: ',>n end.

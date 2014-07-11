@@ -18,14 +18,6 @@ NB. copy 2nd and 3rd from default and edit as required
 NB. custom configs (2nd/3rd files) need not be a complete
 NB. and can just change specific things
 
-NB. JAL or installer creates new jhs_default.ijs
-NB. with luck old later files may still work
-
-NB. createconfig creates script for starting JHS - this can be convenient
-NB.    'b.ijs' createconfig_jhs_ '65001 1 any eric secret B'
-NB.    exit''
-NB. ...> j64-801/bin/jconsole ~addons/ide/jhs/config/b.ijs
-
 NB. private port range 49152 to 65535
 PORT=: 65001
 

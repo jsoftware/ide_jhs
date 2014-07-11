@@ -42,7 +42,7 @@ jhrajax d
 )
 
 desc=: 0 : 0
-<br/>Edit global nouns gdata0__ and gdata1__.<br><br>
+<hr>Edit global nouns gdata0__ and gdata1__.<br><br>
 
 The grid numeric editor uses ajax. When a cell value is
 changed, just 3 numbers (value,row,column) are sent to

@@ -44,7 +44,7 @@ function ajax(ts)
 )
 
 desc=: 0 : 0
-<br/>An ajax request sends only required data to the server.
+<hr>An ajax request sends only required data to the server.
 The JHS framework sends values of html form elements
 that have been listed in the jdoajax arg. Hidden text
 elements are useful for data that should not be visible to

@@ -18,7 +18,7 @@ ev_roll_click=: 3 : 'jhrajax ":>:6?49'
 jev_get=: create
 
 desc=: 0 : 0
-<br/>Ajax stands for 'asynchronous javascript and xml'.<br><br>
+<hr>Ajax stands for 'asynchronous javascript and xml'.<br><br>
 
 An app transaction without ajax waits for all the form
 data to be transmitted to the server, waits for the server
