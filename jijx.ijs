@@ -195,8 +195,6 @@ ev_less_ctrl   =: 3 : 'i.0 0'
 ev_larger_ctrl =: 3 : 'i.0 0'
 ev_query_ctrl =: 3 : 'i.0 0'
 
-NB. *{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
-
 CSS=: 0 : 0
 *{font-family:"courier new","courier","monospace";}
 form{margin-top:0;margin-bottom:0;}

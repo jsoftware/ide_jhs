@@ -28,7 +28,7 @@ t,'<br>'
 
 
 CSS=: 0 : 0
-*{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
+*{font-family:"courier new","courier","monospace";}
 )
 
 JS=: 0 : 0

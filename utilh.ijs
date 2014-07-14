@@ -1,8 +1,6 @@
 NB. html templates and utilities
 coclass'jhs'
 
-NB. font-family - font-size:<PC_FONTSIZE>
-
 NB.framework styles for all pages
 CSSCORE=: 0 : 0
 *{font-family:"sans-serif";}
@@ -46,8 +44,8 @@ HEXTRA=: ''
 NB. core plus page styles with config replaces
 NB. apply outer style tags after removing inner ones
 css=: 3 : 0
-t=. 'PC_FONTSIZE PC_FM_COLOR PC_ER_COLOR PC_LOG_COLOR PC_SYS_COLOR PC_FILE_COLOR'
-t=. (CSSCORE,y) hrplc t;PC_FONTSIZE;PC_FM_COLOR;PC_ER_COLOR;PC_LOG_COLOR;PC_SYS_COLOR;PC_FILE_COLOR
+t=. 'PC_FM_COLOR PC_ER_COLOR PC_LOG_COLOR PC_SYS_COLOR PC_FILE_COLOR'
+t=. (CSSCORE,y) hrplc t;PC_FM_COLOR;PC_ER_COLOR;PC_LOG_COLOR;PC_SYS_COLOR;PC_FILE_COLOR
 '<style type="text/css">',t,'</style>'
 )
 

@@ -534,8 +534,6 @@ You can hide the window if you wish:
 </div>
 )
 
-NB. *{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
-
 CSS=: 0 : 0
 span.h{color:red;}
 )

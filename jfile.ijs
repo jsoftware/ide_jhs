@@ -347,7 +347,7 @@ remlev=: 3 : '(y i: PS){.y'    NB. remove level from path
 CSS=: 0 : 0
 #report{color:red}
 #pathd{color:blue;}
-*{font-family:"courier new","courier","monospace";font-size:<PC_FONTSIZE>;}
+*{font-family:"courier new","courier","monospace";}
 )
 
 JS=: 0 : 0

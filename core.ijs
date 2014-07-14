@@ -756,7 +756,6 @@ NB. PC_LOG_LIMIT=:    20000    NB. limit ijx log size in bytes
 
 NB. html config parameters
 config=: 3 : 0
-PC_FONTSIZE=:     '11px'
 PC_FM_COLOR=:     'black'  NB. formatted output
 PC_ER_COLOR=:     'red'    NB. error
 PC_LOG_COLOR=:    'blue'   NB. log user input
