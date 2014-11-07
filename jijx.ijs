@@ -69,9 +69,7 @@ uplog''
 getlabs=: 3 : 0
 LABTITLES=: LABCATS=: LABFILES=: ''
 t=. jpath'~addons/labs/labs'
-if. -.fexist t,'/lab.ijs' do.
- smoutput 'First install the labs addon.' return.
-end.
+if. -.fexist t,'/lab.ijs' do. LABCATS=: LABFILES=:  LABTITLES=: ''  return. end.
 require__ t,'/lab.ijs'
 labaddons_jlab_''
 labs=. sort labgetfiles_jlab_''
