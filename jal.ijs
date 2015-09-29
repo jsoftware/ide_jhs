@@ -9,7 +9,7 @@ jhjmlink''
 jhmz''
 
 'J Active Library - pacman - Package Manager<br/>'
-'<a href="http://www.jsoftware.com/jwiki/addons">www.jsoftware.com/jwiki/addons</a>'
+'<a href="http://code.jsoftware.com/wiki/addons">code.jsoftware.com/wiki/addons</a>'
 '<hr>'
 'upable' jhb'Upgradeable'
 'remable'jhb'Removeable'

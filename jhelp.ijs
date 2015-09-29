@@ -40,7 +40,7 @@ For complete documentation see:<br>
 <a href="http://www.jsoftware.com/docs/help802/index.htm" target="_blank">www.jsoftware.com help</a><br>
 <a href="http://www.jsoftware.com/docs/help802/dictionary/vocabul.htm" target="_blank">www.jsoftware.com vocabulary</a><br>
 <a href="http://www.jsoftware.com/help/user/library.htm" target="_blank">www.jsoftware.com standard library</a></br>
-<a href="http://www.jsoftware.com/jwiki/NuVoc" target="_blank">www.jsoftware.com wiki NuVoc</a><br>
+<a href="http://code.jsoftware.com/wiki/NuVoc" target="_blank">www.jsoftware.com wiki NuVoc</a><br>
 
 <br>if you have installed local help with jal see:<br>
 <a href="~addons/docs/help/index.htm" target="_blank">~addons/docs/help/index.htm</a>
