@@ -8,6 +8,7 @@ sp_z_       =: sp_jsp_
 spf_z_      =: spf_jsp_
 spr_z_      =: spr_jsp_
 spx_z_      =: spx_jsp_
+spxinit_z_  =: spx_z_          NB.! kill off when Jd updated
 sprunner_z_ =: 3 : '0!:111 y'
 sprunnerx_z_=: 3 : '0!:110 y'
 sptable_z_  =: sptable_jsp_
@@ -133,11 +134,11 @@ elseif. IFQT do.
   qtsave=: 5!:1<'labs_run_jqtide_'
  end.
  labs_run_jqtide_=: 3 : 'spxqt_jsp_ y'
- a=. 'Ctrl+J advances'
+ a=. 'ctrl+j advances'
 elseif. 1 do.
   a=. 'spx'''' NB. advances (create a shortcut key!)'
 end.
-echo a
+echo a,' (see noun spxhelp)'
 SPXFILE_z_=: spf y
 SEM=: get SPXFILE
 SEMN=: 1
