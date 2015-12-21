@@ -23,7 +23,6 @@ jumps=: 0 : 0
 <a href="#ix">iX</a>&nbsp;
 <a href="#ide">IDE</a>&nbsp;
 <a href="#plot">Plot</a>&nbsp;
-<a href="#sp">SP</a>&nbsp;
 <a href="#gui">GUI</a>&nbsp;
 <a href="#jum">JUM</a>&nbsp;
 <a href="#console">Console</a>&nbsp;
@@ -32,6 +31,14 @@ jumps=: 0 : 0
 
 text=: 0 : 0
 <div>
+<a><h1>simple project</h1>
+<p>The simple project utilities (defined in ~addons/ide/jhs/sp.ijs) are an important part of JHS.
+They can be used in any front end.</p>
+
+<p>See noun sphelp for an easy way to manage projects and scripts.</p>
+
+<p>See noun spxhelp for managed execution of scripts and tutorials.</p>
+
 <a name="help"><h1>Help</h1>
 This document links to lots of information, but is itself quite short.
 A bit of time here will pay off down the road.<br><br>
@@ -40,12 +47,18 @@ For complete documentation see:<br>
 <a href="http://www.jsoftware.com/docs/help802/index.htm" target="_blank">www.jsoftware.com help</a><br>
 <a href="http://www.jsoftware.com/docs/help802/dictionary/vocabul.htm" target="_blank">www.jsoftware.com vocabulary</a><br>
 <a href="http://www.jsoftware.com/help/user/library.htm" target="_blank">www.jsoftware.com standard library</a></br>
-<a href="http://code.jsoftware.com/wiki/NuVoc" target="_blank">www.jsoftware.com wiki NuVoc</a><br>
+<a href="http://www.jsoftware.com/jwiki/NuVoc" target="_blank">www.jsoftware.com wiki NuVoc</a><br>
 
 <br>if you have installed local help with jal see:<br>
 <a href="~addons/docs/help/index.htm" target="_blank">~addons/docs/help/index.htm</a>
 
 <a name="recent"><h1>Recent changes</h1>
+<h2>December 2015 update</h2>
+<ul>
+<li>simple project simplifications and improvements</li>
+<li>jfile lists windows drives (c: etc) and unix root (/)</li>
+</ul>
+
 <h2>July 2014 update</h2>
 <ul>
 <li>echo/smoutput displays immediately - http chunked transfer encoding</li>
@@ -458,10 +471,6 @@ make clean
 make
 sudo make install
 </pre>
-
-<a name="sp"><h1>Simple Project</h1>
-
-Noun sphelp has information on Simple Project utilities.<br><br>
 
 <a name="gui"><h1>GUI</h1>
 

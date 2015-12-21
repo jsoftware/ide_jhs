@@ -519,7 +519,7 @@ end.
 )
 
 open_z_=: 3 : 0
-t=. (JIJSAPP_jhs_,'?mid=open&path=',jpath y)jhref_jhs_ y
+t=. (JIJSAPP_jhs_,'?mid=open&path=',jpath spf y)jhref_jhs_ spf y
 jhtml'<div contenteditable="false">',t,'</div>'
 )
 

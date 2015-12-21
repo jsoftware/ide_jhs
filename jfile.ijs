@@ -69,13 +69,17 @@ end.
 )
 
 shorts=: 3 : 0
-buttons 'paths';(2#<({."1 UserFolders_j_,SystemFolders_j_)-.<'Demos'),<' '
+buttons 'paths';(2#<((roots''),~{."1 UserFolders_j_,SystemFolders_j_)-.<'Demos'),<' '
 )
 
 ev_paths_click=: 3 : 0
-sid=. getv'jsid'
-f=. jpath'~',sid,'/'
-LASTPATH=: f
+f=. getv'jsid'
+if. ':'={:f do.
+ f=. f,'/'
+elseif. -.f-:,'/' do.
+ f=. '~',f,'/'
+end. 
+LASTPATH=: f=. jpath f
 jhrajax (jshortname f),JASEP,buttons 'files';(2#<folderinfo remlev f),<'<br>'
 )
 
@@ -343,6 +347,17 @@ end.
 )
 
 remlev=: 3 : '(y i: PS){.y'    NB. remove level from path
+
+roots=: 3 : 0
+if. IFWIN do.
+ a=. 26}.Alpha_j_
+ b=. (<"0 a),each <':/'
+ d=. a#~0~:;#each dir each b
+ (<"0 d),each <':'
+else.
+ <'/'
+end.
+)
 
 CSS=: 0 : 0
 #report{color:red}
