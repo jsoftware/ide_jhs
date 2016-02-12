@@ -1362,7 +1362,7 @@ if. #FIFWHAT do.
 end.
 )
 fifh_open_button=: 3 : 0
-require '~system\extras\util\browser.ijs'
+require '~system/extras/util/browser.ijs'
 launch_jbrowser_ FIFHTMFILE
 )
 fifhshow=: 3 : 0
