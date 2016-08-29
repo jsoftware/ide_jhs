@@ -37,7 +37,7 @@ path{stroke: steelblue;stroke-width: 1;fill: none;}
 .x.axis .minor{stroke-opacity:.5;}
 .x.axis path{display:none;}
 .y.axis line, .y.axis path{fill:none;stroke:#000;}
-.slice text{font-size:16pt;font-family:Arial;}
+.slice text{font-size:16pt;}
 #d3error{font-size:24pt;margin-left:20px;margin-top:20px;}
 span{font-size:inherit;}
 )

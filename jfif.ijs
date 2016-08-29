@@ -60,7 +60,7 @@ jhrajax FIFINFO,>FIFNAMEONLY{JHSFOUNDFILES;FIFFOUND
 )
 
 CSS=: 0 : 0
-*{font-family:"courier new","courier","monospace";}
+*{font-family:<PC_FONTFIXED>;}
 )
 
 JS=: 0 : 0

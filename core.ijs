@@ -749,13 +749,16 @@ See file: <CFGFILE>
 for information on using another PORT.
 )
 
-NB. PC_FONTFAMILY=:   '"courier new","courier","monospace"'
 NB. PC_FONT_COLOR=:   'black'
 NB. PC_RECALL_LIMIT=: 25       NB. limit ijx recall lines
 NB. PC_LOG_LIMIT=:    20000    NB. limit ijx log size in bytes
 
 NB. html config parameters
-config=: 3 : 0
+3 : 0''
+if. 0=nc<'PORT' do. return. end.
+PC_FONTFIXED=:    '"courier new","courier","monospace"'
+PC_FONTVARIABLE=: '"sans-serif"'
+
 PC_FM_COLOR=:     'black'  NB. formatted output
 PC_ER_COLOR=:     'red'    NB. error
 PC_LOG_COLOR=:    'blue'   NB. log user input
@@ -884,7 +887,6 @@ LOCALHOST=: >2{sdgethostbyname_jsocket_'localhost'
 logappfile=: <jpath'~user/.applog.txt' NB. username
 logjhsfile=: <jpath'~user/.jhslog.txt' NB. username
 logjhs'start'
-config''
 SETCOOKIE=: 0
 NVDEBUG=: 0 NB. 1 shows NV on each input
 NB. leading &nbsp; for Chrome delete all

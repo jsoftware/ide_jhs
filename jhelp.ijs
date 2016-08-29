@@ -53,6 +53,11 @@ For complete documentation see:<br>
 <a href="~addons/docs/help/index.htm" target="_blank">~addons/docs/help/index.htm</a>
 
 <a name="recent"><h1>Recent changes</h1>
+<h2>September 2016 update</h2>
+<ul>
+<li>simpler way to start JHS - see ~addons/ide/jhs/config/jhs.cfg</li>
+<li>config PC_FONTFIXED and PC_FONTVARIABLE</li>
+</ul>
 <h2>December 2015 update</h2>
 <ul>
 <li>simple project simplifications and improvements</li>
@@ -153,15 +158,13 @@ with the JHS framework and have the best of all worlds
 in developing your browser app.
 
 <a name="config"><h1>Config</h1>
-A jconsole task becomes a server when the JHS scripts are loaded, configured, and initialized.<br><br>
+A jconsole task becomes a server when the JHS scripts are loaded,
+configured, and initialized.<br><br>
 
-JHS is configured to serve a port (e.g., 65001), allow any or only localhost clients,
-to require a user/pass, etc.<br><br>
+JHS is configured to serve a port (e.g., 65001), allow any or
+only localhost clients, to require a user/pass, etc.<br><br>
 
-Study ~addons/ide/jhs/config/jhs65001.ijs to see how to start a configured JHS.<br><br>
-
-Study ~addons/ide/jhs/config/jhs_default.ijs to see another (older and more complicated)
-way to start a configured server. This is the method used in the installation shortcut.<br><br>
+Study ~addons/ide/jhs/config/jhs.cfg to see how to start a configured JHS.<br><br>
 
 Usually http://127.0.0.1:65001/jijx is the same as http://localhost:65001/jijx.<br><br>
 
