@@ -31,7 +31,19 @@ jumps=: 0 : 0
 
 text=: 0 : 0
 <div>
-<a><h1>simple project</h1>
+<h1>simple plots</h1>
+
+Verb jd3 provides a simple way to plot your data.
+
+<pre class="jcode">
+   jd3'help'
+</pre>
+
+
+<p>See <a href=#jd3>jd3</a> for details and
+<a href="#plot">Plot</a>&nbsp; for other plot facilities.</p>
+
+<h1>simple project</h1>
 <p>The simple project utilities (defined in ~addons/ide/jhs/sp.ijs) are an important part of JHS.
 They can be used in any front end.</p>
 
@@ -57,6 +69,7 @@ For complete documentation see:<br>
 <ul>
 <li>simpler way to start JHS - see ~addons/ide/jhs/config/jhs.cfg</li>
 <li>config PC_FONTFIXED and PC_FONTVARIABLE</li>
+<li>jd3 plot simplified and improved</li>
 </ul>
 <h2>December 2015 update</h2>
 <ul>
@@ -391,16 +404,11 @@ Plot has default output of canvas/html. It can also create cairo/png output.
    plot 10?10                       NB. create ~temp/plot.html 
 </pre>
 
-
-<h2>jd3 - plots with D3/jquery <a target="_blank" href="http://www.d3js.org">www.d3js.org</a></h2>
+<a name="jd3"><h2>jd3 - plots with D3/jquery <a target="_blank" href="http://www.d3js.org">www.d3js.org</a></h2>
 <pre class="jcode">
-   jd3'p1';jd3x,jd3line,jd3data ?3 4$100
-   jd3'p2';jd3x,jd3pie, jd3data ?3$100
-   jd3'p3';jd3x,jd3bar, jd3data ?20$100
-   jd3'p3';jd3x,jd3bar, jd3data ?4 20$100 NB. stacked bar
-   jd3x NB. parameters
+   jd3'help'
 </pre>
-Currently only simple line and pie charts are supported.
+Currently only simple line, bar, and pie charts are supported.
 Study ~addons/ide/jhs/jd3.ijs to see how it works and how easy it will be to extend.
 
 <h2>WebGl</h2>

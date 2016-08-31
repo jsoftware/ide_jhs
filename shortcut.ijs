@@ -54,21 +54,6 @@ Path=<W>
 Icon=<I>
 )
 
-NB. get terminal command used to run this J session
-get_term=: 3 : 0
-d=. <;._2 [2!:0'ps -eo pid,ppid,comm'
-t=. 0".each d
-p=.  ;0{each t
-pp=. ;1{each t
-pid=. 0".;1{<;._2 [2!:0'ps -o pid'
-while. 1~:pid do.
- i=. p i. pid
- pid=. i{pp
-end.
-n=. ;i{d
-}.(n i:' ')}.n
-)
-
 Linux=: 3 : 0
 linux JHS
 linux JC
@@ -77,7 +62,8 @@ linux JC
 linux=: 3 : 0
 'icon arg'=. ;(y-:JHS){(<'jgray.png';''),<'jblue.png';A
 f=. L,y
-r=. desktop rplc '<T>';get_term''
+term=. ;{:<;._2[2!:0'ps -o comm -p',;{:<;._2[2!:0'ps -o ppid -p ',":2!:6''
+r=. desktop rplc '<T>';term NB. terminal command to run this session
 r=. r rplc '<N>';_8}.y
 r=. r rplc '<C>';C
 r=. r rplc '<A>';arg

@@ -561,9 +561,89 @@ validate_jtable_ n
 jjs'window.open("jtable","',t,'");'
 )
 
+NB. jd3 plots
+
+jd3doc_z_=: 0 : 0
+jd3'help'
+jd3'help options'
+
+jd3'reset'         - jd3x=: '' - clear options  
+jd3'title TITLE'   - add title option to jd3x
+
+jd3 tab;options;data
+ tab     - browser tab title
+ options - list of jd3 options
+ data    - data to plot
+
+example:
+jd3'reset'
+jd3'type line'
+jd3'title My Data'
+jd3'legend ["line one","line two","line three"]'
+jd3'line_plot';jd3x;?3 4$100
+
+jd3'type bar'
+jd3'label ["a","b","c","d"]'
+jd3'bar_plot';jd3x;?3 4$100
+
+jd3'type pie'
+jd3'pie_plot';jd3x;?4$100
+)
+
+jd3docoptions_z_=: 0 : 0
+jd3'option arg'    - add option to jd3x__
+ type        line      - line or pie or bar   
+ title       Good Data
+ titlesize   12pt      - html font size
+ minh        100       - min graph pixel height
+ maxh        300       - max graph pixel height
+ linewidth   2
+ barwidth    20
+ legend      ["a","b","c"]
+ lable       ["s","d","f"]
+ header      how now<hr>
+ header_css  "font-size":"24pt","margin-left":50
+ footer      <hr>how now
+ footer_css  "font-size":"24pt","margin-left":50
+ data        formatted data - as formatted by jd3data
+)
+
 jd3_z_=: 3 : 0
 require'~addons/ide/jhs/jd3.ijs'
-'t p'=. y
+if. 'literal'-:datatype y do.
+ i=. y i.' '
+ c=. dltb i{.y
+ a=. dltb i}.y
+ b=. '"',a,'"'
+ select. c
+ fcase.'' do.
+ case.'help' do.
+  ;(a-:'options'){jd3doc;jd3docoptions return.
+ case.'reset' do. jd3x=: '' return.
+ case.'header' do.
+  t=. '$("#ahtml").html(',b,')'
+ case.'footer' do.
+  t=. '$("#zhtml").html(',b,')'
+ case.'header_css' do.
+  t=. '$("#ahtml").css({',a,'})'
+ case.'footer_css' do.
+  t=. '$("#zhtml").css({',a,'})'
+ case. ;:'type title titlesize minh maxh' do.
+  t=. c,'=',b
+ case. ;:'legend label' do.
+  t=. c,'=',a
+ case. do. ('jd3 unknown option: ',y)assert 0  
+ end.
+ jd3x=: jd3x,t,LF
+ i.0 0
+ return.
+end.
+if. 3=#y do.
+ 't p d'=. y
+  p=. p,jd3data d
+else.  
+ 't p'=. y
+end. 
 (t,'_ev_body_load_data_jd3_')=: p
 jjs'window.open("jd3","',t,'");'
 )
@@ -571,30 +651,9 @@ jjs'window.open("jd3","',t,'");'
 jd3data_z_=: 3 : 0
 d=. ":each <"1 y
 d=. d rplc each <' ';','
+d=. d rplc each <'_';'-'
 d=. ']',~each '[',each d
 ']',~'data=[',;d,each','
-)
-
-jd3line_z_=: 'type="line"',LF
-jd3pie_z_=:  'type="pie"',LF
-jd3bar_z_=:  'type="bar"',LF
-
-NB. jd3'foo';jd3x,jd3line,jd3data ?3 4$100
-NB. jd3'foo';jd3x,jd3pie,jd3data ?4$100
-jd3x_z_=: 0 : 0
-title="Example J D3 Plot"
-titlesize= "24pt"
-minh=50
-maxh=400
-linewidth=2
-barwidth=40
-legend= ["legend zero","legend one","legend two","legend three"]
-label=["a","b","c","d"] // pie, bar
-$("#ahtml").html("how now<br>brown cow<hr>")
-$("#zhtml").html("<hr>one flew over")
-$("#ahtml").css({"font-size":"24pt","margin-left":50})
-$("#zhtml").css({"font-size":"24pt","margin-left":50})
-$("#legend").css({"font-size":"16pt","text-align":"center"})
 )
 
 NB. somewhat unique query string - avoid cache - not quaranteed to be unique!
