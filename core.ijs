@@ -551,6 +551,12 @@ jjsx_z_=: 3 : 0
 jjs';',y
 )
 
+NB. pop-up window - jtable/jd3
+windowopen=: 4 : 0
+m=. x,' pop-up blocked\nadjust browser settings to allow localhost pop-up\nsee jhelp section pop-up'
+jjs'if(null==window.open("<X>","<Y>"))alert("<M>");'rplc '<X>';x;'<Y>';y;'<M>';m
+)
+
 jtable_z_=: 3 : 0
 require'~addons/ide/jhs/jtable.ijs'
 't n'=. y
@@ -558,7 +564,7 @@ n=. dltb n
 n=. n,>('_'={:n){'__';''
 validate_jtable_ n
 (t,'_ev_body_load_data_jtable_')=: n
-jjs'window.open("jtable","',t,'");'
+'jtable' windowopen_jhs_ t
 )
 
 NB. jd3 plots
@@ -645,7 +651,7 @@ else.
  't p'=. y
 end. 
 (t,'_ev_body_load_data_jd3_')=: p
-jjs'window.open("jd3","',t,'");'
+'jd3' windowopen_jhs_ t
 )
 
 jd3data_z_=: 3 : 0
