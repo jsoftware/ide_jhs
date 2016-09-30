@@ -544,6 +544,14 @@ m=. x,' pop-up blocked\nadjust browser settings to allow localhost pop-up\nsee j
 jjs'if(null==window.open("<X>","<Y>"))alert("<M>");'rplc '<X>';x;'<Y>';y;'<M>';m
 )
 
+jd3_z_=: 3 : 0
+require'~addons/ide/jhs/d3.ijs'
+jd3_jhs_ y
+:
+require'~addons/ide/jhs/d3.ijs'
+x jd3_jhs_ y
+)
+
 jtable_z_=: 3 : 0
 require'~addons/ide/jhs/jtable.ijs'
 't n'=. y
@@ -552,101 +560,6 @@ n=. n,>('_'={:n){'__';''
 validate_jtable_ n
 (t,'_ev_body_load_data_jtable_')=: n
 'jtable' windowopen_jhs_ t
-)
-
-NB. jd3 plots
-
-jd3doc_z_=: 0 : 0
-jd3'help'
-jd3'help options'
-
-jd3'reset'         - jd3x=: '' - clear options  
-jd3'title TITLE'   - add title option to jd3x
-
-jd3 tab;options;data
- tab     - browser tab title
- options - list of jd3 options
- data    - data to plot
-
-example:
-jd3'reset'
-jd3'type line'
-jd3'title My Data'
-jd3'legend ["line one","line two","line three"]'
-jd3'line_plot';jd3x;?3 4$100
-
-jd3'type bar'
-jd3'label ["a","b","c","d"]'
-jd3'bar_plot';jd3x;?3 4$100
-
-jd3'type pie'
-jd3'pie_plot';jd3x;?4$100
-)
-
-jd3docoptions_z_=: 0 : 0
-jd3'option arg'    - add option to jd3x__
- type        line      - line or pie or bar   
- title       Good Data
- titlesize   12pt      - html font size
- minh        100       - min graph pixel height
- maxh        300       - max graph pixel height
- linewidth   2
- barwidth    20
- legend      ["a","b","c"]
- lable       ["s","d","f"]
- header      how now<hr>
- header_css  "font-size":"24pt","margin-left":50
- footer      <hr>how now
- footer_css  "font-size":"24pt","margin-left":50
- data        formatted data - as formatted by jd3data
-)
-
-jd3_z_=: 3 : 0
-require'~addons/ide/jhs/jd3.ijs'
-if. 'literal'-:datatype y do.
- i=. y i.' '
- c=. dltb i{.y
- a=. dltb i}.y
- b=. '"',a,'"'
- select. c
- fcase.'' do.
- case.'help' do.
-  ;(a-:'options'){jd3doc;jd3docoptions return.
- case.'reset' do. jd3x=: '' return.
- case.'header' do.
-  t=. '$("#ahtml").html(',b,')'
- case.'footer' do.
-  t=. '$("#zhtml").html(',b,')'
- case.'header_css' do.
-  t=. '$("#ahtml").css({',a,'})'
- case.'footer_css' do.
-  t=. '$("#zhtml").css({',a,'})'
- case. ;:'type title titlesize minh maxh' do.
-  t=. c,'=',b
- case. ;:'legend label' do.
-  t=. c,'=',a
- case. do. ('jd3 unknown option: ',y)assert 0  
- end.
- jd3x=: jd3x,t,LF
- i.0 0
- return.
-end.
-if. 3=#y do.
- 't p d'=. y
-  p=. p,jd3data d
-else.  
- 't p'=. y
-end. 
-(t,'_ev_body_load_data_jd3_')=: p
-'jd3' windowopen_jhs_ t
-)
-
-jd3data_z_=: 3 : 0
-d=. ":each <"1 y
-d=. d rplc each <' ';','
-d=. d rplc each <'_';'-'
-d=. ']',~each '[',each d
-']',~'data=[',;d,each','
 )
 
 NB. somewhat unique query string - avoid cache - not quaranteed to be unique!

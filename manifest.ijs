@@ -6,13 +6,14 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.218'
+VERSION=: '1.0.219'
 
 FILES=: 0 : 0
 history.txt
 readme.txt
 favicon.ico
 core.ijs
+d3.ijs
 gnuplot.ijs
 gpdemo.ijs
 jal.ijs
@@ -90,9 +91,9 @@ js/jquery/smoothness/images/ui-icons_2e83ff_256x240.png
 js/jquery/smoothness/images/ui-icons_454545_256x240.png
 js/jquery/smoothness/images/ui-icons_888888_256x240.png
 js/jquery/smoothness/images/ui-icons_cd0a0a_256x240.png
-/js/d3/d3.v3.js
-js/d3/d3.v3.min.js
-/js/d3/license
+js/d3/d3.js
+js/d3/d3.min.js
+js/d3/license
 )
 
 FILESWIN=: 0 : 0
