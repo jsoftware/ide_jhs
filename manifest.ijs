@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.221'
+VERSION=: '1.0.222'
 
 FILES=: 0 : 0
 history.txt
@@ -88,10 +88,10 @@ js/jquery/smoothness/images/ui-icons_2e83ff_256x240.png
 js/jquery/smoothness/images/ui-icons_454545_256x240.png
 js/jquery/smoothness/images/ui-icons_888888_256x240.png
 js/jquery/smoothness/images/ui-icons_cd0a0a_256x240.png
-js/d3/d3.js
 js/d3/d3.min.js
 js/d3/d3.css
 js/d3/license
+js/jsoftware/d3_basic.ijsjs/d3/d3.js
 )
 
 FILESWIN=: 0 : 0
