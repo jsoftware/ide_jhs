@@ -21,7 +21,7 @@ addrecent_jsp_''
 
 fx=: 3 : 0
 s=. ;shorts_jsp_ y
-t=. (JIJSAPP_jhs_,'?mid=open&path=',jpath y)jhref_jhs_ s
+t=. jhref 'jijs';(jpath y);s
 t=. t,(;(1>.20-#s)#<'&nbsp;'),y
 t,'<br>'
 )

@@ -18,7 +18,6 @@ gnuplot.ijs
 gpdemo.ijs
 jal.ijs
 jbinfo.ijs
-jdemo.ijs
 jd3.ijs
 jfif.ijs
 jfile.ijs
@@ -27,14 +26,7 @@ jfilesrc.ijs
 jgcp.ijs
 jhelp.ijs
 jijs.ijs
-jijsta.ijs
-jijsce.ijs
-jijsipad.ijs
 jijx.ijs
-jijxaz.ijs
-jijxh.ijs
-jijxm.ijs
-jijxipad.ijs
 jlogin.ijs
 shortcut.ijs
 jtable.ijs
@@ -93,6 +85,7 @@ js/jquery/smoothness/images/ui-icons_888888_256x240.png
 js/jquery/smoothness/images/ui-icons_cd0a0a_256x240.png
 js/d3/d3.js
 js/d3/d3.min.js
+js/d3/d3.css
 js/d3/license
 )
 

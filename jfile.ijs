@@ -401,7 +401,8 @@ function ev_files_click() // file select
 function ev_files_dblclick()
 {
  if('/'!=jform.jsid.value.charAt(jform.jsid.value.length-1))
-  window.open('jijs?mid=open&path='+jform.path.value,TARGET);
+  //window.open('jijs?mid=open&path='+jform.path.value,TARGET);
+  window.open('jijs?jwid='+jform.path.value,jform.path.value);
 } 
 
 function ev_rename_click()     {jdlgshow("renamedlg","renamex");}

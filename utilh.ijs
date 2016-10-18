@@ -1,6 +1,30 @@
 NB. html templates and utilities
 coclass'jhs'
 
+INC=: CSS=: JS=: HBS=: '' NB. overidden in app locale
+NOCACHE=: 0                NB. use cached js files
+NOPOPUP=: 0                NB. use popups
+
+INC_jquery=: 0 : 0
+~addons/ide/jhs/js/jquery/smoothness/jquery-ui.custom.css
+~addons/ide/jhs/js/jquery/jquery-2.0.3.min.js
+)
+
+INC_d3=: 0 : 0
+~addons/ide/jhs/js/jquery/smoothness/jquery-ui.custom.css
+~addons/ide/jhs/js/d3/d3.css
+~addons/ide/jhs/js/jquery/jquery-2.0.3.min.js
+~addons/ide/jhs/js/d3/d3.min.js
+)
+
+INC_d3_basic=: 0 : 0
+~addons/ide/jhs/js/jquery/smoothness/jquery-ui.custom.css
+~addons/ide/jhs/js/d3/d3.css
+~addons/ide/jhs/js/jquery/jquery-2.0.3.min.js
+~addons/ide/jhs/js/d3/d3.min.js
+~addons/ide/jhs/js/jsoftware/d3_basic.js
+)
+
 NB.framework styles for all pages
 CSSCORE=: 0 : 0
 *{font-family:<PC_FONTVARIABLE>;}
@@ -248,6 +272,18 @@ Connection: close
 </html>
 )
 
+hrxtemplate=: toCRLF 0 : 0
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=utf-8
+Connection: close
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title><TITLE></title>
+)
+
 NB. html 204 response (leave the page as is)
 html204=: toCRLF 0 : 0
 HTTP/1.1 204 OK
@@ -340,7 +376,7 @@ NB. HBS is LF delimited list of sentences
 NB. jhbs returns list of sentence results
 jhbs=: 3 : 0
 t=. <;._2 y
-t=. ;jhbsex each t
+t=. ;LF,~each jhbsex each t
 i=. 1 i.~'</div><div id="jresizeb">'E.t
 if. i~:#t do.
  t=. '<div id="jresizea">',t,'</div>'
@@ -394,7 +430,7 @@ NB. standard demo html boilerplate
 jhdemo=: 3 : 0
 c=. '.ijs',~>coname''
 p=. jpath'~addons/ide/jhs/demo/',c
-'<hr>',(JIJSAPP_jhs_,'?mid=open&path=',p)jhref_jhs_ c
+'<hr>',jhref_jhs_ 'jijs';p;c
 )
 
 NB. jgrid - special jht for grid
@@ -432,6 +468,12 @@ jhdiv=: 4 : 0
 '<div id="',x,'">',y,'</div>'
 )
 
+NB.* jhdivhidden*id jhdivhidden text - <div id...>text</div>
+jhdivhidden=: 4 : 0
+'<div id="',x,'" style="visibility:hidden">',y,'</div>'
+)
+
+
 NB.* jhdiva*id jhdiva text - <div id...>text
 jhdiva=: 4 : 0
 '<div id="',x,'">',y
@@ -440,6 +482,17 @@ jhdiva=: 4 : 0
 NB.* jhdivadlg*id jhdivadlg text - <div id... display:none...>text
 jhdivadlg=: 4 : 0
 '<div id="',x,'" style="display:none;">',y
+)
+
+NB.* jhd3_basic*id jhd3_basic''
+jhd3_basic=: 4 : 0
+r=. (x,'_error')jhdiv''
+r=. r,LF,(x,'_header')jhdiv''
+r=. r,LF,(x,'_title')jhdiv''
+r=. r=. r,LF,x jhdiv''
+r=. r,LF,(x,'_legend')jhdiv''
+r=. r,LF,(x,'_footer')jhdiv''
+(x,'_box')jhdiv LF,r,LF
 )
 
 NB.* jhec*id jhec '' - contenteditable div
@@ -518,17 +571,16 @@ t=. t,' onclick="return jev(event)"/><label for="<ID>"><VALUE></label>'
 t hrplc 'ID VALUE SET CHECKED';x;value;set;checked
 )
 
-NB.* jhref*id jhref text - <a href="id">text</a>
-jhref=: 4 : 0
+NB.* jhref*jhref page;target;text
+NB.* jhref*id jhref text - <a href="id">text</a> (deprecated - use monadic form)
+jhref=: 3 : 0
+'page target text'=. y
+if. '~'={.target do. target=. jpath target end.
+t=. '<a href="<REF>?jwid=<TARGET>" target="<TARGET>" class="jhref" ><TEXT></a>'
+t hrplc 'REF TARGET TEXT';page;target;text
+:
 y=. boxopen y
 t=. '<a href="<REF>" target="',TARGET,'" class="jhref" ><VALUE></a>'
-t hrplc 'REF VALUE';x;y
-)
-
-NB.* jhrefx*id jhrefx text - <a href="id" target="_blank">text</a>
-jhrefx_jhs_=: 4 : 0
-y=. boxopen y
-t=. '<a href="<REF>" target="_blank" class="jhref" ><VALUE></a>'
 t hrplc 'REF VALUE';x;y
 )
 
@@ -637,6 +689,24 @@ NB.* jhhr*jhhr - <hr/>
 jhhr=: '<hr/>'
 
 NB.* 
+NB.* HBS includes of javascript code and stylesheets
+NB.* jhjs*jhjs'name' - 'jquery' or 'd3' or 'd3_basic'
+
+jhjs=: 3 : 0
+select.y
+case.'jquery' do.
+ t=. '<link rel="stylesheet" href="~addons/ide/jhs/js/jquery/smoothness/jquery-ui.custom.css" />'
+ t,  '<script src="~addons/ide/jhs/js/jquery/jquery-2.0.3.min.js"></script>'
+case.'d3' do.
+ '<script src="~addons/ide/jhs/js/d3/d3.min.js"></script>'
+case.'d3_basic' do.
+
+case. do.
+
+end.
+)
+
+NB.* 
 NB.* utilities
 NB.* doch*doch_jhs_'' - framework verbs and nouns
 doch=: 3 : 0
@@ -687,18 +757,58 @@ NB.*
 NB.* html response verbs
 
 NB. build html response from page globals CSS JS HBS
-NB. CSS or JS undefined allwed
+NB. CSS or JS undefined allowed
 NB.* jhr*title jhr names;values - names to replace with values
 NB.* *send html response built from HBS CSS JS names values
 jhr=: 4 : 0
-if. _1=nc <'CSS' do. CSS=: '' end.
-if. _1=nc <'JS'  do. JS=: '' end.
+if. _1=nc<'JS'  do. JS=:'' end.
+if. _1=nc<'CSS' do. CSS=:'' end.
 tmpl=. hrtemplate
 if. SETCOOKIE do.
  SETCOOKIE_jhs_=: 0
  tmpl=. tmpl rplc (CRLF,CRLF);CRLF,'Set-Cookie: ',cookie,CRLF,CRLF
 end.
 htmlresponse tmpl hrplc 'TITLE CSS HEXTRA JS BODY';(TIPX,x);(css CSS);HEXTRA;(js JS);(jhbs HBS)hrplc y
+)
+
+NB.* jhrx*title jhrx (getcss'...'),(getjs'...'),getbody'...'
+NB.* *send html response built from INCLUDE, CSS, JS, HBS
+jhrx=: 4 : 0
+htmlresponse (hrxtemplate hrplc 'TITLE';(TIPX,x)),y
+)
+
+getincs=: 3 : 0
+t=. ~.<;._2 INC
+t=. (;(<y)-:each (-#y){.each t)#t
+if. 0=#t do. t return. end.
+b=. ;fexist each t
+('INC file not found: ',>{.(-.b)#t)assert b
+t
+)
+
+getcss=: 3 : 0
+t=. getincs'.css'
+d=. (<LF,'/* '),each t,each<' /*',LF
+cssi=. ;d,each fread each t
+css y hrplc~cssi,LF,CSS
+)
+
+fixjsi=: 3 : 0
+if. NOCACHE do.
+ '<script type="text/javascript">',LF,'// NOCACHE: ',y,LF,(fread y),LF,'</script>'
+else.
+ '<script src="',y,'"></script>'
+end. 
+)
+
+getjs=: 3 : 0
+t=. getincs'.js'
+jsi=. ;LF,~each fixjsi each t 
+y hrplc~jsi,js JS
+)
+
+gethbs=: 3 : 0
+'</html>',~'</head>',y hrplc~jhbs HBS
 )
 
 NB.* jhrajax*jhrajax data - JASEP delimited data

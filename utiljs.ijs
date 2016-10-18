@@ -321,15 +321,14 @@ function jev(event){
 function jevdo()
 {
  JEV= "ev_"+jform.jmid.value+"_"+jform.jtype.value;
- // alert(JEV);
+ //alert(JEV);
  //try{eval(JEV)}
  //catch(ex)
  if('undefined'==eval("typeof "+JEV))
  {
-  // undef returns true or does jsubmit for buttons 
+  // undef returns true or does alert and returns false for events that should have handlers 
   if(null==jevtarget)return true;
-  var c=jevtarget.getAttribute("class");
-  if(c=="jhb"||c=="jhab"||c=="jhmab")jsubmit();
+  if(jform.jtype.value=="click"||jform.jtype.value=="enter"){alert("not defined: function "+JEV+"()");return false;}
   return true;
  }
  try{var r= eval(JEV+"();")}
@@ -435,19 +434,26 @@ function jdor()
     var t="ajax request failed\n"
     t+=   "response code "+rq.status+"\n";
     t+=   "application did not produce result\n"
-    t+=   "try browsing to url again\n"
-    t+=   "additional info in jijx"
+    t+=   "press enter in jijx for additional info"
     alert(t);
    }
   }
   else
   {
    d=rq.responseText.split(JASEP);
-   if("function"==eval("typeof "+f))
-    f+="(d)";
+   
+   if(  "undefined"==eval("typeof "+f) && "undefined"==typeof ajax)
+   {
+     alert("not defined: function "+f+"()");
+   }
    else
-    f="ajax(d)";
-   try{eval(f)}catch(e){alert(f+" failed: "+e);}
+   {
+    if("function"==eval("typeof "+f))
+     f+="(d)";
+    else
+     f="ajax(d)";
+    try{eval(f)}catch(e){alert(f+" failed: "+e);}
+   }
   }
   rqstate= 0; rqoffset= 0;
  }

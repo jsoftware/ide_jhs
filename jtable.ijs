@@ -32,6 +32,8 @@ assert 2>L.d
 d
 )
 
+NB.! should be changed to work the way jd3 does - tabdata
+
 NB. wid_body_load_data_jtable_ values are not cleaned up
 ev_body_load=: 3 : 0
 try.

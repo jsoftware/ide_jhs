@@ -34,22 +34,19 @@ jumps=: 0 : 0
 text=: 0 : 0
 <div>
 <a name="highlights"><h1>highlights</h1>
-<b>simple plot</b>
-<p>Verb jd3 provides a simple way to plot your data.</p>
+<p>Learn how to build your own GUI apps. See studio>app building.</p>
 
-<pre class="jcode">
-   jd3'help'
-</pre>
-<p>See <a href=#jd3>jd3</a> for details and
-<a href="#plot">plot</a>&nbsp; for other plot facilities.</p>
+<p>Take a look at studio>plot.</p>
 
-<b>simple project</b>
-<p>The simple project utilities (defined in ~addons/ide/jhs/sp.ijs) are an important part of JHS.
-They can be used in any front end.</p>
+<p>Take a look at studio>demos and run the new demo 13.</p>
 
-<p>See noun sphelp for an easy way to manage projects and scripts.</p>
+<p><a href="#pop-up">Pop-up</a> windows are used more. For example <span class=jcode> open '~temp/1.ijs' </span>opens
+an jijs tab. Previously
+it would have displayed a link that you clicked (a click is not a pop-up).</p>
 
-<p>See noun spxhelp for managed execution of scripts and tutorials.</p>
+<p>Window ids are used to avoid opening duplicate tabs. For example, opening a script 
+from a file or files page reopens in a tab if it already exists.
+</p>
 
 <a name="help"><h1>help</h1>
 This document links to lots of information, but is itself quite short.
@@ -65,6 +62,17 @@ For complete documentation see:<br>
 <a href="~addons/docs/help/index.htm" target="_blank">~addons/docs/help/index.htm</a>
 
 <a name="changes"><h1>changes</h1>
+
+<b>October 2016 update</b>
+<ul>
+<li>studio menu reworked</li>
+<li>studio>app building</li>
+<li>demo 13</li>
+<li>pop-ups used more</li>
+<li>window ids used to avoid opening duplicate tabs</li>
+<li>d3 javascript plot library updated to version 4.1.5</li>
+</ul>
+
 <b>September 2016 update</b>
 <ul>
 <li>simpler way to start JHS - see ~addons/ide/jhs/config/jhs.cfg</li>
@@ -258,11 +266,6 @@ function ev_comma_ctrl(){jdoajax([]);}
 <span class="h">jijx</span>
 Run J sentences (ctrl+shift+&uarr;&darr; recall)
 
-<br><br><span class="h">jijxm</span>
-Simple browser support that requires only basic html.
-jijx and related pages require HTML 5 features
-(javascript, style sheets, contenteditable divs, ajax, ...).
-
 <br><br><span class="h">jfile</span>
 Browse files for editing, etc.
 Adequate for simple IDE use and for a remote server.
@@ -272,9 +275,6 @@ as Windows Explorer or Mac Finder.
 <br><br><span class="h">jijs</span>
 CodeMirror (www.codemirror.net) editor. See menu action|search/ctrl for ctrl/search/replace info.
 <a href="#codemirror">CodeMirror Copyright</a>
-
-<br><br><span class="h">jijsta</span>
-edit file in textarea
 
 <br><br><span class="h">jfif</span>
 find in files
@@ -551,8 +551,8 @@ However, they can be very useful in an app like JHS that
 tries to combine the best of the browser interface with some
 features of classic desktop applications.<p>
 
-<p>JHS facilities like jd3 (plots) and jtable (spreadsheet) need
-to create pop-ups.</p>
+<p>JHS facilities like jd3 (plots), jtable (spreadsheet), and demos
+work best if they can create pop-ups.</p>
 
 <p>If your browser is set to block pop-ups, then you will get
 an alert message when JHS tries to create a pop-up. You can
@@ -565,6 +565,12 @@ allow you to configure pop-up blocking to allow pop-ups based
 on the site address. In this case you want to enable pop-ups
 from localhost:65001/jijx. Safari does not allow this kind of
 configuration and you may want to simply allow all pop-ups.</p>
+
+<p>If you don't want to enable pop-ups, you can get by with
+the NOPOPUP option. With this option, instead of a pop-up,
+a link is created in your jijx page. Click the link to see
+the page.</p>
+<pre class="jcode">   NOPOPUP_jhs_=: 1</pre>
 
 
 

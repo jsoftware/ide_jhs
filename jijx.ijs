@@ -8,7 +8,11 @@ jhjmlink''
 actionmenu''
 debugmenu''
 'studio'   jhmg'studio';1;14
- 'jdemo'   jhml'demos'
+ 'plot'    jhmab'plot'
+ 'sp'      jhmab'sp'
+ 'spx'     jhmab'spx'
+ 'demo'    jhmab'demos'
+ 'app'     jhmab'app building'
  'advance' jhmab'advance ctrl+.'
  'lab'     jhmab'labs...'
 jhmz''
@@ -178,6 +182,18 @@ ev_dboff_click=:   3 : 0
 smoutput'debug off'
 dboff''
 )
+
+studio=: 3 : 0
+jhtml'<hr/>'
+echo y
+jhtml'<hr/>'
+)
+
+ev_app_click=:  3 : 'studio studio_app'
+ev_demo_click=: 3 : 'studio studio_demos'
+ev_plot_click=: 3 : 'studio studio_plot'
+ev_sp_click=:   3 : 'studio studio_sp'
+ev_spx_click=:  3 : 'studio studio_spx'
 
 ev_dbstep_click=:    3 : 'try. dbstep''''    catch. end. i.0 0'
 ev_dbstepin_click=:  3 : 'try. dbstepin''''  catch. end. i.0 0'
@@ -418,6 +434,12 @@ function TOajax(){jdoajax([],"",globalajax,true);}
 function document_recall(v){newpline(v);}
 
 function ev_advance_click(){jdoajax([]);}
+
+function ev_app_click() {jdoajax([]);}
+function ev_demo_click(){jdoajax([]);}
+function ev_plot_click(){jdoajax([]);}
+function ev_sp_click(){jdoajax([]);}
+function ev_spx_click(){jdoajax([]);}
 
 function ev_lab_click()
 {

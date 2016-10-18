@@ -32,20 +32,14 @@ jd3'type pie'
 
 jd3docoptions=: 0 : 0
 jd3'option arg'    - add option to jd3x__
- type        line      - line or pie or bar   
- title       Good Data
- titlesize   12pt      - html font size
- minh        100       - min graph pixel height
- maxh        300       - max graph pixel height
- linewidth   2
- barwidth    20
- legend      "a","b","c"
- lable       "s","d","f"
+ type        line      - line or pie or bar
  header      how now<hr>
- header_css  "font-size":"24pt","margin-left":50
+ title       Good Data
+ linewidth   4
+ barwidth    40
+ label       "s","d","f"
+ legend      "a","b","c"
  footer      <hr>how now
- footer_css  "font-size":"24pt","margin-left":50
- data        formatted data - as formatted by jd3data
 )
 
 jd3=: 3 : 0
@@ -53,23 +47,18 @@ assert 'literal'-:datatype y
  i=. y i.' '
  c=. dltb i{.y
  a=. dltb i}.y
- b=. '"',a,'"'
+ a=. a rplc '"';''''
+ b=. '\"',a,'\"'
  select. c
  fcase.'' do.
  case.'help' do. jd3doc return.
  case.'options' do. jd3docoptions return. 
  case.'state' do. jd3x return.
  case.'reset' do. jd3x=: '' return.
- case.'header' do.
-  t=. '$("#ahtml").html(',b,')'
- case.'footer' do.
-  t=. '$("#zhtml").html(',b,')'
- case.'header_css' do.
-  t=. '$("#ahtml").css({',a,'})'
- case.'footer_css' do.
-  t=. '$("#zhtml").css({',a,'})'
- case. ;:'type title titlesize minh maxh' do.
+ case. ;:'type header title footer' do.
   t=. c,'=',b
+ case. ;:'barwidth linewidth' do.
+  t=. c,'=',a
  case. ;:'legend label' do.
   t=. c,'=[',a,']'
  case. do. ('jd3 unknown option: ',y)assert 0  
@@ -77,10 +66,9 @@ assert 'literal'-:datatype y
  jd3x=: jd3x,t,LF
  i.0 0
 :
-require'~addons/ide/jhs/jd3.ijs'
 assert 'literal'-:datatype x
 assert -.'literal'-:datatype y
-(x,'_ev_body_load_data_jd3_')=: jd3x,jd3data y
+(x,'_tabdata')=: (jd3x,jd3data y)rplc LF;'\n' 
 'jd3' windowopen_jhs_ x
 )
 
@@ -91,3 +79,4 @@ d=. d rplc each <'_';'-'
 d=. ']',~each '[',each d
 ']',~'data=[',;d,each','
 )
+

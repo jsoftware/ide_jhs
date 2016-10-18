@@ -426,6 +426,94 @@ logapp y,' error : ',13!:12''
 
 logstdout=: 3 : 'i.0 0[(y,LF) 1!:2[4'
 
+NB. pop-up window - jtable/jd3
+NB. locale windowopen id
+NB. 'jd3' windowopen 'P'
+NB. id is added as jwid parameter to locale - 'jd3?jwid=P'
+windowopen=: 4 : 0
+ t=. x,'?jwid=',jpath y
+if. NOPOPUP do.
+ echo jhtml'<div contenteditable="false">',(t jhref_jhs_ t),'</div>'
+else.
+ m=. x,' pop-up blocked\nadjust browser settings to allow localhost pop-up\nsee jhelp section pop-up'
+ jjs'if(null==window.open("<X>","<Y>"))alert("<M>");'rplc '<X>';t;'<Y>';y;'<M>';m
+end.
+i.0 0
+)
+
+studio_demos=: 0 : 0
+demos are simple apps that show aspects of JHS gui programming
+run the demos to see some of the possibilities
+study the source to see how it is done
+study studio|app building first as the demo source will make more sense after that
+
+1  Roll submit
+2  Roll ajax
+3  Flip ajax
+4  Controls/JS/CSS
+5  Plot
+6  Grid editor
+7  Table layout
+8  Dynamic resize
+9  Multiple frames
+10 Ajax chunks
+11 Ajax interval timer
+12 WebGL 3d graphics
+13 D3 line and bar plots
+
+   rundemo_jhs_ 1
+)
+
+rundemo=: 3 : 0
+t=. 'jdemo',":y
+require'~addons/ide/jhs/demo/jdemo',(":y),'.ijs'
+t windowopen t
+)
+
+studio_app=: 0 : 0
+how to build an app
+run and study each script/app in order
+   runapp_jhs_ N
+    - copies appN.ijs to ~temp/app
+    - runs and opens script in a tab
+    - opens the app in a tab
+move the 2 new tabs so you can easily study them
+
+ 1 HBS - html
+ 2 JS - javascript event handlers
+ 3 J event handlers
+ 4 CSS - cascading style sheets
+ 5 INC - include css/js libraries
+ 
+   runapp_jhs_ 1
+)
+
+runapp=: 3 : 0
+t=. 'app',":y
+a=. t,'.ijs'
+f=. '~temp/app/',a
+1!:5 :: [ <jpath'~temp/app'
+(fread '~addons/ide/jhs/app/',a)fwrite f
+load f
+'jijs'windowopen_jhs_ f
+t windowopen t
+)
+
+studio_plot=: 0 : 0
+D3 (www.d3js.org) javascript library provides
+a powerful plot facility easily used from J
+
+currently simple line, bar, and pie plots are integrated
+study ~addons/ide/jhs/jd3.ijs to see how this could be extended
+
+see link>jhelp>plot for other plot facilities
+
+   jd3'help'
+)
+
+studio_sp=: sphelp__
+studio_spx=: spxhelp__
+
 NB. z local utilities
 
 dbon_z_=: 3 : 0
@@ -506,8 +594,7 @@ end.
 )
 
 open_z_=: 3 : 0
-t=. (JIJSAPP_jhs_,'?mid=open&path=',jpath spf y)jhref_jhs_ spf y
-jhtml'<div contenteditable="false">',t,'</div>'
+'jijs'windowopen_jhs_ spf y
 )
 
 jlogoff_z_=: 3 : 'htmlresponse_jhs_ hajaxlogoff_jhs_'
@@ -538,17 +625,9 @@ jjsx_z_=: 3 : 0
 jjs';',y
 )
 
-NB. pop-up window - jtable/jd3
-windowopen=: 4 : 0
-m=. x,' pop-up blocked\nadjust browser settings to allow localhost pop-up\nsee jhelp section pop-up'
-jjs'if(null==window.open("<X>","<Y>"))alert("<M>");'rplc '<X>';x;'<Y>';y;'<M>';m
-)
-
 jd3_z_=: 3 : 0
-require'~addons/ide/jhs/d3.ijs'
 jd3_jhs_ y
 :
-require'~addons/ide/jhs/d3.ijs'
 x jd3_jhs_ y
 )
 
@@ -870,6 +949,8 @@ NB. load rest of JHS core
 load__'~addons/ide/jhs/utilh.ijs'
 load__'~addons/ide/jhs/utiljs.ijs'
 load__'~addons/ide/jhs/sp.ijs'
+load__'~addons/ide/jhs/d3.ijs'
+load__'~addons/ide/jhs/jd3.ijs'
 
 stub=: 3 : 0
 'jev_get y[load''~addons/ide/jhs/',y,'.ijs'''
@@ -877,7 +958,6 @@ stub=: 3 : 0
 
 NB. app stubs to load app file
 jev_get_jijx_=:    3 : (stub'jijx')
-jev_get_jijxaz_=:  3 : (stub'jijxaz')
 jev_get_jfile_=:   3 : (stub'jfile')
 jev_get_jfiles_=:  3 : (stub'jfiles')
 jev_get_jijs_=:    3 : (stub'jijs')
@@ -887,11 +967,7 @@ jev_get_jtable_=:  3 : (stub'jtable')
 jev_get_jhelp_=:   3 : (stub'jhelp')
 jev_get_jdemo_=:   3 : (stub'jdemo')
 jev_get_jlogin_=:  3 : (stub'jlogin')
-jev_get_jijxh_=:   3 : (stub'jijxh')
-jev_get_jijxm_=:   3 : (stub'jijxm')
 jev_get_jfilesrc_=:3 : (stub'jfilesrc')
-jev_get_jijxipad_=:3 : (stub'jijxipad')
-jev_get_jijsipad_=:3 : (stub'jijsipad')
 
 NB. simple wget with sockets - used to get google charts png
 

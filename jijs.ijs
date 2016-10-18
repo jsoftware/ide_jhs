@@ -58,10 +58,14 @@ end.
 (jgetfile y) jhr 'FILENAME REP DATA';y;rep;d
 )
 
+NB. new way - jwid=~temp/foo.ijs
+NB. old way - mid=open&path=...
 jev_get=: 3 : 0
-if. 'open'-:getv'mid' do.
+if. #getv'jwid' do.
+ create getv'jwid'
+elseif. 'open'-:getv'mid' do.
  create getv'path' 
-else.
+elseif. 1 do.
  create jnew''
 end.
 )
