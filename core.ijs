@@ -511,9 +511,6 @@ see link>jhelp>plot for other plot facilities
    jd3'help'
 )
 
-studio_sp=: sphelp__
-studio_spx=: spxhelp__
-
 NB. z local utilities
 
 dbon_z_=: 3 : 0

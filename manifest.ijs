@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.220'
+VERSION=: '1.0.219'
 
 FILES=: 0 : 0
 history.txt
@@ -37,6 +37,11 @@ utilh.ijs
 utiljs.ijs
 config/jhs_default.ijs
 config/jhs.cfg
+app/app1.ijs
+app/app2.ijs
+app/app3.ijs
+app/app4.ijs
+app/app5.ijs
 demo/jdemo1.ijs
 demo/jdemo2.ijs
 demo/jdemo3.ijs
