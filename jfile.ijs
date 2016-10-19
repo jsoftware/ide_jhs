@@ -172,7 +172,7 @@ t=. jpath'~temp/deleted/'
 if. PS={:F do. NB. delete folder 
  srcfolder=. F
  snkfolder=. jpath'~temp/deleted/',jgetfile remlev srcfolder
- if. t-:(#t){.srcfolder do.
+ if. '~temp/'-:6{.jshortname srcfolder do.
   deletefolder }:srcfolder
   create ('Delete: deleted ',jshortname srcfolder);newf
   return.
@@ -438,6 +438,7 @@ function ev_newfi_click(){jsubmit();}
 function ev_newfo_click(){jsubmit();}
 function ev_deletedo_click(){jsubmit();}
 function ev_renamedo_click(){jsubmit();}
+function ev_renamex_enter(){jsubmit();}
 
 )
 
