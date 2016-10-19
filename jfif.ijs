@@ -101,6 +101,11 @@ function ev_find_click()
  t+=(jform.nameonly.checked?1:0)+JASEP;
  jdoajax([],t);
 }
+
+function ev_matchcase_click(){return true;}
+function ev_subfolders_click(){return true;}
+function ev_nameonly_click(){return true;}
+
 )
 
 NB. ffss version for use from jijs
@@ -1698,3 +1703,8 @@ JHSFOUNDFILES=: ''
 fiff_find_button''
 jhtml  '<div contenteditable="false">',(>FIFNAMEONLY{JHSFOUNDFILES;FIFFOUND),'</div'
 )
+
+
+
+
+

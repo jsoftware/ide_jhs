@@ -428,5 +428,16 @@ function ajax(ts)
  jbyid("sel").innerHTML= ts[1];
 }
 
+// handler must be defined - no longer defaults to jsubmit if not defined
+function ev_edit_click(){jsubmit();}
+function ev_deltemps_click(){jsubmit();}
+function ev_copy_click(){jsubmit();}
+function ev_cut_click(){jsubmit();}
+function ev_paste_click(){jsubmit();}
+function ev_newfi_click(){jsubmit();}
+function ev_newfo_click(){jsubmit();}
+function ev_deletedo_click(){jsubmit();}
+function ev_renamedo_click(){jsubmit();}
+
 )
 
