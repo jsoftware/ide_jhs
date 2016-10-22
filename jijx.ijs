@@ -9,6 +9,7 @@ actionmenu''
 debugmenu''
 'studio'   jhmg'studio';1;14
  'plot'    jhmab'plot'
+ 'watch'   jhmab'watch'
  'sp'      jhmab'sp'
  'spx'     jhmab'spx'
  'demo'    jhmab'demos'
@@ -189,11 +190,12 @@ echo y
 jhtml'<hr/>'
 )
 
-ev_app_click=:  3 : 'studio studio_app'
-ev_demo_click=: 3 : 'studio studio_demos'
-ev_plot_click=: 3 : 'studio studio_plot'
-ev_sp_click=:   3 : 'studio sphelp'
-ev_spx_click=:  3 : 'studio spxhelp'
+ev_app_click=:   3 : 'studio studio_app'
+ev_demo_click=:  3 : 'studio studio_demos'
+ev_plot_click=:  3 : 'studio studio_plot'
+ev_watch_click=: 3 : 'studio studio_watch'
+ev_sp_click=:    3 : 'studio sphelp'
+ev_spx_click=:   3 : 'studio spxhelp'
 
 ev_dbstep_click=:    3 : 'try. dbstep''''    catch. end. i.0 0'
 ev_dbstepin_click=:  3 : 'try. dbstepin''''  catch. end. i.0 0'
@@ -438,6 +440,7 @@ function ev_advance_click(){jdoajax([]);}
 function ev_app_click() {jdoajax([]);}
 function ev_demo_click(){jdoajax([]);}
 function ev_plot_click(){jdoajax([]);}
+function ev_watch_click(){jdoajax([]);}
 function ev_sp_click(){jdoajax([]);}
 function ev_spx_click(){jdoajax([]);}
 

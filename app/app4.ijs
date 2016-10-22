@@ -2,26 +2,24 @@ coclass'app4' NB.
 coinsert'jhs'
 
 CSS=: 0 : 0
-#d1{margin:40px;}             /* CSS comments must be of this form */
+form{margin:40px;}             /* CSS comments must be of this form */
 #t1{color:red;}
 #s1{background-color:aqua;}
 )
 
 HBS=: 0 : 0
-'d1'jhdiva''
-     jhh1'app4 - CSS'
-     jhhr
- 'b1'jhb'b 1'
- 'b2'jhb'b 2' 
- 'b3'jhb'b 3'
- 'b4'jhb'b 4'
- 'b5'jhb'b 5'
- 'b6'jhb'b 6'
- 't1'jhtext't1';10
- 't2'jhtext't2';10
- 's1'jhspan'this is text'
-     desc
-'</div>'
+    jhh1'app4 - CSS'
+    jhhr
+'b1'jhb'b 1'
+'b2'jhb'b 2' 
+'b3'jhb'b 3'
+'b4'jhb'b 4'
+'b5'jhb'b 5'
+'b6'jhb'b 6'
+'t1'jhtext't1';10
+'t2'jhtext't2';10
+'s1'jhspan'this is text'
+    desc
 )
 
 desc=: 0 : 0
@@ -33,8 +31,8 @@ no need to be an expert, but you need to know a bit
 cut/paste and following patterns can get you a long ways
 search for a well phrased question often gives all the answer you need
 
-div with id 'd1' added to HBS that encloses all the other elements
-d1 has a margin (all sides) of 40 pixels
+form is the html element that is the container for the other elements
+css form{...} gives a margin on all sides
 
 t1 has color red and s1 has a backround-color aqua
 <pre/>

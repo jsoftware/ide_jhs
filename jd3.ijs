@@ -16,8 +16,7 @@ CSS=: 0 : 0
 
 NB. J handlers for app events
 jev_get=: 3 : 0
-jwid=. getv'jwid'
-'jd3'jhrx(getcss''),(getjs'TABDATA';(jwid,'_tabdata')~),gethbs''
+'jd3'jhrx(getcss''),(getjs'TABDATA';gd_get''),gethbs''
 )
 
 NB. javascript

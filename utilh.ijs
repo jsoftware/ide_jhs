@@ -382,7 +382,7 @@ if. i~:#t do.
  t=. '<div id="jresizea">',t,'</div>'
 end.
 t=. '<div id="status-busy"><br>server busy<br>event ignored<br><br></div>',t
-'<body onload="jevload();" onunload="jevunload();" onfocus="jevfocus();">',(jhform''),t,'</form></body>'
+'<body onload="jevload();" onunload="jevunload();" onfocus="jevfocus();">',LF,(jhform''),LF,t,LF,'</form></body>'
 )
 
 jhbsex=: 3 : 0
@@ -575,7 +575,7 @@ NB.* jhref*jhref page;target;text
 NB.* jhref*id jhref text - <a href="id">text</a> (deprecated - use monadic form)
 jhref=: 3 : 0
 'page target text'=. y
-if. '~'={.target do. target=. jpath target end.
+NB.! if. '~'={.target do. target=. jpath target end.
 t=. '<a href="<REF>?jwid=<TARGET>" target="<TARGET>" class="jhref" ><TEXT></a>'
 t hrplc 'REF TARGET TEXT';page;target;text
 :

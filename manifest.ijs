@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.226'
+VERSION=: '1.0.227'
 
 FILES=: 0 : 0
 history.txt
@@ -31,6 +31,7 @@ jlogin.ijs
 shortcut.ijs
 jtable.ijs
 jum.ijs
+jwatch.ijs
 sp.ijs
 spxdemo.ijs
 utilh.ijs
@@ -42,6 +43,7 @@ app/app2.ijs
 app/app3.ijs
 app/app4.ijs
 app/app5.ijs
+app/app6.ijs
 demo/jdemo1.ijs
 demo/jdemo2.ijs
 demo/jdemo3.ijs

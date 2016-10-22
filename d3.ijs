@@ -68,7 +68,10 @@ assert 'literal'-:datatype y
 :
 assert 'literal'-:datatype x
 assert -.'literal'-:datatype y
-(x,'_tabdata')=: (jd3x,jd3data y)rplc LF;'\n' 
+
+x gd_set_jd3_ (jd3x,jd3data y)rplc LF;'\n' 
+
+NB. (x,'_tabdata')=: (jd3x,jd3data y)rplc LF;'\n' 
 'jd3' windowopen_jhs_ x
 )
 

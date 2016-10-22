@@ -383,6 +383,19 @@ getvs=: 3 : 0
 ((0{"1 NV)i.;:y){(1{"1 NV),<''
 )
 
+NB. set APP data for get or refresh request
+NB. jev_get_data_JWID=: y
+gd_set=: 3 : 0
+y gd_set~ getv'jwid'
+:
+('jev_get_data_',x)=: y
+)
+
+NB. get APP data for jwid
+gd_get=: 3 : 0
+('jev_get_data_',getv'jwid')~
+)
+
 NB. ~name from full name
 jshortname=: 3 : 0
 p=. <jpath y
@@ -426,12 +439,14 @@ logapp y,' error : ',13!:12''
 
 logstdout=: 3 : 'i.0 0[(y,LF) 1!:2[4'
 
-NB. pop-up window - jtable/jd3
-NB. locale windowopen id
-NB. 'jd3' windowopen 'P'
-NB. id is added as jwid parameter to locale - 'jd3?jwid=P'
+NB. pop-up window - script/demo/app/jd3/jtable/...
+NB. 'jdemo13' windowopen 'jdemo13'
+NB. 'jd3'     windowopen 'P'
+NB. 'jijs'    windowopen jpath file
+NB. 'jwatch'  windowopen sentence
+NB. y is added as url jwid parameter - jd3?jwid=...
 windowopen=: 4 : 0
- t=. x,'?jwid=',jpath y
+ t=. x,'?jwid=',jurlencode y
 if. NOPOPUP do.
  echo jhtml'<div contenteditable="false">',(t jhref_jhs_ t),'</div>'
 else.
@@ -484,6 +499,7 @@ move the 2 new tabs so you can easily study them
  3 J event handlers
  4 CSS - cascading style sheets
  5 INC - include css/js libraries
+ 6 window id and arg - customize jev_get page display
  
    runapp_jhs_ 1
 )
@@ -495,7 +511,7 @@ f=. '~temp/app/',a
 1!:5 :: [ <jpath'~temp/app'
 (fread '~addons/ide/jhs/app/',a)fwrite f
 load f
-'jijs'windowopen_jhs_ f
+'jijs'windowopen_jhs_ jshortname jpath f
 t windowopen t
 )
 
@@ -509,6 +525,10 @@ study ~addons/ide/jhs/jd3.ijs to see how this could be extended
 see link>jhelp>plot for other plot facilities
 
    jd3'help'
+)
+
+studio_watch=: 0 : 0
+   'W1'jwatch'?2 3$100' NB. watch any expression
 )
 
 NB. z local utilities
@@ -591,7 +611,13 @@ end.
 )
 
 open_z_=: 3 : 0
-'jijs'windowopen_jhs_ spf y
+'jijs'windowopen_jhs_ jshortname_jhs_ jpath spf y
+)
+
+jwatch_z_=: 4 : 0
+require'~addons/ide/jhs/jwatch.ijs'
+x gd_set_jwatch_ y
+'jwatch'windowopen_jhs_ x
 )
 
 jlogoff_z_=: 3 : 'htmlresponse_jhs_ hajaxlogoff_jhs_'

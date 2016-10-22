@@ -1,6 +1,3 @@
-NB. load'~addons/ide/jhs/demo/jdemo13.ijs'
-NB. 'jdemo13'windowopen_jhs_ 'foo'
-
 coclass'jdemo13'
 coinsert'jhs'
 
@@ -30,20 +27,19 @@ CSS=: 0 : 0
 )
 
 NB. J handlers for app events
-REF=: '_sentence' NB. (jwid,REF) - global in locale for f5 refresh
+
+jev_get_data_jdemo13=: '?2 8$100' NB. inital default data
 
 jev_get=: 3 : 0
-jwid=. getv'jwid'
-t=. jwid,REF
-if. _1=nc<t do. (t)=: '?3 6$100' end.
-sentence=. (t)~
+sentence=. gd_get''
 data=. jd3data ".sentence
 'jdemo13'jhrx(getcss''),(getjs'TABDATA';data),gethbs'SENTENCE';sentence
 )
 
 ev_plot_click=: 3 : 0
-((getv'jwid'),REF)=: getv'data'
-jhrajax jd3data".getv'data'
+d=. getv'data'
+gd_set d
+jhrajax jd3data".d
 )
 
 NB. javascript
@@ -58,6 +54,8 @@ function ev_plot_click_ajax(ts)
 tabdata=ts[0];
 resize();
 }
+
+function ev_data_enter(){jscdo("plot");}
 
 function ev_flip_click(){hv= hv?0:1;resize();}
 
