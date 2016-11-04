@@ -34,11 +34,18 @@ jumps=: 0 : 0
 text=: 0 : 0
 <div>
 <a name="highlights"><h1>highlights</h1>
+
+<p> Detailed JHS server configuration information at
+<a href="http://code.jsoftware.com/wiki/Guides/JHS/Server" target="_blank">www.jsoftware.com/wiki/Guides/JHS/Server</a>.</p>
+
 <p>Learn how to build your own GUI apps. See studio>app building.</p>
 
 <p>Take a look at studio>plot.</p>
 
 <p>Take a look at studio>demos and run the new demo 13.</p>
+
+<p>Learn how to use powerful debug tools with reworked example and utilities. See studio>debug.
+</p>
 
 <p><a href="#pop-up">Pop-up</a> windows are used more. For example <span class=jcode> open '~temp/1.ijs' </span>opens
 an jijs tab. Previously
@@ -46,7 +53,6 @@ it would have displayed a link that you clicked (a click is not a pop-up).</p>
 
 <p>Window ids are used to avoid opening duplicate tabs. For example, opening a script 
 from a file or files page reopens in a tab if it already exists.
-</p>
 
 <a name="help"><h1>help</h1>
 This document links to lots of information, but is itself quite short.
@@ -63,10 +69,11 @@ For complete documentation see:<br>
 
 <a name="changes"><h1>changes</h1>
 
-<b>October 2016 update</b>
+<b>October 2016 updates</b>
 <ul>
 <li>studio menu reworked</li>
 <li>studio>app building</li>
+<li>studio>debug</li>
 <li>demo 13</li>
 <li>pop-ups used more</li>
 <li>window ids used to avoid opening duplicate tabs</li>
@@ -180,24 +187,22 @@ in developing your browser app.
 
 <a name="config"><h1>config</h1>
 A jconsole task becomes a server when the JHS scripts are loaded,
-configured, and initialized.<br><br>
+configured, and initialized. JHS is configured to serve a port (e.g., 65001),
+allow any or only localhost clients, to require a user/pass, etc.<br><br>
 
-JHS is configured to serve a port (e.g., 65001), allow any or
-only localhost clients, to require a user/pass, etc.<br><br>
+Detailed information is available at
+<a href="http://code.jsoftware.com/wiki/Guides/JHS/Server" target="_blank">www.jsoftware.com/wiki/Guides/JHS/Server</a>.<br><br>
 
-Study ~addons/ide/jhs/config/jhs.cfg to see how to start a configured JHS.<br><br>
-
-Usually http://127.0.0.1:65001/jijx is the same as http://localhost:65001/jijx.<br><br>
+Information here is a brief summary. Start by sutdying ~addons/ide/jhs/config/jhs.cfg.<br><br>
 
 The JHS port must be accessible through the firewall for clients on other machines.
 Allowing access to a port varies between platforms.
 If unfamiliar with the steps, do an internet search for: your_platform firewall port access.<br><br>
 
 To access JHS from another machine you need to know the ip address of the server.
-Finding this varies between platforms.
-If unfamiliar with the steps, do an interent search for: your_platform find ip address.<br><br>
+<pre class="jcode">   getlanip_jhs_''</pre>
 
-If the ip address is of the form 192.168.0.? then it is a LAN ip address. This address can be used
+If the ip address is of the form 192.168.?.? then it is a LAN ip address. This address can be used
 to access the server from other machines on the same LAN.<br><br>
 
 If the address is not a LAN ip address then you can probably access the server with it from another machine.
@@ -209,9 +214,7 @@ seen by the rest of the internet). You may be able to get the routers ip address
 <pre class="jcode">   getexternalip_jhs_''</pre>
 
 Configure the router to forward internet traffic for the server port to the server LAN ip address.
-Search the internet for info on how to configure the router. Typically you browse to 192.168.0.1
-and login with a user and password. You need to find the configuration page for port forwarding and
-change it so that traffic for your server port is forwarded to your server LAN ip address.
+Search the internet for info on how to configure the router.
 
 <a name="ix"><h1>iPhone/iPad/... clients</h1></a>
 
@@ -316,33 +319,6 @@ ja_bbb=: 3 : 0
 'bbb clicked'
 <PAREN>
 ***
-</pre>
-
-<span class="h">jijx debug menu</span>
-With debug on (jijx menu debug), execution suspends at an error or a stop.
-<pre class="jcode">
-   dbsm'name'      - display numbered definition lines
-   dbsm'name ...'  - add stops
-   dbsm'name :...' - add dyadic stops
-   dbsm'~...'      - remove stops starting with ...
-   dbsm''          - display stops
-</pre>
-
-Try the following:
-<pre class="jcode">
-   dbsm'calendar'   NB. numbered explicit defn
-   dbsm'calendar 0' NB. stop monadic line 0
-menu debug|on
-   calendar 1
-study stack display - note 6 blank prompt
-   y
-menu debug|step in
-stepped into dyadic call of calendar
-   x,y
-menu debug|step - step to line 1
-   a
-menu debug|run - run to error or stop
-(runs to end as no error or stops)
 </pre>
 
 <a name="plot"><h1>plot</h1>
@@ -485,31 +461,29 @@ sudo make install
 
 <a name="gui"><h1>GUI</h1>
 
-GUI applications are built with J, JHS framework, html,
-javascript, and css.
 
-See jijx demos for examples of GUI applications.<br><br>
+<p>See jijx studio->app building for information on building GUI apps.</p>
 
-The IDE is built with the same facilities. See
+<p>See jijx studio->demos for app examples.</p>
+
+
+<p>The IDE is built with the same facilities. See
 ~addons/ide/jhs/jfile.ijs to see how the jfile page is
-implemented.<br><br>
+implemented.</p>
 
-You can create simple applications with just info
-from the demos. For more complicated applications you
-need to learn about html, DOM (document object model),
-javascript, and css (styles).<br><br>
+<p>GUI apps are built with J, JHS framework, html, DOM (document object model), javascript, and css.</p>
 
-There are great web resources on these topics.
+<p>There are great web resources on these topics.
 You may prefer more structured
 presentation and there are many books to choose from. None
 stand out, but 'The Definitive Guide' series from O'Reilly
-on HTML, Javascript, and CSS are adequate.<br><br>
+on HTML, Javascript, and CSS are adequate.</p>
 
-There is a lot to learn to cover everything. Fortunately
+<p>There is a lot to learn to cover everything. Fortunately
 the learning curve, though long, is not terribly steep
 and there are significant rewards along the way.
 Everything you learn is applicable not just to J,
-but to every aspect of the incredible world of web programming.
+but to every aspect of the incredible world of web programming.</p
 
 <a name="jum"><h1>JUM (J User Manager)</h1>
 JUM is a JHS application that runs on a web server

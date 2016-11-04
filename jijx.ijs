@@ -14,6 +14,7 @@ debugmenu''
  'spx'     jhmab'spx'
  'demo'    jhmab'demos'
  'app'     jhmab'app building'
+ 'debug'   jhmab'debug'
  'advance' jhmab'advance ctrl+.'
  'lab'     jhmab'labs...'
 jhmz''
@@ -164,24 +165,71 @@ and may run with minor errors that can be ignored.
 ev_lab_click=: 3 : 'smoutput labmsg' NB. no labs to select
 
 debugmenu=: 3 : 0
-t=.   'debug'    jhmg'debug';1;8
-t=. t,'dbstep'   jhmab'step     s^'
-t=. t,'dbstepin' jhmab'step in  i^'
-t=. t,'dbstepout'jhmab'step out o^'
-t=. t,'dbcutback'jhmab'cut back'
-t=. t,'dbrun'    jhmab'run'
-t=. t,'dbon'     jhmab'on'
-t=. t,'dboff'    jhmab'off'
+t=.   'debug'    jhmg'debug';1;9
+t=. t,'dbstep'   jhmab'dbstep    s^'
+t=. t,'dbstepin' jhmab'dbstepin  i^'
+t=. t,'dbstepout'jhmab'dbstepout o^'
+t=. t,'dbcutback'jhmab'dbcutback'
+t=. t,'dbrun'    jhmab'dbrun'
+t=. t,'dbnxt'    jhmab'dbnxt'
 )
 
-ev_dbon_click=: 3 : 0
-smoutput'debug on'
-dbon''
+studio_app=: 0 : 0
+how to build an app
+run and study each script/app in order
+   runapp_jhs_ N
+    - copies appN.ijs to ~temp/app
+    - runs and opens script in a tab
+    - opens the app in a tab
+move the 2 new tabs so you can easily study them
+
+ 1 HBS - html
+ 2 JS - javascript event handlers
+ 3 J event handlers
+ 4 CSS - cascading style sheets
+ 5 INC - include css/js libraries
+ 6 window id and arg - customize jev_get page display
+ 
+   runapp_jhs_ 1
 )
 
-ev_dboff_click=:   3 : 0
-smoutput'debug off'
-dboff''
+studio_demos=: 0 : 0
+demos are simple apps that show aspects of JHS gui programming
+run the demos to see some of the possibilities
+study the source to see how it is done
+study studio|app building first as the demo source will make more sense after that
+
+1  Roll submit
+2  Roll ajax
+3  Flip ajax
+4  Controls/JS/CSS
+5  Plot
+6  Grid editor
+7  Table layout
+8  Dynamic resize
+9  Multiple frames
+10 Ajax chunks
+11 Ajax interval timer
+12 WebGL 3d graphics
+13 D3 line and bar plots
+
+   rundemo_jhs_ 1
+)
+
+studio_plot=: 0 : 0
+D3 (www.d3js.org) javascript library provides
+a powerful plot facility easily used from J
+
+currently simple line, bar, and pie plots are integrated
+study ~addons/ide/jhs/jd3.ijs to see how this could be extended
+
+see link>jhelp>plot for other plot facilities
+
+   jd3'help'
+)
+
+studio_watch=: 0 : 0
+   'W1'jwatch'?2 3$100' NB. watch any expression
 )
 
 studio=: 3 : 0
@@ -194,14 +242,37 @@ ev_app_click=:   3 : 'studio studio_app'
 ev_demo_click=:  3 : 'studio studio_demos'
 ev_plot_click=:  3 : 'studio studio_plot'
 ev_watch_click=: 3 : 'studio studio_watch'
+ev_debug_click=: 3 : 'studio studio_debug'
 ev_sp_click=:    3 : 'studio sphelp'
 ev_spx_click=:   3 : 'studio spxhelp'
 
-ev_dbstep_click=:    3 : 'try. dbstep''''    catch. end. i.0 0'
-ev_dbstepin_click=:  3 : 'try. dbstepin''''  catch. end. i.0 0'
-ev_dbstepout_click=: 3 : 'try. dbstepout'''' catch. end. i.0 0'
-ev_dbcutback_click=: 3 : 'try. dbcutback'''' catch. end. i.0 0'
-ev_dbrun_click=:     3 : 'try. dbrun''''     catch. end. i.0 0'
+ev_dbstep_click=: 3 : 0
+echo'dbstep' try. dbstep'' catch. end. i.0 0
+)
+
+ev_dbstepin_click=: 3 : 0
+echo'dbstepin' try. dbstepin'' catch. end. i.0 0
+)
+
+ev_dbstep_click=: 3 : 0
+echo'dbstep' try. dbstep'' catch. end. i.0 0
+)
+
+ev_dbstepout_click=: 3 : 0
+echo'dbstepout' try. dbstepout'' catch. end. i.0 0
+)
+
+ev_dbcutback_click=: 3 : 0
+echo'dbcutback' try. dbcutback'' catch. end. i.0 0
+)
+
+ev_dbrun_click=: 3 : 0
+echo'dbrun' try. dbrun'' catch. end. i.0 0
+)
+
+ev_dbnxt_click=: 3 : 0
+echo'dbnxt' try. dbnxt'' catch. end. i.0 0
+)
 
 NB. default ctrl+,./ handlers
 ev_comma_ctrl =: 3 : 'sp__'''''
@@ -441,6 +512,7 @@ function ev_app_click() {jdoajax([]);}
 function ev_demo_click(){jdoajax([]);}
 function ev_plot_click(){jdoajax([]);}
 function ev_watch_click(){jdoajax([]);}
+function ev_debug_click(){jdoajax([]);}
 function ev_sp_click(){jdoajax([]);}
 function ev_spx_click(){jdoajax([]);}
 
@@ -483,8 +555,7 @@ function ev_dbstepin_click() {jdoajax([]);}
 function ev_dbstepout_click(){jdoajax([]);}
 function ev_dbcutback_click(){jdoajax([]);}
 function ev_dbrun_click()    {jdoajax([]);}
-function ev_dbon_click()     {jdoajax([]);}
-function ev_dboff_click()    {jdoajax([]);}
+function ev_dbnxt_click()    {jdoajax([]);}
 function ev_s_shortcut(){jscdo("dbstep");}
 function ev_i_shortcut(){jscdo("dbstepin");}
 function ev_o_shortcut(){jscdo("dbstepout");}

@@ -35,7 +35,9 @@ NB. login not allowed after LIMIT failures
 NB. jum sets to _ (multiple users)
 LIMIT=: 10
 
-CSS=: JS=: ''
+CSS=: 0 : 0
+form{margin:20px;}
+)
 
 count=: 0
 logins=: ''
@@ -83,6 +85,8 @@ end.
 )
 
 JS=: 0 : 0
-function ev_body_load(){jform.user.focus();}
-function ev_pass_enter(){jsubmit();}
+function ev_body_load()  {jform.user.focus();}
+function ev_user_enter() {jsubmit();}
+function ev_pass_enter() {jsubmit();}
+function ev_login_click(){jsubmit();}
 )

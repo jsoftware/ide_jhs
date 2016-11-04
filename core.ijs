@@ -533,82 +533,6 @@ studio_watch=: 0 : 0
 
 NB. z local utilities
 
-dbon_z_=: 3 : 0
-13!:15 'smoutput dbes dbestack_z_=:13!:18'''''
-9!:27 '13!:0[1'
-9!:29 [1
-i.0 0
-)
-
-dboff_z_=: 3 : 0
-13!:15 ''
-9!:27 '13!:0[0'
-9!:29 [1
-i.0 0
-)
-
-dbcutback_z_=: 13!:19
-dbstep_z_=:    13!:20
-dbstepin_z_=:  13!:21
-dbstepout_z_=: 13!:22
-
-NB. display numbered explicit defn
-dbsd_z_=: 3 : 0
-if. -.1 2 3 e.~nc<y do. 'not an explicit definition' return. end.
-raw=. 5!:5<y
-t=.<;.2 LF,~raw
-if. 1=#t do. '0 ',raw return. end.
-i=.t i.<':',LF
-if. ('3'={.raw)*.i~:#t do.
- j=. (_1,i.<:i),_1,(i.<:<:(#t)-i),_1
-else.
- j=. _1,(i._2+#t),_1
-end.
-n=. ":each<"0 j
-n=. a: ((n=<'_1')#i.#n)} n
-n=. <"1 ' ',.~' ',.~>n
-;n,each t
-)
-
-NB. debug stop manager
-NB. dbsm'name'     - display numbered explicit defn
-NB. dbsm'~...'     - remove stops starting with ...
-NB. dbsm'name n:n' - add stops
-NB. dbsm''         - display stops
-dbsm_z_=: 3 : 0
-if. ('~'~:{.y)*.1=#;:y do. dbsd y return. end.
-if.'~'={.y do.
- s=. deb each<;._2 (dbsq''),';'
- a=. }.y
- s=. (-.(<a)=(#a){.each s)#s
-else.
- s=. deb each<;._2 (dbsq''),y,';'
-end.
-s=. ~./:~(s~:a:)#s
-dbss ;s,each<' ; '
-dbsq''
-)
-
-NB. show execution stack as set by last supension
-dbes_z_=: 3 : 0
-len=. >./dbestack i."1 ' '
-t=. |."2[dbestack
-r=. ''
-while. #t do.
- d=. }.dtb{.t
- d=. (len>.#d){.d
- t=. }.t
- if. ' '~:1{d do.
-  n=. dltb}.{.t
-  if. 2~:#t do. n=. n rplc '    ';'' end.
-  r=. r,<d,n
-  t=. }.t
- else.
-  r=. r,<d rplc '    ';''
- end.
-end.
-'_',(>coname''),'_',LF,;|.r,each LF
-)
 
 open_z_=: 3 : 0
 'jijs'windowopen_jhs_ jshortname_jhs_ jpath spf y
@@ -974,6 +898,7 @@ load__'~addons/ide/jhs/utiljs.ijs'
 load__'~addons/ide/jhs/sp.ijs'
 load__'~addons/ide/jhs/d3.ijs'
 load__'~addons/ide/jhs/jd3.ijs'
+load__'~addons/ide/jhs/debug.ijs'
 
 stub=: 3 : 0
 'jev_get y[load''~addons/ide/jhs/',y,'.ijs'''
@@ -1052,6 +977,19 @@ Accept-Encoding: gzip, deflate
 User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; WOW64; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; .NET CLR 3.5.30729; .NET CLR 3.0.30729)
 Connection: Keep-Alive
 
+)
+
+getlanip=: 3 : 0
+if. IFWIN do.
+ r=. dltb each<;._2 spawn_jtask_'ipconfig'
+ r=. ;{.(;(<'IPv4 Address')=12{.each r)#r
+ dltb(>:r i.':')}.r
+else.
+ r=. dltb each<;._2[2!:0'ifconfig'
+ r=. ;{.(;(<'inet addr:')=10{.each r)#r
+ r=. (>:r i.':')}.r
+ dltb (r i.' '){.r
+end. 
 )
 
 getexternalip=: 3 : 0

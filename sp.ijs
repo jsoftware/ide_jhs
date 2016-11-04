@@ -109,8 +109,8 @@ elseif. 1 do.
   r=. ,>{.c#SPFILES
 end.
 assert. fexist r['must exist'
-assert. '.ijs'-:_4{.r['not .ijs'
-addrecent r
+if. '.ijs'-:_4{.r do. addrecent r end. NB. addrecent only for .ijs
+r
 )
 
 shorts=: 3 : 0
