@@ -7,8 +7,8 @@ app6 shows how jev_get gets arg for setting initial state of page
 global vars in app6 locale have arg for corresponding window id
 
 for example,
-   jev_get_data_NEW_app6_ - jev_get or F5 refresh window ith id NEW
-   jev_get_data_abc_app6  - arg for window with id abc
+   jev_get_data_NEW_app6_ - jev_get or F5 refresh window with id NEW
+   jev_get_data_abc_app6_ - arg for window with id abc
 
 in jijx - create new app6 page to display load verb:
    'NEW' app6 'load' NB. display in app6 window with id NEW
@@ -40,14 +40,14 @@ NB. JWID is the window id set by windowopen
 NB. gd_get gets the global arg
 jev_get=: 3 : 0
 s=. gd_get''
-(getv'jwid') jhrx (getcss''),(getjs''),gethbs'NAME TEXT';s;jhtmlfroma dbsm s
+(getv'jwid') jhrx (getcss''),(getjs''),gethbs'NAME TEXT';s;jhtmlfroma dbsd s
 )
 
 NB. gd_set s - sets global to new value - F5 refresh will use new value
 ev_run_click=: 3 : 0
 s=. getv'name'
 gd_set s
-jhrajax jhtmlfroma dbsm s
+jhrajax jhtmlfroma dbsd s
 )
 
 NB. launch app6 from j
