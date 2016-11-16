@@ -59,11 +59,22 @@ linux JHS
 linux JC
 )
 
+NB. terminal command used to run this session
+NB. trace back through pids to pid 1 init
+getterm=: 3 : 0
+p=. ":2!:6''
+while. 1 do.
+ r=.  2!:0'ps -o comm -p ',p
+ p=. ;{:<;._2[2!:0'ps -o ppid -p ',p
+ if. 1=".p do. break. end.
+end. 
+;{:<;._2 r
+)
+
 linux=: 3 : 0
 'icon arg'=. ;(y-:JHS){(<'jgray.png';''),<'jblue.png';A
 f=. L,y
-term=. ;{:<;._2[2!:0'ps -o comm -p',;{:<;._2[2!:0'ps -o ppid -p ',":2!:6''
-r=. desktop rplc '<T>';term NB. terminal command to run this session
+r=. desktop rplc '<T>';getterm'' NB. terminal command to run this session
 r=. r rplc '<N>';_8}.y
 r=. r rplc '<C>';C
 r=. r rplc '<A>';arg
