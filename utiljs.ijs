@@ -431,10 +431,20 @@ function jdor()
     location="jlogin";
    else
    {
-    var t="ajax request failed\n"
-    t+=   "response code "+rq.status+"\n";
-    t+=   "application did not produce result\n"
-    t+=   "press enter in jijx for additional info"
+    var t;
+    var code= rq.status;
+    if(0==code)
+    {
+     // kludge - text copied from core.ijs
+     t= "Your JHS server has exited.\nManually close all pages for that server.\nThey won't work properly without a server\nand will be confused if the server restarts."
+    }
+    else
+    {
+     t="ajax request failed\n"
+     t+=   "response code "+code+"\n";
+     t+=   "application did not produce result\n"
+     t+=   "press enter in jijx for additional info"
+    }
     alert(t);
    }
   }
@@ -803,7 +813,6 @@ function jseval(ajax,s)
 {
  var i,j,a,z,q;
  a= "<!-- j html output a --><!-- j js a --><!-- ";
-
  z= " --><!-- j js z --><!-- j html output z -->";
  while(0!=s.length)
  {

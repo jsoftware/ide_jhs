@@ -122,6 +122,7 @@ function ev_inst_click(){jsubmit();}
 function ev_notin_click(){jsubmit();}
 function ev_desc_click(){jsubmit();}
 function ev_upgrade_click(){jsubmit();}
+function ev_install_click(){jsubmit();}
 
 function check(v)
 {

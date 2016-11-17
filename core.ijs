@@ -170,6 +170,13 @@ end.
 
 CHUNKY_jhs_=: 0
 
+jhsexit=: 0 : 0
+Your JHS server has exited.
+Manually close all pages for that server.
+They won't work properly without a server
+and will be confused if the server restarts.
+)
+
 NB. J has output - x is type, y is string
 NB. MTYOFM  1 formatted result array
 NB. MTYOER  2 error
@@ -180,7 +187,10 @@ NB. MTYOFILE 6 output 1!:2[2
 NB. x is type, y is string
 output=: 4 : 0
 logapp 'output type : ',":x
-if. 5=x do. jhrajax 'Your J HTTP Server has exited.<br/><div id="prompt" class="log">&nbsp;&nbsp;&nbsp;</div>'[PROMPT_jhs_=:'   ' end.
+if. 5=x do.
+ NB. jhrajax 'Your J HTTP Server has exited.<br/><div id="prompt" class="log">&nbsp;&nbsp;&nbsp;</div>'[PROMPT_jhs_=:'   '
+ jhrajax'<font style="color:red;"><pre>',jhsexit,'</pre></font>'
+end.
 try.
  s=. y NB. output string
  type=. x NB. MTYO type
