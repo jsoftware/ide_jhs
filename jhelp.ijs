@@ -18,7 +18,6 @@ jev_get=: 3 : 0
 jumps=: 0 : 0
 <a href="#highlights">highlights</a>&nbsp;
 <a href="#help">help</a>&nbsp;
-<a href="#changes">changes</a>&nbsp;
 <a href="#jhs">JHS</a>&nbsp;
 <a href="#config">config</a>&nbsp;
 <a href="#ix">iX</a>&nbsp;
@@ -56,86 +55,20 @@ from a file or files page reopens in a tab if it already exists.
 
 <a name="help"><h1>help</h1>
 This document links to lots of information, but is itself quite short.
-A bit of time here will pay off down the road.<br><br>
+A bit of time here will pay off down the road.
 
-For complete documentation see:<br>
+<p>For additional JHS specific information see
+<a href="http://www.jsoftware.com/jwiki/Guides/JHS" target="_blank">
+www.jsoftware.com wiki Guides/JHS</a>.</p>
+
+For complete J documentation see:<br>
 <a href="http://www.jsoftware.com/docs/help802/index.htm" target="_blank">www.jsoftware.com help</a><br>
 <a href="http://www.jsoftware.com/docs/help802/dictionary/vocabul.htm" target="_blank">www.jsoftware.com vocabulary</a><br>
 <a href="http://www.jsoftware.com/help/user/library.htm" target="_blank">www.jsoftware.com standard library</a></br>
 <a href="http://www.jsoftware.com/jwiki/NuVoc" target="_blank">www.jsoftware.com wiki NuVoc</a><br>
 
-<br>if you have installed local help with jal see:<br>
+<br>If you have installed local help with jal see:
 <a href="~addons/docs/help/index.htm" target="_blank">~addons/docs/help/index.htm</a>
-
-<a name="changes"><h1>changes</h1>
-
-<b>October 2016 updates</b>
-<ul>
-<li>studio menu reworked</li>
-<li>studio>app building</li>
-<li>studio>debug</li>
-<li>demo 13</li>
-<li>pop-ups used more</li>
-<li>window ids used to avoid opening duplicate tabs</li>
-<li>d3 javascript plot library updated to version 4.1.5</li>
-</ul>
-
-<b>September 2016 update</b>
-<ul>
-<li>simpler way to start JHS - see ~addons/ide/jhs/config/jhs.cfg</li>
-<li>config PC_FONTFIXED and PC_FONTVARIABLE</li>
-<li>jd3 plot simplified and improved</li>
-</ul>
-<b>December 2015 update</b>
-<ul>
-<li>simple project simplifications and improvements</li>
-<li>jfile lists windows drives (c: etc) and unix root (/)</li>
-</ul>
-
-<b>July 2014 update</b>
-<ul>
-<li>echo/smoutput displays immediately - http chunked transfer encoding</li>
-<li>demo 10 Ajax chunks - http chunked transfer encoiding</li>
-<li>demo 11 Ajax interval timer - similar to J602 wd timer</li>
-<li>demo 12 WebGl 3d graphics</li>
-<li>iX section has info on iPhone/iPad/... client support</li>
-<li><i>server busy - event ignored</i> for new request when waiting for response</li>
-<li>Config section expanded and an easier way to run a server configured for port etc.</li>
-<li>codemirror 4.2</li>
-<li> IE 11 HTML 5 support adequate as JHS client</li>
-</ul>
-
-<b>Oct 2013 update</b>
-<ul>
-<li>jd3 support added (see plot section for details)
-<li>jtable - table editor with handsontable/jquery - <a target="_blank" href="http://www.handsontable.com">www.handsontable.com</a> </li>
-<pre class="jcode">
-   jtable 'e1';'n' [ n=: i.3 4
-   jtable 'e2';'s' [ s=: 2 2$'aa';'b';'c';'dd'
-   NB. try cut/paste, cell right-click, undo/redo
-</pre>
-
-Study ~addons/ide/jhs/jtable.ijs to see how it works and how easy it will be to extend.
-<li>jquery javascript library easily integrates with the JHS framework - see jd3 and jtable</li>
-<li>jfiles - list recent files</li>
-<li>ctrl+shift+up/down arrow recall</li>
- <ul>
- <li>jijx - recall input lines</li>
- <li>jfile - recall folders</li>
- <li>jfif - recall what/where text lines</li>
- </ul>
-<li>browser local storage carries recalls over J task sessions</li>
-<li>jijx - menu action|clear window</li>
-<li>jijx - menu action|clear refresh (refresh log)</li>
-<li>jijx - menu action|clear LS (local storage recalls)</li>
-<li>browser javascript calls to J are synchronous</li>
-previously if J was busy an event for J got a busy alert and was discarded<br/>
-alert was a nuisance if the delay would have been brief<br/>
-now events are queued and will fire when J call completes<br/>
-avoids alerts, but remember the queue - don't go click crazy when you don't see expected responses<br/>
-<li>jlog utility removed</li>
-<li>minor bug fixes</li>
-</ul>
 
 <a name="jhs"><h1>JHS (J HTTP Server)</h1></a>
 JHS is a browser interface to J and
@@ -217,28 +150,14 @@ Configure the router to forward internet traffic for the server port to the serv
 Search the internet for info on how to configure the router.
 
 <a name="ix"><h1>iPhone/iPad/... clients</h1></a>
-
-iX 7.0 Safari has adequate HTML 5 support to run JHS client.<br><br>
-
-Relatively few changes were required for iX support.<br><br>
-
-Resize calculations were required to handle the virtual keyboard coming and going.
-There are still rough edges but it works well enough to be usefull.
-Sometimes a resize event is not triggered and the screen won't be quite right.
-An enter will usually fix this.
-The iPhone sometimes 'squeezes' its top decorations (time, battery, address, etc) and that confuses
-resize calculations. Touch time at top to unsqueeze and do enter to get propoer sizing.<br><br>
-
-A touch stylus makes it much easier to work with these devices (especially the iPhone).<br><br>
-
+A touch stylus makes it much easier to work with these devices.
 A wireless keyboard works well and is highly recommended for other than casual use.<br><br>
 
 JHS esc shortcuts are handy on iX. Virtual keyboard has no esc key and the esc key on the
 wireless keyboard does not work. Virtual keyboard pressing s and sliding to ß 
 is the esc for shortcuts. Wireless keyboard hold down option and press s for esc.<br><br>
 
-Wireless arrow keys work on jijx but do not work on jijs (codemirror). This is a known codemirror
-problem and hopefully will be fixed in a future codemirror release.
+Wireless keyboard arrow keys work on jijx but may not work on jijs (codemirror).
 
 <a name="ide"><h1>IDE (Interactive Development Environment)</h1></a>
 <span class="h">target</span><br>
