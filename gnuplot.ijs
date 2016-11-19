@@ -1,4 +1,4 @@
- NB. gnuplot html canvas - based on Fraser Jackson's J601 gnuplot addon
+NB. JHS gnuplot - based on Fraser Jackson's gnuplot addon
 
 gpdemo_z_=: 3 : 0
 load'~addons/ide/jhs/gpdemo.ijs'
@@ -75,6 +75,13 @@ else.
 end.
 )
 
+BADEXE=: 'EXE_jgnuplot_ is invalid - set it to be the gnuplot binary'
+BADJSDIR=: 0 : 0
+JSDIR_jgnuplot_ is invalid - set it to be path to gnuplot js scripts
+ linux/mac JSDIR starts with ~root and that prefix is required
+ likely problem is verson number - perhaps need to change 4.6 to new version
+)  
+
 gpplot=: 4 : 0
 dat=. y
 cmd=. WITH
@@ -86,6 +93,10 @@ txt=. gpsetcommand''
 txt=. txt, gpcommand cmd;shp;jpath DAT
 txt fwrite PLT
 t=. '"',EXE,'" "',(jpath PLT),'"'
+
+BADEXE   assert fexist EXE
+BADJSDIR assert fexist'canvastext.js',~(5*'~root/'-:6{.JSDIR)}.JSDIR
+
 if. IFWIN do.
    e=: spawn_jtask_ t
    if. #e do. smoutput 'error: ',e assert. 0 end.
@@ -107,29 +118,19 @@ if. 137 80 78 71 13 10 26 10 -: a.i.8{.d do. NB. png file
  r=. PATH,x,'.png'
  ferase r
  r frename GNU
-elseif. '<html>'-:6{.d do.
+elseif. '<!DOCTYPE HTML>'-:15{.d do.
  r=. gpadjustcanvas x
 elseif. 1 do.
 end.
 r
 )
 
-NB. excanvas.js supported canvas in IE8 - we require IE9 and do not support IE8
-IE =: '<!--[if IE]><script type="text/javascript" src="excanvas.js"></script><![endif]-->',LF
-IE8=: '<!--[if lt IE 9]><script type="text/javascript" src="/~addons/ide/jhs/js/excanvas.js"></script><![endif]-->',LF
-
 NB. create adjusted canvas output
 gpadjustcanvas=: 3 : 0
 d=. fread GNU
 d=. toJ d
-
-NB. i=. (IE E. d)i.1
-NB. if. i<#d do. d=. (i{.d),IE8,(i+#IE)}.d end. NB. remove IE8 excanvas.js
-
-d=. d rplc '<!--[if IE]>';'<!--[if lt IE 9]>'
-
-d=. d rplc 'src="excanvas.js"';'src="/~addons/ide/jhs/js/excanvas.js"'
-
+NB. gnuplot hardwires excanvas.js for IE and we don't need to support that older IE
+d=. d rplc '<!--[if IE]><script type="text/javascript" src="excanvas.js"></script><![endif]-->';'<!-->IE excanvas.js stuff<! -->'
 a=. 1 i.~ '<canvas id="gnuplot_canvas"' E. d
 z=. 9+1 i.~ '</canvas>' E. d
 n=. 1 i.~ '<table class="mbleft">' E. d
@@ -239,20 +240,13 @@ NB. hardwired OS assumptions that may need tweaking
 select. UNAME 
 case. 'Win' do.
  EXE  =: (jpath'~home/gnuplot/binary/gnuplot.exe')rplc'/';'\'
- JSDIR=: '~home/gnuplot/binary/share/gnuplot/4.4/js/'
+ JSDIR=: '~home/gnuplot/binary/share/gnuplot/4.6/js/'
 case. 'Linux' do.
  EXE  =: '/usr/bin/gnuplot'
- JSDIR=: '~root/usr/share/gnuplot/gnuplot/4.4/js/'
+ JSDIR=: '~root/usr/share/gnuplot/gnuplot/4.6/js/'
 case. 'Darwin' do.
  EXE  =: '/usr/local/bin/gnuplot'
- JSDIR=: '~root/usr/local/share/gnuplot/4.4/js/'
+ JSDIR=: '~root/usr/local/share/gnuplot/4.6/js/'
 case. do. assert. 0['unknown UNAME'
-end.
-if. -.fexist EXE do.
- smoutput EXE,' not found' assert. 0
-end.
-t=. 'canvastext.js',~(5*'~root/'-:6{.JSDIR)}.JSDIR
-if. -.fexist t do.
- smoutput t,' not found' assert. 0
 end.
 )
