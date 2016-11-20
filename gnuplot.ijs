@@ -9,7 +9,7 @@ coclass 'jgnuplot'
 
 gpinit=: 3 : 0
 PATH=: '~temp/gnuplot/'
-1!:5 :: 0:<jpath t
+1!:5 :: 0:<jpath PATH
 DAT=: PATH,'gnu.dat'
 PLT=: PATH,'gnu.plt'
 GNU=: PATH,'gnu'
@@ -75,11 +75,11 @@ else.
 end.
 )
 
-BADEXE=: 'EXE_jgnuplot_ is invalid - set it to be the gnuplot binary'
+BADEXE=: 'EXE_jgnuplot_ invalid - see current value - set it to be the gnuplot binary'
 BADJSDIR=: 0 : 0
-JSDIR_jgnuplot_ is invalid - set it to be path to gnuplot js scripts
+JSDIR_jgnuplot_ invalid - see current value - set it to be path to gnuplot js scripts
  linux/mac JSDIR starts with ~root and that prefix is required
- likely problem is verson number - perhaps need to change 4.6 to new version
+ linux/mac - possible  problem is verson - perhaps need to change 4.6 to newer version
 )  
 
 gpplot=: 4 : 0
@@ -92,7 +92,7 @@ dat gpwrite DAT
 txt=. gpsetcommand''
 txt=. txt, gpcommand cmd;shp;jpath DAT
 txt fwrite PLT
-t=. '"',EXE,'" "',(jpath PLT),'"'
+t=. '"',(hostpathsep EXE),'" "',(jpath PLT),'"'
 
 BADEXE   assert fexist EXE
 BADJSDIR assert fexist'canvastext.js',~(5*'~root/'-:6{.JSDIR)}.JSDIR
@@ -130,7 +130,7 @@ gpadjustcanvas=: 3 : 0
 d=. fread GNU
 d=. toJ d
 NB. gnuplot hardwires excanvas.js for IE and we don't need to support that older IE
-d=. d rplc '<!--[if IE]><script type="text/javascript" src="excanvas.js"></script><![endif]-->';'<!-->IE excanvas.js stuff<! -->'
+d=. d rplc '<!--[if IE]><script type="text/javascript" src="excanvas.js"></script><![endif]-->';''
 a=. 1 i.~ '<canvas id="gnuplot_canvas"' E. d
 z=. 9+1 i.~ '</canvas>' E. d
 n=. 1 i.~ '<table class="mbleft">' E. d
@@ -142,6 +142,7 @@ if. *./(#d)>a,z,n do.
 else.
  d=. d rplc '<table class="plot">';'<table>'   NB. remove class so canvas at left
 end.
+d=. d rplc '<title>plot</title>';'<title>',y,'</title>'
 f=. PATH,y,'.html'
 ('<!DOCTYPE html>',LF,d) fwrite f
 f
@@ -237,10 +238,11 @@ NB. set EXE   as path to gnuplot binary
 NB. set JSDIR as path to gnuplot javascript scripts
 NB. hardwired OS assumptions that may need tweaking
 3 : 0''
+if. 0=nc<'EXE' do. return. end.
 select. UNAME 
 case. 'Win' do.
- EXE  =: (jpath'~home/gnuplot/binary/gnuplot.exe')rplc'/';'\'
- JSDIR=: '~home/gnuplot/binary/share/gnuplot/4.6/js/'
+ EXE=: 'C:/program files (x86)/gnuplot/bin/gnuplot.exe'
+ JSDIR=: 'C:/program files (x86)/gnuplot/share/js/'
 case. 'Linux' do.
  EXE  =: '/usr/bin/gnuplot'
  JSDIR=: '~root/usr/share/gnuplot/gnuplot/4.6/js/'
