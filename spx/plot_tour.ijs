@@ -1,17 +1,16 @@
 0 : 0
-
 there are several ways to visual data in JHS
-
-this is a rough draft and needs lot os work
-
+this is a rough draft and needs lot of work
 some graphs show inline in jijx
 others show in new (or reused) tabs
 )
 
+NB. viewmat
 load'viewmat'
 viewmat ?10 10$100
 viewmat */~ i:9
 
+NB. native plot
 load'plot'
 plotdef 'jijx';'plot';400 200;'canvas'
 plot ?10$100
@@ -52,10 +51,104 @@ jd3'help'
    
    
 NB. google plots
-jhtml'<h3>gcplot <div contenteditable="false"><a href="http://code.google.com/apis/chart/"  target="_blank">Google Charts</a></div></h3>'
+jhtml'<div contenteditable="false"><a href="http://code.google.com/apis/chart/"  target="_blank">Google Charts</a></div>'
 load'~addons/ide/jhs/jgcp.ijs'
 jgc'help'  NB. plot info
 jgcx''     NB. examples
 
 NB. WebGL 
 rundemo_jhs_ 12
+
+NB. gnuplot
+0 : 0
+gnuplot
+
+gnuplot www.gnuplot.info
+Plots can be created with gnuplot and displayed in the browser.
+
+The following is out of date and needs changes in order to make use of the new gnuplot addon.
+
+After gnuplot is installed, try the following:
+)
+
+jhtml'<div contenteditable="false"><a href="http://www.gnuplot.info"  target="_blank">gnuplot info</a></div>'
+load'~addons/ide/jhs/gnuplot.ijs'
+   
+term_png             =: 'term png tiny size 400,200 background 0xffffff'
+term_canvas          =: gpcanvas 400 200;1;'plot'
+term_canvas_mouseless=: gpcanvas 400 200;0;'plot'
+
+gpd0=: 4 : 0
+gpinit''
+gpset y
+gpset 'grid'
+gpset 'title "sin(exp) vs cos(exp)"'
+gpset 'xlabel "x-axis"'
+gpset 'ylabel "y-axis"'
+gpsetwith 'with lines title "sin(exp)", with lines title "cos(exp)"'
+x gpplot  (;sin@^,:cos@^) steps _1 2 100
+)
+
+gpd1=: 4 : 0
+wiggle=. 4
+points=. 200
+X=. (3 % <:points) * i.points
+fn=. +/@((0.9&^) * cos@((3&^ * (+/&X))))@i.
+XY=. fn wiggle
+gpinit''
+gpset y
+gpsetwith 'with lines'
+x gpplot X;XY
+)
+
+gpd2=: 4 : 0
+xd=. range _3 3 0.2
+yd=. range _3 3 0.2
+zd=. sin xd +/ sin yd
+CP=. xd;yd;zd
+gpinit''
+gpset y
+gpset 'title "sin(x+sin(y))"'
+gpset 'parametric'
+gpsetwith 'with lines'
+gpsetsurface 1
+x gpplot CP
+)
+
+gpd3=: 4 : 0
+xd=. range _3 3 0.1
+yd=. range _3 3 0.1
+SP=. xd;yd;(sin xd) */ sin yd
+gpinit''
+gpset y
+gpset 'title "sin(x)*sin(y)) contour plot"'
+gpset 'parametric;contour;cntrparam levels 20;view 0,0,1;nosurface'
+gpsetwith 'with lines'
+gpsetsurface 1
+x gpplot SP NB. surface plot
+)
+
+gpd4=: 4 : 0
+gpinit''
+gpset y
+gpsetwith'with lines'
+x gpplot 10?10
+)
+
+   
+'d0' gpd0 term_png                  NB. create png file
+'d0' gpd0 term_canvas               NB. create html file
+
+jhspng  'd0' gpd0 term_png          NB. display in session
+jhslink 'd1' gpd1 term_canvas       NB. link to file
+jhsshow 'd2' gpd2 term_canvas       NB. show file in popup
+
+'one' jhslink 'd0' gpd0 term_canvas NB. window named one
+'one' jhslink 'd1' gpd1 term_canvas
+
+'one' jhsshow 'd2' gpd2 term_canvas
+'one' jhsshow 'd3' gpd3 term_canvas
+
+'one' jhsshow 'd4' gpd4 term_canvas
+'one' jhsshow 'd4' gpd4 term_canvas
+
