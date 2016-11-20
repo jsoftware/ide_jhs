@@ -78,7 +78,6 @@ end.
 BADEXE=: 'EXE_jgnuplot_ invalid - see current value - set it to be the gnuplot binary'
 BADJSDIR=: 0 : 0
 JSDIR_jgnuplot_ invalid - see current value - set it to be path to gnuplot js scripts
- linux/mac JSDIR starts with ~root and that prefix is required
  linux/mac - possible  problem is verson - perhaps need to change 4.6 to newer version
 )  
 
@@ -95,7 +94,7 @@ txt fwrite PLT
 t=. '"',(hostpathsep EXE),'" "',(jpath PLT),'"'
 
 BADEXE   assert fexist EXE
-BADJSDIR assert fexist'canvastext.js',~(5*'~root/'-:6{.JSDIR)}.JSDIR
+BADJSDIR assert fexist JDDISR,'canvastext.js'
 
 if. IFWIN do.
    e=: spawn_jtask_ t
@@ -245,10 +244,10 @@ case. 'Win' do.
  JSDIR=: 'C:/program files (x86)/gnuplot/share/js/'
 case. 'Linux' do.
  EXE  =: '/usr/bin/gnuplot'
- JSDIR=: '~root/usr/share/gnuplot/gnuplot/4.6/js/'
+ JSDIR=: '/usr/share/gnuplot/gnuplot/4.6/js/'
 case. 'Darwin' do.
  EXE  =: '/usr/local/bin/gnuplot'
- JSDIR=: '~root/usr/local/share/gnuplot/4.6/js/'
+ JSDIR=: '/usr/local/share/gnuplot/4.6/js/'
 case. do. assert. 0['unknown UNAME'
 end.
 )
