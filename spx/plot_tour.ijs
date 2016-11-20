@@ -73,6 +73,7 @@ After gnuplot is installed, try the following:
 
 jhtml'<div contenteditable="false"><a href="http://www.gnuplot.info"  target="_blank">gnuplot info</a></div>'
 load'~addons/ide/jhs/gnuplot.ijs'
+require'numeric trig'
    
 term_png             =: 'term png tiny size 400,200 background 0xffffff'
 term_canvas          =: gpcanvas 400 200;1;'plot'
