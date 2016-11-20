@@ -94,7 +94,7 @@ txt fwrite PLT
 t=. '"',(hostpathsep EXE),'" "',(jpath PLT),'"'
 
 BADEXE   assert fexist EXE
-BADJSDIR assert fexist JDDISR,'canvastext.js'
+BADJSDIR assert fexist JSDIR,'canvastext.js'
 
 if. IFWIN do.
    e=: spawn_jtask_ t
