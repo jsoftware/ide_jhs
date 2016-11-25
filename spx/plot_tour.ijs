@@ -134,8 +134,8 @@ x gpplot 10?10
 
 termxtra=: ' size 400,200 '
    
-'d0' gpd0 term_png,size                  NB. create png file
-'d0' gpd0 term_canvas,size               NB. create html file
+'d0' gpd0 term_png,termxtra                  NB. create png file
+'d0' gpd0 term_canvas,termxtra               NB. create html file
 
 jhspng  'd0' gpd0 term_png,termxtra          NB. display in session
 jhslink 'd1' gpd1 term_canvas,termxtra       NB. link to file

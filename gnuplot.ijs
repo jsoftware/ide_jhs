@@ -235,7 +235,7 @@ case. 'Win' do.
  EXE=: 'C:/program files (x86)/gnuplot/bin/gnuplot.exe'
 case.      do.
  try.
-  EXE=: 2!:0'which gnuplot'
+  EXE=: }:2!:0'which gnuplot'
  catch.
   'gnuplot not installed'assert 0
  end. 
