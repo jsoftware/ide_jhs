@@ -131,7 +131,13 @@ d=. fread GNU
 d=. toJ d
 NB. gnuplot hardwires excanvas.js for IE and we don't need to support that older IE
 d=. d rplc '<!--[if IE]><script type="text/javascript" src="excanvas.js"></script><![endif]-->';''
-d=. d rplc '<script src="';'<script src="/' NB. needs / to do the get from jfilessrc
+
+if. IFWIN do.
+ NB. windows needs leading / to do the get from jfilessrc
+ NB. see jfilesrc corresponding kludge to add leading / for linux
+ d=. d rplc '<script src="';'<script src="/'
+ d=. d rplc '<link type="text/css" href="';'<link type="text/css" href="/'
+end. 
 a=. 1 i.~ '<canvas id="gnuplot_canvas"' E. d
 z=. 9+1 i.~ '</canvas>' E. d
 n=. 1 i.~ '<table class="mbleft">' E. d

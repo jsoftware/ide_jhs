@@ -5,7 +5,9 @@ coinsert'jhs'
 NB. serves .htm .js etc pages from anywhere
 NB. possible security issues! careful on allowing other suffixes!
 jev_get=: 3 : 0
+if. 0=nc<'gets_jhs_' do. gets_jhs_=: gets_jhs_,y,LF end.
 if. y-:'favicon.ico' do. favicon 0 return. end.
+if. (-.IFWIN)*.'usr/share/'-:10{.y do. y=. '/',y end. NB. gnuplot kludge
 y=. jpath y
 d=. fread y
 if. _1=d do. echo 'get file does not exist: ',y return. end.
