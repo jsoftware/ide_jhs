@@ -75,10 +75,6 @@ jhtml'<div contenteditable="false"><a href="http://www.gnuplot.info"  target="_b
 load'~addons/ide/jhs/gnuplot.ijs'
 require'numeric trig'
    
-term_png             =: 'term png tiny size 400,200 background 0xffffff'
-term_canvas          =: gpcanvas 400 200;1;'plot'
-term_canvas_mouseless=: gpcanvas 400 200;0;'plot'
-
 gpd0=: 4 : 0
 gpinit''
 gpset y
@@ -136,20 +132,21 @@ gpsetwith'with lines'
 x gpplot 10?10
 )
 
+termxtra=: ' size 400,200 '
    
-'d0' gpd0 term_png                  NB. create png file
-'d0' gpd0 term_canvas               NB. create html file
+'d0' gpd0 term_png,size                  NB. create png file
+'d0' gpd0 term_canvas,size               NB. create html file
 
-jhspng  'd0' gpd0 term_png          NB. display in session
-jhslink 'd1' gpd1 term_canvas       NB. link to file
-jhsshow 'd2' gpd2 term_canvas       NB. show file in popup
+jhspng  'd0' gpd0 term_png,termxtra          NB. display in session
+jhslink 'd1' gpd1 term_canvas,termxtra       NB. link to file
+jhsshow 'd2' gpd2 term_canvas,termxtra       NB. show file in popup
 
-'one' jhslink 'd0' gpd0 term_canvas NB. window named one
-'one' jhslink 'd1' gpd1 term_canvas
+'one' jhslink 'd0' gpd0 term_canvas,termxtra NB. window named one - different than the tab name d0
+'one' jhslink 'd1' gpd1 term_canvas,termxtra
 
-'one' jhsshow 'd2' gpd2 term_canvas
-'one' jhsshow 'd3' gpd3 term_canvas
+'one' jhsshow 'd2' gpd2 term_canvas,termxtra
+'one' jhsshow 'd3' gpd3 term_canvas,termxtra
 
-'one' jhsshow 'd4' gpd4 term_canvas
-'one' jhsshow 'd4' gpd4 term_canvas
+'one' jhsshow 'd4' gpd4 term_canvas,termxtra
+'one' jhsshow 'd4' gpd4 term_canvas,termxtra
 

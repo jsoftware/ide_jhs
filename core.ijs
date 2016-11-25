@@ -932,7 +932,7 @@ NB. simple wget with sockets - used to get google charts png
 NB. jwget 'host';'file'
 NB. jwget 'chart.apis.google.com';'chart?&cht=p3....'
 NB. simplistic - needs work to be robust and general
-NB.! JHS get/put and jwget should probably share code
+NB. JHS get/put and jwget should probably share code
 wget=: 3 : 0
 'host file'=. y
 ip=. >2{sdgethostbyname_jsocket_ host

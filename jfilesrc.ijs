@@ -5,15 +5,15 @@ coinsert'jhs'
 NB. serves .htm .js etc pages from anywhere
 NB. possible security issues! careful on allowing other suffixes!
 jev_get=: 3 : 0
-NB. echo 'get: ',y
 if. y-:'favicon.ico' do. favicon 0 return. end.
 y=. jpath y
 d=. fread y
+if. _1=d do. echo 'get file does not exist: ',y return. end.
 NB. Firefox 8 requires a response header
 if. ('.htm'-:_4{.y)+.'.html'-:_5{.y do. htmlresponse d,~fsrchead rplc '<TYPE>';'text/html' return. end.
 if. (#mimetypes) > i=. ({:"1 mimetypes) i. <@tolower@}.(}.~ i:&'.') y do.
  t=. i{:: {."1 mimetypes
-else. smoutput 'will not get file ',y return. end.
+else. echo 'will not get file ',y return. end.
 t gsrcf d
 )
 
