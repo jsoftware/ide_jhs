@@ -16,6 +16,7 @@ jhmz''
 'inst'   jhb'Installed'
 'notin'  jhb'Not Installed'
 'desc'   jhb'Descriptions'
+'all'    jhb'Upgrade/Install All'
 'buttons'jhdiv'<BUTTONS>'
 jhresize''
 'result' jhdiv'<RESULT>'
@@ -38,6 +39,14 @@ create=: 3 : 0 NB. create - y replaces <RESULT> in body
 jev_get=: 3 : 0
 create '';('update'jpkg'')rplc LF;'<br>'
 )
+
+ev_all_click=: 3 : 0
+'update'jpkg'' NB. update to make current
+'upgrade'jpkg''
+'install'jpkg,<'all'
+jev_get''
+)
+
 
 ev_upable_click=: 3 : 0
 'update'jpkg'' NB. update to make current
@@ -123,6 +132,12 @@ function ev_notin_click(){jsubmit();}
 function ev_desc_click(){jsubmit();}
 function ev_upgrade_click(){jsubmit();}
 function ev_install_click(){jsubmit();}
+function ev_all_click()
+{
+ jbyid("result").innerHTML= 'this may take a few minutes ...';
+ jsubmit();
+}
+function ev_remove_click(){jsubmit();}
 
 function check(v)
 {
