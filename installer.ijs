@@ -1,6 +1,6 @@
 NB. routines to update/install all addons and to create desktop icons
 
-install=: 3 : 0
+installer=: 3 : 0
 update_install_all 0
 shortcut 0
 )
