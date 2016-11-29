@@ -155,13 +155,34 @@ else.
 end. 
 )
 
+
+SECTION=: 'NB.spxsection:'
+SECTIONC=: #SECTION
+
+spxsections=: 3 : 0
+b=.(<SECTION)=SECTIONC{.each y
+i=.b#i.#y
+t=. (#SECTION)}.each i{y
+;t=. (<'spx'':'),each t,each <'''',LF
+)
+
 spx=: 3 : 0
-if. (0~:#y)*.2=3!:0 y do. spxinit y return. end.
+nsec=. -.':'={.y
+if. nsec*.(0~:#y)*.2=3!:0 y do. spxinit y return. end.
 if. -.fexist SPXFILE do. smoutput 'not initialized - do spxinit' return. end.
 if. ''-:y do. spx SEMN return. end.
 if. 0={.y do. status'' return. end.
 d=. SEM
 SEM=:get SPXFILE
+
+if. -.nsec do.
+ if. ':'-:y do. spxsections SEM return. end.
+ a=. SECTION,deb}.y
+ s=. (#a){.each SEM
+ i=. s i.<a
+ if. i<#s do. y=. >:i end.
+end.
+
 if. 2=#y do.
  if. -.(3!:0[4) e. 1 4 do. smoutput 'not integer line numbers' return. end.
  SEMN=: {.y

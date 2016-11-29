@@ -613,13 +613,18 @@ t=. '<img width=<WIDTH>px height=<HEIGHT>px src="<FILE><UQS>" ></img>'
 jhtml t hrplc_jhs_ 'WIDTH HEIGHT FILE UQS';w;h;y;jhsuqs''
 )
 
-NB. TARGET f URL
+NB. [TARGET] f URL - url is server page or file with UQS 
 jhslink_z_=: 3 : 0
 '_blank' jhslink y
 :
 t=. '<a href="<REF><UQS>" target="<TARGET>" class="jhref" ><TEXT></a>'
 t=. t hrplc_jhs_ 'TARGET REF UQS TEXT';x;y;(jhsuqs'');y
 jhtml'<div contenteditable="false">',t,'</div>'
+)
+
+NB. f URL - url is www url
+jhslinkurl_z_=: 3 : 0
+jhtml'<div contenteditable="false"><a href="http://',y,'" target="_blank">',y,'</a></span>'
 )
 
 NB. TARGET f URL

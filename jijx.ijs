@@ -8,7 +8,7 @@ jhjmlink''
 actionmenu''
 debugmenu''
 'studio'   jhmg'studio';1;14
- 'plot'    jhmab'plot'
+ 'plot'    jhmab'plot tour'
  'watch'   jhmab'watch'
  'sp'      jhmab'sp'
  'spx'     jhmab'spx'
@@ -216,18 +216,6 @@ study studio|app building first as the demo source will make more sense after th
    rundemo_jhs_ 1
 )
 
-studio_plot=: 0 : 0
-D3 (www.d3js.org) javascript library provides
-a powerful plot facility easily used from J
-
-currently simple line, bar, and pie plots are integrated
-study ~addons/ide/jhs/jd3.ijs to see how this could be extended
-
-see link>jhelp>plot for other plot facilities
-
-   jd3'help'
-)
-
 studio_watch=: 0 : 0
    'W1'jwatch'?2 3$100' NB. watch any expression
 )
@@ -240,7 +228,14 @@ jhtml'<hr/>'
 
 ev_app_click=:   3 : 'studio studio_app'
 ev_demo_click=:  3 : 'studio studio_demos'
-ev_plot_click=:  3 : 'studio studio_plot'
+
+ev_plot_click=:  3 : 0
+jhtml'<hr>'
+echo'plot tour'
+spx'~addons/ide/jhs/spx/plot_tour.ijs'
+jhtml'<hr/>'
+)
+
 ev_watch_click=: 3 : 'studio studio_watch'
 ev_debug_click=: 3 : 'studio studio_debug'
 ev_sp_click=:    3 : 'studio sphelp'

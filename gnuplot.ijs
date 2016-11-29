@@ -1,5 +1,7 @@
 NB. JHS gnuplot - based on Fraser Jackson's gnuplot addon
 
+require'numeric trig'
+
 term_png         =: 'term png background 0xffffff '
 term_pngcairo    =: 'term pngcairo background 0xffffff '
 term_canvas      =: 'term canvas standalone title "plot" '
