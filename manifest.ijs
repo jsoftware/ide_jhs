@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.250'
+VERSION=: '1.0.251'
 
 FILES=: 0 : 0
 history.txt
@@ -34,7 +34,6 @@ jtable.ijs
 jum.ijs
 jwatch.ijs
 sp.ijs
-spxdemo.ijs
 utilh.ijs
 utiljs.ijs
 config/jhs_default.ijs
@@ -59,6 +58,7 @@ demo/jdemo11.ijs
 demo/jdemo12.ijs
 demo/jdemo13.ijs
 spx/plot_tour.ijs
+spx/spx_tour.ijs
 js/webgl/glmatrix-min.js
 js/jquery-1.5.1.min.js
 js/codemirror/license.txt
