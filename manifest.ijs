@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.251'
+VERSION=: '1.0.252'
 
 FILES=: 0 : 0
 history.txt
@@ -17,6 +17,7 @@ debug.ijs
 d3.ijs
 gnuplot.ijs
 gpdemo.ijs
+installer.ijs
 jal.ijs
 jbinfo.ijs
 jd3.ijs
@@ -29,7 +30,6 @@ jhelp.ijs
 jijs.ijs
 jijx.ijs
 jlogin.ijs
-shortcut.ijs
 jtable.ijs
 jum.ijs
 jwatch.ijs
