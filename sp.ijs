@@ -17,8 +17,6 @@ sphelp_z_=: 0 : 0
 sp (simple project) defined by ~addons/ide/jhs/sp.ijs
 part of JHS and can be loaded in any front end
 
-see spxhelp for managed execution info
-
 simple project:
  sp  f    set SPFILE and load it
  sp''     load SPFILE
@@ -60,10 +58,8 @@ simple project managed execution:
  spx 0        status
  spx n        run line n
  spx n m      run lines n through m
- spx''        advance
-
-managed execution example:
- spx'~addons/ide/jhs/spxdemo.ijs' 
+ spx':'       sections
+ spx'~addons/ide/jhs/spx/spx_tour.ijs' 
 )
 
 MAXRECENT=: 40 NB. max recent files 
@@ -205,7 +201,7 @@ ndx=. <:SEMN
 d=. >ndx{SEM
 if. 0=#d-.' ' do. SEMN=:>:SEMN[echo ;IFJHS{'';LF goto_top. end.
 
-if. '0 : ''spx hr'''-:12{.deb d do.
+if. 'NB.spxhr:'-:9{.deb d do.
  SEMN=:>:SEMN
  if. IFJHS do. jhtml'<hr/>' else. echo 80$'_'end.
  goto_top.

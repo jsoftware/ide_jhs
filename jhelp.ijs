@@ -22,7 +22,6 @@ jumps=: 0 : 0
 <a href="#help">help</a>&nbsp;
 <a href="#jhs">JHS</a>&nbsp;
 <a href="#config">config</a>&nbsp;
-<a href="#ix">iX</a>&nbsp;
 <a href="#ide">IDE</a>&nbsp;
 <a href="#gui">GUI</a>&nbsp;
 <a href="#console">console</a>&nbsp;
@@ -38,17 +37,15 @@ A bit of time here will pay off down the road.</p>
 <p>Pop-up windows can be a plague when browsing ill-behaved sites.
 However, they can be very useful in an app like JHS that
 tries to combine the best of the browser interface with some
-features of classic desktop applications.<p>
-
-<p>JHS facilities like jd3 (plots), jtable (spreadsheet), and demos
+features of classic desktop applications.
+JHS facilities like jd3 (plots), jtable (spreadsheet), and demos
 work best if they can create pop-ups.</p>
 
 <p>If your browser is set to block pop-ups, then you will get
 an alert message when JHS tries to create a pop-up. You can
-adjust the browser settings to allow the JHS pop-ups.</p>
+adjust the browser settings to allow the pop-ups.</p>
 
-<p>You may not want to enable all pop-ups, and instead only
-want to allow JHS pop-ups.
+<p>You may not want to enable all pop-ups, and instead only allow JHS pop-ups.
 More recent versions of most browsers (Firefox/Chrome/Edge/IE)
 allow you to configure pop-up blocking to allow pop-ups based
 on the site address. In this case you want to enable pop-ups
@@ -60,6 +57,11 @@ the NOPOPUP option. With this option, instead of a pop-up,
 a link is created in your jijx page. Click the link to see
 the page. This work-around is not supported in all cases.
 <div class="jcode">   NOPOPUP_jhs_=: 1</div></p>
+
+<p>Default target is _blank so new pages appear in new tabs
+(for example, menu link>jal).
+Change this if you want new pages to replace the current page.
+<div class="jcode">   TARGET_jhs_=: '_self'</div></p>
 
 <a name="quickstart"><h1>quick-start</h1></a>
 Get started with the studio menu.
@@ -89,12 +91,11 @@ from a file or files page reopens in a tab if it already exists.
 utilities. See studio>debug.</p>
 
 <p>Detailed JHS server configuration information at
-<a href="http://code.jsoftware.com/wiki/Guides/JHS/Server" target="_blank">www.jsoftware.com/wiki/Guides/JHS/Server</a>.</p>
+<a href="http://code.jsoftware.com/wiki/Guides/JHS/Server" target="_blank">wiki/Guides/JHS/Server</a>.</p>
 
 <a name="help"><h1>help</h1>
 <p>For additional JHS specific information see
-<a href="http://www.jsoftware.com/jwiki/Guides/JHS" target="_blank">
-www.jsoftware.com wiki Guides/JHS</a>.</p>
+<a href="http://code.jsoftware.com/wiki/Guides/JHS" target="_blank">wiki/Guides/JHS</a>.</p>
 
 For complete J documentation see:<br>
 <a href="http://www.jsoftware.com/docs/help802/index.htm" target="_blank">www.jsoftware.com help</a><br>
@@ -155,34 +156,23 @@ in developing your browser app.
 
 <a name="config"><h1>config</h1>
 Detailed information at
-<a href="http://code.jsoftware.com/wiki/Guides/JHS/Server" target="_blank">www.jsoftware.com/wiki/Guides/JHS/Server</a>.<br><br>
-
-<a name="ix"><h1>iPhone/iPad/... clients</h1></a>
-A touch stylus makes it much easier to work with these devices.
-A wireless keyboard works well and is highly recommended for other than casual use.<br><br>
-
-JHS esc shortcuts are handy on iX. Virtual keyboard has no esc key and the esc key on the
-wireless keyboard does not work. Virtual keyboard pressing s and sliding to ß 
-is the esc for shortcuts. Wireless keyboard hold down option and press s for esc.<br><br>
-
-Wireless keyboard arrow keys work on jijx but may not work on jijs (codemirror).
+<a href="http://code.jsoftware.com/wiki/Guides/JHS/Server" target="_blank">wiki/Guides/JHS/Server</a>.<br><br>
 
 <a name="ide"><h1>IDE (Interactive Development Environment)</h1></a>
-<span class="h">target</span><br>
-New pages target _blank (new tab but may depend on browser).
-Change TARGET_jhs_ to be _self (and refresh) to have pages open in place.
-
-<br><br><span class="h">keyboard shortcuts</span><br>
+<span class="h">keyboard shortcuts</span><br>
 esc key escapes next key to be a shortcut.<br/>
 For example, esc j links to jijx page.<br/>
 Menu items document shortcuts on the right.<br/>
 esc 1 sets focus on menu.<br/>
-esc 2 sets focus to page default.<br/>
-<br/>
+esc 2 sets focus to page default.
+
+<p>Mobile device may not have an esc key.
+Touch: s and slide to ß. Wireless: hold down option and press s.</p>
+
 Control shortcuts are supported for ,./<>? as they
 less likely conflict with the browser.<br/><br/>
 
-jijx ctrl+. is lab advance.<br/><br/>
+jijx ctrl+. is lab/spx advance.<br/><br/>
 
 Example of a custom jijx handler:
 <pre>   ev_comma_ctrl_jijx_=: 3 : 'i.5'</pre>
@@ -200,7 +190,10 @@ Run J sentences (ctrl+shift+&uarr;&darr; recall)
 Browse files for editing, etc.
 Adequate for simple IDE use and for a remote server.
 For more complicated requirements use host facilities such
-as Windows Explorer or Mac Finder.
+as Windows Explorer or OSX Finder.
+
+<br><br><span class="h">jfiles</span>
+Recent file list - click to open.
 
 <br><br><span class="h">jijs</span>
 CodeMirror (www.codemirror.net) editor. See menu action|search/ctrl for ctrl/search/replace info.
@@ -210,8 +203,7 @@ CodeMirror (www.codemirror.net) editor. See menu action|search/ctrl for ctrl/sea
 find in files
 
 <br><br><span class="h">jal</span>
-Addons package manager (pacman) downloads and installs
-software packages
+addons package manager (pacman) - download/install software packages
 
 <br><br><span class="h">utils</span>
 <pre class="jcode">

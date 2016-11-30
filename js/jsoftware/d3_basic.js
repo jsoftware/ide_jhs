@@ -36,10 +36,11 @@ label= [];
 footer="";
 linewidth= 1;
 barwidth= 40;
+minh= 200;
+maxh= 400;
+minw= 200;
+maxw= 400;
 data=[[10,100,30]];  // data matrix - list of lists
-
-minh= 50;
-maxh= 2000;
 
 // vars not set by eval
 datan='';
@@ -98,6 +99,9 @@ h= wh-(az+mh+mh+ss);
 
 h= (h<minh)?minh:h;
 h= (h>maxh)?maxh:h;
+
+w= (w<minw)?minw:w;
+w= (w>maxw)?maxw:w;
 
 $("#"+g).html(""); // remove this to see multiple graphs
 }

@@ -1,5 +1,4 @@
 0 : 0
-
 there are several ways to visualize data:
  viewmat - table values as colors
  plot    - J native plot
@@ -57,8 +56,8 @@ plotdemos 54
 NB.spxsection:jd3
 jhslinkurl'www.d3js.org' NB. link to D3 home page
 jd3'help'
-jd3'type bar'
-'plot'jd3 ?3 10$100 NB. plot resizes with window
+jd3'reset;type line;title My Data;legend "line one","line two","line three"'
+'P' jd3 ?3 4$100 NB. plot resizes with window
    
 NB.spxsection:gnuplot
 jhslinkurl'www.gnuplot.info'

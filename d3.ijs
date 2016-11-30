@@ -9,22 +9,18 @@ jd3doc=: 0 : 0
 jd3'help'
 jd3'options'     NB. plot options
 jd3'state'       NB. current options state
-
 jd3'reset'       NB. reset options state
+jd3'type bar'    NB. add type option
 jd3'title TITLE' NB. add title option
 
 'tab' jd3 data   NB. browser tab title
 
 example:
-jd3'reset'
-jd3'type line'
-jd3'title My Data'
-jd3'legend "line one","line two","line three"'
-'L' jd3 ?3 4$100
+jd3'reset;type line;title My Data;legend "line one","line two","line three"'
+'P' jd3 ?3 4$100
 
-jd3'type bar'
-jd3'label "a","b","c","d"'
-'B' jd3 ?3 4$100
+jd3'type bar;label "a","b","c","d"'
+'P' jd3 ?3 4$100
 
 jd3'type pie'
 'P' jd3 ?4$100
@@ -35,6 +31,10 @@ jd3'option arg'    - add option to jd3x__
  type        line      - line or pie or bar
  header      how now<hr>
  title       Good Data
+ minh        200       - min height
+ maxh        600
+ minw        300       - min width
+ maxw        700
  linewidth   4
  barwidth    40
  label       "s","d","f"
@@ -44,6 +44,13 @@ jd3'option arg'    - add option to jd3x__
 
 jd3=: 3 : 0
 assert 'literal'-:datatype y
+
+ if. ';'e. y do.
+  t=. jd3 each a:-.~<;._2 y,';'
+  >(0~:;*/each $each t)#t
+  return.
+ end.
+
  i=. y i.' '
  c=. dltb i{.y
  a=. dltb i}.y
@@ -57,7 +64,7 @@ assert 'literal'-:datatype y
  case.'reset' do. jd3x=: '' return.
  case. ;:'type header title footer' do.
   t=. c,'=',b
- case. ;:'barwidth linewidth' do.
+ case. ;:'minh maxh minw maxw barwidth linewidth' do.
   t=. c,'=',a
  case. ;:'legend label' do.
   t=. c,'=[',a,']'

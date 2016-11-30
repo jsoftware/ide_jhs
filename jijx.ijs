@@ -9,9 +9,9 @@ actionmenu''
 debugmenu''
 'studio'   jhmg'studio';1;14
  'plot'    jhmab'plot tour'
+ 'spx'     jhmab'spx tour'
  'watch'   jhmab'watch'
  'sp'      jhmab'sp'
- 'spx'     jhmab'spx'
  'demo'    jhmab'demos'
  'app'     jhmab'app building'
  'debug'   jhmab'debug'
@@ -236,10 +236,16 @@ spx'~addons/ide/jhs/spx/plot_tour.ijs'
 jhtml'<hr/>'
 )
 
+ev_spx_click=:  3 : 0
+jhtml'<hr>'
+echo'spx tour'
+spx'~addons/ide/jhs/spx/spx_tour.ijs'
+jhtml'<hr/>'
+)
+
 ev_watch_click=: 3 : 'studio studio_watch'
 ev_debug_click=: 3 : 'studio studio_debug'
 ev_sp_click=:    3 : 'studio sphelp'
-ev_spx_click=:   3 : 'studio spxhelp'
 
 ev_dbstep_click=: 3 : 0
 echo'dbstep' try. dbstep'' catch. end. i.0 0
@@ -506,6 +512,7 @@ function ev_advance_click(){jdoajax([]);}
 function ev_app_click() {jdoajax([]);}
 function ev_demo_click(){jdoajax([]);}
 function ev_plot_click(){jdoajax([]);}
+function ev_spx_click(){jdoajax([]);}
 function ev_watch_click(){jdoajax([]);}
 function ev_debug_click(){jdoajax([]);}
 function ev_sp_click(){jdoajax([]);}
@@ -560,4 +567,5 @@ function ev_slash_ctrl(){jdoajax([]);}
 function ev_less_ctrl(){jdoajax([]);}
 function ev_larger_ctrl(){jdoajax([]);}
 function ev_query_ctrl(){jdoajax([]);}
+function ev_scratcharea_enter(){return true;}
 )
