@@ -542,13 +542,19 @@ t
 )
 
 NB.* jhml*id jhml text - menu anchor link - (shortcut ^s)
+NB. extra y element sets target - but not so useful as it isn't made current
 jhml=: 4 : 0
+if. 1=L.y do.
+ 'y target'=. y
+else.
+ target=. TARGET
+end.
 't s'=.jhmx y
 value=. t
 text=. ((0>.JMWIDTH-#value)#' '),s
 value=. value rplc ' ';'&nbsp;'
 text=. text rplc ' ';'&nbsp;'
-t=.   '<li><a href="<REF>" target="',TARGET,'" class="jhml" onclick="return jmenuhide();"'
+t=.   '<li><a href="<REF>" target="',target,'" class="jhml" onclick="return jmenuhide();"'
 t=. t,jmon''
 t=. t,'><VALUE></a><TEXT></li>'
 t hrplc 'REF VALUE TEXT';x;value;text

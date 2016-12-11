@@ -21,6 +21,18 @@ debugmenu''
  'j3'      jhmab'J 3'
  'plot'    jhmab'plot'
  'spx'     jhmab'spx'
+'help'     jhmg'help';1;10
+'~addons/docs/help/index.htm'              jhml 'help'
+'~addons/docs/help/user/product.htm'       jhml 'info'
+'~addons/docs/help/dictionary/vocabul.htm' jhml 'vocabulary'
+'http://code.jsoftware.com/wiki/NuVoc'     jhml 'wiki nuvoc'
+'~addons/docs/help/dictionary/dcons.htm'   jhml 'constant'
+'~addons/docs/help/dictionary/ctrl.htm'    jhml 'control'
+'~addons/docs/help/dictionary/xmain.htm'   jhml 'foreign'
+'~addons/docs/help/dictionary/contents.htm'jhml 'dictionary'
+'~addons/docs/help/user/library.htm'       jhml 'stdlib'
+'http://code.jsoftware.com/wiki/Guides/JHS'jhml 'wiki JHS'
+'about'    jhmab'about'
 jhmz''
 'scratchdlg' jhdivadlg''
 'scratcharea'jhtextarea'';1;1
@@ -141,6 +153,14 @@ if. fexist'~user/projects/ja/ja.ijs' do.
  end.
 end.
 t
+)
+
+ev_about_click=: 3 : 0
+jhtml'<hr/>'
+echo JVERSION
+echo' '
+echo'Copyright 1994-2016 Jsoftware Inc.'
+jhtml'<hr/>'
 )
 
 ev_action_click=:  3 : 0
@@ -545,6 +565,8 @@ function ev_watch_click(){jdoajax([]);}
 function ev_debug_click(){jdoajax([]);}
 function ev_sp_click(){jdoajax([]);}
 function ev_spx_click(){jdoajax([]);}
+function ev_about_click(){jdoajax([]);}
+
 
 function ev_lab_click()
 {
