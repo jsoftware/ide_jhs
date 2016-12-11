@@ -214,7 +214,7 @@ addons package manager (pacman) - download/install software packages
    t=. '~addons/docs/help/index.htm'jhref_jhs_'help'
    jhtml'&lt;div contenteditable="false"&gt;',t,'&lt;/div&gt;'
 
-   open'~temp/f.ijs' NB. create jijs link to file
+   open'~temp/f.ijs' NB. open file in jijs tab
 </pre>
 
 <span class="h">jijx action menu</span>

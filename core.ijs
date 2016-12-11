@@ -1,5 +1,7 @@
 NB. JHS - core services
 require 'socket'
+require :: ['plot' NB. UGH avoid later load clobbering our open
+
 coclass'jhs'
 
 0 : 0
@@ -542,7 +544,6 @@ studio_watch=: 0 : 0
 )
 
 NB. z local utilities
-
 
 open_z_=: 3 : 0
 'jijs'windowopen_jhs_ jshortname_jhs_ jpath spf y

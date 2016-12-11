@@ -232,7 +232,12 @@ end.
   a=. <;.2 d
   b=. ;:}:;{.a
   if. b-:;:'0 : 0' do.
-   echo ;}.}:a
+   NB. foldtext for 0 : 0 that has long lines
+   if. +/80<;#each a do.
+    echo 80 foldtext ;}.}:a
+   else. 
+    echo ;}.}:a
+   end. 
   else.
    if. IFJHS do.
     jhtml '<font color="blue">',(jhfroma_jhs_ ;a),'</font>'
