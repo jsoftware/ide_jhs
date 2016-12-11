@@ -1,50 +1,19 @@
 NB. routines to create desktop launch icons and to update/install base and addons
 
-NB. shortcut 'jc' or 'jhs' or 'jqt' - create desktop launch icon
-shortcut=: 3 : 0
-t=. jpath'~/Desktop'
-('Desktop folder does not exist: ',t)assert 2=ftype t
-".UNAME,'_jinstaller_ y'
-)
-
-pre=: '------------------------------------'
-good=: pre,'   finished',LF
-bad =: pre,'   !!!failed!!!',LF
-
+NB. 0 to install all, 1 to skip Jqt install
 installer=: 3 : 0
-er=. 0
-echo'installation can take several minutes',LF
-try.
- echo pre,'update and install addons'
- update_install_all 0
- echo good
-catch.
- er=. 1
- echo bad
-end.
-
-try.
- echo pre,'install Jqt ide'
+echo'these steps can take several minutes'
+echo' '
+update_install_all 0
+echo' '
+if. 0=y do.
  install'qtide'
- echo good
-catch.
- er=. 1
- echo bad
-end.
-
-for_n. 'jc';'jhs';'jqt' do.
- try.
-  n=. ;n
-  shortcut n
- catch.
-  er=. 1
-  echo pre,'install ',n,' desktop launch icon failed!!!'
- end.
-end.
-
-if. er do. echo LF,'there were errors!!!',LF end.
-
-echo 'double click a desktop icon to run J with the corresponding user interface'
+ echo' '
+ shortcutx'jqt'
+end. 
+shortcutx'jc'
+shortcutx'jhs'
+echo'double click a desktop icon to run J with the corresponding user interface'
 i.0 0
 )
 
@@ -54,6 +23,21 @@ require'pacman'
 'update'jpkg''
 'upgrade'jpkg'all'
 'install'jpkg {."1'shownotinstalled'jpkg''
+)
+
+NB. shortcut 'jc' or 'jhs' or 'jqt' - create desktop launch icon
+shortcut=: 3 : 0
+t=. jpath'~/Desktop'
+('Desktop folder does not exist: ',t)assert 2=ftype t
+".UNAME,'_jinstaller_ y'
+)
+
+shortcutx=: 3 : 0
+try.
+ shortcut y
+catch.
+ echo 'install ',y,' desktop launch icon failed!!!'
+end.
 )
 
 coclass'jinstaller'
