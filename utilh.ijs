@@ -657,7 +657,6 @@ t=. t,'jfiles' jhml'jfiles   k^'
 t=. t,JIJSAPP  jhml'jijs     J^'
 t=. t,'jfif'   jhml'jfif     F^'
 t=. t,'jal'    jhml'jal'
-t=. t,'jhelp'  jhml'jhelp    h^'
 )
 
 NB.* jhma*jhma'' - menu start
