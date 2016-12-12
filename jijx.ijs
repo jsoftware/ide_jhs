@@ -22,6 +22,7 @@ debugmenu''
  'plot'    jhmab'plot'
  'spx'     jhmab'spx'
 'help'     jhmg'help';1;10
+'jhelp                      '              jhml 'JHS help'
 '~addons/docs/help/index.htm'              jhml 'help'
 '~addons/docs/help/user/product.htm'       jhml 'info'
 '~addons/docs/help/dictionary/vocabul.htm' jhml 'vocabulary'

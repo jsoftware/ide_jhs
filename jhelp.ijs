@@ -19,20 +19,16 @@ jumps=: 0 : 0
 <a href="#pop-up">pop-up</a>&nbsp;
 <a href="#quickstart">quick-start</a>&nbsp;
 <a href="#highlights">highlights</a>&nbsp;
-<a href="#help">help</a>&nbsp;
 <a href="#jhs">JHS</a>&nbsp;
-<a href="#config">config</a>&nbsp;
 <a href="#ide">IDE</a>&nbsp;
 <a href="#gui">GUI</a>&nbsp;
 <a href="#console">console</a>&nbsp;
-<a href="#about">about</a>
 )
 
 text=: 0 : 0
 <div>
 <p>This document links to lots of information, but is itself quite short.
 A bit of time here will pay off down the road.</p>
-
 <a name="pop-up"><h1>pop-up</h1></a>
 <p>Pop-up windows can be a plague when browsing ill-behaved sites.
 However, they can be very useful in an app like JHS that
@@ -64,9 +60,9 @@ Change this if you want new pages to replace the current page.
 <div class="jcode">   TARGET_jhs_=: '_self'</div></p>
 
 <a name="quickstart"><h1>quick-start</h1></a>
-Get started with the studio menu.
-Take the plot and other tours and run demos to get familiar with JHS.
-Use labs... to learn about J.
+Get started with the tour menu. Take the J 1 tour to learn a bit about J
+and be sure to take the plot tour. Play with the studio menu to learn more
+about JHS.
 
 <a name="highlights"><h1>highlights</h1>
 
@@ -89,22 +85,6 @@ from a file or files page reopens in a tab if it already exists.
 
 <p>Learn how to use powerful debug tools with reworked example and
 utilities. See studio>debug.</p>
-
-<p>Detailed JHS server configuration information at
-<a href="http://code.jsoftware.com/wiki/Guides/JHS/Server" target="_blank">wiki/Guides/JHS/Server</a>.</p>
-
-<a name="help"><h1>help</h1>
-<p>For additional JHS specific information see
-<a href="http://code.jsoftware.com/wiki/Guides/JHS" target="_blank">wiki/Guides/JHS</a>.</p>
-
-For complete J documentation see:<br>
-<a href="http://www.jsoftware.com/docs/help802/index.htm" target="_blank">www.jsoftware.com help</a><br>
-<a href="http://www.jsoftware.com/docs/help802/dictionary/vocabul.htm" target="_blank">www.jsoftware.com vocabulary</a><br>
-<a href="http://www.jsoftware.com/help/user/library.htm" target="_blank">www.jsoftware.com standard library</a></br>
-<a href="http://www.jsoftware.com/jwiki/NuVoc" target="_blank">www.jsoftware.com wiki NuVoc</a><br>
-
-<br>If you have installed local help with jal see:
-<a href="~addons/docs/help/index.htm" target="_blank">~addons/docs/help/index.htm</a>
 
 <a name="jhs"><h1>JHS (J HTTP Server)</h1></a>
 JHS is a browser interface to J and
@@ -273,12 +253,6 @@ In windows you can edit the icon properties to run minimized.
 You can hide the window if you wish:
 <pre class="jcode">   jshowconsole_j_ 0 NB. hide/show 0/1</pre>
 
-<a name="about"><h1>about</h1></a>
-<pre class="jcode">
-   JVERSION
-
-<JVERSION>
-</pre>
 </div>
 )
 
