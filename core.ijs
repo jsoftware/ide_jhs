@@ -1,6 +1,5 @@
 NB. JHS - core services
 require 'socket'
-require :: ['plot' NB. UGH avoid later load clobbering our open
 
 coclass'jhs'
 
