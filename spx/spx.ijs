@@ -42,12 +42,6 @@ NB.   display in a single advance
 next advance is =: although the script line is =.
 )
 a=. 5
-y=. 23
-b=. 'a'+123
-f=. 3 : '*:y'
-g=. 3 : 0
-+:y
-)
 
 0 : 0
 often scripts need to be stepped through in order
