@@ -15,11 +15,12 @@ debugmenu''
  'debug'   jhmab'debug'
  'advance' jhmab'advance ctrl+.'
  'lab'     jhmab'labs...'
-'tour'     jhmg'tour';1;4
+'tour'     jhmg'tour';1;6
  'j1'      jhmab'J 1'
  'j2'      jhmab'J 2'
  'j3'      jhmab'J 3'
  'plot'    jhmab'plot'
+ 'table'   jhmab'table'
  'spx'     jhmab'spx'
 'help'     jhmg'help';1;10
 'jhelp                      '              jhml 'JHS help'
@@ -254,39 +255,35 @@ jhtml'<hr/>'
 ev_app_click=:   3 : 'studio studio_app'
 ev_demo_click=:  3 : 'studio studio_demos'
 
-ev_j1_click=:  3 : 0
+tour=: 4 : 0
 jhtml'<hr>'
-echo'J 1'
-spx'~addons/ide/jhs/spx/j1.ijs'
+echo x
+spx '~addons/ide/jhs/spx/',y
 jhtml'<hr/>'
+)
+
+ev_j1_click=:  3 : 0
+'J 1'tour'j1.ijs'
 )
 
 ev_j2_click=:  3 : 0
-jhtml'<hr>'
-echo'J 2'
-spx'~addons/ide/jhs/spx/j2.ijs'
-jhtml'<hr/>'
+'J 2'tour'j2.ijs'
 )
 
 ev_j3_click=:  3 : 0
-jhtml'<hr>'
-echo'J 3'
-spx'~addons/ide/jhs/spx/j3.ijs'
-jhtml'<hr/>'
+'J 3'tour'j3.ijs'
 )
 
 ev_plot_click=:  3 : 0
-jhtml'<hr>'
-echo'plot tour'
-spx'~addons/ide/jhs/spx/plot.ijs'
-jhtml'<hr/>'
+'plot tour'tour'plot.ijs'
+)
+
+ev_table_click=: 3 : 0
+'table tour'tour'table.ijs'
 )
 
 ev_spx_click=:  3 : 0
-jhtml'<hr>'
-echo'spx tour'
-spx'~addons/ide/jhs/spx/spx.ijs'
-jhtml'<hr/>'
+'spx tour'tour'spx.ijs'
 )
 
 ev_watch_click=: 3 : 'studio studio_watch'
@@ -561,6 +558,7 @@ function ev_j1_click(){jdoajax([]);}
 function ev_j2_click(){jdoajax([]);}
 function ev_j3_click(){jdoajax([]);}
 function ev_plot_click(){jdoajax([]);}
+function ev_table_click(){jdoajax([]);}
 function ev_spx_click(){jdoajax([]);}
 function ev_watch_click(){jdoajax([]);}
 function ev_debug_click(){jdoajax([]);}

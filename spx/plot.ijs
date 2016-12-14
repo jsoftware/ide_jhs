@@ -14,7 +14,7 @@ plots can:
  write a file in a common format (png/html/...)
 
 run next line to open this script
-   open'~addons/ide/jhs/spx/plot_tour.ijs'
+   open'~addons/ide/jhs/spx/plot.ijs'
 
 there are independent sections - you can skip around
 )
