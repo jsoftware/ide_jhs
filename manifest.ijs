@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.261'
+VERSION=: '1.0.262'
 
 FILES=: 0 : 0
 history.txt
@@ -62,6 +62,7 @@ spx/j2.ijs
 spx/j3.ijs
 spx/plot.ijs
 spx/spx.ijs
+spx/table.ijs
 js/webgl/glmatrix-min.js
 js/jquery-1.5.1.min.js
 js/codemirror/license.txt
