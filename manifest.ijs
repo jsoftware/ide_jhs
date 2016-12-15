@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.262'
+VERSION=: '1.0.263'
 
 FILES=: 0 : 0
 history.txt
@@ -64,7 +64,6 @@ spx/plot.ijs
 spx/spx.ijs
 spx/table.ijs
 js/webgl/glmatrix-min.js
-js/jquery-1.5.1.min.js
 js/codemirror/license.txt
 js/codemirror/codemirror.min.4.2.js
 js/codemirror/codemirror.4.2.css
@@ -74,8 +73,8 @@ js/codemirror/util/dialog.4.2.css
 js/codemirror/util/dialog.4.2.js
 js/codemirror/util/search.4.2.js
 js/codemirror/util/searchcursor.4.2.js
-js/jquery/handsontable.css
-js/jquery/handsontable.js
+js/handsontable/handsontable.full.min.css
+js/handsontable/handsontable.full.min.js
 js/jquery/jquery-2.0.3.min.js
 js/jquery/jquery-2.0.3.min.map
 js/jquery/jquery-ui.css

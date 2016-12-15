@@ -8,8 +8,8 @@ HBS=: 0 : 0
 '<script src="~addons/ide/jhs/js/jquery/jquery-2.0.3.min.js"></script>'
 '<script src="~addons/ide/jhs/js/jquery/jquery-ui.min.js"></script>'
 '<script rel="stylesheet" href="~addons/ide/jhs/js/jquery/jquery-ui.css"></script>'
-'<script src="~addons/ide/jhs/js/jquery/handsontable.js"></script>'
-'<link rel="stylesheet" href="~addons/ide/jhs/js/jquery/handsontable.css">'
+'<script src="~addons/ide/jhs/js/handsontable/handsontable.full.min.js"></script>'
+'<link rel="stylesheet" href="~addons/ide/jhs/js/handsontable/handsontable.full.min.css">'
 '<button type="button" id="save">save</button>'
 '<input type="text" id="n" name="n" value="<NAME>" autofocus="autofocus" size="22"/>'
 'example' jhdiv ''
@@ -107,8 +107,10 @@ function ajax(ts)
      return;
  }
  if("save"==jform.jmid.value)return;
- var sf= (ts[1].indexOf('"')===-1)?"numeric":null; 
+ var sf= (ts[1].indexOf('"')===-1)?"numeric":"text"; 
  data= eval(ts[1]);
+ 
+
  $("#n").val(ts[2]);
  $('#example').handsontable({
   data: data,
