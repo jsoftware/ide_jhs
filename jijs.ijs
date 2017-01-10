@@ -115,7 +115,7 @@ NB. should have replace/cancel option if file exists
 ev_saveasx_enter=: 3 : 0
 f=. getv'filename'
 n=. getv'saveasx'
-if. n-:n-.'~/' do.
+if. n-:n-.'~/\' do.
  new=. (jgetpath f),n
 else.
  new=. jpath n
