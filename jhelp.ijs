@@ -3,9 +3,6 @@ coclass'jhelp'
 coinsert'jhs'
 
 HBS=: 0 : 0
-jhma''
-jhjmlink''
-jhmz''
 jumps
 jhresize''
 text hrplc 'PAREN CONFIG JVERSION';')';'~addons/ide/jhs/config/jhs_default.ijs';JVERSION

@@ -8,22 +8,26 @@ NOPOPUP=: 0                NB. use popups
 INC_jquery=: 0 : 0
 ~addons/ide/jhs/js/jquery/smoothness/jquery-ui.custom.css
 ~addons/ide/jhs/js/jquery/jquery-2.0.3.min.js
+~addons/ide/jhs/js/jquery/jquery-ui.min.js
+~addons/ide/jhs/js/jquery/jquery-ui.css"
 )
 
-INC_d3=: 0 : 0
-~addons/ide/jhs/js/jquery/smoothness/jquery-ui.custom.css
+INC_d3=: INC_jquery,0 : 0
 ~addons/ide/jhs/js/d3/d3.css
-~addons/ide/jhs/js/jquery/jquery-2.0.3.min.js
 ~addons/ide/jhs/js/d3/d3.min.js
 )
 
-INC_d3_basic=: 0 : 0
-~addons/ide/jhs/js/jquery/smoothness/jquery-ui.custom.css
-~addons/ide/jhs/js/d3/d3.css
-~addons/ide/jhs/js/jquery/jquery-2.0.3.min.js
-~addons/ide/jhs/js/d3/d3.min.js
+INC_d3_basic=: INC_d3,0 : 0
 ~addons/ide/jhs/js/jsoftware/d3_basic.js
 )
+
+INC_handsontable=: INC_jquery, 0 : 0
+~addons/ide/jhs/js/handsontable/handsontable.full.min.js
+~addons/ide/jhs/js/handsontable/handsontable.full.min.css
+)
+
+INC_handsontable_basic=: INC_handsontable NB. no jsoftware stuff yet
+
 
 NB.framework styles for all pages
 CSSCORE=: 0 : 0
@@ -70,7 +74,7 @@ NB. apply outer style tags after removing inner ones
 css=: 3 : 0
 t=. 'PC_FONTFIXED PC_FONTVARIABLE PC_FM_COLOR PC_ER_COLOR PC_LOG_COLOR PC_SYS_COLOR PC_FILE_COLOR'
 t=. (CSSCORE,y) hrplc t;PC_FONTFIXED;PC_FONTVARIABLE;PC_FM_COLOR;PC_ER_COLOR;PC_LOG_COLOR;PC_SYS_COLOR;PC_FILE_COLOR
-'<style type="text/css">',t,'</style>'
+'<style type="text/css">',LF,t,'</style>',LF
 )
 
 NB. core plus page js
@@ -124,6 +128,13 @@ jmarkjsz=: ' --><!-- j js z -->'
 jmarka=:     '<!-- j html output a -->'
 jmarkz=:     '<!-- j html output z -->'
 jmarkc=: #jmarka
+
+
+NB. unique query string - avoid cache
+uqs=: 3 : 0
+canvasnum=: >:canvasnum
+'?',((":6!:0'')rplc' ';'_';'.';'_'),'_',":canvasnum
+)
 
 NB. output starting with jmarka and ending with jmarkz,LF
 NB.  is assumed to be html and is not touched
@@ -547,7 +558,7 @@ jhml=: 4 : 0
 if. 1=L.y do.
  'y target'=. y
 else.
- target=. TARGET
+ target=. ;('jijs'-:y){y;TARGET
 end.
 't s'=.jhmx y
 value=. t
@@ -646,17 +657,6 @@ tx
 NB.* jhh1*jhh1 text - <h1>text</h1>
 jhh1=: 3 : 0
 '<h1>',y,'</h1>'
-)
-
-NB.* jhjmlink*jhjmlink'' - ide link menu
-jhjmlink=: 3 : 0
-t=.   'jmlink' jhmg'link';1;8
-t=. t,'jijx'   jhml'jijx     j^'
-t=. t,'jfile'  jhml'jfile    f^'
-t=. t,'jfiles' jhml'jfiles   k^'
-t=. t,JIJSAPP  jhml'jijs     J^'
-t=. t,'jfif'   jhml'jfif     F^'
-t=. t,'jal'    jhml'jal'
 )
 
 NB.* jhma*jhma'' - menu start
@@ -782,6 +782,12 @@ jhrx=: 4 : 0
 htmlresponse (hrxtemplate hrplc 'TITLE';(TIPX,x)),y
 )
 
+NB.* jhrpage*title jhrpage (getcss'...'),(getjs'...'),getbody'...'
+NB.* *page response to a get
+jhrpage=: 4 : 0
+(hrxtemplate hrplc 'TITLE';(TIPX,x)),y
+)
+
 getincs=: 3 : 0
 t=. ~.<;._2 INC
 t=. (;(<y)-:each (-#y){.each t)#t
@@ -792,10 +798,10 @@ t
 )
 
 getcss=: 3 : 0
+'getcss arg not empty'assert ''-:y
 t=. getincs'.css'
-d=. (<LF,'/* '),each t,each<' /*',LF
-cssi=. ;d,each fread each t
-css y hrplc~cssi,LF,CSS
+t=. ;(<'<link rel="stylesheet" href="'),each t,each<'" />',LF
+t,css CSS
 )
 
 fixjsi=: 3 : 0

@@ -4,10 +4,6 @@ coinsert'jhs'
 require'pacman'
 
 HBS=: 0 : 0
-jhma''
-jhjmlink''
-jhmz''
-
 'J Active Library - pacman - Package Manager<br/>'
 '<a href="http://code.jsoftware.com/wiki/addons">code.jsoftware.com/wiki/addons</a>'
 '<hr>'

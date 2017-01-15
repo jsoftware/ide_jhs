@@ -4,6 +4,39 @@ NB. JS could be src= and with cache would load faster
 NB. JS is small and doing it inline (not src=) is easier
 
 0 : 0
+*** repopen
+Browsers are concerned with javascript action changing tab focus
+as this can be obnoxious from some sites.
+
+It would have been nice if pages from the same domain didn't have this
+restriction.
+
+The JHS solution is to:
+ w=window.open('','id');w.close();window.open('URL','id');
+ 
+This gives a new window with the focus. Drawbacks are that it is probably
+in a new location and is a refresh. But at least it has focus.
+
+
+Different browsers behave differently for window.open() and focus().
+For this code window.open('www.sample.com','mywindow').focus()
+
+Chrome 20 opens a new tab, and focuses on subsequent open() calls regardless if focus() is called or not.
+Chrome >20 behaves more like Firefox
+
+Firefox 13 opens a new tab, focuses on first open(), does not focus on subsequent open() calls/disregards focus().
+
+IE 8 opens a new window, honors focus().
+
+Safari 5 opens a new window, and focuses on subsequent open() calls regardless if focus() is called or not.
+***
+
+jquery dialog stuff
+ '<div id="dialog" title="Table Editor Error"></div>'
+ $(function(){$("#dialog").dialog({autoOpen:false,modal:true});});
+ $("#dialog").html(ts[0]);
+ $("#dialog").dialog("open");
+
 onunload/onbeforeunload events would be nice if they worked 'properly'
 would allow app to clean up client side and (ajax) server side
 there are limitations (ajax, etc.) in the handlers
@@ -49,6 +82,7 @@ var i= LS.indexOf("#");
 if(-1!=i) LS= LS.substring(0,i) // strip off # fragment
 LS+= ".";
 var logit= "";
+var closing=0; // set 1 when page/locale is closing to prevent events 
 
 function jbyid(id){return document.getElementById(id);}
 function jsubmit(s){jform.jdo.value=jevsentence;jform.submit();}
@@ -294,8 +328,7 @@ function jevunload(){jscdo("body","","unload");return false;}
  
 function jevfocus()
 {
- // return false; // IE onfocus before onload
- if(jform=="")return false;
+ if(closing||jform=="")return false;
  jscdo("body","","focus");
  return false;
 }
@@ -918,6 +951,16 @@ function setlast(id)
   var a= jbyid(id);
   setls(id+".index","-1");
   udarrow(a,1);
+}
+
+var pagedirty=0;
+
+function ev_pageclose_click()
+{
+ var ok=1;
+ if(pagedirty){closing= 1; ok= confirm("Unsaved changes. Confirm close or Cancel.")} // closing - avoid jev_body_focus error
+ if(ok){window.onbeforeunload=null;jdoajax();window.close();}
+ closing= 0;
 }
 
 )

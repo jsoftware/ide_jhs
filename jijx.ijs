@@ -22,20 +22,22 @@ debugmenu''
  'plot'    jhmab'plot'
  'table'   jhmab'table'
  'spx'     jhmab'spx'
-'help'     jhmg'help';1;10
-'jhelp                      '              jhml 'JHS help'
-'~addons/docs/help/index.htm'              jhml 'help'
-'~addons/docs/help/user/product.htm'       jhml 'info'
-'~addons/docs/help/dictionary/vocabul.htm' jhml 'vocabulary'
-'http://code.jsoftware.com/wiki/NuVoc'     jhml 'wiki nuvoc'
-'~addons/docs/help/dictionary/dcons.htm'   jhml 'constant'
-'~addons/docs/help/dictionary/ctrl.htm'    jhml 'control'
-'~addons/docs/help/dictionary/xmain.htm'   jhml 'foreign'
-'~addons/docs/help/dictionary/contents.htm'jhml 'dictionary'
-'~addons/docs/help/user/library.htm'       jhml 'stdlib'
-'http://code.jsoftware.com/wiki/Guides/JHS'jhml 'wiki JHS'
-'about'    jhmab'about'
+
+'help'          jhmg'help';1;10
+'helpjhs'       jhmab'JHS help'
+'helphelp'      jhmab'help'
+'helpinfo'      jhmab'info'
+'helpvocab'     jhmab'vocabulary'
+'helpwikinuvoc' jhmab'wiki nuvoc'
+'helpconstant'  jhmab'constant'
+'helpcontrol'   jhmab'control'
+'helpforeign'   jhmab'foreign'
+'helpdictionary'jhmab'dictionary'
+'helpstdlib'    jhmab'stdlib'
+'helpwikijhs'   jhmab'wiki JHS'
+'about'         jhmab'about'
 jhmz''
+
 'scratchdlg' jhdivadlg''
 'scratcharea'jhtextarea'';1;1
 '</div>'
@@ -262,6 +264,10 @@ spx '~addons/ide/jhs/spx/',y
 jhtml'<hr/>'
 )
 
+ev_jijs_click=: 3 : 0
+open jnew_jhs_''
+)
+
 ev_j1_click=:  3 : 0
 'J 1'tour'j1.ijs'
 )
@@ -325,6 +331,15 @@ ev_slash_ctrl  =: 3 : 'i.0 0'
 ev_less_ctrl   =: 3 : 'i.0 0'
 ev_larger_ctrl =: 3 : 'i.0 0'
 ev_query_ctrl =: 3 : 'i.0 0'
+
+jhjmlink=: 3 : 0
+t=.   'jmlink' jhmg 'link';1;8
+t=. t,'jfile'  jhmab'jfile    f^'
+t=. t,'jfiles' jhmab'jfiles   k^'
+t=. t,JIJSAPP  jhmab'jijs     J^'
+t=. t,'jfif'   jhmab'jfif     F^'
+t=. t,'jal'    jhmab'jal'
+)
 
 CSS=: 0 : 0
 *{font-family:<PC_FONTFIXED>;}
@@ -594,6 +609,31 @@ function ev_labrun_click()
  jform.jsid.value= jbyid("labsel").selectedIndex;
  jdoajax([],"");
 }
+
+function linkclick(a)
+{
+ w=window.open("",a);
+ w.close();
+ window.open(a,a);
+}
+
+function ev_jfile_click(){linkclick("jfile");}
+function ev_jfiles_click(){linkclick("jfiles");}
+function ev_jfif_click(){linkclick("jfif");}
+function ev_jal_click(){linkclick("jal");}
+function ev_jijs_click(){jdoajax([]);}
+
+function ev_helpjhs_click(){linkclick("jhelp")};
+function ev_helphelp_click(){linkclick("~addons/docs/help/index.htm")};
+function ev_helpinfo_click(){linkclick("~addons/docs/help/user/product.htm")};
+function ev_helpvocab_click(){linkclick("~addons/docs/help/dictionary/vocabul.htm")};
+function ev_helpwikinuvoc_click(){linkclick("http://code.jsoftware.com/wiki/NuVoc")};
+function ev_helpconstant_click(){linkclick("~addons/docs/help/dictionary/dcons.htm")};
+function ev_helpcontrol_click(){linkclick("~addons/docs/help/dictionary/ctrl.htm")};
+function ev_helpforeign_click(){linkclick("~addons/docs/help/dictionary/xmain.htm")};
+function ev_helpdictionary_click(){linkclick("~addons/docs/help/dictionary/contents.htm")};
+function ev_helpstdlib_click(){linkclick("~addons/docs/help/user/library.htm")};
+function ev_helpwikijhs_click(){linkclick("http://code.jsoftware.com/wiki/Guides/JHS")};
 
 function ev_actionn_click(){jdoajax([]);}
 

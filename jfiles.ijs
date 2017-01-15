@@ -3,9 +3,6 @@ coclass'jfiles'
 coinsert'jhs'
 
 HBS=: 0 : 0
-jhma''
-jhjmlink''
-jhmz''
 jhresize''
 files''
 )
@@ -22,7 +19,8 @@ addrecent_jsp_''
 fx=: 3 : 0
 s=. ;shorts_jsp_ y
 t=. jhref 'jijs';y;s NB. (jpath y);s
-t=. t,(;(1>.20-#s)#<'&nbsp;'),(_4}.isotimestamp>1{,(1!:0@jpath y)),' ',y
+t=. t,(;(1>.20-#s)#<'&nbsp;'),y
+NB.! t=. t,(;(1>.20-#s)#<'&nbsp;'),(_4}.isotimestamp>1{,(1!:0@jpath y)),' ',y
 t,'<br>'
 )
 

@@ -13,8 +13,7 @@ HBS=: 0 : 0 rplc 'CMV';'4.2'
 '<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/j/jtheme.CMV.css">'
 '<script src="~addons/ide/jhs/js/codemirror/j/j.CMV.js"></script>'
 jhma''
-jhjmlink''
-'action'    jhmg'action';1;11
+ 'action'    jhmg'action';1;11
  'runw'     jhmab'run     r^'
  'runwd'    jhmab'run display'
  'save'     jhmab'save    s^'

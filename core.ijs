@@ -457,7 +457,12 @@ NB. 'jijs'    windowopen jpath file
 NB. 'jwatch'  windowopen sentence
 NB. y is added as url jwid parameter - jd3?jwid=...
 windowopen=: 4 : 0
+if. ''-:y do.
+ t=. x
+ y=. x
+else.
  t=. x,'?jwid=',jurlencode y
+end. 
 if. NOPOPUP do.
  echo jhtml'<div contenteditable="false">',(t jhref_jhs_ t),'</div>'
 else.
@@ -542,7 +547,33 @@ studio_watch=: 0 : 0
    'W1'jwatch'?2 3$100' NB. watch any expression
 )
 
+audio=: 3 : 0
+assert fexist y
+jhtml'<audio controls="controls"><source src="',y,'" type="audio/mp3">not supported</audio>'
+)
+
+NB. eval javascript sentences
+NB. starting without ';' is evaluated only in ajax
+NB. starting with ';' is evaluated in ajax and in refresh
+jjs=:3 : 0
+jhtml jmarkjsa,y,jmarkjsz
+)
+
 NB. z local utilities
+
+NB. javascript window open URL,wid,specs,replace
+NB. wid is the window id - javascript uses term window name - it is not the page or tab title
+NB. NOPOPUP not supported - could be added
+NB. jhsopen url;wid
+jhsopen_z_=: 3 : 0
+'a b'=. y
+m=. a,' pop-up blocked\nadjust browser settings to allow localhost pop-up\nsee jhelp section pop-up'
+jjs_jhs_'if(null==window.open("<X>","<Y>"))alert("<M>");'rplc '<X>';a;'<Y>';b;'<M>';m
+)
+
+jhsclose_z_=: 3 : 0
+jjs_jhs_'w=window.open("","',y,'");w.close();'
+)
 
 open_z_=: 3 : 0
 'jijs'windowopen_jhs_ jshortname_jhs_ jpath spf y
@@ -565,23 +596,6 @@ smoutput jmarka_jhs_,y,jmarkz_jhs_
 i.0 0
 )
 
-jaudio_z_=: 3 : 0
-assert fexist y
-jhtml'<audio controls="controls"><source src="',y,'" type="audio/mp3">not supported</audio>'
-)
-
-NB. eval javascript sentences
-NB. starting without ';' is evaluated only in ajax
-NB. starting with ';' is evaluated in ajax and in refresh
-jjs_z_=:3 : 0
-jhtml jmarkjsa_jhs_,y,jmarkjsz_jhs_
-)
-
-NB. eval javascript sentences - eval again in refresh
-jjsx_z_=: 3 : 0
-jjs';',y
-)
-
 jd3_z_=: 3 : 0
 jd3_jhs_ y
 :
@@ -598,19 +612,13 @@ validate_jtable_ n
 'jtable' windowopen_jhs_ t
 )
 
-NB. somewhat unique query string - avoid cache - not quaranteed to be unique!
-jhsuqs_z_=: 3 : 0
-canvasnum_jhs_=: >:canvasnum_jhs_
-'?',((":6!:0'')rplc' ';'_';'.';'_'),'_',":canvasnum_jhs_
-)
-
 NB. f file.png
 jhspng_z_=: 3 : 0
 d=. fread y
 w=. 256#.a.i.4{.16}.d
 h=. 256#.a.i.4{.20}.d
 t=. '<img width=<WIDTH>px height=<HEIGHT>px src="<FILE><UQS>" ></img>'
-jhtml t hrplc_jhs_ 'WIDTH HEIGHT FILE UQS';w;h;y;jhsuqs''
+jhtml t hrplc_jhs_ 'WIDTH HEIGHT FILE UQS';w;h;y;uqs_jhs_''
 )
 
 NB. [TARGET] f URL - url is server page or file with UQS 
@@ -618,7 +626,7 @@ jhslink_z_=: 3 : 0
 '_blank' jhslink y
 :
 t=. '<a href="<REF><UQS>" target="<TARGET>" class="jhref" ><TEXT></a>'
-t=. t hrplc_jhs_ 'TARGET REF UQS TEXT';x;y;(jhsuqs'');y
+t=. t hrplc_jhs_ 'TARGET REF UQS TEXT';x;y;(uqs_jhs_'');y
 jhtml'<div contenteditable="false">',t,'</div>'
 )
 
@@ -631,7 +639,7 @@ NB. TARGET f URL
 jhsshow_z_=: 3 : 0
 '_blank' jhsshow y
 :
-jjs 'window.open("',(y,jhsuqs''),'","',x,'");'
+jjs 'window.open("',(y,uqs_jhs_''),'","',x,'");'
 )
 
 plotjijx_z_=: 3 : 0
@@ -646,8 +654,9 @@ d=. (('</script>'E.d)i.1){.d
 d=. d,'graph();'
 d=. d rplc'canvas1';canvasname
 jhtml c
-jjsx d
+jjs_jhs_ ';',d
 )
+
 NB. f type;window;width height[;output]
 NB. type selects case in plotcanvas/plotcairo
 plotdef_z_=: 3 : 0
@@ -691,9 +700,6 @@ end.
 i.0 0
 )
 
-jhsrefresh_z_=: 3 : 0
-y,'?refresh=',(":6!:0'')rplc' ';'-'
-)
 
 jbd_z_=: 3 : '9!:7[y{Boxes_j_' NB. select boxdraw (PC_BOXDRAW)
 

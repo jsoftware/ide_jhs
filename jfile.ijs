@@ -4,8 +4,7 @@ coinsert'jhs'
 
 HBS=: 0 : 0
 jhma''
-jhjmlink''
-'action'    jhmg'action';1;12
+ 'action'    jhmg'action';1;12
  'edit'     jhmab'edit'
  'del'      jhmab'delete'
  'deltemps' jhmab'delete temps'

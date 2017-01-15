@@ -2,9 +2,6 @@ coclass'jfif'
 coinsert'jhs'
 
 HBS=: 0 : 0
-jhma''
-jhjmlink''
-jhmz''
 'find'   jhb'Find'
 'what'   jhtext '';20
 'where'  jhtext '';50
