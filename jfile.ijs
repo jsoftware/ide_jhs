@@ -223,6 +223,10 @@ else.
 end.
 )
 
+ev_close_click=: 3 : 0
+jhrajax''
+)
+
 copy=: _1 NB. _1 not ready, 0 copy, 1 cut 
 
 copycut=: 3 : 0

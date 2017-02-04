@@ -29,14 +29,14 @@ Firefox 13 opens a new tab, focuses on first open(), does not focus on subsequen
 IE 8 opens a new window, honors focus().
 
 Safari 5 opens a new window, and focuses on subsequent open() calls regardless if focus() is called or not.
-***
 
-jquery dialog stuff
+*** jquery dialog stuff
  '<div id="dialog" title="Table Editor Error"></div>'
  $(function(){$("#dialog").dialog({autoOpen:false,modal:true});});
  $("#dialog").html(ts[0]);
  $("#dialog").dialog("open");
 
+*** unload/beforeunload
 onunload/onbeforeunload events would be nice if they worked 'properly'
 would allow app to clean up client side and (ajax) server side
 there are limitations (ajax, etc.) in the handlers
@@ -63,6 +63,43 @@ window.onbeforeunload= xxxclose;
 function xxxclose(){return dirty?""prefered way to leave this page is menu close or close button ×;null;
 
 a page could manage the dirty flag and do proper shutdown in the close handler
+
+
+Jan 2017 - conclusion again that unload/beforeunload are not useful
+start to use standard close button on numbered locale pages
+ this can free locales and resource properly
+
+unload can free locales - but refresh is an unload and thed a reload from the locale that no longer exists
+beforeunload does not ask permission to leave if page has not been touched by user (no good for freeing locale)
+beforeunload can prevent unload of changed page - but gets confusing on if being replaced by J open_jhs_
+
+*** contenteditable to/from text
+IE:
+ <BR>             <-> N (\n)
+ </P>              -> N
+ <P>&nbsp;</P      -> N (can not tell emtpy from 1 blank)
+ can have \r\n !
+
+Chrome:
+ <br>            <-> N
+ <div>            -> N
+ <div><br></div>  -> N
+ saw nested divs, but do not know how to get them
+ starting div so break on div rather than /div
+ 
+FF:
+ <br>            <-> N
+ has (and needs) <br> at end
+
+Portable rules (all case insensitive):
+ remove \r \n
+ <p>&nbsp;</p>    -> N
+ <div><br></div>  -> N
+ <br>            <-> N
+ </p>             -> N
+ </div>           -> N
+ always have <br> at end (read/write)
+ &lt;...         <-> < > & space
 )
 
 JSCORE=: 0 : 0
@@ -553,6 +590,7 @@ function keyup(ev)
   if(c==188){jscdo(e.shiftKey?"less":"comma",undefined,"ctrl");return false;}
   if(c==190){jscdo(e.shiftKey?"larger":"dot",undefined,"ctrl");return false;}
   if(c==191){jscdo(e.shiftKey?"query":"slash",undefined,"ctrl");return false;}
+  if(c==220&&!e.shiftKey){jscdo("close");return false;} // ctrl+\
   if(c==38&&e.shiftKey&&'function'==typeof uarrow){uarrow();return false;}
   if(c==40&&e.shiftKey&&'function'==typeof darrow){darrow();return false;}
  }
@@ -686,6 +724,7 @@ function jmenuclick(ev)
  var e=window.event||ev;
  var tar=(typeof e.target=='undefined')?e.srcElement:e.target;
  var id=tar.id;
+ if(id=="adv"){jscdo("advance");return;}
  var idul= id+"_ul";
  jbyid(id).focus(); // required on mac
  if(jbyid(idul).style.display=="block")
@@ -963,63 +1002,16 @@ function ev_pageclose_click()
  closing= 0;
 }
 
-)
+function ev_close_click()
+{
+ if(window.frameElement)
+ {
+  window.top.jscdo("close");
+ }
+ else
+  {jdoajax([],'');window.close();}
+}
 
-docjs=: 3 : 0
-docjsn
-)
+function ev_close_click_ajax(ts){;}
 
-docjsn=: 0 : 0
-
-see ~addons/ide/jhs/utiljs.ijs for complete information
-
-html element ids are mid[*sid] (main id and optional sub id)
-
-functions defined by you:
-
-ev_body_load()   - page load (open)
-ev_body_unload() - page unload (close)
-ev_body_focus()  - page focus
-  
-ev_mid_event() - event handler - click, change, keydown, ...
-
-js event handler:
-  jevev is event object
-  event ignored if not defined
-  jsubmit() runs J ev_mid_event and response is new page
-  jdoajax([...],"...") runs J ev_mid_event
-    ajax(ts) (if defined) is run with J ajax response
-    ev_mid_event_ajax(ts) is run if ajax() not defined
-  returns true (to continue processing) or false
-)
-
-0 : 0
-/* contenteditable to/from text
-IE:
- <BR>             <-> N (\n)
- </P>              -> N
- <P>&nbsp;</P      -> N (can not tell emtpy from 1 blank)
- can have \r\n !
-
-Chrome:
- <br>            <-> N
- <div>            -> N
- <div><br></div>  -> N
- saw nested divs, but do not know how to get them
- starting div so break on div rather than /div
- 
-FF:
- <br>            <-> N
- has (and needs) <br> at end
-
-Portable rules (all case insensitive):
- remove \r \n
- <p>&nbsp;</p>    -> N
- <div><br></div>  -> N
- <br>            <-> N
- </p>             -> N
- </div>           -> N
- always have <br> at end (read/write)
- &lt;...         <-> < > & space
-*/
 )

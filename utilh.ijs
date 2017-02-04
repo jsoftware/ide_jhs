@@ -64,7 +64,10 @@ div{padding-left:2px;}
  display: none; background: white;
  text-align:center;
 }
+#close{position:absolute;top:0;left:0;width:20px;height:20px;font-size:16px;background-color:firebrick;color:white;font-weight:bold;}
 )
+
+NB.#close{position:absolute;top:0;left:0;width:20px;height:20px;font-size:16px;background-color:firebrick;color:white;font-weight:bold;}
 
 NB. extra html - e.g. <script .... src=...> - included after CSS and before JSCORE,JS
 HEXTRA=: '' 
@@ -165,6 +168,7 @@ end.
 htmlresponse=: 3 : 0
 logapp'htmlresponse'
 NB. y 1!:2<jpath'~temp/lastreponse.txt'
+LASTTS=: 6!:1''
 putdata LASTRESPONSE=: y
 sdclose_jsocket_ SKSERVER
 SKSERVER_jhs_=: _1
@@ -416,9 +420,12 @@ t=. t,' onkeydown="return jmenukeydown(event);"'
 
 jhmx=: 3 : 0
 if. '^'={:y do.
- s=. ' ',_2{y
+ s=. ' ','Esc+',_2{y
  t=. _2}.y
-else.
+elseif. '*'={:y do.
+ s=. ' ','Ctrl+',_2{y
+ t=. _2}.y
+elseif. 1 do.
  s=. '  '
  t=. y
 end.
@@ -450,6 +457,7 @@ t=. '<input type="text" id="<ID>" name="<ID>" class="<CLASS>" <EXTRAS>',jeditatt
 t hrplc 'ID VALUE SIZE CLASS EXTRAS';5{.y,(#y)}.'';'';'';'ht';''
 )
 
+NB.* see ~addons/ide/jhs/utilh.ijs for complete information
 NB.* 
 NB.* HBS verbs with id
 NB.* jhab*id jhab text - anchor button
@@ -463,6 +471,12 @@ NB.* jhb*id jhb text - button
 jhb=: 4 : 0
 t=. '<input type="submit" id="<ID>" name="<ID>" value="<VALUE>" class="jhb" onclick="return jev(event)">'
 t hrplc 'ID VALUE';x;y
+)
+
+
+NB.* jhclose*jhclose'' - cojhs close button and spacer
+jhclose=: 3 : 0
+'close'jhb''
 )
 
 NB.* jhcheckbox*id jhcheckbox text;checked (checked 0 or 1)
@@ -497,7 +511,8 @@ jhdivadlg=: 4 : 0
 
 NB.* jhd3_basic*id jhd3_basic''
 jhd3_basic=: 4 : 0
-r=. (x,'_error')jhdiv''
+r=. 'redspacer'jhdiv'&nbsp;'
+r=. r,LF,(x,'_error')jhdiv''
 r=. r,LF,(x,'_header')jhdiv''
 r=. r,LF,(x,'_title')jhdiv''
 r=. r=. r,LF,x jhdiv''
@@ -551,6 +566,17 @@ MINDEX=: <:MINDEX
 JMWIDTH=: w
 t
 )
+
+jhmgb=: 4 : 0
+t=. x jhab y
+t=. t rplc 'class="jhab"';'class="jhmab"',jmon''
+MSTATE=: 2
+MINDEX=: <:MINDEX
+JMWIDTH=: w
+t
+)
+
+
 
 NB.* jhml*id jhml text - menu anchor link - (shortcut ^s)
 NB. extra y element sets target - but not so useful as it isn't made current
@@ -693,62 +719,6 @@ jhbr=: '<br/>'
 NB.* jhhr*jhhr - <hr/>
 jhhr=: '<hr/>'
 
-NB.* 
-NB.* HBS includes of javascript code and stylesheets
-NB.* jhjs*jhjs'name' - 'jquery' or 'd3' or 'd3_basic'
-
-jhjs=: 3 : 0
-select.y
-case.'jquery' do.
- t=. '<link rel="stylesheet" href="~addons/ide/jhs/js/jquery/smoothness/jquery-ui.custom.css" />'
- t,  '<script src="~addons/ide/jhs/js/jquery/jquery-2.0.3.min.js"></script>'
-case.'d3' do.
- '<script src="~addons/ide/jhs/js/d3/d3.min.js"></script>'
-case.'d3_basic' do.
-
-case. do.
-
-end.
-)
-
-NB.* 
-NB.* utilities
-NB.* doch*doch_jhs_'' - framework verbs and nouns
-doch=: 3 : 0
-r=. LF,'see ~addons/ide/jhs/utilh.ijs for complete information',LF
-t=. <;.2 LF,~fread jpath'~addons/ide/jhs/utilh.ijs'
-for_n. t do.
- n=. >n
- if. 'NB.* '-:5{.n do.
-  n=. 5}.n
-  i=. n i.'*'
-  if. i~:#n do.
-   n=.(10{.i{.n),' ',}.i}.n
-  end.
-  r=. r,n
- end.
-end.
-r
-)
-
-NB.* docjs*docjs_jhs_'' - framework javascript overview
-docjs=: 3 : 0
-r=. ''
-t=. <;.2 LF,~fread jpath'~addons/ide/jhs/utiljs.ijs'
-for_n. t do.
- n=. >n
- if. '//* '-:4{.n do.
-  n=. 5}.n
-  i=. n i.'*'
-  if. i~:#n do.
-   n=.(10{.i{.n),' ',}.i}.n
-  end.
-  r=. r,n
- end.
-end.
-r
-)
-
 NB.* jhbshtml*jhbshtml_jdemo1_'' -  show HBS sentences and html
 jhbshtml=: 3 : 0
 s=.<;._2 HBS
@@ -779,6 +749,7 @@ htmlresponse tmpl hrplc 'TITLE CSS HEXTRA JS BODY';(TIPX,x);(css CSS);HEXTRA;(js
 NB.* jhrx*title jhrx (getcss'...'),(getjs'...'),getbody'...'
 NB.* *send html response built from INCLUDE, CSS, JS, HBS
 jhrx=: 4 : 0
+JTITLE=: x
 htmlresponse (hrxtemplate hrplc 'TITLE';(TIPX,x)),y
 )
 

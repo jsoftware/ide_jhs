@@ -14,7 +14,7 @@ plots can:
  write a file in a common format (png/html/...)
 
 run next line to open this script
-   open'~addons/ide/jhs/spx/plot.ijs'
+   edit'~addons/ide/jhs/spx/plot.ijs'
 
 there are independent sections - you can skip around
 )
@@ -57,8 +57,8 @@ NB.spxsection:jd3
 jhslinkurl'www.d3js.org' NB. link to D3 home page
 jd3'help'
 jd3'reset;type line;title My Data;legend "line one","line two","line three"'
-'P' jd3 ?3 4$100 NB. plot resizes with window
-   
+'jd3;10 10'cojhs jd3x;?3 4$100
+  
 NB.spxsection:gnuplot
 jhslinkurl'www.gnuplot.info'
 0 : 0
@@ -146,7 +146,7 @@ x gpplot 10?10
 jhspng  'plot' gpd4 term_png,small NB. display in session
    
 NB.spxsection:gc
-jhtml'<div contenteditable="false"><a href="http://code.google.com/apis/chart/"  target="_blank">Google Charts</a></div>'
+jhtml_jhs_'<div contenteditable="false"><a href="http://code.google.com/apis/chart/"  target="_blank">Google Charts</a></div>'
 load'~addons/ide/jhs/jgcp.ijs'
 jgc'help'  NB. plot info
 jgcx''     NB. examples

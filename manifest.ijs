@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.266'
+VERSION=: '1.0.267'
 
 FILES=: 0 : 0
 history.txt
@@ -20,7 +20,6 @@ gpdemo.ijs
 installer.ijs
 jal.ijs
 jbinfo.ijs
-jd3.ijs
 jfif.ijs
 jfile.ijs
 jfiles.ijs
@@ -30,10 +29,10 @@ jhelp.ijs
 jijs.ijs
 jijx.ijs
 jlogin.ijs
-jtable.ijs
 jum.ijs
-jwatch.ijs
 sp.ijs
+tool.ijs
+util.ijs
 utilh.ijs
 utiljs.ijs
 config/jhs_default.ijs
@@ -44,6 +43,10 @@ app/app3.ijs
 app/app4.ijs
 app/app5.ijs
 app/app6.ijs
+cojhs/jd3.ijs
+cojhs/jhot.ijs
+cojhs/jtable.ijs
+cojhs/jwatch.ijs
 demo/jdemo1.ijs
 demo/jdemo2.ijs
 demo/jdemo3.ijs
@@ -57,12 +60,9 @@ demo/jdemo10.ijs
 demo/jdemo11.ijs
 demo/jdemo12.ijs
 demo/jdemo13.ijs
-spx/j1.ijs
-spx/j2.ijs
-spx/j3.ijs
+demo/jdemo14.ijs
 spx/plot.ijs
 spx/spx.ijs
-spx/table.ijs
 js/webgl/glmatrix-min.js
 js/codemirror/license.txt
 js/codemirror/codemirror.min.4.2.js

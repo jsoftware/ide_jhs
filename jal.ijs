@@ -36,6 +36,10 @@ jev_get=: 3 : 0
 create '';('update'jpkg'')rplc LF;'<br>'
 )
 
+ev_close_click=: 3 : 0
+jhrajax''
+)
+
 ev_all_click=: 3 : 0
 'update'jpkg'' NB. update to make current
 'upgrade'jpkg''

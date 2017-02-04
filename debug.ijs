@@ -1,20 +1,20 @@
 NB. JHS - debug
 coclass'jhs'
 
-studio_debug=: 0 : 0
+tool_debug=: 0 : 0
 debug facilities:
  suspend execution at stop or error
  examine/modify locals
  step/stepin/stepout/etc
  
 practice with simple test cases before you need it for real!
-
-   dbwatch'calendar'     NB. show definition with line numbers in tab
+   dbsd'calendar'     NB. show definition with line numbers
+   'jwatch;0 0'cojhs'dbsd''calendar''' NB. show in window
    dbsm'calendar 0 : 3'  NB. stop on lines monadic 0 and dyadic 3
    dbr 1             NB. debug enabled
    calendar 1        NB. suspend at line 0 - note 6 space prompt
    dbstepin''        NB. step into call of dyadic calendar
-   dbrun''            NB. run to stop or error - note stop on line 3
+   dbrun''           NB. run to stop or error - note stop on line 3
    a                 NB. local value a
    dbstep''          NB. step to next line
    dbes''            NB. formatted stack display
@@ -34,10 +34,6 @@ dbcutback_z_=: 13!:19
 dbstep_z_=:    13!:20
 dbstepin_z_=:  13!:21
 dbstepout_z_=: 13!:22
-
-dbwatch_z_=: 3 : 0
-('db_',y)jwatch'dbsd''',y,''''
-)
 
 NB. display numbered explicit defn
 dbsd_z_=: 3 : 0

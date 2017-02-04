@@ -14,12 +14,12 @@ HBS=: 0 : 0 rplc 'CMV';'4.2'
 '<script src="~addons/ide/jhs/js/codemirror/j/j.CMV.js"></script>'
 jhma''
  'action'    jhmg'action';1;11
- 'runw'     jhmab'run     r^'
+ 'runw'     jhmab'run     r*'
  'runwd'    jhmab'run display'
- 'save'     jhmab'save    s^'
+ 'save'     jhmab'save    s*'
  'saveas'   jhmab'save as...'
- 'undo'     jhmab'undo    z^'
- 'redo'     jhmab'redo    y^'
+ 'undo'     jhmab'undo    z*'
+ 'redo'     jhmab'redo    y*'
  'search'   jhmab'search/ctrls'
 'option'    jhmg'option';1;8
  'ro'       jhmab'readonly    t^'
@@ -67,6 +67,11 @@ elseif. 'open'-:getv'mid' do.
 elseif. 1 do.
  create jnew''
 end.
+)
+
+NB. add dirty handler here
+ev_close_click=: 3 : 0
+jhrajax''
 )
 
 save=: 3 : 0

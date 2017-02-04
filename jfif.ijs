@@ -56,6 +56,10 @@ fiff_find_button''
 jhrajax FIFINFO,>FIFNAMEONLY{JHSFOUNDFILES;FIFFOUND
 )
 
+ev_close_click=: 3 : 0
+jhrajax''
+)
+
 CSS=: 0 : 0
 *{font-family:<PC_FONTFIXED>;}
 )

@@ -14,11 +14,11 @@ jev_get=: 3 : 0
 
 jumps=: 0 : 0
 <a href="#pop-up">pop-up</a>&nbsp;
-<a href="#quickstart">quick-start</a>&nbsp;
+<a href="#close">close</a>&nbsp;
+<a href="#libraries">libraries</a>&nbsp;
 <a href="#highlights">highlights</a>&nbsp;
 <a href="#jhs">JHS</a>&nbsp;
 <a href="#ide">IDE</a>&nbsp;
-<a href="#gui">GUI</a>&nbsp;
 <a href="#console">console</a>&nbsp;
 )
 
@@ -26,6 +26,13 @@ text=: 0 : 0
 <div>
 <p>This document links to lots of information, but is itself quite short.
 A bit of time here will pay off down the road.</p>
+
+<p>Be sure to read pop-up and close sections!</p>
+
+<p>Get started with the tour menu. Take the J 1 tour to learn a bit about J
+and be sure to take the plot tour. Play with the tool menu to learn more
+about JHS.</p>
+
 <a name="pop-up"><h1>pop-up</h1></a>
 <p>Pop-up windows can be a plague when browsing ill-behaved sites.
 However, they can be very useful in an app like JHS that
@@ -56,32 +63,49 @@ the page. This work-around is not supported in all cases.
 Change this if you want new pages to replace the current page.
 <div class="jcode">   TARGET_jhs_=: '_self'</div></p>
 
-<a name="quickstart"><h1>quick-start</h1></a>
-Get started with the tour menu. Take the J 1 tour to learn a bit about J
-and be sure to take the plot tour. Play with the studio menu to learn more
-about JHS.
+<a name="close"><h1>close</h1></a>
+<p>The preferred way to close a JHS page is to press ctrl+\ or click the
+red button in the upper left corner. This lets JHS manage the close and 
+save data and free up resources as appropriate.</p>
+
+<p>Only pages opened by other pages can be closed this way. For example, crtl+\
+on a jijx page opened by a bookmark is ignored.</p>
+
+<p>The browser accesses the web and it can be a wild out there.
+Badly behaved sites try to usurp your control with pages that won't close gracefully.
+The browser is in an ongoing battle to keep you
+in control. When you click a tab close button, the browser assumes you mean it.
+There are mechanisms to give the application some control but they are badly flawed.</p>
+
+<a name="libraries"><h1>libraries</h1></a>
+<p>JHS includes several javascript libraries.</p>
+
+<a href="http://codemirror.net/" target="_blank">CodeMirror</a><br>
+<a href="http://www.jquery.com" target="_blank">jQuery</a><br>
+<a href="http://www.handsontable.com" target="_blank">Handsontable</a><br>
+<a href="http://www.d3js.org" target="_blank">D3</a><br>
 
 <a name="highlights"><h1>highlights</h1>
 
-<p>Important changes over the last few updates that might
-catch your interest.</p>
-
 <p><a href="#pop-up">Pop-up</a> windows are used more.
-For example <span class=jcode> open '~temp/1.ijs' </span>opens
-an jijs tab. Previously
-it would have displayed a link that you clicked (a click is not a pop-up).</p>
 
-<p>Window ids are used to avoid opening duplicate tabs. For example, opening a script 
-from a file or files page reopens in a tab if it already exists.
+<p>Window ids used to avoid opening duplicate tabs. For example, opening a script 
+from a file or files page reopens in a tab if it is already open.
 
-<p>Learn about the various ways to visualize data. See studio>plot tour.</p>
+<p>New style of app use locales for state information and use ctrl+\ or red button
+in upper left corner for managed close.</p>
 
-<p>Learn how to build your own GUI apps. See studio>app building.</p>
+<p>Menus are reorganized. In particular see the new tool and tour menus and explore
+all the items.</p>
 
-<p>Take a look at studio>demos and run the new demo 13.</p>
+<p>Learn about the various ways to visualize data. See menu tour>plot.</p>
+
+<p>Learn how to build your own GUI apps. See menu tour>app.</p>
+
+<p>Take a look at menu tour>demos and be sure to run the new demos 13 and 14.</p>
 
 <p>Learn how to use powerful debug tools with reworked example and
-utilities. See studio>debug.</p>
+utilities. See tool>debug.</p>
 
 <a name="jhs"><h1>JHS (J HTTP Server)</h1></a>
 JHS is a browser interface to J and
@@ -136,7 +160,24 @@ Detailed information at
 <a href="http://code.jsoftware.com/wiki/Guides/JHS/Server" target="_blank">wiki/Guides/JHS/Server</a>.<br><br>
 
 <a name="ide"><h1>IDE (Interactive Development Environment)</h1></a>
-<span class="h">keyboard shortcuts</span><br>
+<span class="h">jijx</span> Run J sentences (ctrl+shift+&uarr;&darr; recall)
+
+<br><br><span class="h">jfile</span>
+Browse files for editing, etc.
+Adequate for simple IDE use and for a remote server.
+For more complicated requirements use host facilities such
+as Windows Explorer or OSX Finder.
+
+<br><br><span class="h">jfiles</span> recent file list - click to open.
+
+<br><br><span class="h">jijs</span> script editor
+
+<br><br><span class="h">jfif</span> find in files
+
+<br><br><span class="h">jal</span>
+addons package manager (pacman) - download/install software packages
+
+<br><br><span class="h">keyboard shortcuts</span><br>
 esc key escapes next key to be a shortcut.<br/>
 For example, esc j links to jijx page.<br/>
 Menu items document shortcuts on the right.<br/>
@@ -159,87 +200,6 @@ Other pages require J and Javascript handlers. For example,
 ev_comma_ctrl=: 3 : 'i.5'
 function ev_comma_ctrl(){jdoajax([]);}
 </pre>
-
-<span class="h">jijx</span>
-Run J sentences (ctrl+shift+&uarr;&darr; recall)
-
-<br><br><span class="h">jfile</span>
-Browse files for editing, etc.
-Adequate for simple IDE use and for a remote server.
-For more complicated requirements use host facilities such
-as Windows Explorer or OSX Finder.
-
-<br><br><span class="h">jfiles</span>
-Recent file list - click to open.
-
-<br><br><span class="h">jijs</span>
-CodeMirror (www.codemirror.net) editor. See menu action|search/ctrl for ctrl/search/replace info.
-<a href="#codemirror">CodeMirror Copyright</a>
-
-<br><br><span class="h">jfif</span>
-find in files
-
-<br><br><span class="h">jal</span>
-addons package manager (pacman) - download/install software packages
-
-<br><br><span class="h">utils</span>
-<pre class="jcode">
-   jbd 1      NB. boxdraw +|-
-   jfe_jhs_ y NB. toggle console/browser
-   jhtml'&lt;font style="color:red;"&gt;A&lt;/font&gt;'
-
-   t=. '~addons/docs/help/index.htm'jhref_jhs_'help'
-   jhtml'&lt;div contenteditable="false"&gt;',t,'&lt;/div&gt;'
-
-   open'~temp/f.ijs' NB. open file in jijs tab
-</pre>
-
-<span class="h">jijx action menu</span>
-A script defines action menu items and the verbs to run
-when clicked. Shortcuts wqe are hardwired to the first
-3 added menu items. The following is a sample file you can
-define and then modify:
-<pre class="jcode">
-*** script ~user/projects/ja/ja.ijs ***
-coclass'z'
-ja_menu=: 0 : 0
-aaa
-bbb
-<PAREN>
-
-ja_aaa=: 3 : 0
-'aaa clicked'
-<PAREN>
-
-ja_bbb=: 3 : 0
-'bbb clicked'
-<PAREN>
-***
-</pre>
-
-<a name="gui"><h1>GUI</h1></a>
-<p>See jijx studio->app building for information on building GUI apps.</p>
-
-<p>See jijx studio->demos for app examples.</p>
-
-
-<p>The IDE is built with the same facilities. See
-~addons/ide/jhs/jfile.ijs to see how the jfile page is
-implemented.</p>
-
-<p>GUI apps are built with J, JHS framework, html, DOM (document object model), javascript, and css.</p>
-
-<p>There are great web resources on these topics.
-You may prefer more structured
-presentation and there are many books to choose from. None
-stand out, but 'The Definitive Guide' series from O'Reilly
-on HTML, Javascript, and CSS are adequate.</p>
-
-<p>There is a lot to learn to cover everything. Fortunately
-the learning curve, though long, is not terribly steep
-and there are significant rewards along the way.
-Everything you learn is applicable not just to J,
-but to every aspect of the incredible world of web programming.</p>
 
 <a name="console"><h1>console</h1></a>
 The JHS jconsole window diplays useful information.<br><br>

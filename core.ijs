@@ -394,19 +394,6 @@ getvs=: 3 : 0
 ((0{"1 NV)i.;:y){(1{"1 NV),<''
 )
 
-NB. set APP data for get or refresh request
-NB. jev_get_data_JWID=: y
-gd_set=: 3 : 0
-y gd_set~ getv'jwid'
-:
-('jev_get_data_',x)=: y
-)
-
-NB. get APP data for jwid
-gd_get=: 3 : 0
-('jev_get_data_',getv'jwid')~
-)
-
 NB. ~name from full name
 jshortname=: 3 : 0
 p=. <jpath y
@@ -450,283 +437,13 @@ logapp y,' error : ',13!:12''
 
 logstdout=: 3 : 'i.0 0[(y,LF) 1!:2[4'
 
-NB. pop-up window - script/demo/app/jd3/jtable/...
-NB. 'jdemo13' windowopen 'jdemo13'
-NB. 'jd3'     windowopen 'P'
-NB. 'jijs'    windowopen jpath file
-NB. 'jwatch'  windowopen sentence
-NB. y is added as url jwid parameter - jd3?jwid=...
-windowopen=: 4 : 0
-if. ''-:y do.
- t=. x
- y=. x
-else.
- t=. x,'?jwid=',jurlencode y
-end. 
-if. NOPOPUP do.
- echo jhtml'<div contenteditable="false">',(t jhref_jhs_ t),'</div>'
-else.
- m=. x,' pop-up blocked\nadjust browser settings to allow localhost pop-up\nsee jhelp section pop-up'
- jjs'if(null==window.open("<X>","<Y>"))alert("<M>");'rplc '<X>';t;'<Y>';y;'<M>';m
-end.
-i.0 0
-)
-
-studio_demos=: 0 : 0
-demos are simple apps that show aspects of JHS gui programming
-run the demos to see some of the possibilities
-study the source to see how it is done
-study studio|app building first as the demo source will make more sense after that
-
-1  Roll submit
-2  Roll ajax
-3  Flip ajax
-4  Controls/JS/CSS
-5  Plot
-6  Grid editor
-7  Table layout
-8  Dynamic resize
-9  Multiple frames
-10 Ajax chunks
-11 Ajax interval timer
-12 WebGL 3d graphics
-13 D3 line and bar plots
-
-   rundemo_jhs_ 1
-)
-
-rundemo=: 3 : 0
-t=. 'jdemo',":y
-require'~addons/ide/jhs/demo/jdemo',(":y),'.ijs'
-t windowopen t
-)
-
-studio_app=: 0 : 0
-how to build an app
-run and study each script/app in order
-   runapp_jhs_ N
-    - copies appN.ijs to ~temp/app
-    - runs and opens script in a tab
-    - opens the app in a tab
-move the 2 new tabs so you can easily study them
-
- 1 HBS - html
- 2 JS - javascript event handlers
- 3 J event handlers
- 4 CSS - cascading style sheets
- 5 INC - include css/js libraries
- 6 window id and arg - customize jev_get page display
- 
-   runapp_jhs_ 1
-)
-
-runapp=: 3 : 0
-t=. 'app',":y
-a=. t,'.ijs'
-f=. '~temp/app/',a
-1!:5 :: [ <jpath'~temp/app'
-(fread '~addons/ide/jhs/app/',a)fwrite f
-load f
-'jijs'windowopen_jhs_ jshortname jpath f
-t windowopen t
-)
-
-studio_plot=: 0 : 0
-D3 (www.d3js.org) javascript library provides
-a powerful plot facility easily used from J
-
-currently simple line, bar, and pie plots are integrated
-study ~addons/ide/jhs/jd3.ijs to see how this could be extended
-
-see link>jhelp>plot for other plot facilities
-
-   jd3'help'
-)
-
-studio_watch=: 0 : 0
-   'W1'jwatch'?2 3$100' NB. watch any expression
-)
-
 audio=: 3 : 0
 assert fexist y
 jhtml'<audio controls="controls"><source src="',y,'" type="audio/mp3">not supported</audio>'
 )
 
-NB. eval javascript sentences
-NB. starting without ';' is evaluated only in ajax
-NB. starting with ';' is evaluated in ajax and in refresh
-jjs=:3 : 0
-jhtml jmarkjsa,y,jmarkjsz
-)
+NB. z locale utilities
 
-NB. z local utilities
-
-NB. javascript window open URL,wid,specs,replace
-NB. wid is the window id - javascript uses term window name - it is not the page or tab title
-NB. NOPOPUP not supported - could be added
-NB. jhsopen url;wid
-jhsopen_z_=: 3 : 0
-'a b'=. y
-m=. a,' pop-up blocked\nadjust browser settings to allow localhost pop-up\nsee jhelp section pop-up'
-jjs_jhs_'if(null==window.open("<X>","<Y>"))alert("<M>");'rplc '<X>';a;'<Y>';b;'<M>';m
-)
-
-jhsclose_z_=: 3 : 0
-jjs_jhs_'w=window.open("","',y,'");w.close();'
-)
-
-open_z_=: 3 : 0
-'jijs'windowopen_jhs_ jshortname_jhs_ jpath spf y
-)
-
-jwatch_z_=: 4 : 0
-require'~addons/ide/jhs/jwatch.ijs'
-x gd_set_jwatch_ y
-'jwatch'windowopen_jhs_ x
-)
-
-jlogoff_z_=: 3 : 'htmlresponse_jhs_ hajaxlogoff_jhs_'
-
-NB. one very long line as LF is <br>
-jhtml_z_=: 3 : 0
-a=. 9!:36''
-9!:37[ 4$0,1000+#y NB. allow lots of html formatted output
-smoutput jmarka_jhs_,y,jmarkz_jhs_
-9!:37 a
-i.0 0
-)
-
-jd3_z_=: 3 : 0
-jd3_jhs_ y
-:
-x jd3_jhs_ y
-)
-
-jtable_z_=: 3 : 0
-require'~addons/ide/jhs/jtable.ijs'
-'t n'=. y
-n=. dltb n
-n=. n,>('_'={:n){'__';''
-validate_jtable_ n
-(t,'_ev_body_load_data_jtable_')=: n
-'jtable' windowopen_jhs_ t
-)
-
-NB. f file.png
-jhspng_z_=: 3 : 0
-d=. fread y
-w=. 256#.a.i.4{.16}.d
-h=. 256#.a.i.4{.20}.d
-t=. '<img width=<WIDTH>px height=<HEIGHT>px src="<FILE><UQS>" ></img>'
-jhtml t hrplc_jhs_ 'WIDTH HEIGHT FILE UQS';w;h;y;uqs_jhs_''
-)
-
-NB. [TARGET] f URL - url is server page or file with UQS 
-jhslink_z_=: 3 : 0
-'_blank' jhslink y
-:
-t=. '<a href="<REF><UQS>" target="<TARGET>" class="jhref" ><TEXT></a>'
-t=. t hrplc_jhs_ 'TARGET REF UQS TEXT';x;y;(uqs_jhs_'');y
-jhtml'<div contenteditable="false">',t,'</div>'
-)
-
-NB. f URL - url is www url
-jhslinkurl_z_=: 3 : 0
-jhtml'<div contenteditable="false"><a href="http://',y,'" target="_blank">',y,'</a></span>'
-)
-
-NB. TARGET f URL
-jhsshow_z_=: 3 : 0
-'_blank' jhsshow y
-:
-jjs 'window.open("',(y,uqs_jhs_''),'","',x,'");'
-)
-
-plotjijx_z_=: 3 : 0
-canvasnum_jhs_=: >:canvasnum_jhs_
-canvasname=. 'canvas',":canvasnum_jhs_
-d=. fread y
-c=. (('<canvas 'E.d)i.1)}.d
-c=. (9+('</canvas>'E.c)i.1){.c
-c=. c rplc 'canvas1';canvasname
-d=. (('function graph()'E.d)i.1)}.d
-d=. (('</script>'E.d)i.1){.d
-d=. d,'graph();'
-d=. d rplc'canvas1';canvasname
-jhtml c
-jjs_jhs_ ';',d
-)
-
-NB. f type;window;width height[;output]
-NB. type selects case in plotcanvas/plotcairo
-plotdef_z_=: 3 : 0
-if. 'cairo'-:_1{::y=. 4{.y,<'canvas' do.
- 'CAIRO_DEFSHOW_jzplot_ CAIRO_DEFWINDOW_jzplot_ CAIRO_DEFSIZE_jzplot_ JHSOUTPUT_jzplot_'=: y
-else.
- 'CANVAS_DEFSHOW_jzplot_ CANVAS_DEFWINDOW_jzplot_ CANVAS_DEFSIZE_jzplot_ JHSOUTPUT_jzplot_'=: y
-NB. default output
- JHSOUTPUT_jzplot_=: 'canvas'
-end.
-i.0 0
-)
-
-plotcanvas_z_=: 3 : 0
-f=. '~temp/plot.html' NB. CANVAS_DEFFILE
-d=. fread f
-d=. d rplc'<h1>plot</h1>';''
-d=. d rplc'#canvas1 { margin-left:80px; margin-top:40px; }';'#canvas1{margin-left:0; margin-top:0;}'
-d fwrite f
-w=. CANVAS_DEFWINDOW_jzplot_
-select. CANVAS_DEFSHOW_jzplot_
- case. 'show' do. w jhsshow f
- case. 'link' do. w jhslink f
- case. 'jijx' do. plotjijx f
- case. 'none' do.
- case.        do. plotjijx f
-end.
-i.0 0
-)
-
-plotcairo_z_=: 3 : 0
-f=. '~temp/plot.png' NB. CAIRO_DEFFILE
-w=. CAIRO_DEFWINDOW_jzplot_
-select. CAIRO_DEFSHOW_jzplot_
- case. 'show' do. w jhsshow f
- case. 'link' do. w jhslink f
- case. 'jijx' do. jhspng f
- case. 'none' do.
- case.        do. jhspng f
-end.
-i.0 0
-)
-
-
-jbd_z_=: 3 : '9!:7[y{Boxes_j_' NB. select boxdraw (PC_BOXDRAW)
-
-decho_z_=: echo_z_
-
-NB. JHS echo to console - should be in JHS core or even stdlib
-echoc_z_=: 3 : 0
-if. IFJHS do.
- try.
-  jbd 1
-  jfe_jhs_ 0
-  echo y
- catch.
- end.
- jfe_jhs_ 1
- jbd 0
-else.
- echo y
-end. 
-)
-
-dechoc_z_=: echoc_z_
-NB. toggle jfe behavior
-jfe=: 3 : 0
-15!:16 y
-i.0 0
-)
 
 console_welcome=: 0 : 0
 
@@ -914,12 +631,16 @@ jfe 1
 )
 
 NB. load rest of JHS core
+load__'~addons/ide/jhs/util.ijs'
 load__'~addons/ide/jhs/utilh.ijs'
 load__'~addons/ide/jhs/utiljs.ijs'
 load__'~addons/ide/jhs/sp.ijs'
+load__'~addons/ide/jhs/tool.ijs'
 load__'~addons/ide/jhs/d3.ijs'
-load__'~addons/ide/jhs/jd3.ijs'
 load__'~addons/ide/jhs/debug.ijs'
+
+NB. load addons, but do not fail init if not found
+load__ :: ['~addons/convert/json/json.ijs'
 
 stub=: 3 : 0
 'jev_get y[load''~addons/ide/jhs/',y,'.ijs'''
@@ -932,7 +653,6 @@ jev_get_jfiles_=:  3 : (stub'jfiles')
 jev_get_jijs_=:    3 : (stub'jijs')
 jev_get_jfif_=:    3 : (stub'jfif')
 jev_get_jal_=:     3 : (stub'jal')
-jev_get_jtable_=:  3 : (stub'jtable')
 jev_get_jhelp_=:   3 : (stub'jhelp')
 jev_get_jdemo_=:   3 : (stub'jdemo')
 jev_get_jlogin_=:  3 : (stub'jlogin')
@@ -1030,133 +750,4 @@ if. ('255.255.255.255'-:z) +. ('127.0.'-:6{.z) +. '192.168.'-:8{.z do.
  end.
 end.
 z
-)
-
-NB. viewmat - previously in jgcp - should come from addon eventually
-coclass'jgcp'
-NB. viewmat stuff - subset borrowed from viewmat addon
-
-viewmat=: 3 : 0
-t=. (<6#16)#: each <"0>1{''getvm_jgcp_ y
-t=. '#',each t{each <'0123456789abcdef'
-a=. (<'<font ',LF,'style="background-color:'),each t
-a=. a,each (<'; color:'),each t
-a=. a,each <';">ww</font>'
-jhtml ;a,.<'<br>'
-)
-
-3 : 0
-if. 803 > ". '.'-.~ 4{. LF -.~ 1!:1<jpath '~system/config/version.txt' do.
-  viewmat_z_=: viewmat_jgcp_
-end.
-''
-)
-
-finite=: x: ^: _1
-intersect=: e. # [
-citemize=: ,: ^: (2: > #@$)
-rndint=: <.@:+&0.5
-tomatrix=: (_2 {. 1 1 , $) $ ,
-
-delinf=: 3 : 0
-if. +:/ _ __ e. ,y do. y return. end.
-sc=. 0.1
-a=. (,y) -. _ __
-max=. >./a
-min=. <./a
-ext=. sc * max - min
-(min-ext) >. y <. max+ext
-)
-
-NB. =========================================================
-NB.*gethue v generate color from color set
-NB. x is color set
-NB. y is values from 0 to 1, selecting color
-gethue=: 4 : 0
-y=. y*<:#x
-b=. x {~ <.y
-t=. x {~ >.y
-k=. y-<.y
-(t*k) + b*-.k
-)
-
-NB. =========================================================
-NB. getvm
-NB.
-NB. form: hue getvm data [;title]
-NB.
-NB. hue may be empty, in which case a default is used
-NB. hue may be a N by 3 matrix of colors or a vector
-NB.     of RGB integers.
-NB.
-NB. returns:
-NB.   original data
-NB.   scaled data matrix
-NB.   angle (if any)
-NB.   title
-getvm=: 4 : 0
-'dat tit'=. 2 {. boxopen y
-tit=. ": tit
-tit=. tit, (0=#tit) # 'viewmat'
-'mat ang'=. x getvm1 dat
-dat ; mat ; ang ; tit
-)
-
-NB. =========================================================
-getvm1=: 4 : 0
-hue=. x
-mat=. y
-ang=. ''
-
-NB. ---------------------------------------------------------
-if. 2 > #$hue do.
-  hue=. |."1 [ 256 256 256 #: ,hue
-end.
-
-NB. ---------------------------------------------------------
-select. 3!:0 mat
-case. 2;32 do.
-  mat=. (, i. ]) mat
-case. 16 do.
-  ang=. * mat
-  mat=. delinf | mat
-case. do.
-  mat=. finite mat
-end.
-
-NB. ---------------------------------------------------------
-select. #$mat
-case. 0 do.
-  mat=. 1 1$mat
-case. 1 do.
-  mat=. citemize mat
-case. 3 do.
-  'mat ang'=. mat
-end.
-
-NB. ---------------------------------------------------------
-if. */ (,mat) e. 0 1 do.
-  if. #hue do.
-    h=. <. 0 _1 { hue
-  else.
-    h=. 0 ,: 255 255 255
-  end.
-  mat=. mat { h
-
-else.
-  if. #hue do.
-    h=. hue
-  else.
-    h=. 255 * #: 7 | 3^i.6
-  end.
-  val=. ,mat
-  max=. >./ val
-  min=. <./ val
-  mat=. <. h gethue (mat - min) % max - min
-end.
-
-mat=. mat +/ .* 65536 256 1
-
-mat ; ang
-
 )

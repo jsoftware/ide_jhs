@@ -11,6 +11,10 @@ jev_get=: 3 : 0
 'jfiles'jhr''
 )
 
+ev_close_click=: 3 : 0
+jhrajax''
+)
+
 files=: 3 : 0
 addrecent_jsp_''
 '</div>',~'<div>',;fx each SPFILES_jsp_

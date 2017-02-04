@@ -10,7 +10,7 @@ next step opens this script - put it in another window
 so you can read along as spx steps through
 )
 
-open'~addons/ide/jhs/spx/spx.ijs'
+edit'~addons/ide/jhs/spx/spx.ijs'
 
 NB. : to ) lines display in a single advance
 f=: 3 : 0

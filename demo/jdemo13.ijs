@@ -28,17 +28,14 @@ CSS=: 0 : 0
 
 NB. J handlers for app events
 
-jev_get_data_jdemo13=: '?2 8$100' NB. inital default data
-
 jev_get=: 3 : 0
-sentence=. gd_get''
+sentence=. '?2 8$100'
 data=. jd3data ".sentence
 'jdemo13'jhrx(getcss''),(getjs'TABDATA';data),gethbs'SENTENCE';sentence
 )
 
 ev_plot_click=: 3 : 0
 d=. getv'data'
-gd_set d
 jhrajax jd3data".d
 )
 

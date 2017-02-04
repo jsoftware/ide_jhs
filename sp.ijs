@@ -8,7 +8,6 @@ sp_z_       =: sp_jsp_
 spf_z_      =: spf_jsp_
 spr_z_      =: spr_jsp_
 spx_z_      =: spx_jsp_
-spxinit_z_  =: spx_z_          NB.! kill off when Jd updated
 sprunner_z_ =: 3 : '0!:111 y'
 sprunnerx_z_=: 3 : '0!:110 y'
 sptable_z_  =: sptable_jsp_
@@ -53,6 +52,7 @@ spxhelp_z_=: 0 : 0
 simple project managed execution:
  spx f        set SPXFILE
  crtl+.       JHS advance
+ menu >       JHS advance
  ctrl+j       JQt advance
  spx''        advance
  spx 0        status
@@ -123,8 +123,8 @@ sptable(shorts_jsp_ t),.t
 spxinit=: 3 : 0
 assert. fexist spf y['must exist'
 if. IFJHS do.
- ev_dot_ctrl_jijx_=: 3 : 'spx__'''''
- a=. 'ctrl+. advances'
+ ADVANCE_jijx_=: 'spx'
+ a=. 'ctrl+. or menu > advances'
 elseif. IFQT do.
  if. _1=4!:0<'qtsave' do.
   qtsave=: 5!:1<'labs_run_jqtide_'
@@ -203,7 +203,7 @@ if. 0=#d-.' ' do. SEMN=:>:SEMN[echo ;IFJHS{'';LF goto_top. end.
 
 if. 'NB.spxhr:'-:9{.deb d do.
  SEMN=:>:SEMN
- if. IFJHS do. jhtml'<hr/>' else. echo 80$'_'end.
+ if. IFJHS do. jhtml_jhs_'<hr/>' else. echo 80$'_'end.
  goto_top.
 end.
 
@@ -240,7 +240,7 @@ end.
    end. 
   else.
    if. IFJHS do.
-    jhtml '<font color="blue">',(jhfroma_jhs_ ;a),'</font>'
+    jhtml_jhs_'<font color="blue">',(jhfroma_jhs_ ;a),'</font>'
    else.
     echo ;a
    end.
@@ -251,7 +251,7 @@ end.
   d=. 3}.each dltb each <;.2 d
   d=. ;(*./' '=;{.each d)}.each d
   if. IFJHS do. 
-   jhtml '<font color="green">',(jhfroma_jhs_ d),'</font>'
+   jhtml_jhs_'<font color="green">',(jhfroma_jhs_ d),'</font>'
   else.
    echo d
   end. 
