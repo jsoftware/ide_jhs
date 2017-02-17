@@ -636,7 +636,7 @@ j=. j, f (0 : 0)
 
 FIFINSERT=: {."1 each j
 FIFINSTXT=: {:"1 each j
-t=: wpinsert_run
+NB. t=: wpinsert_run
 
 ffssinit=: 3 : 0
 if. (FIFCONTEXTNDX=0) > RX do. 1 return. end.
