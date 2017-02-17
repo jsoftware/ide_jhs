@@ -1368,8 +1368,9 @@ if. #FIFWHAT do.
 end.
 )
 fifh_open_button=: 3 : 0
-require '~system/extras/util/browser.ijs'
-launch_jbrowser_ FIFHTMFILE
+NB. require '~system/extras/util/browser.ijs'
+NB. launch_jbrowser_ FIFHTMFILE
+browse_j_ FIFHTMFILE
 )
 fifhshow=: 3 : 0
 wd 'set hlook ', todelim j=. {."1 FIFHELPS
