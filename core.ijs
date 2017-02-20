@@ -191,6 +191,8 @@ logapp 'output type : ',":x
 if. 5=x do.
  NB. jhrajax 'Your J HTTP Server has exited.<br/><div id="prompt" class="log">&nbsp;&nbsp;&nbsp;</div>'[PROMPT_jhs_=:'   '
  jhrajax'<font style="color:red;"><pre>',jhsexit,'</pre></font>'
+ jfe_jhs_ 0
+ 2!:55[0
 end.
 try.
  s=. y NB. output string
