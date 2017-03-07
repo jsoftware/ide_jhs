@@ -98,45 +98,6 @@ Path=<W>
 Icon=<I>
 )
 
-NB. bad version - mint17 vs mint18?
-getterm_bad=: 3 : 0
-if. IFQT do. 
- echo jqtwarning
- 'terminal'
- return.
-end.
-p=. ":2!:6''
-r=.  2!:0'ps -o comm -p ',p
-p=. ;{:<;._2[2!:0'ps -o ppid -p ',p
-r=.  2!:0'ps -o comm -p ',p
-;{:<;._2 r
-)
-
-jqtwarning=: 0 : 0
-
-Jqt can't determine command and sets it as terminal
-  edit icon properties as appropriate
-   for example, gnome-terminal or mate-terminal
-)
-
-NB. terminal command used to run this session
-NB. trace back through pids to pid 1 init
-getterm=: 3 : 0
-if. IFQT do. 
- echo jqtwarning
- 'terminal'
- return.
-end.
-p=. ":2!:6''
-while. 1 do.
- r=.  2!:0'ps -o comm -p ',p
- echo p;r
- p=. ;{:<;._2[2!:0'ps -o ppid -p ',p
- if. 1=".p do. break. end.
-end. 
-;{:<;._2 r
-)
-
 Linux=: 3 : 0
 select. y
 case.'jc' do.
@@ -159,7 +120,7 @@ c=. hostpathsep jpath '~bin/',bin
 if. type-:'jqt' do.
  e=. '"',c,'"'
 else.
- e=. '<T> -e "\"<C>\"<A>"'rplc '<T>';(getterm'');'<C>';c;'<A>';arg
+ e=. '<T> -e "\"<C>\"<A>"'rplc '<T>';'x-terminal-emulator';'<C>';c;'<A>';arg
 end.
 r=. desktop rplc '<N>';n
 r=. r rplc '<E>';e
