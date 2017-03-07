@@ -98,17 +98,17 @@ Path=<W>
 Icon=<I>
 )
 
-NB. terminal command used to run this session
-NB. trace back through pids to pid 1 init
-NB. worked on min17 but fails on mint18
-getterm_old=: 3 : 0
+NB. bad version - mint17 vs mint18?
+getterm_bad=: 3 : 0
+if. IFQT do. 
+ echo jqtwarning
+ 'terminal'
+ return.
+end.
 p=. ":2!:6''
-while. 1 do.
- r=.  2!:0'ps -o comm -p ',p
- echo p;r
- p=. ;{:<;._2[2!:0'ps -o ppid -p ',p
- if. 1=".p do. break. end.
-end. 
+r=.  2!:0'ps -o comm -p ',p
+p=. ;{:<;._2[2!:0'ps -o ppid -p ',p
+r=.  2!:0'ps -o comm -p ',p
 ;{:<;._2 r
 )
 
@@ -120,6 +120,7 @@ Jqt can't determine command and sets it as terminal
 )
 
 NB. terminal command used to run this session
+NB. trace back through pids to pid 1 init
 getterm=: 3 : 0
 if. IFQT do. 
  echo jqtwarning
@@ -127,9 +128,12 @@ if. IFQT do.
  return.
 end.
 p=. ":2!:6''
-r=.  2!:0'ps -o comm -p ',p
-p=. ;{:<;._2[2!:0'ps -o ppid -p ',p
-r=.  2!:0'ps -o comm -p ',p
+while. 1 do.
+ r=.  2!:0'ps -o comm -p ',p
+ echo p;r
+ p=. ;{:<;._2[2!:0'ps -o ppid -p ',p
+ if. 1=".p do. break. end.
+end. 
 ;{:<;._2 r
 )
 
