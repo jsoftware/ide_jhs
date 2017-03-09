@@ -451,16 +451,10 @@ console_welcome=: 0 : 0
 
 J HTTP Server - init OK
 
-Requires HTML 5 browser with javascript.
-
-On many systems localhost is the same as <LOCAL>. 
-
 Ctrl+c here signals an interrupt to J.
 
-A : separates ip address from port.
 <REMOTE>
-Start a web browser on this machine and enter URL:
-   http://<LOCAL>:<PORT>/jijx
+Browse to: http://<LOCAL>:<PORT>/jijx
 )
 
 remoteaccess=: 0 : 0
@@ -490,6 +484,7 @@ BIND=: 'localhost' NB. 'any'  - access from any machine
 USER=: ''          NB. 'john' - login
 PASS=: ''          NB. 'abra' - login
 TIPX=: ''          NB. tab title prefix - distinguish sessions
+AUTO=: 1           NB. startup browse to http:/localhost:PORT/jijx
 
 PC_FONTFIXED=:     '"courier new","courier","monospace"'
 PC_FONTVARIABLE=:  '"sans-serif"'
@@ -571,7 +566,10 @@ cocurrent 'jhs'
 NB. simplified config
 jhscfg=: 3 : 0
 configdefault''
-if. 3=nc<'config' do. config'' end.
+if. 3=nc<'config' do.
+ config''
+ PORT=: PORT+10*'avx'-:8 9 10{9!:14'' NB.! kludge to give avx different port
+end.
 'PORT invalid' assert (PORT>49151)*.PORT<2^16
 'BIND invalid' assert +./(<BIND)='any';'localhost'
 'LHOK invalid' assert +./LHOK=0 1
@@ -630,6 +628,19 @@ end.
 input_jfe_=: input_jhs_  NB. only use jfe locale to redirect input/output
 output_jfe_=: output_jhs_
 jfe 1
+
+if. AUTO do.
+ url=. 'http://localhost:PORT/jijx'rplc'PORT';":PORT
+ try.
+  select. UNAME
+  case. 'Win'    do. shell_jtask_'start ',url
+  case. 'Linux'  do. 2!:0'x-www-browser ',url
+  case. 'Darwin' do. 2!:0'open ',url
+  end.
+ catch.
+  echo'AUTO failed: ',url
+ end.
+end.
 )
 
 NB. load rest of JHS core
