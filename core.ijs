@@ -634,7 +634,7 @@ if. AUTO do.
  try.
   select. UNAME
   case. 'Win'    do. shell_jtask_'start ',url
-  case. 'Linux'  do. 2!:0'x-www-browser ',url,' 2>/dev/null &'
+  case. 'Linux'  do. 2!:0'x-www-browser ',url,' >/dev/null &'
   case. 'Darwin' do. 2!:0'open ',url,' &'
   end.
  catch.
