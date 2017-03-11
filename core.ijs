@@ -566,10 +566,7 @@ cocurrent 'jhs'
 NB. simplified config
 jhscfg=: 3 : 0
 configdefault''
-if. 3=nc<'config' do.
- config''
- PORT=: PORT+10*'avx'-:8 9 10{9!:14'' NB.! kludge to give avx different port
-end.
+if. 3=nc<'config' do. config'' end.
 'PORT invalid' assert (PORT>49151)*.PORT<2^16
 'BIND invalid' assert +./(<BIND)='any';'localhost'
 'LHOK invalid' assert +./LHOK=0 1
