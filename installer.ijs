@@ -9,10 +9,10 @@ echo' '
 if. 0=y do.
  install'qtide'
  echo' '
- shortcutx'jqt'
+ shortcut'jqt'
 end. 
-shortcutx'jc'
-shortcutx'jhs'
+shortcut'jc'
+shortcut'jhs'
 echo'double click a desktop icon to run J with the corresponding user interface'
 i.0 0
 )
@@ -27,27 +27,45 @@ require'pacman'
 
 NB. shortcut 'jc' or 'jhs' or 'jqt' - create desktop launch icon
 shortcut=: 3 : 0
-t=. jpath'~/Desktop'
-('Desktop folder does not exist: ',t)assert 2=ftype t
-".UNAME,'_jinstaller_ y'
+e=. 'create ',y,' launch icon failed'
+if. 2~:ftype jpath'~/Desktop' do. echo e,' - no Desktop folder' return. end.
+try. ".UNAME,'_jinstaller_ y' catchd. echo e end. 
 )
 
-shortcutx=: 3 : 0
-try.
- shortcut y
-catch.
- echo 'install ',y,' desktop launch icon failed!!!'
+NB. switch to avx JE if available and it runs
+avx=: 3 : 0
+i=. (;:'Win Linux Darwin')i.<UNAME
+pre=. ;i{'';'lib';'lib'
+suf=. ;i{'dll';'so';'dylib'
+t=. jpath'~bin/'
+f=. pre,'j.',suf
+favx=. pre,'javx.',suf
+if. 'avx'-:3{.8}.9!:14'' do. echo'avx JE already running' return. end.
+if. -.fexist t,favx do. echo favx,' JE does not exist' return. end.
+a=. shell q=: '"',t,'jconsole','" -lib ',favx,' -js exit[0[echo[i.~i.10'
+if. (a-.CRLF)-:":i.10 do.
+ echo'avx JE exists and runs'
+ (t,f,'.original') frename t,f
+ (fread t,favx)fwrite t,favx,'.original'
+ (t,f) frename t,favx
+ echo'avx JE is now the default JE'
+ echo'exit and restart'
+else.
+ echo'failed'
 end.
 )
 
 coclass'jinstaller'
 
+defaults=: 3 : 0
 A=:   ' ~addons/ide/jhs/config/jhs.cfg'
 L=:   hostpathsep jpath'~/Desktop/'
 W=:   hostpathsep jpath'~'
 I=:   hostpathsep jpath'~bin/icons/'
 N=:   (1 2 3{9!:14''),;IF64{'-32';''
 DS=:  ;(('Win';'Linux';'Darwin')i.<UNAME){'.lnk';'.desktop';'.app'
+LIB=: ''
+)
 
 NB. windows
 vbs=: 0 : 0
@@ -61,17 +79,21 @@ oLink.Save
 )
 
 Win=: 3 : 0
+defaults''
+Winx y
+)
+
+Winx=: 3 : 0
 select. y
 case.'jc' do.
- win'jc' ;'jconsole';'jgray.ico';''
+ win'jc' ;'jconsole';'jgray.ico';LIB
 case. 'jhs' do. 
- win'jhs';'jconsole';'jblue.ico';'~addons/ide/jhs/config/jhs.cfg'
+ win'jhs';'jconsole';'jblue.ico';LIB,A
 case. 'jqt' do.
- win'jqt';'jqt'     ;'jgreen.ico';''
+ win'jqt';'jqt'     ;'jgreen.ico';LIB
 case. do.
- 'unknown launch icon type'assert 0
+ assert 0
 end.
-i.0 0
 )
 
 win=: 3 : 0
@@ -99,15 +121,20 @@ Icon=<I>
 )
 
 Linux=: 3 : 0
+defaults''
+Linuxx y
+)
+
+Linuxx=: 3 : 0
 select. y
 case.'jc' do.
- linux'jc' ;'jconsole';'jgray.png';''
+ linux'jc' ;'jconsole';'jgray.png';LIB
 case. 'jhs' do. 
- linux'jhs';'jconsole';'jblue.png';A
+ linux'jhs';'jconsole';'jblue.png';LIB,A
 case. 'jqt' do.
- linux'jqt';'jqt'     ;'jgreen.png';''
+ linux'jqt';'jqt'     ;'jgreen.png';LIB
 case. do.
- 'unknown launch icon type'assert 0
+ assert 0
 end.
 i.0 0
 )
@@ -144,18 +171,24 @@ plist=: 0 : 0
 </dict></plist>
 )
 
-COM=: jpath'~temp/jhs.command'
+COM=: jpath'~temp/launch.command'
 
 Darwin=: 3 : 0
+defaults''
+Darwinx y
+)
+
+
+Darwinx=: 3 : 0
 select. y
 case.'jc' do.
- darwin'jc' ;'jconsole';'jgray.icns';''
+ darwin'jc' ;'jconsole';'jgray.icns';LIB
 case. 'jhs' do. 
- darwin'jhs';'jconsole';'jblue.icns';A
+ darwin'jhs';'jconsole';'jblue.icns';LIB,A
 case. 'jqt' do.
- darwin'jqt';'jqt'     ;'jgreen.icns';''
+ darwin'jqt';'jqt'     ;'jgreen.icns';LIB
 case. do.
- 'unknown launch icon type'assert 0
+ assert 0
 end.
 i.0 0
 )
@@ -168,11 +201,12 @@ f=. L,type,N,DS
 c=. hostpathsep jpath '~bin/',bin
 select. type
 case.'jc' do.
- r=. '#!/bin/sh',LF,'open "',c,'"'
+ NB. r=. '#!/bin/sh',LF,'open "',c,'"'
+ r=. launch rplc '<COM>';COM;'<C>';(hostpathsep jpath '~bin/jconsole');'<A>';LIB
 case. 'jhs' do.
- r=. jhsrun
+ r=. launch rplc '<COM>';COM;'<C>';(hostpathsep jpath '~bin/jconsole');'<A>';LIB,A
 case. 'jqt' do.
- r=.'#!/bin/sh',LF,'"',c,'.command"'
+ r=.'#!/bin/sh',LF,'"',c,'.command" ',LIB
 end.
 fpathcreate f,'/Contents/MacOS'
 fpathcreate f,'/Contents/Resources'
@@ -182,10 +216,10 @@ r fwrite f,'/Contents/MacOS/apprun'
 2!:0'chmod -R +x ',f
 )
 
-jhsrun=: 0 : 0 rplc '<COM>';COM;'<C>';hostpathsep jpath '~bin/jconsole'
+launch=: 0 : 0 
 #!/bin/sh
 echo '#!/bin/sh' > "<COM>"
-echo '"<C>" ~addons/ide/jhs/config/jhs.cfg' >> "<COM>"
+echo '"<C>" <A>' >> "<COM>"
 chmod +x <COM>
 open "<COM>"
 )
