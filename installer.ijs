@@ -42,16 +42,21 @@ f=. pre,'j.',suf
 favx=. pre,'javx.',suf
 if. 'avx'-:3{.8}.9!:14'' do. echo'avx JE already running' return. end.
 if. -.fexist t,favx do. echo favx,' JE does not exist' return. end.
-a=. shell q=: '"',t,'jconsole','" -lib ',favx,' -js exit[0[echo[i.~i.10'
+try.
+ a=. shell q=: '"',t,'jconsole','" -lib ',favx,' -js exit[0[echo[i.~i.10'
+catch.
+ a=. ''
+end.
 if. (a-.CRLF)-:":i.10 do.
- echo'avx JE exists and runs'
+ echo'avx JE runs!'
  (t,f,'.original') frename t,f
  (fread t,favx)fwrite t,favx,'.original'
  (t,f) frename t,favx
  echo'avx JE is now the default JE'
  echo'exit and restart'
 else.
- echo'failed'
+ echo'avx JE fails'
+ echo'this system can not run the avx JE binary'
 end.
 )
 
