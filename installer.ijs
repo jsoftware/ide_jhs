@@ -142,7 +142,8 @@ get_terminal=: 3 : 0
 p=. (shell'ps -o ''ppid='' -p $$')-.' ',LF
 p=. (shell'ps -o ''ppid='' -p ',p)-.' ',LF
 t=. shell'ps -o ''cmd='' -p ',p
-(t i.' '){.t
+t=. ((t i.' '){.t)-.LF
+t=. ;('/'={.t){t;'gnome-terminal' NB. kludge /.../gnome-terminal-server 
 )
 
 Linux=: 3 : 0
