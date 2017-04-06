@@ -1,7 +1,19 @@
-NB. routines to create desktop launch icons and to update/install base and addons
+0 : 0
+routines to update/install base and addons and create desktop launch icons
+jconsole required - simple and lets linux can determine terminal
 
-NB. 0 to install all, 1 to skip Jqt install
+   installer 0   NB. install jqt, update all, and create launch icons
+   installer 1   NB. same as 0 except jqt skipped
+   
+   shortcut'jc'  NB. create jconsole launch icon
+   shortcut'jhs'
+   shortcut'jqt'
+)
+
+jcon=: 3 : '''must be run in jconsole''assert 0=IFJHS,IFQT'
+
 installer=: 3 : 0
+jcon''
 echo'these steps can take several minutes'
 echo' '
 update_install_all 0
@@ -27,6 +39,7 @@ require'pacman'
 
 NB. shortcut 'jc' or 'jhs' or 'jqt' - create desktop launch icon
 shortcut=: 3 : 0
+jcon''
 e=. 'create ',y,' launch icon failed'
 if. 2~:ftype jpath'~/Desktop' do. echo e,' - no Desktop folder' return. end.
 try. ".UNAME,'_jinstaller_ y' catchd. echo e end. 
@@ -125,6 +138,13 @@ Path=<W>
 Icon=<I>
 )
 
+get_terminal=: 3 : 0
+p=. (shell'ps -o ''ppid='' -p $$')-.' ',LF
+p=. (shell'ps -o ''ppid='' -p ',p)-.' ',LF
+t=. shell'ps -o ''cmd='' -p ',p
+(t i.' '){.t
+)
+
 Linux=: 3 : 0
 defaults''
 Linuxx y
@@ -152,7 +172,7 @@ c=. hostpathsep jpath '~bin/',bin
 if. type-:'jqt' do.
  e=. '"',c,'"'
 else.
- e=. '<T> -e "\"<C>\"<A>"'rplc '<T>';'x-terminal-emulator';'<C>';c;'<A>';arg
+ e=. '<T> -e "\"<C>\"<A>"'rplc '<T>';(get_terminal'');'<C>';c;'<A>';arg
 end.
 r=. desktop rplc '<N>';n
 r=. r rplc '<E>';e
