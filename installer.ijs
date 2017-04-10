@@ -1,31 +1,31 @@
 0 : 0
 routines to update/install base and addons and create desktop launch icons
-jconsole required - simple and lets linux can determine terminal
 
-   installer 0   NB. install jqt, update all, and create launch icons
-   installer 1   NB. same as 0 except jqt skipped
+   installer 0   NB. update all, install qjt, and create launch icons
    
    shortcut'jc'  NB. create jconsole launch icon
    shortcut'jhs'
    shortcut'jqt'
 )
 
-jcon=: 3 : '''must be run in jconsole''assert 0=IFJHS,IFQT'
+JQT=: 1       NB. 0 to avoid jqt install
+SHORTCUTS=: 1 NB. 0 to avoid creating shortcuts
 
 installer=: 3 : 0
-jcon''
 echo'these steps can take several minutes'
 echo' '
 update_install_all 0
 echo' '
-if. 0=y do.
+if. JQT do.
  install'qtide'
  echo' '
- shortcut'jqt'
+ if. SHORTCUTS do. shortcut'jqt' end.
+end.
+if. SHORTCUTS do.
+ shortcut'jc'
+ shortcut'jhs'
+ echo'double click a desktop icon to run J with the corresponding user interface'
 end. 
-shortcut'jc'
-shortcut'jhs'
-echo'double click a desktop icon to run J with the corresponding user interface'
 i.0 0
 )
 
@@ -39,7 +39,6 @@ require'pacman'
 
 NB. shortcut 'jc' or 'jhs' or 'jqt' - create desktop launch icon
 shortcut=: 3 : 0
-jcon''
 e=. 'create ',y,' launch icon failed'
 if. 2~:ftype jpath'~/Desktop' do. echo e,' - no Desktop folder' return. end.
 try. ".UNAME,'_jinstaller_ y' catchd. echo e end. 
@@ -138,12 +137,19 @@ Path=<W>
 Icon=<I>
 )
 
+lter=: 0 : 0
+
+x-terminal-emulator does not exist and does not link to your preferred terminal
+edit launch icon properties and change x-terminal-emulator to be your preferred terminal
+ or
+create it with: sudo update-alternatives --config x-terminal-emulator
+
+)
+
 get_terminal=: 3 : 0
-p=. (shell'ps -o ''ppid='' -p $$')-.' ',LF
-p=. (shell'ps -o ''ppid='' -p ',p)-.' ',LF
-t=. shell'ps -o ''cmd='' -p ',p
-t=. ((t i.' '){.t)-.LF
-t=. ;('/'={.t){t;'gnome-terminal' NB. kludge /.../gnome-terminal-server 
+t=. 'x-terminal-emulator'
+if. 0=shell :: 0:'which ',t do. echo lter end.
+t
 )
 
 Linux=: 3 : 0

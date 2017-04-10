@@ -631,7 +631,9 @@ if. AUTO do.
  try.
   select. UNAME
   case. 'Win'    do. shell_jtask_'start ',url
-  case. 'Linux'  do. 2!:0 'firefox ',url,' >/dev/null &' NB. x-www-browser or xdg-open
+  case. 'Linux'  do.
+   t=. ;(0-:shell :: 0:'which x-www-browserx'){'x-www-browser';'firefox'
+   2!:0 t,' ',url,' >/dev/null &'
   case. 'Darwin' do. 2!:0'open ',url,' &'
   end.
  catch.
