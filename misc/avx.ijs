@@ -28,7 +28,7 @@ x I.@:e. y
 
 version=: 1 NB. compare only same version
 types=: ;:'intsr intbr char float float0'
-counts=: '1e7 1e3';'1e5 1e3'
+counts=: (UNAME-:'Android'){:: ('1e7 1e3';'1e5 1e3') ,&< ('1e6 1e3';'1e5 1e3')
 mtimes=: 3 NB. multiple times to run a test
 NB. mtimes=: 1 NB.!
 
@@ -41,6 +41,8 @@ case. 'Win' do.
  dltb;1{<;._2 CR-.~shell'wmic cpu get name'
 case. 'Darwin' do.
  shell'sysctl -n machdep.cpu.brand_string'
+case. 'Android' do.
+ LF-.~ 2!:0 'getprop ro.product.model'
 end. 
 )
 
