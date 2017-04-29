@@ -129,17 +129,29 @@ a=. ;5{new
 b=. ;5{old
 d=. 5j1":each<"0 >b%each a
 d=. d,.<;._2 tests
+if. IFJHS do.
 r=. r,LF,seebox_jhs_ (types,<'test'),d
+else.
+r=. r,LF, , ,&LF"1 ~.":(types,<'test'),d
+end.
 r=. r,LF,'   ''type'' set ',":;1{counts
 a=. ;6{new
 b=. ;6{old
 d=. 4j1":each<"0 >b%each a
 d=. d,.<;._2 tests
+if. IFJHS do.
 r=. r,LF,seebox_jhs_ (types,<'test'),d
+else.
+r=. r,LF, , ,&LF"1 ~.":(types,<'test'),d
+end.
 r=. r,LF,'   ''type'' set ''1e3'''
 a=. ;7{new
 b=. ;7{old
 d=. ;:'mmint mmfloat mmcomplex test'
 d=. d,:(4j1":each<"0 b%a),<'a +/ . * b'
+if. IFJHS do.
 r=. r,LF,seebox_jhs_ d
+else.
+r=. r,LF, , ,&LF"1 ~.":d
+end.
 )
