@@ -207,6 +207,28 @@ if. 'NB.spxhr:'-:9{.deb d do.
  goto_top.
 end.
 
+if. 'NB.spxhtml:'-:11{.deb d do.
+ SEMN=:>:SEMN
+ d=. 11}.d
+ if. IFJHS do.
+  jhtml_jhs_ d
+ else.
+  echo 'html: ',d
+ end.
+ goto_top.
+end.
+
+if. 'NB.spxlatex:'-:12{.deb d do.
+ SEMN=:>:SEMN
+ d=. 12}.d
+ if. IFJHS do.
+  jhtml_jhs_'<img src="http://latex.codecogs.com/svg.latex?',d,'" border="0"/>'
+ else.
+  echo 'latex: ',d
+ end.
+ goto_top.
+end.
+
 if. iscolon d do. NB. collect : lines
  ot=. 1
  c=. (dltb each ndx}.SEM) i. <,')'

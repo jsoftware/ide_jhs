@@ -12,6 +12,8 @@ so you can read along as spx steps through
 
 edit'~addons/ide/jhs/spx/spx.ijs'
 
+require'plot'
+
 NB. : to ) lines display in a single advance
 f=: 3 : 0
 *:y
@@ -42,6 +44,16 @@ NB.   display in a single advance
 next advance is =: although the script line is =.
 )
 a=. 5
+
+NB.spxhtml:<div><font style="color:red;font-size:32px;font-style:italic;">html, latex, and plots can be included</font></div>
+
+NB.spxlatex:1+sin(x)
+
+NB.spxlatex:^2+y^2+z^2
+
+NB.spxlatex:\frac{1+sin(x)}{x^3}
+
+plot 20?20
 
 0 : 0
 often scripts need to be stepped through in order
