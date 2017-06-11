@@ -148,7 +148,7 @@ r=. r,LF,'   ''type'' set ''1e3'''
 a=. ;7{new
 b=. ;7{old
 d=. ;:'mmint mmfloat mmcomplex test'
-d=. d,((0j1":each<"0 b%a),(<'a +/ . * b')),:(0j1":each<"0 (2 2 6)*(1e3^3)%a*1e9),<'GFlop'
+d=. d,((0j1":each<"0 b%a),(<'a +/ . * b')),:(0j1":each<"0 (2 2 6)*(1e3^3)%a*1e9),<'GFlops'
 if. IFJHS do.
 r=. r,LF,seebox_jhs_ d
 else.
