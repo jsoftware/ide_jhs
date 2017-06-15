@@ -7,8 +7,8 @@ HBS=: 0 : 0
 login
 '<MSG>'
 jhtablea
- jhtr 'user: '    ;'user' jhtext'';15
- jhtr 'password: ';'pass' jhpassword'';15
+ jhtr 'user: ';'user' jhtext'';15
+ jhtr 'pswd: ';'pass' jhpassword'';15
 jhtablez
 'login'jhb'login'
 loggedin
@@ -40,24 +40,16 @@ form{margin:20px;}
 )
 
 count=: 0
-logins=: ''
 
 jev_get=: create
 
 ev_login_click=: create
 
-invalid=: 0 : 0
-<span style="color:red;">Invalid login (<COUNT>).<br>
-Check with system admin if you are unable to login.
-</span><br><br>
-)
-
-getmessage=: 3 : 0
->(count>0){'';invalid hrplc 'COUNT';":count
-)
+invalid=: '<span style="color:red;">Invalid login COUNT.</span><br><br>'
 
 expires=: 'jcookie=; Mon, 1-Jan-2000 00:00:00 GMT;'
 
+NB. wierd as it runs through a 1st time with a failure to show the page the 1st time
 NB. called from core input if cookie required and not set
 NB. valid login   - goes to page and does SetCookie
 NB. invalid login - shows page with setcookie expires and no-cache
@@ -66,18 +58,17 @@ if. (-.URL-:'jlogin')*.-.URL-:'favicon.ico' do. GOURL=: URL end.
 NB.override formtmpl to stay on users desired url
 formtmpl=: formtmpl_jhs_ rplc '<LOCALE>';GOURL
 p=. PASS
-if. -.p-:PASS do. count=: 0 end. NB. new password resets count
 u=. getv'user'
 p=. getv'pass'
-logins=: logins,u,'/',p,LF
-if. (count<:LIMIT)*.(u-:USER)*.p-:PASS do.
+if. (0~:#PASS)*.(u-:USER)*.p-:PASS do.
  count=: 0
  SETCOOKIE_jhs_=: 1
  PROMPT_jhs_=: '   '
  goto''
 else.
- count=: count+METHOD-:'post'
- b=. (jhbs HBS)hrplc 'MSG';getmessage''
+ if. count>3 do. 6!:3[3 end. NB. slow down pswd attack
+ b=. (jhbs HBS)hrplc 'MSG';(count>0)#invalid rplc 'COUNT';":<:count
+ count=: >:count
  t=. hrtemplate rplc (CRLF,CRLF);CRLF,'Cache-Control: no-cache',CRLF,CRLF
  t=. t rplc (LF,LF);LF,'Set-Cookie: ',expires,LF,LF
  htmlresponse t hrplc'TITLE CSS JS BODY';GOURL;(css CSS);(js JS);b
