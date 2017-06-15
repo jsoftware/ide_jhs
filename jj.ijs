@@ -1,27 +1,36 @@
-NB. jjhs client code
+NB. jj (j to jhs) client code
 
 0 : 0
 verbs used on the client
 
-sentence jhsdo  y
-target   jhsget source
-target   jhsput source
+         jjset 'ip:port password'
+sentence jjdo  y
+target   jjget source
+target   jjput source
 
-source/target must be 2 files or 2 folders
+if source is a filename, it is copied to the target filename (replaces)
+
+if source is a folder, it is copied to the target folder (replaces)
 )
 
 require'socket'
 require'tar'
 
-jhsdo=:     jhsdo_jjhs_
-jhsget=:    jhsget_jjhs_
-jhsput=:    jhsput_jjhs_
+jjset=:    jjset_jj_
+jjdo=:     jjdo_jj_
+jjget=:    jjget_jj_
+jjput=:    jjput_jj_
 
-coclass'jjhs'
+coclass'jj'
 
-PASS=: ''
-SERVER=: 'localhost:65001'
-URL=: 'jjhsserver'
+3 : 0''
+if. _1=nc<'SERVER' do.
+ PASS=: ''
+ SERVER=: 'localhost:65001'
+end.
+)
+ 
+URL=: 'jjserver'
 TAR=: '~temp/jtoj.tar'
 
 posttemplate=: _2}.toCRLF 0 : 0
@@ -32,7 +41,14 @@ Content-Length: <COUNT>
 <DATA>
 )
 
-jhsdo=: 4 : 0
+jjset=: 3 : 0
+d=. <;._1 ' ',deb y
+'argument not: ip:port pass'assert 2=#d
+'SERVER PASS'=: d
+i.0 0
+)
+
+jjdo=: 4 : 0
 data=. PASS,({.a.),x,({.a.),3!:1 y
 i=. SERVER i. ':'
 port=. 0".}.i}.SERVER
@@ -85,16 +101,16 @@ if. '|'={.d do. d assert 0 end. NB. error - plain text starting with |
 )
 
 NB. source is there and we are getting it here
-jhsget=: 4 : 0
+jjget=: 4 : 0
 target=. x [ source=. y
-select. ftype source
+select. 'ftype y'jjdo source
 case. 1 do.
- d=. 'fread y' jhsdo source
+ d=. 'fread y' jjdo source
  mkdir_j_ (target i: '/'){.target NB. ensure path
  'write to target failed'assert (#d)=d fwrite target
 case. 2 do.
- 'tar y'jhsdo 'c';TAR;source;''
- d=. 'fread y' jhsdo TAR
+ 'tar y'jjdo 'c';TAR;source;''
+ d=. 'fread y' jjdo TAR
  d fwrite TAR
  mkdir_j_ target
  tar 'x';TAR;target
@@ -104,18 +120,37 @@ end.
 )
 
 NB. source is here and we are putting it there
-jhsput=: 4 : 0
+jjput=: 4 : 0
 target=. x [ source=. y
 select. ftype source
 case. 1 do.
  d=. fread source
- 'mkdir_j_ y' jhsdo (target i: '/'){.target NB. ensure path
- ('y fwrite ''',target,'''') jhsdo d
+ 'mkdir_j_ y' jjdo (target i: '/'){.target NB. ensure path
+ ('y fwrite ''',target,'''') jjdo d
 case. 2 do.
  tar 'c';TAR;source;''
- '(>{.y) fwrite {:y' jhsdo TAR;fread TAR
- 'tar y' jhsdo 'x';TAR;target
+ '(>{:y) fwrite {.y' jjdo TAR;fread TAR
+ 'tar y' jjdo 'x';TAR;target
 case. do.
  'source is not a file or folder'assert 0
 end. 
 )
+
+NB. simple test for jjput/jjget - run on same machine
+test=: 3 : 0
+mkdir_j_'~temp/jj'
+ferase {."1 fdir'~temp/jjx*'
+ferase {."1 fdir'~temp/jjy/*'
+ferase {."1 fdir'~temp/jjz/*'
+'abc'fwrite'~temp/jjx/a'
+'~temp/jj/b'jjput'~temp/jjx/a'
+'~temp/jj/c'jjget'~temp/jjx/b'
+assert fexist (<'~temp/jjx/'),each ;:'a b c'
+
+'~temp/jjy'jjput'~temp/jjx'
+assert fexist (<'~temp/jjy/'),each ;:'a b c'
+'~temp/jjz'jjget'~temp/jjy'
+assert fexist (<'~temp/jjz/'),each ;:'a b c'
+)
+
+

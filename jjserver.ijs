@@ -3,19 +3,19 @@ NB. j to jhs server
 0 : 0
 
 JHS task
-   load'~addons/ide/jhs/jjhsserver.ijs'
-   OKURL_jhs_=: 'jjhsserver'
-   PASS_jjhsserver_=: 'fubar' NB. client request must match
+   load'~addons/ide/jhs/jjserver.ijs'
+   OKURL_jhs_=:     'jjserver'
+   PASS_jjserver_=: 'fubar'
    
 Other J task
-   load'~addons/ide/jhs/jjhs.ijs'
-   PASS_jjhs_=: 'fubar'
+   load'~addons/ide/jhs/jj.ijs'
+   PASS_jj_=: 'fubar'
    'i.y'jhsdo 5
 )   
 
 require'tar'
 
-coclass'jjhsserver'
+coclass'jjserver'
 coinsert'jhs'
 
 PASS=: ''
