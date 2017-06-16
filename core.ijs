@@ -42,22 +42,17 @@ useful stab poke if confused.
 
 *** login/bind/cookie/security overview
 
-Listening socket can bind localhost or any. What about lan?
-
-Localhost is relatively secure.
-Firewalls provide some any protection.
-
-Localhost is relatively secure and gains little from login.
-
-Non-localhost should require a login.
-
-Login is provided by a cookie.
-The cookie is set in the response to providing a password.
-That cookie is then included in the header of all requests
-and is validated by the server.
-
-The cookie is non-persistent and is deleted when browser closes.
-New tabs do not need to login, but a new browser does.
+listening socket binds to any
+localhost is relatively secure
+firewalls provide protection
+localhost is relatively secure and would gain little from login
+tunnel to localhost provides good security
+non-localhost requires a login
+login is provided by a cookie
+cookie set in the response to providing a valid password
+cookie is then included in the header of all requests - validated by server
+cookie is non-persistent and is deleted when browser closes.
+tabs do not need to login, but a new browser does.
 
 *** app overview
 URL == APP == LOCALE
@@ -152,7 +147,7 @@ if. _1~:SKSERVER do. try. ".'urlresponse_',URL,'_ y' catch. end. end. NB. jijx
 if. _1~:SKSERVER do. jbad'' end.
 getdata'' NB. get and parse http request
 if. 1=NVDEBUG do. smoutput seebox NV end. NB. HNV,NV
-if. (-.(<URL)e.boxopen OKURL)*.(0~:#PASS)*.(1~:+/cookie E. gethv'Cookie:')*.-.LHOK*.PEER-:LOCALHOST
+if. -. ((<URL)e.boxopen OKURL)+.(cookie-:gethv'Cookie:')+.PEER-:LOCALHOST
                        do. r=. 'jev_get_jlogin_ 0'
 elseif. 1=RAW          do. r=. 'jev_post_raw_',URL,'_'''''
 elseif. 'post'-:METHOD do. r=. getv'jdo'
@@ -453,14 +448,7 @@ J HTTP Server - init OK
 
 Ctrl+c here signals an interrupt to J.
 
-<REMOTE>
 Browse to: http://<LOCAL>:<PORT>/jijx
-)
-
-remoteaccess=: 0 : 0
-
-Access from another machine:
-   http://SERVER_IP_ADDRESS:<PORT>/jijx
 )
 
 console_failed=: 0 : 0
@@ -479,8 +467,6 @@ See file "~addons/ide/jhs/config/jhs.cfg" on using another PORT.
 NB. html config parameters
 configdefault=: 3 : 0
 PORT=: 65001       NB. private port range 49152 to 65535
-LHOK=: 1           NB. 0 if localhost requires user/pass login
-BIND=: 'localhost' NB. 'any'  - access from any machine
 USER=: ''          NB. 'john' - login
 PASS=: ''          NB. 'abra' - login
 TIPX=: ''          NB. tab title prefix - distinguish sessions
@@ -557,6 +543,15 @@ while.
 do. end.
 )
 
+addOKURL=: 3 : 0
+rmOKURL y
+OKURL=: OKURL,<y
+)
+
+rmOKURL=: 3 : 0
+OKURL=: OKURL-.<y
+)
+
 lcfg=: 3 : 0
 try. load jpath y catch. ('load failed: ',y) assert 0 end.
 NB. current locale possibly changed
@@ -568,8 +563,6 @@ jhscfg=: 3 : 0
 configdefault''
 if. 3=nc<'config' do. config'' end.
 'PORT invalid' assert (PORT>49151)*.PORT<2^16
-'BIND invalid' assert +./(<BIND)='any';'localhost'
-'LHOK invalid' assert +./LHOK=0 1
 'PASS invalid' assert 2=3!:0 PASS
 if. _1=nc<'USER' do. USER=: '' end. NB. not in JUM config
 'USER invalid' assert 2=3!:0 USER
@@ -581,7 +574,6 @@ TIPX=: TIPX,(0~:#TIPX)#'/'
 'TIPX invalid' assert 2=3!:0 TIPX
 if. _1=nc<'TARGET' do. TARGET=: '_blank' end.
 if. _1=nc<'OKURL' do. OKURL=: '' end. NB. URL allowed without login
-BIND=: >(BIND-:'any'){'127.0.0.1';''
 )
 
 NB. SO_REUSEADDR allows server to kill/exit and restart immediately
@@ -605,7 +597,7 @@ PDFOUTPUT=: 'output pdf "',(jpath'~temp\pdf\plot.pdf'),'" 480 360;'
 DATAS=: ''
 PS=: '/'
 cfgfile=. jpath'~addons/ide/jhs/config/jhs_default.ijs'
-r=. dobind BIND
+r=. dobind''
 if. r=10048 do.
  echo console_failed hrplc 'PORT';":PORT
  'JHS init failed'assert 0
@@ -614,14 +606,9 @@ sdcheck_jsocket_ r
 sdcheck_jsocket_ sdlisten_jsocket_ SKLISTEN,5 NB. queue length
 SKSERVER_jhs_=: _1
 boxdraw_j_ PC_BOXDRAW
-remote=. >(BIND-:''){'';remoteaccess hrplc 'PORT';":PORT
-smoutput console_welcome hrplc 'PORT LOCAL REMOTE';(":PORT);LOCALHOST;remote
+smoutput console_welcome hrplc 'PORT LOCAL';(":PORT);LOCALHOST
 startupjhs''
-if. 0~:#PASS do.
- cookie=: 'jcookie=',0j4":{:6!:0''
-else.
- cookie=: ''
-end.
+cookie=: 'jcookie=',":{:6!:0''
 input_jfe_=: input_jhs_  NB. only use jfe locale to redirect input/output
 output_jfe_=: output_jhs_
 jfe 1
@@ -732,17 +719,28 @@ Connection: Keep-Alive
 
 )
 
+NB. return first ip address that is not localhost
 getlanip=: 3 : 0
 if. IFWIN do.
- r=. dltb each<;._2 spawn_jtask_'ipconfig'
- r=. ;{.(;(<'IPv4 Address')=12{.each r)#r
- dltb(>:r i.':')}.r
-else.
- r=. dltb each<;._2[2!:0'ifconfig'
- r=. ;{.(;(<'inet addr:')=10{.each r)#r
- r=. (>:r i.':')}.r
- dltb (r i.' '){.r
-end. 
+ r=. deb each<;._2 spawn_jtask_'ipconfig'
+ r=. ((<'IPv4 Address')=12{.each r)#r
+ r=. (>:;r i.each':')}.each r
+elseif. UNAME-:'Darwin' do.
+ r=. <;._2[2!:0'ifconfig'
+ r=. deb each r rplc each <TAB;' ' 
+ r=. ((<'inet ')=5{.each r)#r
+ r=. 5}.each r
+elseif. 1 do.
+ r=. deb each<;._2[2!:0'ifconfig'
+ r=. ((<'inet addr:')=10{.each r)#r
+ r=. 10}.each r
+end.
+r=. deb each r
+r=. deb each(r i.each' '){.each r
+r=. r-.<'127.0.0.1'
+'no lan ip' assert 0<#r
+if. 1<#r do. echo 'multiple lan ips: ',;LF,~each' ',each r end.
+;{.r
 )
 
 getexternalip=: 3 : 0
