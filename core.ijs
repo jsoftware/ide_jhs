@@ -739,7 +739,7 @@ r=. deb each r
 r=. deb each(r i.each' '){.each r
 r=. r-.<'127.0.0.1'
 'no lan ip' assert 0<#r
-if. 1<#r do. echo 'multiple lan ips: ',;LF,~each' ',each r end.
+if. 1<#r do. echo 'multiple lan ips: ',LF,;LF,~each' ',each r end.
 ;{.r
 )
 
