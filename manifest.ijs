@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.294'
+VERSION=: '1.0.295'
 
 FILES=: 0 : 0
 history.txt
@@ -28,8 +28,8 @@ jgcp.ijs
 jhelp.ijs
 jijs.ijs
 jijx.ijs
-jjhs.ijs
-jjhsserver.ijs
+jj.ijs
+jjserver.ijs
 jlogin.ijs
 jum.ijs
 sp.ijs
