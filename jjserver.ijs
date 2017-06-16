@@ -1,24 +1,20 @@
 NB. j to jhs server
 
 0 : 0
-
-JHS task
+JHS jjserver task
    load'~addons/ide/jhs/jjserver.ijs'
-   OKURL_jhs_=:     'jjserver'
-   PASS_jjserver_=: 'fubar'
+   init_jjserver_ 'pwsd'
    
-Other J task
+J jj client task
    load'~addons/ide/jhs/jj.ijs'
-   PASS_jj_=: 'fubar'
-   'i.y'jhsdo 5
+   jjset 'ip:port pswd'
+   '~temp/f.ijs' jhsget '~temp/g.ijs'
 )   
 
 require'tar'
 
 coclass'jjserver'
 coinsert'jhs'
-
-PASS=: ''
 
 jev_post_raw=: 3 : 0
 
@@ -33,11 +29,17 @@ try.
  d=. (>:i)}.d
  erase'y' NB. so do will see the global
  y__=: 3!:2 d
-echo 'try';s;y__
  r=. 3!:1 do__ s
 catch.
  r=. 13!:12''
 end. 
 'jbin' gsrcf r
 erase'y__'
+i.0 0
+)
+
+init=: 3 : 0
+PASS=: y
+addOKURL_jhs_'jjserver'
+'client access with: jjset ''',(getlanip''),':',(":PORT),' ',PASS,''''
 )

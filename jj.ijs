@@ -1,12 +1,10 @@
 NB. jj (j to jhs) client code
 
 0 : 0
-verbs used on the client
-
-         jjset 'ip:port password'
-sentence jjdo  y
+         jjset 'ip:port pswd'
 target   jjget source
 target   jjput source
+sentence jjdo  y
 
 if source is a filename, it is copied to the target filename (replaces)
 
@@ -23,13 +21,6 @@ jjput=:    jjput_jj_
 
 coclass'jj'
 
-3 : 0''
-if. _1=nc<'SERVER' do.
- PASS=: ''
- SERVER=: 'localhost:65001'
-end.
-)
- 
 URL=: 'jjserver'
 TAR=: '~temp/jtoj.tar'
 
@@ -49,6 +40,7 @@ i.0 0
 )
 
 jjdo=: 4 : 0
+'jjset required to set ip:port pswd'assert 0=nc<'SERVER'
 data=. PASS,({.a.),x,({.a.),3!:1 y
 i=. SERVER i. ':'
 port=. 0".}.i}.SERVER

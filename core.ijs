@@ -543,6 +543,15 @@ while.
 do. end.
 )
 
+addOKURL=: 3 : 0
+rmOKURL y
+OKURL=: OKURL,<y
+)
+
+rmOKURL=: 3 : 0
+OKURL=: OKURL-.<y
+)
+
 lcfg=: 3 : 0
 try. load jpath y catch. ('load failed: ',y) assert 0 end.
 NB. current locale possibly changed
@@ -710,17 +719,25 @@ Connection: Keep-Alive
 
 )
 
+NB. return first ip address that is not localhost
 getlanip=: 3 : 0
 if. IFWIN do.
- r=. dltb each<;._2 spawn_jtask_'ipconfig'
- r=. ;{.(;(<'IPv4 Address')=12{.each r)#r
- dltb(>:r i.':')}.r
-else.
- r=. dltb each<;._2[2!:0'ifconfig'
- r=. ;{.(;(<'inet addr:')=10{.each r)#r
- r=. (>:r i.':')}.r
- dltb (r i.' '){.r
-end. 
+ r=. deb each<;._2 spawn_jtask_'ipconfig'
+ r=. ((<'IPv4 Address')=12{.each r)#r
+ r=. (>:;r i.each':')}.each r
+elseif. UNAME-:'Darwin' do.
+ r=. <;._2[2!:0'ifconfig'
+ r=. deb each r rplc each <TAB;' ' 
+ r=. ((<'inet ')=5{.each r)#r
+ r=. 5}.each r
+elseif. 1 do.
+ r=. deb each<;._2[2!:0'ifconfig'
+ r=. ((<'inet addr:')=10{.each r)#r
+ r=. 10}.each r
+end.
+r=. deb each(r i.each' '){.each r
+r=. r-.<'127.0.0.1'
+;{.r
 )
 
 getexternalip=: 3 : 0
