@@ -541,10 +541,10 @@ function ev_body_load(){
 
 INC=: 0 : 0
 ~addons/ide/jhs/js/jquery/smoothness/jquery-ui.custom.css
-~addons/ide/jhs/js/jquery-ui-1.12.1.hc2-custom/jquery-ui.min.css"
-~addons/ide/jhs/js/jquery-ui-1.12.1.hc2-custom/jquery-ui.theme.min.css
-~addons/ide/jhs/js/jquery-ui-1.12.1.hc2-custom/jquery-3.2.1.min.js
-~addons/ide/jhs/js/jquery-ui-1.12.1.hc2-custom/jquery-ui.min.js
+~addons/ide/jhs/js/jquery-ui-1.12.1.hc3-custom/jquery-ui.min.css"
+~addons/ide/jhs/js/jquery-ui-1.12.1.hc3-custom/jquery-ui.theme.min.css
+~addons/ide/jhs/js/jquery-ui-1.12.1.hc3-custom/jquery-3.2.1.min.js
+~addons/ide/jhs/js/jquery-ui-1.12.1.hc3-custom/jquery-ui.min.js
 )
 
 'cobrowser'cojhs ''
