@@ -39,6 +39,7 @@ i.0 0
 )
 
 init=: 3 : 0
+'bad password'assert (2=3!:0 y)*.(1=$$y)*.1<#y
 PASS=: y
 addOKURL_jhs_'jjserver'
 'client access with: jjset ''',(getlanip''),':',(":PORT),' ',PASS,''''

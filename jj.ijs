@@ -1,16 +1,5 @@
 NB. jj (j to jhs) client code
 
-0 : 0
-         jjset 'ip:port pswd'
-target   jjget source
-target   jjput source
-sentence jjdo  y
-
-if source is a filename, it is copied to the target filename (replaces)
-
-if source is a folder, it is copied to the target folder (replaces)
-)
-
 require'socket'
 require'tar'
 
@@ -92,40 +81,45 @@ if. '|'={.d do. d assert 0 end. NB. error - plain text starting with |
 3!:2 d
 )
 
-NB. source is there and we are getting it here
-jjget=: 4 : 0
+jjget=: 3 : 0
+y jjget~ (y i:'/'){.y
+:
 target=. x [ source=. y
-select. 'ftype y'jjdo source
-case. 1 do.
+st=. 'ftype y'jjdo source
+'source is not a file or folder'assert 0~:st
+mkdir_j_ target
+'target is not a folder'assert 2=ftype target
+t=. target,(source i:'/')}.source
+if. 1=st do.
  d=. 'fread y' jjdo source
- mkdir_j_ (target i: '/'){.target NB. ensure path
- 'write to target failed'assert (#d)=d fwrite target
-case. 2 do.
+ 'write to target failed'assert (#d)=d fwrite t
+else.
  'tar y'jjdo 'c';TAR;source;''
  d=. 'fread y' jjdo TAR
  d fwrite TAR
- mkdir_j_ target
- tar 'x';TAR;target
-case. do.
- 'source is not a file or folder'assert 0
-end. 
+ tar 'x';TAR;t
+end.
+'OK'
 )
 
-NB. source is here and we are putting it there
-jjput=: 4 : 0
+jjput=: 3 : 0
+y jjput~ (y i:'/'){.y
+:
 target=. x [ source=. y
-select. ftype source
-case. 1 do.
+st=. ftype source
+'source is not a file or folder'assert 0~:st
+'mkdir_j_ y' jjdo target
+'target is not a folder'assert 2='ftype y'jjdo target
+t=. target,(source i:'/')}.source
+if. 1=st do.
  d=. fread source
- 'mkdir_j_ y' jjdo (target i: '/'){.target NB. ensure path
- ('y fwrite ''',target,'''') jjdo d
-case. 2 do.
+ ('y fwrite ''',t,'''') jjdo d
+else.
  tar 'c';TAR;source;''
  '(>{:y) fwrite {.y' jjdo TAR;fread TAR
- 'tar y' jjdo 'x';TAR;target
-case. do.
- 'source is not a file or folder'assert 0
+ 'tar y' jjdo 'x';TAR;t
 end. 
+'OK'
 )
 
 NB. simple test for jjput/jjget - run on same machine
@@ -145,4 +139,14 @@ assert fexist (<'~temp/jjy/'),each ;:'a b c'
 assert fexist (<'~temp/jjz/'),each ;:'a b c'
 )
 
+echo 0 : 0
+         jjset 'ip:port pswd'
+[target] jjget source
+[target] jjput source
+'...'    jjdo  y
 
+source is .../FILE or .../FOLDER
+to put in target folder
+
+elided target is ... from source
+)

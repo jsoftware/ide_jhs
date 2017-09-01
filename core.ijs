@@ -139,6 +139,12 @@ JIJSAPP=: 'jijs' NB. 'jijsm' for simple jijs editor
 PROMPT=: '   '
 JZWSPU8=: 226 128 139{a. NB. empty prompt kludge - &#8203; \200B
 
+NB. prevent child inherit - critical with fork
+cloexec=: 3 : 0
+if. -.IFUNIX do. return. end.
+((unxlib 'c'),' fcntl i i i i') cd y,F_SETFD_jsocket_,FD_CLOEXEC_jsocket_
+)
+
 NB. J needs input - y is prompt - '' '   ' '      '
 input=: 3 : 0
 logapp 'jhs input prompt: ',":#y
@@ -235,7 +241,7 @@ getdata=: 3 : 0
 RAW=: 0
 while. 1 do.
  logapp 'getdata loop'
- SKSERVER_jhs_=: 0 pick sdcheck_jsocket_ sdaccept_jsocket_ SKLISTEN
+ cloexec SKSERVER_jhs_=: 0 pick sdcheck_jsocket_ sdaccept_jsocket_ SKLISTEN
 
  NB. JHS runs blocking sockets and uses sdselect for timeouts
  NB. sdioctl_jsocket_ SKSERVER,FIONBIO_jsocket_,1
@@ -524,11 +530,8 @@ end.
 
 dobind=: 3 : 0
 sdcleanup_jsocket_''
-SKLISTEN=: 0 pick sdcheck_jsocket_ sdsocket_jsocket_''
-if. IFUNIX do.
-  ((unxlib 'c'),' fcntl i i i i') cd SKLISTEN,F_SETFD_jsocket_,FD_CLOEXEC_jsocket_
-  sdsetsockopt_jsocket_ SKLISTEN;SOL_SOCKET_jsocket_;SO_REUSEADDR_jsocket_;2-1
-end.
+cloexec SKLISTEN=: 0 pick sdcheck_jsocket_ sdsocket_jsocket_''
+if. IFUNIX do.  sdsetsockopt_jsocket_ SKLISTEN;SOL_SOCKET_jsocket_;SO_REUSEADDR_jsocket_;2-1 end.
 sdbind_jsocket_ SKLISTEN;AF_INET_jsocket_;y;PORT
 )
 
@@ -577,7 +580,6 @@ if. _1=nc<'OKURL' do. OKURL=: '' end. NB. URL allowed without login
 )
 
 NB. SO_REUSEADDR allows server to kill/exit and restart immediately
-NB. FD_CLOEXEC prevents inheritance by new tasks (JUM startask)
 init=: 3 : 0
 'already initialized' assert _1=nc<'SKLISTEN'
 IFJHS_z_=: 1
