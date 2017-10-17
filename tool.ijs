@@ -131,46 +131,57 @@ labs are organized into categories
 run one of the following sentences:
 )
 
+getlabs=: 3 : 0
+LABFILES=: f=. ,{."1 dirtree'~addons/*.ijt'
+d=. (>:#jpath'~addons')}.each f
+d=. (;d i: each '/'){.each d
+b=. ;(<'labs/labs/')=10{.each d
+d=. (b*10)}.each d
+d=. (<'addons') ((-.b)#i.#d)}d
+LABCATS=: d
+t=. toJ each fread each f
+t=. (t i.each LF){.each t
+t=. (>:each t i.each ':')}.each t
+t=. t-.each ''''
+t=. deb each t
+LABTITLES=: t
+)
+
+NB. could be used to exclude labs - see exlabs.txt
+EXJHS=: 0 : 0
+)
+
 tool_labs=:3 : 0
 getlabs''
 if. 0=#LABCATS do.
  t=. 'No labs installed.',LF,'Do jal (pacman) labs/labs install and try again.'
 else.
  t=. tool_labs_txt
- d=. ~.LABCATS
- t=. t,;LF,~each(<'   lab '),each'''',~each'''',each d
+ d=. /:~~.LABCATS
+ t=. t,;LF,~each(<'   lablist_jijx_ '),each'''',~each'''',each d
 end.
 t
 )
 
-lab=: 3 : 0
-t=. dltb y
-alltitles=. dltb each (>:;LABTITLES i.each ':')}.each LABTITLES
-if. (#LABCATS)>LABCATS i. <t do. 
- titles=. (LABCATS = <t)#alltitles
- echo'run one of the following sentences:'
- echo ;LF,~each (<'   lab '),each'''',~each'''',each titles
- echo 'to advance, press ctrl+. or click menu > item'
-else.
- f=. LABFILES{~alltitles i. <t
- ADVANCE=: 'lab'
- require__'~addons/labs/labs/lab.ijs'
- ADVANCE_jlab_=: 'To advance, press ctrl+. or click menu > item.'
- smselout_jijs_=: smfocus_jijs_=: [ NB. allow introcourse to run
- labinit_jlab_ f
-end.
+lablist=: 3 : 0
+titles=. /:~(LABCATS = <dltb y)#LABTITLES
+echo'run one of the following sentences:'
+echo ;LF,~each (<'   labrun_jijx_ '),each'''',~each'''',each titles
 )
 
-lab_z_=: lab_jijx_
-
-labopen=: 3 : 0
-'c n'=. y
-f=. LABFILES{~<:n+LABCATS i. (<:c){~.LABCATS
+labrun=: 3 : 0
+f=. ;LABFILES{~LABTITLES i. <dltb y
+echo ;f
 ADVANCE=: 'lab'
 require__'~addons/labs/labs/lab.ijs'
+
+NB. restore spx
+spx__=:    spx_jsp_
+spx_jhs_=: spx_jsp_
+
 ADVANCE_jlab_=: 'To advance, press ctrl+. or click menu > item.'
 smselout_jijs_=: smfocus_jijs_=: [ NB. allow introcourse to run
-labinit_jlab_ f
+echo'JHS lab advance - ctrl+. or menu >'
+lab_jlab_ f
 )
 
-labopen_jhs_=: labopen_jijx_

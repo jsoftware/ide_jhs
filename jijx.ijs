@@ -80,27 +80,10 @@ uplog''
 'jijx' jhr 'LOG';LOG
 )
 
-getlabs=: 3 : 0
-LABTITLES=: LABCATS=: LABFILES=: ''
-t=. jpath'~addons/labs/labs'
-if. -.fexist t,'/lab.ijs' do. LABCATS=: LABFILES=:  LABTITLES=: ''  return. end.
-require__ t,'/lab.ijs'
-labaddons_jlab_''
-labs=. labgetfiles_jlab_''
-NB. klude - map Debug lab to be Core Language'
-i=. ({."1 labs)i.<'Debug'
-if. i<#labs do. labs=. (<'Core Language') (<i,0)}labs end.
-labs=. sort labs
-labs=. labs |.~ 0 i.~ ({."1 labs)=<'Addons'
-LABCATS=: 0{"1 labs
-LABFILES=: 2{"1 labs
-LABTITLES=: LABCATS ,each (<': ') ,each 1{"1 labs
-)
-
 ev_advance_click=: 3 : 0
 select. ADVANCE
 case. 'spx' do. spx__''
-case. 'lab' do. labnext_jlab_''
+case. 'lab' do. lab 0
 case.       do. echo 'no open lab/spx to advance'
 end.
 )
@@ -126,18 +109,6 @@ t=. t,'dbcutback'jhmab'dbcutback'
 t=. t,'dbrun'    jhmab'dbrun'
 t=. t,'dbnxt'    jhmab'dbnxt'
 )
-
-labopen=: 3 : 0
-'c n'=. y
-f=. LABFILES{~<:n+LABCATS i. (<:c){~.LABCATS
-ADVANCE=: 'lab'
-require__'~addons/labs/labs/lab.ijs'
-ADVANCE_jlab_=: 'To advance, press ctrl+. or click menu > item.'
-smselout_jijs_=: smfocus_jijs_=: [ NB. allow introcourse to run
-labinit_jlab_ f
-)
-
-labopen_jhs_=: labopen_jijx_
 
 rundemo_jhs_=: 3 : 0
 t=. 'jdemo',":y
