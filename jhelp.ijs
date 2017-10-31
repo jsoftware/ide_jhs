@@ -13,6 +13,7 @@ jev_get=: 3 : 0
 )
 
 jumps=: 0 : 0
+<a href="#shortcuts">shortcuts</a>&nbsp;
 <a href="#pop-up">pop-up</a>&nbsp;
 <a href="#close">close</a>&nbsp;
 <a href="#libraries">libraries</a>&nbsp;
@@ -32,6 +33,33 @@ A bit of time here will pay off down the road.</p>
 <p>Get started with the tour menu. Take the J 1 tour to learn a bit about J
 and be sure to take the plot tour. Play with the tool menu to learn more
 about JHS.</p>
+
+<a name="shortcuts"><h1>shortcuts</h1></a>
+ctrl+shift+up-arrow/dn-arrow to recall previous lines<br/>
+macOS conflict - ctrl+shift+&lt;/&gt; to recall previous lines<br/><br/>
+
+esc key escapes next key to be a shortcut.<br/>
+For example, esc j links to jijx page.<br/>
+Menu items document shortcuts on the right.<br/>
+esc 1 sets focus on menu.<br/>
+esc 2 sets focus to page default.
+
+<p>Mobile device may not have an esc key.
+Touch: s and slide to ß. Wireless: hold down option and press s.</p>
+
+Control shortcuts are supported for ,./<>? as they
+less likely conflict with the browser.<br/><br/>
+
+jijx ctrl+. is lab/spx advance.<br/><br/>
+
+Example of a custom jijx handler:
+<pre>   ev_comma_ctrl_jijx_=: 3 : 'i.5'</pre>
+
+Other pages require J and Javascript handlers. For example,
+<pre>
+ev_comma_ctrl=: 3 : 'i.5'
+function ev_comma_ctrl(){jdoajax([]);}
+</pre>
 
 <a name="pop-up"><h1>pop-up</h1></a>
 <p>Pop-up windows can be a plague when browsing ill-behaved sites.
@@ -176,30 +204,6 @@ as Windows Explorer or OSX Finder.
 
 <br><br><span class="h">jal</span>
 addons package manager (pacman) - download/install software packages
-
-<br><br><span class="h">keyboard shortcuts</span><br>
-esc key escapes next key to be a shortcut.<br/>
-For example, esc j links to jijx page.<br/>
-Menu items document shortcuts on the right.<br/>
-esc 1 sets focus on menu.<br/>
-esc 2 sets focus to page default.
-
-<p>Mobile device may not have an esc key.
-Touch: s and slide to ß. Wireless: hold down option and press s.</p>
-
-Control shortcuts are supported for ,./<>? as they
-less likely conflict with the browser.<br/><br/>
-
-jijx ctrl+. is lab/spx advance.<br/><br/>
-
-Example of a custom jijx handler:
-<pre>   ev_comma_ctrl_jijx_=: 3 : 'i.5'</pre>
-
-Other pages require J and Javascript handlers. For example,
-<pre>
-ev_comma_ctrl=: 3 : 'i.5'
-function ev_comma_ctrl(){jdoajax([]);}
-</pre>
 
 <a name="console"><h1>console</h1></a>
 The JHS jconsole window diplays useful information.<br><br>

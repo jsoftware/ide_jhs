@@ -575,7 +575,7 @@ function keypress(ev)
  
  var s= String.fromCharCode(c);
  if(!jsc)return true;
- jsc=0;
+  jsc=0;
  try{eval("ev_"+s+"_shortcut()");}
  catch(e){jdostdsc(s);}
  return false;
@@ -587,6 +587,11 @@ function keyup(ev)
  var c=e.keyCode;
  if(e.ctrlKey)
  {
+  if('MacIntel'==navigator.platform)
+  {
+   if(c==188&&e.shiftKey&&'function'==typeof uarrow){uarrow();return false;}
+   if(c==190&&e.shiftKey&&'function'==typeof darrow){darrow();return false;}
+  }
   if(c==188){jscdo(e.shiftKey?"less":"comma",undefined,"ctrl");return false;}
   if(c==190){jscdo(e.shiftKey?"larger":"dot",undefined,"ctrl");return false;}
   if(c==191){jscdo(e.shiftKey?"query":"slash",undefined,"ctrl");return false;}
