@@ -558,7 +558,6 @@ function jdostdsc(c)
   case 'j': window.open("jijx",TARGET);  break;
   case 'f': window.open("jfile",TARGET); break;
   case 'k': window.open("jfiles",TARGET); break;
-  case 'h': window.open("jhelp",TARGET); break;
   case 'J': window.open("jijs",TARGET); break;
   case 'F': window.open("jfif",TARGET); break;
  }
@@ -595,6 +594,8 @@ function keyup(ev)
   if(c==188){jscdo(e.shiftKey?"less":"comma",undefined,"ctrl");return false;}
   if(c==190){jscdo(e.shiftKey?"larger":"dot",undefined,"ctrl");return false;}
   if(c==191){jscdo(e.shiftKey?"query":"slash",undefined,"ctrl");return false;}
+  if(c==59){jscdo(e.shiftKey?"colon":"semicolon",undefined,"ctrl");return false;}
+  if(c==222){jscdo(e.shiftKey?"doublequote":"quote",undefined,"ctrl");return false;}
   if(c==220&&!e.shiftKey){jscdo("close");return false;} // ctrl+\
   if(c==38&&e.shiftKey&&'function'==typeof uarrow){uarrow();return false;}
   if(c==40&&e.shiftKey&&'function'==typeof darrow){darrow();return false;}

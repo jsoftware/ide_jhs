@@ -226,10 +226,11 @@ end.
 )
 
 NB. event handler called by js event
+NB. catch. changed to catchd. - december 2017 - for debug step with error
 jev=: 3 : 0
 try.
  ".t=. 'ev_',(getv'jmid'),'_',(getv'jtype'),' 0'
-catch.
+catchd.
  smoutput LF,'*** event handler error',LF,t,LF,(13!:12''),seebox NV
 end.
 )
@@ -654,7 +655,6 @@ jev_get_jfiles_=:  3 : (stub'jfiles')
 jev_get_jijs_=:    3 : (stub'jijs')
 jev_get_jfif_=:    3 : (stub'jfif')
 jev_get_jal_=:     3 : (stub'jal')
-jev_get_jhelp_=:   3 : (stub'jhelp')
 jev_get_jdemo_=:   3 : (stub'jdemo')
 jev_get_jlogin_=:  3 : (stub'jlogin')
 jev_get_jfilesrc_=:3 : (stub'jfilesrc')

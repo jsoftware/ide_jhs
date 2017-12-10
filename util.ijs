@@ -135,7 +135,7 @@ if. i<#a do.
  a=. (i{.a),jurlencode i}.a
 end.
 JWID=: b
-m=. a,' pop-up blocked\nadjust browser settings to allow localhost pop-up\nsee jhelp section pop-up'
+m=. a,' pop-up blocked\nadjust browser settings to allow localhost pop-up\nsee wiki JHS help pop-up section'
 jjs'w=window.open("","<Y>");if(null==w)alert("<M>");w.close();window.open("<X>","<Y>","<S>")'rplc '<X>';a;'<Y>';b;'<S>';s;'<M>';m
 )
 

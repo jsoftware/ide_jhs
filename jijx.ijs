@@ -5,7 +5,6 @@ coinsert'jhs'
 HBS=: 0 : 0
 jhma''
 jhjmlink''
-debugmenu''
 'tool'   jhmg'tool';1;7
  'table'   jhmab'table'
  'jd3'     jhmab'plot-d3'
@@ -21,17 +20,16 @@ debugmenu''
  'app'     jhmab'app'
  'labs'    jhmab'labs'
 'help'          jhmg'help';1;10
- 'helpjhs'       jhmab'JHS help'
+ 'helpwikijhs'   jhmab'wiki JHS'
+ 'helpwikinuvoc' jhmab'wiki nuvoc'
  'helphelp'      jhmab'help'
  'helpinfo'      jhmab'info'
  'helpvocab'     jhmab'vocabulary'
- 'helpwikinuvoc' jhmab'wiki nuvoc'
  'helpconstant'  jhmab'constant'
  'helpcontrol'   jhmab'control'
  'helpforeign'   jhmab'foreign'
  'helpdictionary'jhmab'dictionary'
  'helpstdlib'    jhmab'stdlib'
- 'helpwikijhs'   jhmab'wiki JHS'
  'about'         jhmab'about'
 'adv'jhmg '>';0;10
 jhmz''
@@ -96,18 +94,8 @@ ev_about_click=: 3 : 0
 jhtml'<hr/>'
 echo JVERSION
 echo' '
-echo'Copyright 1994-2016 Jsoftware Inc.'
+echo'Copyright 1994-2017 Jsoftware Inc.'
 jhtml'<hr/>'
-)
-
-debugmenu=: 3 : 0
-t=.   'debug'    jhmg'debug';1;9
-t=. t,'dbstep'   jhmab'dbstep    s^'
-t=. t,'dbstepin' jhmab'dbstepin  i^'
-t=. t,'dbstepout'jhmab'dbstepout o^'
-t=. t,'dbcutback'jhmab'dbcutback'
-t=. t,'dbrun'    jhmab'dbrun'
-t=. t,'dbnxt'    jhmab'dbnxt'
 )
 
 rundemo_jhs_=: 3 : 0
@@ -165,34 +153,6 @@ ev_spx_click=:  3 : 0
 'spx tour'tour'spx.ijs'
 )
 
-ev_dbstep_click=: 3 : 0
-echo'dbstep' try. dbstep'' catch. end. i.0 0
-)
-
-ev_dbstepin_click=: 3 : 0
-echo'dbstepin' try. dbstepin'' catch. end. i.0 0
-)
-
-ev_dbstep_click=: 3 : 0
-echo'dbstep' try. dbstep'' catch. end. i.0 0
-)
-
-ev_dbstepout_click=: 3 : 0
-echo'dbstepout' try. dbstepout'' catch. end. i.0 0
-)
-
-ev_dbcutback_click=: 3 : 0
-echo'dbcutback' try. dbcutback'' catch. end. i.0 0
-)
-
-ev_dbrun_click=: 3 : 0
-echo'dbrun' try. dbrun'' catch. end. i.0 0
-)
-
-ev_dbnxt_click=: 3 : 0
-echo'dbnxt' try. dbnxt'' catch. end. i.0 0
-)
-
 NB. default ctrl+,./ handlers
 ADVANCE=: 'none'
 ev_comma_ctrl =: 3 : 'sp__'''''
@@ -201,6 +161,18 @@ ev_slash_ctrl  =: 3 : 'i.0 0'
 ev_less_ctrl   =: 3 : 'i.0 0'
 ev_larger_ctrl =: 3 : 'i.0 0'
 ev_query_ctrl =: 3 : 'i.0 0'
+ev_semicolon_ctrl =:   3 : 'echo''semicolon'''
+ev_colon_ctrl =:       3 : 'echo''colon'''
+
+ev_quote_ctrl_jijx_=: 3 : 0
+if. -.'*'e.{."1[13!:18'' do. 'not suspended' return. end.
+dbstep''
+)
+
+ev_doublequote_ctrl =: 3 : 0
+if. -.'*'e.{."1[13!:18'' do. 'not suspended' return. end.
+dbstepin''
+)
 
 jhjmlink=: 3 : 0
 t=.   'jmlink' jhmg 'ide';1;12
@@ -209,6 +181,7 @@ t=. t,'jfiles' jhmab'jfiles   k^'
 t=. t,JIJSAPP  jhmab'jijs     J^'
 t=. t,'jfif'   jhmab'jfif     F^'
 t=. t,'jal'    jhmab'jal'
+t=. t,'jijx'   jhmab'jijx     j^'
 t=. t,'clearwindow'jhmab'clear window'
 t=. t,'clearrefresh'jhmab'clear refresh'
 t=. t,'clearLS'jhmab'clear LS'
@@ -469,8 +442,8 @@ function ev_jfiles_click(){linkclick("jfiles");}
 function ev_jfif_click(){linkclick("jfif");}
 function ev_jal_click(){linkclick("jal");}
 function ev_jijs_click(){jdoajax([]);}
+function ev_jijx_click(){linkclick("jijx");}
 
-function ev_helpjhs_click(){linkclick("jhelp")};
 function ev_helphelp_click(){linkclick("~addons/docs/help/index.htm")};
 function ev_helpinfo_click(){linkclick("~addons/docs/help/user/product.htm")};
 function ev_helpvocab_click(){linkclick("~addons/docs/help/dictionary/vocabul.htm")};
@@ -482,20 +455,15 @@ function ev_helpdictionary_click(){linkclick("~addons/docs/help/dictionary/conte
 function ev_helpstdlib_click(){linkclick("~addons/docs/help/user/library.htm")};
 function ev_helpwikijhs_click(){linkclick("http://code.jsoftware.com/wiki/Guides/JHS")};
 
-function ev_dbstep_click()   {jdoajax([]);}
-function ev_dbstepin_click() {jdoajax([]);}
-function ev_dbstepout_click(){jdoajax([]);}
-function ev_dbcutback_click(){jdoajax([]);}
-function ev_dbrun_click()    {jdoajax([]);}
-function ev_dbnxt_click()    {jdoajax([]);}
-function ev_s_shortcut(){jscdo("dbstep");}
-function ev_i_shortcut(){jscdo("dbstepin");}
-function ev_o_shortcut(){jscdo("dbstepout");}
 function ev_comma_ctrl(){jdoajax([]);}
 function ev_dot_ctrl(){jdoajax([]);}
 function ev_slash_ctrl(){jdoajax([]);}
 function ev_less_ctrl(){jdoajax([]);}
 function ev_larger_ctrl(){jdoajax([]);}
 function ev_query_ctrl(){jdoajax([]);}
+function ev_semicolon_ctrl(){jdoajax([]);}
+function ev_quote_ctrl(){jdoajax([]);}
+function ev_colon_ctrl(){jdoajax([]);}
+function ev_doublequote_ctrl(){jdoajax([]);}
 function ev_close_click(){window.close();} // close ignored if not opened by another window
 )

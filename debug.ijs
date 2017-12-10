@@ -4,91 +4,62 @@ coclass'jhs'
 tool_debug=: 0 : 0
 debug facilities:
  suspend execution at stop or error
- examine/modify locals
- step/stepin/stepout/etc
+ examine/modify locals - step/stepin/stepout/etc
  
-practice with simple test cases before you need it for real!
-   dbsd'calendar'     NB. show definition with line numbers
-   'jwatch;0 0'cojhs'dbsd''calendar''' NB. show in window
-   dbsm'calendar 0 : 3'  NB. stop on lines monadic 0 and dyadic 3
+ ctrl+'       - dbstep   - run and stop at next
+ crtl+"       - dbstepin - run and stop at next (may be in called name)
+ 
+ dbstepout''  - run and stop at next in caller
+ dbjump n     - run n and stop at next
+ dbrun''      - run and continue
+ dbnxt''      - run next line and continue
+ dbcutback''  - cut back 1 stack level and stop
+ dbes''       - formatted stack
+ dbstopedit'' - create temp script with stops
+ dbstopset''  - set stops from temp script
+ 
+practice before you need it for real!
+   dbsd'calendar'    NB. show definition with line numbers 
+ click monadic line 0 to set stop   
    dbr 1             NB. debug enabled
    calendar 1        NB. suspend at line 0 - note 6 space prompt
-   dbstepin''        NB. step into call of dyadic calendar
-   dbrun''           NB. run to stop or error - note stop on line 3
+   ctrl+"            NB. step into call of dyadic calendar
+   ctrl+'            NB. step to next line
    a                 NB. local value a
-   dbstep''          NB. step to next line
-   dbes''            NB. formatted stack display
-   dbrun''           NB. run - to end as there are no stops and no error
+   dbrun''           NB. run to end as no stops/error
    dbr 0             NB. debug disabled
-   dbsm'~calendar'   NB. remove all calendar stops
-   dbsm'help'        NB. documentation for db stop manager utility
 )
 
-dbsmhelp=: 0 : 0
-   dbsm'name ... : ...'  - add monadic : dyadic stops
-   dbsm'~...'            - remove stops starting with ...
-   dbsm''                - display stops
-)
+dbstoptxt=: '~temp/dbstop.txt'
 
 dbcutback_z_=: 13!:19
 dbstep_z_=:    13!:20
 dbstepin_z_=:  13!:21
 dbstepout_z_=: 13!:22
+dbjump__=: '' dbstep~ ]
 
-NB. display numbered explicit defn
 dbsd_z_=: 3 : 0
-if. -.1 2 3 e.~nc<y do. 'not an explicit definition' return. end.
-raw=. 5!:5<y
-t=.<;.2 LF,~raw
-if. 1=#t do. '0 ',raw return. end.
-i=.t i.<':',LF
-if. ('3'={.raw)*.i~:#t do.
- j=. (_1,i.<:i),_1,(i.<:<:(#t)-i),_1
-else.
- j=. _1,(i._2+#t),_1
-end.
-n=. ":each<"0 j
-n=. a: ((n=<'_1')#i.#n)} n
-n=. <"1 ' ',.~' ',.~>n
-;n,each t
+'jdebug;0 0'cojhs y
+i.0 0
 )
 
-NB. stop manager
-NB. dbsm'~...'     - remove stops starting with ...
-NB. dbsm'name n:n' - add stops
-NB. dbsm''         - display stops
-dbsm_z_=: 3 : 0
-if. 'help'-:dltb y do. dbsmhelp_jhs_ return. end.
-if.'~'={.y do.
- s=. deb each<;._2 (dbsq''),';'
- a=. }.y
- s=. (-.(<a)=(#a){.each s)#s
-else.
- s=. deb each<;._2 (dbsq''),y,';'
-end.
-s=. ~./:~(s~:a:)#s
-dbss ;s,each<' ; '
-dbsq''
-)
-
-NB. formatted execution stack
 dbes_z_=: 3 : 0
-t=. 2}.13!:18'' NB. stack less top entry for dbes
-len=. >./t i."1 ' '
-t=. |."2[t
-r=. ''
-while. #t do.
- d=. }.dtb{.t
- d=. (len>.#d){.d
- t=. }.t
- if. ' '~:1{d do.
-  n=. dltb}.{.t
-  if. 2~:#t do. n=. n rplc '    ';'' end.
-  r=. r,<d,n
-  t=. }.t
- else.
-  r=. r,<d rplc '    ';''
- end.
-end.
-'locale: _',(>coname''),'_',LF,;|.r,each LF
+'locale: _',(>coname''),'_',LF,;LF,~each dtb each<"1[2}.13!:18''
+)
+
+dbstopedit_z_=: 3 : 0
+t=. 13!:2''
+t=. ;deb each <;.2 t,';'#~';'~:{:t
+(t rplc ';';LF) fwrite dbstoptxt_jhs_
+edit dbstoptxt_jhs_
+)
+
+dbstopset_z_=: 3 : 0
+t=. LF,~fread dbstoptxt_jhs_
+t=. dltb each<;._2 t
+t=. t-.<''
+t=. t-.<,';'
+t=. ;LF,~each t
+13!:3 deb t rplc LF;' ; ';':';' : '
+i.0 0
 )

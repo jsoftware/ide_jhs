@@ -1,4 +1,4 @@
-NB. J HTTP Server - jhelp app
+NB. JHS - recent files
 coclass'jfiles'
 coinsert'jhs'
 

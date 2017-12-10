@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.302'
+VERSION=: '1.0.303'
 
 FILES=: 0 : 0
 app/app1.ijs
@@ -16,6 +16,7 @@ app/app4.ijs
 app/app5.ijs
 app/app6.ijs
 cojhs/jd3.ijs
+cojhs/jdebug.ijs
 cojhs/jhot.ijs
 cojhs/jtable.ijs
 cojhs/jwatch.ijs
@@ -49,7 +50,6 @@ jfile.ijs
 jfiles.ijs
 jfilesrc.ijs
 jgcp.ijs
-jhelp.ijs
 jijs.ijs
 jijx.ijs
 jj.ijs
