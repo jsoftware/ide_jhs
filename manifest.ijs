@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.304'
+VERSION=: '1.0.305'
 
 FILES=: 0 : 0
 app/app1.ijs
@@ -107,4 +107,4 @@ FILESWIN=: 0 : 0
 grep.exe
 )
 
-RELEASE=: 'j804 j805 j806 j807'
+RELEASE=: 'j805 j806 j807'

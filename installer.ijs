@@ -125,12 +125,24 @@ ferase f
 i.0 0
 )
 
-NB. Linux
+NB. Linux (Ubuntu)
 desktop=: 0 : 0
 [Desktop Entry]
 Version=1.0
 Type=Application
 Terminal=false
+Name=<N>
+Exec=<E>
+Path=<W>
+Icon=<I>
+)
+
+NB. Linux (RedHat and Centos)
+desktoprh=: 0 : 0
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=<TT>
 Name=<N>
 Exec=<E>
 Path=<W>
@@ -176,17 +188,37 @@ linux=: 3 : 0
 n=. type,N
 f=. L,type,N,DS
 c=. hostpathsep jpath '~bin/',bin
-if. type-:'jqt' do.
- e=. '"',c,'"'
+rh=. 1<#fread '/etc/redhat-release' 
+if. rh do.
+ if. type-:'jqt' do.
+  e=. c
+ else.
+  e=. c,' ',arg
+ end.
 else.
- e=. '<T> -e "\"<C>\"<A>"'rplc '<T>';(get_terminal'');'<C>';c;'<A>';arg
+ if. type-:'jqt' do.
+  e=. '"',c,'"'
+ else.
+  e=. '<T> -e "\"<C>\"<A>"'rplc '<T>';(get_terminal'');'<C>';c;'<A>';arg
+ end.
 end.
-r=. desktop rplc '<N>';n
-r=. r rplc '<E>';e
-r=. r rplc '<W>';W
-r=. r rplc '<I>';I,icon
-r fwrite f
-2!:0'chmod +x ',f
+
+if. rh do.
+ r=. desktoprh rplc '<N>';n
+ r=. r rplc '<E>';e
+ r=. r rplc '<W>';W
+ r=. r rplc '<I>';I,icon
+ r=. r rplc '<TT>';(type-:'jc'){'false';'true'
+ r fwrite f
+ 2!:0'chmod +x ',f
+else.
+ r=. desktop rplc '<N>';n
+ r=. r rplc '<E>';e
+ r=. r rplc '<W>';W
+ r=. r rplc '<I>';I,icon
+ r fwrite f
+ 2!:0'chmod +x ',f
+end.
 )
 
 NB. Darwin
