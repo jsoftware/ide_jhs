@@ -170,7 +170,8 @@ logapp'htmlresponse'
 NB. y 1!:2<jpath'~temp/lastreponse.txt'
 LASTTS=: 6!:1''
 putdata LASTRESPONSE=: y
-sdclose_jsocket_ SKSERVER
+shutdownJ_jsocket_ SKSERVER ; 2
+sdclose_jsocket_ ::0: SKSERVER
 SKSERVER_jhs_=: _1
 i.0 0 NB. nothing to display if final J result
 )
@@ -819,7 +820,8 @@ putdata chunk y
 NB.* jhrajax_b*jhrajax_z data - last chunk
 jhrajax_z=: 3 : 0
 putdata (chunk y),'0',CRLF,CRLF
-sdclose_jsocket_ SKSERVER
+shutdownJ_jsocket_ SKSERVER ; 2
+sdclose_jsocket_ ::0: SKSERVER
 SKSERVER_jhs_=: _1
 )
 

@@ -297,7 +297,8 @@ URL=: jurldecode}.(<./t i.' ?'){.t=. gethv y
 
 serror=: 4 : 0
 if. y do.
- sdclose_jsocket_ SKSERVER
+ shutdownJ_jsocket_ SKSERVER ; 2
+ sdclose_jsocket_ ::0: SKSERVER
  logapp x
  x 13!:8[3
 end.
@@ -540,7 +541,8 @@ nextport=: 3 : 0
 while.
  PORT=: >:PORT
  r=.dobind y
- sdclose_jsocket_ SKLISTEN
+ shutdownJ_jsocket_ SKLISTEN ; 2
+ sdclose_jsocket_ ::0: SKLISTEN
  sdcleanup_jsocket_''
  erase'SKLISTEN_jhs_'
  10048=r
@@ -623,8 +625,8 @@ if. AUTO do.
   case. 'Win'    do. shell_jtask_'start ',url
   case. 'Linux'  do.
    if. (0;'') -.@e.~ <2!:5 'DISPLAY' do.
-    t=. ;(0-:shell :: 0:'which x-www-browser'){'x-www-browser';'firefox'
-    2!:0 t,' ',url,' >/dev/null &'
+    t=. ;(0-:(2!:0) :: 0:'which x-www-browser 2>/dev/null'){'x-www-browser';'firefox'
+    2!:1 t,' ',url,' >/dev/null 2>&1 &'
    end.
   case. 'Darwin' do. 2!:0'open ',url,' &'
   end.
@@ -700,11 +702,13 @@ try.
   end.
  end.
 catch.
- sdclose_jsocket_ sk
+ shutdownJ_jsocket_ sk ; 2
+ sdclose_jsocket_ ::0: sk
  smoutput 13!:12''
  'get error' assert 0
 end.
-sdclose_jsocket_ sk
+shutdownJ_jsocket_ sk ; 2
+sdclose_jsocket_ ::0: sk
 h;d
 )
 
@@ -765,3 +769,16 @@ if. ('255.255.255.255'-:z) +. ('127.0.'-:6{.z) +. '192.168.'-:8{.z do.
 end.
 z
 )
+
+NB. shutdown JHS
+NB. y: integer return code for 2!:55
+NB.    ''  just shutdown JHS, J not exit
+shutdown=: 3 : 0
+ shutdownJ_jsocket_ SKLISTEN ; 2
+ sdclose_jsocket_ ::0: SKLISTEN
+ sdcleanup_jsocket_''
+ erase'SKLISTEN'
+ IFJHS_z_=: 0
+ jfe 0
+ 2!:55^:(''-.@-:y)y
+) 

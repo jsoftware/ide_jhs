@@ -72,10 +72,12 @@ try.
   end.
  end.
 catch.
- sdclose_jsocket_ sk
+ shutdownJ_jsocket_ sk ; 2
+ sdclose_jsocket_ ::0: sk
  (13!:12'') assert 0
 end.
-sdclose_jsocket_ sk
+shutdownJ_jsocket_ sk ; 2
+sdclose_jsocket_ ::0: sk
 
 if. '|'={.d do. d assert 0 end. NB. error - plain text starting with |
 3!:2 d
