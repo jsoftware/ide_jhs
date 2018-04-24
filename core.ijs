@@ -478,7 +478,7 @@ PORT=: 65001       NB. private port range 49152 to 65535
 USER=: ''          NB. 'john' - login
 PASS=: ''          NB. 'abra' - login
 TIPX=: ''          NB. tab title prefix - distinguish sessions
-AUTO=: 1           NB. startup browse to http:/localhost:PORT/jijx
+AUTO=: (UNAME-:'Linux')*:0-:2!:5'DISPLAY'  NB. startup browse to http:/localhost:PORT/jijx
 
 PC_FONTFIXED=:     '"courier new","courier","monospace"'
 PC_FONTVARIABLE=:  '"sans-serif"'
