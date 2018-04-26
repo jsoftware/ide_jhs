@@ -107,4 +107,6 @@ FILESWIN=: 0 : 0
 grep.exe
 )
 
-RELEASE=: 'j805 j806 j807'
+RELEASE=: 'j805'
+
+FOLDER=: 'ide/jhs'
