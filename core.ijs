@@ -259,6 +259,14 @@ while. 1 do.
   d=. i}.h
   h=. i{.h
   parseheader h
+  if. '100-continue'-:gethv'Expect:' do.
+   hr=. 'HTTP/1.1 100 Continue',CRLF,CRLF    NB. inform client to send request body
+   try.
+    while. #hr do. hr=. (ssend hr)}.hr end.
+   catch.
+    logapp '100-continue error: ',13!:12''
+   end.
+  end.
   if. 'POST '-:5{.h do.
    len=.".gethv'Content-Length:'
    while. len>#d do. d=. d,srecv'' end.
