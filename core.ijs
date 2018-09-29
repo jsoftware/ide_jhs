@@ -624,7 +624,6 @@ startupjhs''
 cookie=: 'jcookie=',":{:6!:0''
 input_jfe_=: input_jhs_  NB. only use jfe locale to redirect input/output
 output_jfe_=: output_jhs_
-jfe 1
 
 if. AUTO do.
  url=. 'http://localhost:PORT/jijx'rplc'PORT';":PORT
@@ -633,7 +632,7 @@ if. AUTO do.
   case. 'Win'    do. shell_jtask_'start ',url
   case. 'Linux'  do.
    if. (0;'') -.@e.~ <2!:5 'DISPLAY' do.
-    t=. ;(0-:(2!:0) :: 0:'which x-www-browser 2>/dev/null'){'x-www-browser';'firefox'
+    assert. *#t=. dfltbrowser_j_''
     2!:1 t,' ',url,' >/dev/null 2>&1 &'
    end.
   case. 'Darwin' do. 2!:0'open ',url,' &'
@@ -642,6 +641,7 @@ if. AUTO do.
   echo'AUTO failed: ',url
  end.
 end.
+jfe 1
 )
 
 NB. load rest of JHS core
