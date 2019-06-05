@@ -132,7 +132,7 @@ run one of the following sentences:
 )
 
 getlabs=: 3 : 0
-LABFILES=: f=. ,{."1 dirtree'~addons/*.ijt'
+LABFILES=: f=. excludes ,{."1 dirtree'~addons/*.ijt' NB. exclude inserted to remove excluded labs - see exlabs.txt
 d=. (>:#jpath'~addons')}.each f
 d=. (;d i: each '/'){.each d
 b=. ;(<'labs/labs/')=10{.each d
@@ -149,6 +149,23 @@ LABTITLES=: t
 
 NB. could be used to exclude labs - see exlabs.txt
 EXJHS=: 0 : 0
+)
+
+excludes=: 3 : 0  NB. based on excludes_jlab805_ with a different final line
+t=. 'b' fread '~addons/labs/labs/exlabs.txt'
+if. t-:_1 do. y return. end.
+t=. t #~ '#' ~: {.&> t
+0!:100 ; t ,each LF
+r=. EXALL
+if. IFJHS do.
+ r=. r,EXJHS
+elseif. IFQT do.
+ r=. r,EXJQT
+elseif. IFJNET do.
+ r=. r,EXJNET
+end.
+r=. ((jpath '~addons/'),deb) each <;._2 r
+y #~ -. y e. r                       NB. This line is different from the jlab805 version as LABFILES is a list
 )
 
 tool_labs=:3 : 0
