@@ -434,9 +434,7 @@ function ev_about_click(){jdoajax([]);}
 function ev_clearwindow_click(){jbyid("log").innerHTML= "";newpline("   ");}
 function ev_clearrefresh_click(){jdoajax([]);}
 function ev_clearLS_click(){localStorage.clear();};
-
-function linkclick(a){window.open(a,a);return false;}
-
+function linkclick(a){w=window.open("",a);w.close();window.open(a,a);return false;}
 function ev_jfile_click(){linkclick("jfile");}
 function ev_jfiles_click(){linkclick("jfiles");}
 function ev_jfif_click(){linkclick("jfif");}
