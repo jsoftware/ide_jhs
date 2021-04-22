@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.316'
+VERSION=: '1.0.317'
 
 FILES=: 0 : 0
 app/app1.ijs
@@ -90,9 +90,15 @@ js/jquery/smoothness/images/ui-icons_cd0a0a_256x240.png
 js/jquery/smoothness/jquery-ui.custom.css
 js/jsoftware/d3_basic.js
 js/webgl/glmatrix-min.js
+node/cert.pem
+node/key.pem
+node/server.js
+node/server.html
 jum.ijs
 manifest.ijs
 misc/avx.ijs
+node.ijs
+port.ijs
 readme.txt
 sp.ijs
 spx/plot.ijs

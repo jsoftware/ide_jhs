@@ -763,16 +763,18 @@ getexternalip=: 3 : 0
 z=. >2{sdgethostbyname_jsocket_ >1{sdgethostname_jsocket_''
 if. ('255.255.255.255'-:z) +. ('127.0.'-:6{.z) +. '192.168.'-:8{.z do.
  if. UNAME-:'Linux' do.
-  a=. , 2!:0 ::_1: 'wget -q --timeout=7 -O - http://www.checkip.org/'
+  a=. , 2!:0 ::_1: 'wget -q --timeout=3 --waitretry=0 --tries=3 --retry-connrefused -O - http://www.checkip.org/'
  elseif. UNAME-:'Darwin' do.
   a=. , 2!:0 ::_1: 'curl -s --max-time 7 -o - http://www.checkip.org/'
  elseif. UNAME-:'Win' do.
-  a=. , spawn_jtask_ '"',(jpath '~tools/ftp/wget.exe'),'" -q --timeout=7 -O - http://www.checkip.org/'
+  a=. , spawn_jtask_ '"',(jpath '~tools/ftp/wget.exe'),'" -q --timeout=3 --waitretry=0 --tries=3 --retry-connrefused -O - http://www.checkip.org/'
  elseif. do.
   a=. ,_1
  end.
  if. 1 e. r=. '<h1>Your IP Address:' E. a do.
    z=. ({.~ i.&'<') (}.~ [: >: i.&'>') (20+{.I.r)}.a
+ else.
+   z=. '?.?.?.?'
  end.
 end.
 z

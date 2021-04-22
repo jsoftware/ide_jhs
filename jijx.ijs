@@ -99,7 +99,7 @@ ev_about_click=: 3 : 0
 jhtml'<hr/>'
 echo JVERSION
 echo' '
-echo'Copyright 1994-2019 Jsoftware Inc.'
+echo'Copyright 1994-2021 Jsoftware Inc.'
 jhtml'<hr/>'
 )
 
@@ -187,6 +187,12 @@ t=. t,JIJSAPP  jhmab'jijs     J^'
 t=. t,'jfif'   jhmab'jfif     F^'
 t=. t,'jal'    jhmab'pacman'
 t=. t,'jijx'   jhmab'jijx     j^'
+
+if. 1=#gethv'node-jhs:' do.
+ t=. t,'jlogoff' jhmab'logoff'
+ t=. t,'jbreak'  jhmab'break'
+end.
+
 t=. t,'clearwindow'jhmab'clear window'
 t=. t,'clearrefresh'jhmab'clear refresh'
 t=. t,'clearLS'jhmab'clear LS'
@@ -434,17 +440,43 @@ function ev_about_click(){jdoajax([]);}
 function ev_clearwindow_click(){jbyid("log").innerHTML= "";newpline("   ");}
 function ev_clearrefresh_click(){jdoajax([]);}
 function ev_clearLS_click(){localStorage.clear();};
-function linkclick(a){w=window.open("",a);w.close();window.open(a,a);return false;}
+
+//function linkclick(a){w=window.open("",a);w.close();window.open(a,a);return false;} // popup blocker
+// avoid popup blocker (direct user action) - some browsers (firefox) ignore focus()
+function linkclick(a){window.open(a,a+'?'+Date.now());return false;} // always open new tab
+
 function ev_jfile_click(){linkclick("jfile");}
 function ev_jfiles_click(){linkclick("jfiles");}
 function ev_jfif_click(){linkclick("jfif");}
 function ev_jal_click(){linkclick("jal");}
-function ev_jijs_click(){jdoajax([]);}
+function ev_jijs_click(){linkclick("jijs")} 
 function ev_jijx_click(){linkclick("jijx");}
 
-function ev_helphelp_click(){linkclick("~addons/docs/help/index.htm")};
-function ev_helpinfo_click(){linkclick("~addons/docs/help/user/product.htm")};
-function ev_helpvocab_click(){linkclick("~addons/docs/help/dictionary/vocabul.htm")};
+function ev_jbreak_click()
+{
+ if(0==rqstate) return; // do not break if not busy
+ if("http:"==window.location.protocol)
+ {
+  updatelog("<b>jbreak not supported - use ctrl+c in server terminal window</b>")
+  newpline("");
+  return;
+ }
+ let rq= newrq();
+ rq.open("POST",jform.jlocale.value,0); // synch call
+ rq.send("jbreak?");
+}
+
+function ev_jlogoff_click()
+{
+ let rq= newrq();
+ rq.open("POST",jform.jlocale.value,0); // synch call
+ rq.send("jlogoff?");
+ window.location= "jlogoff";
+}
+
+function ev_helphelp_click(){linkclick("https://www.jsoftware.com/help/index.htm")};
+function ev_helpinfo_click(){linkclick("https://www.jsoftware.com/help/user/product.htm")};
+function ev_helpvocab_click(){linkclick("https://www.jsoftware.com/help/dictionary/vocabul.htm")};
 function ev_helpwikinuvoc_click(){linkclick("http://code.jsoftware.com/wiki/NuVoc")};
 function ev_helpwikiancillary_click(){linkclick("http://code.jsoftware.com/wiki/NuVoc#bottomrefs")};
 
@@ -453,11 +485,11 @@ function ev_helpwikicontrol_click(){linkclick("http://code.jsoftware.com/wiki/Vo
 function ev_helpwikiforeign_click(){linkclick("http://code.jsoftware.com/wiki/Vocabulary/Foreigns")};
 
 
-function ev_helpconstant_click(){linkclick("~addons/docs/help/dictionary/dcons.htm")};
-function ev_helpcontrol_click(){linkclick("~addons/docs/help/dictionary/ctrl.htm")};
-function ev_helpforeign_click(){linkclick("~addons/docs/help/dictionary/xmain.htm")};
-function ev_helpdictionary_click(){linkclick("~addons/docs/help/dictionary/contents.htm")};
-function ev_helpstdlib_click(){linkclick("~addons/docs/help/user/library.htm")};
+function ev_helpconstant_click(){linkclick("https://www.jsoftware.com/help/dictionary/dcons.htm")};
+function ev_helpcontrol_click(){linkclick("https://www.jsoftware.com/help/dictionary/ctrl.htm")};
+function ev_helpforeign_click(){linkclick("https://www.jsoftware.com/help/dictionary/xmain.htm")};
+function ev_helpdictionary_click(){linkclick("https://www.jsoftware.com/help/dictionary/contents.htm")};
+function ev_helpstdlib_click(){linkclick("https://www.jsoftware.com/help/user/library.htm")};
 function ev_helpwikijhs_click(){linkclick("http://code.jsoftware.com/wiki/Guides/JHS")};
 
 function ev_comma_ctrl(){jdoajax([]);}

@@ -337,14 +337,13 @@ additional info in jijx
 gsrchead=: toCRLF 0 : 0
 HTTP/1.1 200 OK
 Server: JHS
-Last-Modified: Mon, 01 Mar 2010 00:23:24 GMT
-Accept-Ranges: bytes
 Content-Length: <LENGTH>
-Keep-Alive: timeout=15, max=100
-Connection: Keep-Alive
 Content-Type: <TYPE>
+Cache-Control: no-cache
+Connection: Keep-Alive
 
 )
+
 
 gsrcf=: 4 : 0
 htmlresponse y,~gsrchead rplc '<TYPE>';x;'<LENGTH>';":#y

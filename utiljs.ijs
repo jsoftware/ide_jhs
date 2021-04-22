@@ -4,31 +4,15 @@ NB. JS could be src= and with cache would load faster
 NB. JS is small and doing it inline (not src=) is easier
 
 0 : 0
-*** repopen
-Browsers are concerned with javascript action changing tab focus
-as this can be obnoxious from some sites.
+*** menu open new tab jfile/jijs/etc
+browsers block popups if not 'directly' the result of a user action - click on link or button
 
-It would have been nice if pages from the same domain didn't have this
-restriction.
+some browsers prevent giving focus to different tab
 
-The JHS solution is to:
- w=window.open('','id');w.close();window.open('URL','id');
+see function linkclick in jijx.ijs
+uses window.open with a new window name each time - jfile+'?'+Date.now()
  
-This gives a new window with the focus. Drawbacks are that it is probably
-in a new location and is a refresh. But at least it has focus.
-
-
-Different browsers behave differently for window.open() and focus().
-For this code window.open('www.sample.com','mywindow').focus()
-
-Chrome 20 opens a new tab, and focuses on subsequent open() calls regardless if focus() is called or not.
-Chrome >20 behaves more like Firefox
-
-Firefox 13 opens a new tab, focuses on first open(), does not focus on subsequent open() calls/disregards focus().
-
-IE 8 opens a new window, honors focus().
-
-Safari 5 opens a new window, and focuses on subsequent open() calls regardless if focus() is called or not.
+this always opens a new tab with focus - but means there may be many jfile tabs
 
 *** jquery dialog stuff
  '<div id="dialog" title="Table Editor Error"></div>'
