@@ -62,8 +62,8 @@ pem=. jpath pem
 
 node_config_man=: 0 : 0
 for initial config or for changes run one of the following:
-   config_node_jhs_ nodepath ; pempath ; nodeport ; logonkey
-   config_node_jhs_ nodepath ; logonkey
+   node_config_jhs_ nodepath ; pempath ; nodeport ; logonkey
+   node_config_jhs_ nodepath ; logonkey
    
 where:   
  nodepath - path to nodejs bin folder
@@ -72,7 +72,7 @@ where:
  logonkey - key required to logon
 
 to just change the logonkey run:
-   config_node_jhs_ logonkey
+   node_config_jhs_ logonkey
 )
 
 node_config=: 3 : 0
