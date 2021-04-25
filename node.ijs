@@ -10,6 +10,7 @@ node_man=: 0 : 0
    load'~addons/ide/jhs/node.ijs'
    node_config_jhs_'?' 
    node_jhs_'start'
+   node_std_jhs_'' NB. node stdout/stderr
 3. browse to url in start report   
 
 *** node - commercial server - https://nodejs.org
@@ -51,23 +52,23 @@ if. _1=nc<'NODEPORT' do. NODEPORT=: 0 end.
 )
 
 config_validate=: 3 : 0
-'bin pem nodeport key'=. y
-bin=. jpath bin
+'node pem nodeport key'=. y
+node=. jpath node
 pem=. jpath pem
-(' is not path to node binary',~bin)assert fexist jpath bin,'/node'
-(' is not path to key.pem and cert.pem files',~pem)assert fexist(<jpath pem),each'/cert.pem';'/key.pem'
+(' is not node binary',~node)assert 1=ftype node
+(' is not pem folder',~pem)assert 1=ftype pem,'/cert.pem'
 (' is not valid nodeport',~":nodeport) assert (3000<:nodeport)*.nodeport<:65536
 'key too short' assert 5<#key
 )
 
 node_config_man=: 0 : 0
 for initial config or for changes run one of the following:
-   node_config_jhs_ nodepath ; pempath ; nodeport ; logonkey
-   node_config_jhs_ nodepath ; logonkey
+   node_config_jhs_ node ; pem ; nodeport ; logonkey
+   node_config_jhs_ node ; logonkey
    
 where:   
- nodepath - path to nodejs bin folder
- pempath  - path to certificate files - default ~addons/ide/jhs/node
+ node     - node executable  - e.g. C:/Program Files/nodejs/node.exe
+ pem      - folder with cert.pem file - default ~addons/ide/jhs/node
  nodeport - port served by node proxy server - default 1+PORT_jhs_
  logonkey - key required to logon
 
@@ -104,7 +105,7 @@ breakfile=. hostpathsep setbreak'node'
 pem=. fread pjhsnode,'/argpem'
 arg=. arg,' ',(":PORT),' "',breakfile,'" "',pem,'"'
 t=. '"<BIN>" "<FILE>" <ARG> > "<OUT>" 2>&1'
-bin=. hostpathsep '/node',~fread pjhsnode,'/argbin'
+bin=. hostpathsep fread pjhsnode,'/argbin'
 file=. jpath'~addons/ide/jhs/node/server'
 nodeout=: hostpathsep jpath pjhsnode,'/std.log'
 t=. t rplc '<BIN>';bin;'<FILE>';file;'<ARG>';arg;'<OUT>';nodeout
