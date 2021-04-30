@@ -741,6 +741,20 @@ if. IFWIN do.
  r=. deb each<;._2 spawn_jtask_'ipconfig'
  r=. ((<'IPv4 Address')=12{.each r)#r
  r=. (>:;r i.each':')}.each r
+else.
+ r=. deb each <;._2[2!:0'ip address'
+ r=. 5}.each((<'inet ')=5{.each r)#r
+ r=. (r i. each '/'){.each r
+end.
+r=. deb each r
+r=. deb each(r i.each' '){.each r
+r=. r-.<'127.0.0.1'
+'no lan ip' assert 0<#r
+if. 1<#r do. echo 'multiple lan ips: ',LF,;LF,~each' ',each r end.
+;{.r
+)
+
+0 : 0 NB. getlanip with old ifconfig
 elseif. UNAME-:'Darwin' do.
  r=. <;._2[2!:0'ifconfig'
  r=. deb each r rplc each <TAB;' ' 
@@ -751,12 +765,6 @@ elseif. 1 do.
  r=. ((<'inet addr:')=10{.each r)#r
  r=. 10}.each r
 end.
-r=. deb each r
-r=. deb each(r i.each' '){.each r
-r=. r-.<'127.0.0.1'
-'no lan ip' assert 0<#r
-if. 1<#r do. echo 'multiple lan ips: ',LF,;LF,~each' ',each r end.
-;{.r
 )
 
 getexternalip=: 3 : 0
