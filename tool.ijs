@@ -7,6 +7,7 @@ echo y
 jhtml'<hr>'
 )
 
+ev_node_click=:  3 : 'tool tool_node'
 ev_table_click=: 3 : 'tool tool_table'
 ev_jd3_click=:   3 : 'tool tool_jd3'
 ev_app_click=:   3 : 'tool tool_app'
@@ -18,6 +19,15 @@ ev_debug_click=: 3 : 'tool tool_debug'
 ev_sp_click=:    3 : 'tool sphelp'
 ev_labs_click=:  3 : 'tool tool_labs 0'
 
+
+tool_node=: 0 : 0
+node - commercial server - https://nodejs.org
+node https proxy server sits between JHS and client
+securely access your JHS server from any device on lan or remote
+
+   load'~addons/ide/jhs/node.ijs'
+   node_jhs_''
+)
 
 NB. jhslinkurl'www.d3js.org' NB. link to D3 home page
 tool_jd3=: 0 : 0

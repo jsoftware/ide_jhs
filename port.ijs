@@ -39,7 +39,19 @@ else.
 end.
 )
 
+NB. delays to allow task to start
 pidfromport=: 3 : 0
 'pid port'=. pidport''
-(port i. y){pid,_1
+r=. (port i. y){pid,_1
+if. r=_1 do.
+ 6!:3[0.1
+ 'pid port'=. pidport''
+ r=. (port i. y){pid,_1
+ if. r=_1 do.
+  6!:3[0.4
+  'pid port'=. pidport''
+  r=. (port i. y){pid,_1
+ end. 
+end.
+r
 )

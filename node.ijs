@@ -4,24 +4,17 @@ coclass'jhs'
 require'~addons/ide/jhs/port.ijs'
 
 node_man=: 0 : 0
-*** summary - best read it all - but here are the steps
-1. if not installed, download and install node: https://nodejs.org
-2. start JHS
+*** summary
+1. start JHS
    load'~addons/ide/jhs/node.ijs'
-   node_config_jhs_'?' 
+   node_config_jhs_'' 
    node_jhs_'start'
-   node_std_jhs_'' NB. node stdout/stderr
-3. browse to url in start report   
-
-*** node - commercial server - https://nodejs.org
-node https proxy server sits between JHS and client
-securely access your JHS server from any device on lan or remote
+2. browse to url in start report   
  
 *** https server requires certificate
 self-signed certificate is provided for a quick start
 this requires exception permission when you first browse the page
-self-signed certificate built with:
- https://nodejs.org/en/knowledge/HTTP/servers/how-to-create-a-HTTPS-server/
+https://nodejs.org/en/knowledge/HTTP/servers/how-to-create-a-HTTPS-server/
 
 *** jijx menu ide>break signals break to J from node proxy client
 
@@ -40,9 +33,7 @@ make note of the remote address before you leave home
 1. have a good logonkey and protect it
 2. don't leave a machine connected to your JHS server unattended
 3. always logofff (jijx menu ide>logoff) when finished
-3. self-signed certificate is OK for casual, private use
 )
-
 
 pjhsnode=: '~temp/jhs/node'
 mkdir_j_ pjhsnode
@@ -63,22 +54,21 @@ pem=. jpath pem
 
 node_config_man=: 0 : 0
 for initial config or for changes run one of the following:
+   node_config_jhs_ node ; logonkey    NB. default pem and nodeport
    node_config_jhs_ node ; pem ; nodeport ; logonkey
-   node_config_jhs_ node ; logonkey
+   node_config_jhs_ logonkey           NB. change logonkey
    
 where:   
  node     - node executable  - e.g. C:/Program Files/nodejs/node.exe
- pem      - folder with cert.pem file - default ~addons/ide/jhs/node
- nodeport - port served by node proxy server - default 1+PORT_jhs_
  logonkey - key required to logon
-
-to just change the logonkey run:
-   node_config_jhs_ logonkey
+ pem      - folder with cert.pem file - default ~addons/ide/jhs/node
+ nodeport - port served by node proxy server - default 100+PORT_jhs_
+ 
+if node is not installed: download and install from: https://nodejs.org
 )
 
 node_config=: 3 : 0
-if. '?'={.y do. echo node_config_man return. end.
-mkdir_j_ pjhsnode
+if. (''-:y) +. -.1 2 4 e.~ #boxopen y do. echo node_config_man return. end.
 if. 1=#boxopen y do. y=. (fread pjhsnode,'/argbin');y end.
 if. 2=#y do. y=. ({.y),'~addons/ide/jhs/node';(100+PORT);{:y end.
 config_validate y
@@ -89,34 +79,34 @@ config_validate y
 i.0 0
 )
 
-NB. start node server for current JHS server
-NB. kills node server if already running
+node_config_get=: 3 : 0
+'config_node_jhs_ must be run first' assert fexist pjhsnode,'/arg'
+(fread pjhsnode,'/argbin');(fread pjhsnode,'/argpem');;:fread pjhsnode,'/arg'
+)
+
+NB. start or stop node server for current JHS server
 node=: 3 : 0
-'arg must be ''?'' or ''start'' or ''stop''' assert (<,y)e.;:'? start stop'
-if. '?'={.y do. echo node_man return. end.
-mkdir_j_ pjhsnode
-if. 'stop'-:y do. i.0 0[NODEPORT=: 0[killport_jport_ NODEPORT return. end.
-'config_node_jhs_ must be run first' assert fexist pjhsnode,'/argbin'
-arg=. fread pjhsnode,'/arg'
-NODEPORT=: 0".(arg i.' '){.arg
-killport_jport_ NODEPORT
-'killport NODEPORT failed'assert _1=pidfromport_jport_ NODEPORT
+if. -.(<,y)e.;:'? start stop' do. echo node_man return. end.
+'node pem port key'=. node_config_get''
+nport=. 0".port
+killport_jport_ nport
+if. 'stop'-:y do. i.0 0 return. end.
 breakfile=. hostpathsep setbreak'node'
 pem=. fread pjhsnode,'/argpem'
-arg=. arg,' ',(":PORT),' "',breakfile,'" "',pem,'"'
+arg=. port,' ',key,' ',(":PORT),' "',breakfile,'" "',pem,'"'
 t=. '"<BIN>" "<FILE>" <ARG> > "<OUT>" 2>&1'
 bin=. hostpathsep fread pjhsnode,'/argbin'
 file=. jpath'~addons/ide/jhs/node/server'
 nodeout=: hostpathsep jpath pjhsnode,'/std.log'
 t=. t rplc '<BIN>';bin;'<FILE>';file;'<ARG>';arg;'<OUT>';nodeout
 fork_jtask_ t
-6!:3[0.2 NB. give task a chance to get started
-'server failed to start' assert _1~:pidfromport_jport_ NODEPORT
+'server failed to start' assert _1~:pidfromport_jport_ nport NB. pidfromport has delays
 node_status''
 )
 
 nodetemplate=: 0 : 0
 node port <NODEPORT> is proxy server for JHS port <PORT>
+firewall must be configured to allow access to <NODEPORT>
 
 local:  https://localhost:<NODEPORT>/jijx'
 lan:    https://<LAN>:<NODEPORT>/jijx'
@@ -130,9 +120,9 @@ remote requires router port forwarding: <NODEPORT> -> <NODEPORT> <LAN>
 
 NB. report how to access node JHS proxy server
 node_status=: 3 : 0
-if. _1=pidfromport_jport_ NODEPORT do. 'node server is not running'[NODEPORT=: 0 return. end.
-r=. nodetemplate rplc '<NODEPORT>';(":NODEPORT);'<PORT>';(":PORT);'<LAN>';(getlanip_jhs_'');'<REMOTE>';getexternalip_jhs_''
-
+'node pem port key'=. node_config_get''
+if. _1=pidfromport_jport_ 0".port do. 'node server is not running' return. end.
+nodetemplate rplc '<NODEPORT>';(":port);'<PORT>';(":PORT);'<LAN>';(getlanip_jhs_'');'<REMOTE>';getexternalip_jhs_''
 )
 
 node_std=: 3 : 'fread nodeout'

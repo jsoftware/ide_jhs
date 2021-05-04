@@ -6,6 +6,7 @@ HBS=: 0 : 0
 jhma''
 jhjmlink''
 'tool'   jhmg'tool';1;7
+ 'node'    jhmab'https'
  'table'   jhmab'table'
  'jd3'     jhmab'plot-d3'
  'print'   jhmab'print'
@@ -429,6 +430,7 @@ function ev_j2_click(){jdoajax([]);}
 function ev_j3_click(){jdoajax([]);}
 function ev_plot_click(){jdoajax([]);}
 function ev_table_click(){jdoajax([]);}
+function ev_node_click(){jdoajax([]);}
 function ev_jd3_click(){jdoajax([]);}
 function ev_spx_click(){jdoajax([]);}
 function ev_watch_click(){jdoajax([]);}
