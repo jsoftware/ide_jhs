@@ -651,7 +651,6 @@ load__'~addons/ide/jhs/utiljs.ijs'
 load__'~addons/ide/jhs/sp.ijs'
 load__'~addons/ide/jhs/tool.ijs'
 load__'~addons/ide/jhs/d3.ijs'
-load__'~addons/ide/jhs/debug.ijs'
 
 NB. load addons, but do not fail init if not found
 load__ :: ['~addons/convert/json/json.ijs'
@@ -670,6 +669,7 @@ jev_get_jal_=:     3 : (stub'jal')
 jev_get_jdemo_=:   3 : (stub'jdemo')
 jev_get_jlogin_=:  3 : (stub'jlogin')
 jev_get_jfilesrc_=:3 : (stub'jfilesrc')
+jev_get_jdebug_=:  3 : (stub'jdebug')
 
 NB. simple wget with sockets - used to get google charts png
 

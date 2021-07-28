@@ -488,9 +488,13 @@ t=. t,' name="<ID>" onclick="return jev(event)"/><label for="<ID>"><VALUE></labe
 t hrplc 'ID VALUE CHECKED';x;value;checked
 )
 
-NB.* jhdiv*id jhdiv text - <div id...>text</div>
+NB.* jhdiv*id jhdiv text [;class]- <div id...>text</div>
 jhdiv=: 4 : 0
-'<div id="',x,'">',y,'</div>'
+if. 0=L.y do.
+ '<div id="',x,'">',y,'</div>'
+else.
+ '<div id="',x,'" class="',(1{::y),'" >',(0{::y),'</div>'
+end.
 )
 
 NB.* jhdivhidden*id jhdivhidden text - <div id...>text</div>

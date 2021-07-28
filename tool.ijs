@@ -20,6 +20,34 @@ ev_sp_click=:    3 : 'tool sphelp'
 ev_labs_click=:  3 : 'tool tool_labs 0'
 
 
+tool_debug=: 0 : 0
+debug facilities: suspend execution at stop or error
+ examine/modify values and definitions and continue
+
+NOTE: jdebug into button requires j903 to work properly!
+
+practice before you need it for real!
+
+jijx ide>jdebug - open jdebug
+ move tab so you can see jijx and jdebug at same time if possible
+    
+   dbr 1       NB. enable debug
+   calendar'a' NB. will stop on error on dyadic line 0
+   y=. 0       NB. fix error
+   
+press jdebug over button to step through verb
+ check values as you move along
+ ctrl+quote is same as over button - may be more convenient
+ step until the verb is finished
+ 
+   dbxsm'calendar 0:0' NB. stop on monadic/dyadic line 0
+   calendar 0
+
+press jdebug run button to run to stop on dyadic line 0
+
+press jdebug over button to step through
+)
+
 tool_node=: 0 : 0
 node - commercial server - https://nodejs.org
 node https proxy server sits between JHS and client

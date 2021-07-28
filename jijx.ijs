@@ -169,16 +169,8 @@ ev_larger_ctrl =: 3 : 'i.0 0'
 ev_query_ctrl =: 3 : 'i.0 0'
 ev_semicolon_ctrl =:   3 : 'echo''semicolon'''
 ev_colon_ctrl =:       3 : 'echo''colon'''
-
-ev_quote_ctrl_jijx_=: 3 : 0
-if. -.'*'e.{."1[13!:18'' do. 'not suspended' return. end.
-dbstep''
-)
-
-ev_doublequote_ctrl =: 3 : 0
-if. -.'*'e.{."1[13!:18'' do. 'not suspended' return. end.
-dbstepin''
-)
+ev_quote_ctrl_jijx_=: 3 : 'dbover dbxup'''''
+ev_doublequote_ctrl =: 3 : 'dbinto dbxup'''''
 
 jhjmlink=: 3 : 0
 t=.   'jmlink' jhmg 'ide';1;13
@@ -188,6 +180,7 @@ t=. t,JIJSAPP  jhmab'jijs     J^'
 t=. t,'jfif'   jhmab'jfif     F^'
 t=. t,'jal'    jhmab'pacman'
 t=. t,'jijx'   jhmab'jijx     j^'
+t=. t,'jdebug' jhmab'jdebug'
 
 if. 1=#gethv'node-jhs:' do.
  t=. t,'jlogoff' jhmab'logoff'
@@ -219,6 +212,7 @@ var ptail= '</div>';
 var globalajax; // sentence for enter setTimeout ajax
 var TOT= 1;     // timeout time to let DOM settle before change
 //var TOT= 100; // might need more time on slow devices???
+var wjdebug= null; // jdebug window object
 
 function ev_body_focus(){if(!jisiX)setTimeout(ev_2_shortcut,TOT);}
 
@@ -453,6 +447,8 @@ function ev_jfif_click(){linkclick("jfif");}
 function ev_jal_click(){linkclick("jal");}
 function ev_jijs_click(){linkclick("jijs")} 
 function ev_jijx_click(){linkclick("jijx");}
+
+function ev_jdebug_click(){wjdebug= window.open("jdebug","jdebug");return false;;}
 
 function ev_jbreak_click()
 {

@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.322'
+VERSION=: '1.0.323'
 
 FILES=: 0 : 0
 app/app1.ijs
@@ -16,14 +16,12 @@ app/app4.ijs
 app/app5.ijs
 app/app6.ijs
 cojhs/jd3.ijs
-cojhs/jdebug.ijs
 cojhs/jhot.ijs
 cojhs/jtable.ijs
 cojhs/jwatch.ijs
 config/jhs.cfg
 core.ijs
 d3.ijs
-debug.ijs
 demo/jdemo1.ijs
 demo/jdemo10.ijs
 demo/jdemo11.ijs
@@ -52,6 +50,7 @@ jfilesrc.ijs
 jgcp.ijs
 jijs.ijs
 jijx.ijs
+jdebug.ijs
 jj.ijs
 jjserver.ijs
 jlogin.ijs
@@ -96,7 +95,6 @@ node/server.js
 node/server.html
 jum.ijs
 manifest.ijs
-misc/avx.ijs
 node.ijs
 port.ijs
 readme.txt

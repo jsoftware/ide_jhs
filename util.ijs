@@ -320,6 +320,11 @@ jhslinkurl=: 3 : 0
 jhtml'<div contenteditable="false"><a href="http://',y,'" target="_blank">',y,'</a></span>'
 )
 
+jhslinkurlx=: 3 : 0
+'a b'=. y
+jhtml'<div contenteditable="false"><a href="',a,'" target="_blank">',b,'</a>'
+)
+
 NB. TARGET f URL
 jhsshow=: 3 : 0
 '_blank' jhsshow y

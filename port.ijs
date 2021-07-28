@@ -1,6 +1,6 @@
 NB. port utilties - used with Jd/JHS node server
 NB. should probably be an addons - for now it can live here
-NB. currently routines are duplicated in Jd
+NB. Jd currently loads this script
 
 coclass'jport'
 
@@ -28,6 +28,7 @@ if. UNAME-:'Win' do.
  d=. ;0".each 4{"1 d
  d,:a
 else.
+ NB. lsof reporting no ports gets interface error
  d=. shell_jtask_ :: 0: 'lsof -F pn -s TCP:LISTEN -i TCP'
  if. d-:0 do. i.2 0 return. end.
  d=. <;._2 shell_jtask_'lsof -F pn -s TCP:LISTEN -i TCP'
