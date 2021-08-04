@@ -218,6 +218,7 @@ function ev_body_focus(){if(!jisiX)setTimeout(ev_2_shortcut,TOT);}
 
 function ev_body_load()
 {
+ if(""==window.name) window.name= "jijx";
  jseval(false,jbyid("log").innerHTML); // redraw canvas elements
  newpline("   ");
  jresize();
@@ -437,9 +438,9 @@ function ev_clearwindow_click(){jbyid("log").innerHTML= "";newpline("   ");}
 function ev_clearrefresh_click(){jdoajax([]);}
 function ev_clearLS_click(){localStorage.clear();};
 
-//function linkclick(a){w=window.open("",a);w.close();window.open(a,a);return false;} // popup blocker
-// avoid popup blocker (direct user action) - some browsers (firefox) ignore focus()
-function linkclick(a){window.open(a,a+'?'+Date.now());return false;} // always open new tab
+// cache
+//function linkclick(a){window.open(a+'?'+Date.now(),a);return false;} // open new tab or refresh old
+function linkclick(a){window.open(a,a);return false;} // open new tab or old
 
 function ev_jfile_click(){linkclick("jfile");}
 function ev_jfiles_click(){linkclick("jfiles");}

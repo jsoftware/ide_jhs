@@ -4,15 +4,8 @@ NB. JS could be src= and with cache would load faster
 NB. JS is small and doing it inline (not src=) is easier
 
 0 : 0
-*** menu open new tab jfile/jijs/etc
+*** menu ide>jfile/jijs/etc
 browsers block popups if not 'directly' the result of a user action - click on link or button
-
-some browsers prevent giving focus to different tab
-
-see function linkclick in jijx.ijs
-uses window.open with a new window name each time - jfile+'?'+Date.now()
- 
-this always opens a new tab with focus - but means there may be many jfile tabs
 
 *** jquery dialog stuff
  '<div id="dialog" title="Table Editor Error"></div>'

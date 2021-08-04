@@ -104,6 +104,7 @@ open_jhs_ ('jwatch?jwid=',x);x
 )
 
 NB.* open - [xywh] open url [; jwid ]
+NB.* open new tab if not already open - reload url?xxx into existing tab
 NB.*    xywh elided is broswer default (probably new tab)
 NB.*    xywh gives xywh for new window
 NB.*    wh elided defaults to 500 500
@@ -128,15 +129,18 @@ else.
  'bad xywh' assert (4=3!:0 x+0)*.(1=$$x)*.+./2 4 e.#x
  s=. 'left=<X>,top=<Y>,width=<W>,height=<H>'hrplc 'X Y W H';":each 4{.x,500 500
 end.
-NB. a=. jurlencode a - should work, but it doesn't - only encode after the ?jwid=
+
 i=. 1 i.~a E. '?jwid='
 if. i<#a do.
  i=. i+6
- a=. (i{.a),jurlencode i}.a
+ JWID=: i}.a NB. used by cojhs report
+ a=. (i{.a),jurlencode i}.a NB. jurlencode just the parameter
 end.
-JWID=: b
+
+NB. a=. a,(('?'e.a){'?&'),'nocache=',":<.10000*6!:1'' NB. cache
+
 m=. a,' pop-up blocked\nadjust browser settings to allow localhost pop-up\nsee wiki JHS help pop-up section'
-jjs'w=window.open("","<Y>");if(null==w)alert("<M>");w.close();window.open("<X>","<Y>","<S>")'rplc '<X>';a;'<Y>';b;'<S>';s;'<M>';m
+jjs 'w=window.open("<URL>","<Y>","<S>");if(null==w)alert("<M>");'rplc '<URL>';a;'<Y>';b;'<S>';s;'<M>';m
 )
 
 NB.* openreport - openreport'' - report wid,tab,class,locale
@@ -260,11 +264,10 @@ r
 )
 
 NB.* edit - [xywh] edit'~temp/abc.ijs
-NB.*    uses sp shortname
 edit=: 3 : 0
 ''edit y
 :
-x open_jhs_'jijs?jwid=',jshortname_jhs_ jpath spf y
+x open_jhs_'jijs?jwid=',jshortname_jhs_ jpath y
 )
 
 NB.* jd3 - jd3''
@@ -310,8 +313,10 @@ NB. [TARGET] f URL - url is server page or file with UQS
 jhslink=: 3 : 0
 '_blank' jhslink y
 :
+UQS=. (+./'~/\'e. y){:: '';uqs_jhs_'' NB. ? cache only for file
+decho UQS
 t=. '<a href="<REF><UQS>" target="<TARGET>" class="jhref" ><TEXT></a>'
-t=. t hrplc_jhs_ 'TARGET REF UQS TEXT';x;y;(uqs_jhs_'');y
+t=. t hrplc_jhs_ 'TARGET REF UQS TEXT';x;y;UQS;y
 jhtml'<div contenteditable="false">',t,'</div>'
 )
 
