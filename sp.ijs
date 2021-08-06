@@ -313,6 +313,11 @@ d=. ":y
 (-.*./"1 d="1 1[' '#~{:$d)#d
 )
 
+NB. line recall list of projects
+splist=: 3 : 0
+echo >(<'   edit_jhs_ SPFILE'),~   (<'   '),each(<''''''),~each 'project_'nl_z_ 3
+)
+
 3 : 0''
 try.
 if. _1=nc<'initialized' do. 

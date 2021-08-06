@@ -130,12 +130,13 @@ else.
  s=. 'left=<X>,top=<Y>,width=<W>,height=<H>'hrplc 'X Y W H';":each 4{.x,500 500
 end.
 
-i=. 1 i.~a E. '?jwid='
+i=. 1 i.~'?jwid='E.a
 if. i<#a do.
  i=. i+6
- JWID=: i}.a NB. used by cojhs report
+ NB. JWID=: i}.a NB. used by cojhs report
  a=. (i{.a),jurlencode i}.a NB. jurlencode just the parameter
 end.
+JWID=: b
 
 NB. a=. a,(('?'e.a){'?&'),'nocache=',":<.10000*6!:1'' NB. cache
 

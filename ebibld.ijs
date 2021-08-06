@@ -8,7 +8,7 @@ help=: 0 : 0
 
 >git pull
 
-  set'ide/jhs' NB. does bup
+  set'ide/jhs'
   dobup'' NB. backup up git and ~addons
   status''
   copyfiles'' NB. be very careful
@@ -62,7 +62,7 @@ cfiles=: (ddata~:gdata)#dfiles
 load devp,'manifest.ijs'
 mfiles=. /:~(<'manifest.ijs'),<;._2 FILES
 
-'development files not in manifest'rep dfiles-.mfiles
+'development files not in manifest'rep dfiles-.mfiles,<'ebibld.ijs'
 'manifest files not in development'rep mfiles-.dfiles
 )
 

@@ -54,6 +54,7 @@ jdebug.ijs
 jj.ijs
 jjserver.ijs
 jlogin.ijs
+spfile_template.ijs
 js/codemirror/codemirror.4.2.css
 js/codemirror/codemirror.min.4.2.js
 js/codemirror/j/j.4.2.js
