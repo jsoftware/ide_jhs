@@ -17,9 +17,11 @@ sp (simple project) defined by ~addons/ide/jhs/sp.ijs
 part of JHS and can be loaded in any front end
 
 simple project:
- sp  f    set SPFILE and load it
- sp''     load SPFILE
- ctrl+,   load SPFILE (JHS shortcut)
+ sp 0    initialize default SPFILE
+ sp ''   load SPFILE
+ ctrl+,  load SPFILE (JHS shortcut)
+
+ sp f    set non-defulat SPFILE and load it
 
 sp example:
  'echo 123'fwrite f=: '~temp/a.ijs'
@@ -72,6 +74,14 @@ t=. fread y
 )
 
 sp=: 3 : 0
+if. 0-:y do.
+ t=. '~temp/sp/spfile.ijs'
+ (fread'~addons/ide/jhs/spfile_template.ijs')fwrite t
+ SPFILE_z_=: t
+ t fwrite spspf
+ echo'ctrl+comma will load ',t
+ return.
+end.
 t=. spf y
 assert. (fexist t)['must exist'
 SPFILE_z_=: t

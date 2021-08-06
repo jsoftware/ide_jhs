@@ -1,6 +1,10 @@
-NB. define project verbs
-NB. default location for this script is: ~temp/sp/spfile.ijs
-NB. template is: ~addons/ide/jhs/spfile_template.ijs
+0 : 0
+define project verbs
+default location for this script is: ~temp/sp/spfile.ijs
+template is: ~addons/ide/jhs/spfile_template.ijs
+
+   sp 0 NB. set ~temp/sp/spfile.ijs as SPFILE and create it from template
+)
 
 project_jhs_z_=: 3 : 0
 edit '~/fubar.ijs'
