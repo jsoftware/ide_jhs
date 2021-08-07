@@ -9,9 +9,9 @@ help=: 0 : 0
 >git pull
 
   set'ide/jhs'
-  dobup'' NB. backup up git and ~addons
+  dobup''           NB. backup up git and ~addons
   status''
-  copyfiles'' NB. be very careful
+  copy_dev_to_git'' NB. be very careful
 
   bump_version''
 )
@@ -60,7 +60,7 @@ cfiles=: (ddata~:gdata)#dfiles
 'dev files not equal to git files'rep cfiles
 
 load devp,'manifest.ijs'
-mfiles=. /:~(<'manifest.ijs'),<;._2 FILES
+mfiles=: /:~(<'manifest.ijs'),<;._2 FILES
 
 'development files not in manifest'rep dfiles-.mfiles,<'ebibld.ijs'
 'manifest files not in development'rep mfiles-.dfiles
@@ -89,10 +89,16 @@ m fwrite f
 EMPTY
 )
 
-copyfiles=: 3 : 0
+copy_dev_to_git=: 3 : 0
 d=. fread  each (<devp),each cfiles
 d   fwrite each (<gitp),each cfiles
 )
+
+copy_mfiles_git_to_dev=: 3 : 0
+d=. fread  each (<gitp),each mfiles
+d   fwrite each (<devp),each mfiles
+)
+
 
 cre8f=: 3 : 0
 t=. jpath y
