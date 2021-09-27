@@ -17,19 +17,13 @@ sp (simple project) defined by ~addons/ide/jhs/sp.ijs
 part of JHS and can be loaded in any front end
 
 simple project:
- sp 0    initialize default SPFILE
+ sp 0    init example SPFILE
+ ctrl+,  load SPFILE (JHS)
  sp ''   load SPFILE
- ctrl+,  load SPFILE (JHS shortcut)
 
- sp f    set non-defulat SPFILE and load it
+ sp f    set non-default SPFILE and load it
 
-sp example:
- 'echo 123'fwrite f=: '~temp/a.ijs'
- sp f
- ctrl+, (JHS shortcut)
- sp''  
  SPFILE carried over sessions
- ctrl+, in new session loads SPFILE
 
 SPFILES/shortname:
  sp use of an ijs file adds it to SPFILES
@@ -44,7 +38,6 @@ SPFILES/shortname example:
  spf ''  NB. SPFILE
  
 utilities:
- sp  f    set SPFILE load it
  spr n    shortnames and n{.SPFILES
  spf f    file from filename or shortname or SPFILE
  sptable 3 2$'asdf';123;'def';(i.2 3);'q';23
@@ -61,7 +54,7 @@ simple project managed execution:
  spx n        run line n
  spx n m      run lines n through m
  spx':'       sections
- spx'~addons/ide/jhs/spx/spx_tour.ijs' 
+ spx'~addons/ide/jhs/spx/spx.ijs' 
 )
 
 MAXRECENT=: 40 NB. max recent files 
@@ -74,14 +67,20 @@ t=. fread y
 )
 
 sp=: 3 : 0
+a=. '~temp/sp/spfile.ijs'
 if. 0-:y do.
- t=. '~temp/sp/spfile.ijs'
- (fread'~addons/ide/jhs/spfile_template.ijs')fwrite t
- SPFILE_z_=: t
- t fwrite spspf
- echo'ctrl+comma will load ',t
+ SPFILE_z_=: a
+ SPFILE fwrite spspf
+ if. fexist SPFILE do.
+  t=. (_4}.SPFILE),'_',((":6!:0'')rplc' ';'_';'.';'_'),'.ijs'
+  echo 'SPFILE backed up as: ',t
+ end. 
+ 'NB. script for simple project'fwrite '~temp/spexample.ijs'
+ (fread'~addons/ide/jhs/spfile_template.ijs')fwrite SPFILE
+ echo'ctrl+, loads SPFILE (',SPFILE,')'
  return.
 end.
+if. (''-:y) *. -.fexist a do. sp 0 end.
 t=. spf y
 assert. (fexist t)['must exist'
 SPFILE_z_=: t
@@ -325,7 +324,7 @@ d=. ":y
 
 NB. line recall list of projects
 splist=: 3 : 0
-echo >(<'   edit_jhs_ SPFILE'),~   (<'   '),each(<''''''),~each 'project_'nl_z_ 3
+echo ;LF,~each dtb each(<'   edit_jhs_ SPFILE'),(<'   '),each(<'_jsp_'''''),~each 'p_'nl_jsp_ 3
 )
 
 3 : 0''

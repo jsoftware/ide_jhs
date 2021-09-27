@@ -103,6 +103,31 @@ x gd_set_jwatch_ y
 open_jhs_ ('jwatch?jwid=',x);x
 )
 
+PUBLOCKED=: 0 : 0 rplc LF;'\n'
+pop-up blocked
+adjust browser settings to allow localhost pop-up
+see: jijx>wiki>JHS>>Help>pop-up
+)
+
+NB. javascript to open/reopen a window
+NB. close required so S parmeter has an effect
+jsopen=: 0 : 0 NB. URL window-name specs
+w=window.open("","<WNM>");
+if(null==w)
+ alert("<M>")
+else 
+{
+  if(""==w.document.title)
+  {
+   w.close();  
+   window.open("<URL>","<WNM>","<S>");
+  }
+  else
+   w.setTimeout(function(){w.focus();},50);
+}
+)
+
+NB. note that ugs (cache avoidance is on url) - it not on wid!
 NB.* open - [xywh] open url [; jwid ]
 NB.* open new tab if not already open - reload url?xxx into existing tab
 NB.*    xywh elided is broswer default (probably new tab)
@@ -115,11 +140,11 @@ NB.*    ?jwid= is only url paramter supported - see kludge below
 NB.*    javascript window open URL,jwid,specs,replace
 NB.*    jwid is the window id - javascript uses term window name
 NB.*    jwid is not the page or tab title
-NB.*    NOPOPUP not supported
+NB. NOPOPUP is supported
+NB. cojhs (table/watch/... use open - locale is url - jwid???
 open=: 3 : 0
 ''open y
 :
-assert 0=NOPOPUP
 a=. boxopen y
 if. 1=#a do. a=. a,a end.
 'a b'=. a
@@ -130,18 +155,26 @@ else.
  s=. 'left=<X>,top=<Y>,width=<W>,height=<H>'hrplc 'X Y W H';":each 4{.x,500 500
 end.
 
+if. NOPOPUP do.
+ JWID=: b NB. needs work
+ jhslinknopu a
+ return.
+end.
+
 i=. 1 i.~'?jwid='E.a
 if. i<#a do.
  i=. i+6
  NB. JWID=: i}.a NB. used by cojhs report
  a=. (i{.a),jurlencode i}.a NB. jurlencode just the parameter
-end.
+end. 
 JWID=: b
-
-NB. a=. a,(('?'e.a){'?&'),'nocache=',":<.10000*6!:1'' NB. cache
-
 m=. a,' pop-up blocked\nadjust browser settings to allow localhost pop-up\nsee wiki JHS help pop-up section'
-jjs 'w=window.open("<URL>","<Y>","<S>");if(null==w)alert("<M>");'rplc '<URL>';a;'<Y>';b;'<S>';s;'<M>';m
+jjs q__=: jsopen rplc '<URL>';a;'<WNM>';b;'<S>';s;'<M>';PUBLOCKED
+)
+
+NB. focus wid - focus 'jfif' - focus 'jijs?jwid=~temp/sp/spfile.ijs'
+focus=: 3 : 0
+jjs_jhs_'setTimeout(function(){w=window.open("","<WID>");if(""==w.document.title) w.close(); else w.focus();},50)' rplc '<WID>';y
 )
 
 NB.* openreport - openreport'' - report wid,tab,class,locale
@@ -151,8 +184,8 @@ t=. t#~;(<'jhs')=>1{each copath each conl 1
 loc=. tab=. wid=. class=. ''
 for_c. t do.
  if. COCREATOR__c-:<'base' do.
-  tab=. tab,<JTITLE__c
-  wid=. wid,<JWID__c
+  try. tab=. tab,<JTITLE__c catch. tab=. tab,<,'?' end.
+  try. wid=. wid,<JWID__c   catch. wid=. wid,<,'?' end.
   loc=. loc,c
   class=. class,{.copath c
  end.
@@ -318,6 +351,14 @@ UQS=. (+./'~/\'e. y){:: '';uqs_jhs_'' NB. ? cache only for file
 decho UQS
 t=. '<a href="<REF><UQS>" target="<TARGET>" class="jhref" ><TEXT></a>'
 t=. t hrplc_jhs_ 'TARGET REF UQS TEXT';x;y;UQS;y
+jhtml'<div contenteditable="false">',t,'</div>'
+)
+
+jhslinknopu=: 3 : 0
+'_blank' jhslinknopu y
+:
+t=. '<a href="<REF>" target="<TARGET>" class="jhref" ><TEXT></a>'
+t=. t hrplc_jhs_ 'TARGET REF TEXT';x;y;y
 jhtml'<div contenteditable="false">',t,'</div>'
 )
 

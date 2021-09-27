@@ -2,6 +2,18 @@ NB. JHS is (unfortunately) not maintained as a normal addon
 NB. development is done in the ~addons folder
 NB. and periodically is moved to the git/addons folder with the help of this script
 
+NB. dupicated - be careful and fix
+bup=: 3 : 0
+p=. jpath y
+t=. jpath'~/'
+if. t-:(#t){.p do. p=. (#t)}.p end.
+try.
+ shell_jtask_'bin/bup ',p,' > bup.txt 2>&1'
+catch.
+ 0 assert~fread'bup.txt'
+end.
+i.0 0
+)
 
 help=: 0 : 0
 
@@ -25,7 +37,6 @@ gitp=: 'git/addons/',y,'/'
 )
 
 dobup=: 3 : 0
-require't/e' NB. bup
 bup (}:devp),' ','before_push'
 bup (}:gitp),' ','before_push'
 )

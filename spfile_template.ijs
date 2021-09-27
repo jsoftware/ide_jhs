@@ -1,27 +1,31 @@
+coclass'jsp'
+
 0 : 0
 define project verbs
-default location for this script is: ~temp/sp/spfile.ijs
+
+default SPFILE is: ~temp/sp/spfile.ijs
 template is: ~addons/ide/jhs/spfile_template.ijs
 
-   sp 0 NB. set ~temp/sp/spfile.ijs as SPFILE and create it from template
+edit/open do popups
+see: jijx>wiki>JHS>>Help>pop-up
+
+focus works in firefox, but may not work in other browsers
 )
 
-project_jhs_z_=: 3 : 0
-edit '~/fubar.ijs'
-edit      SPFILE
-open_jhs_ 'jfif'
-open_jhs_ 'jfile' 
-open_jhs_ 'jfiles'
-open_jhs_ 'jdebug'
+p_aaa=: 3 : 0
+edit       '~temp/spexample.ijs'
+open_jhs_  'jfif'
+open_jhs_  'jfiles'
+focus_jhs_ 'jijx'
 )
 
-project_jd_z_=: 3 : 0
-edit_jhs_ '~/t1.ijs'
+p_bbb=: 3 : 0
 open_jhs_ 'jfile'
-open_jhs_ 'jfiles'
-open_jhs_ 'jdebug'
+10 10 open_jhs_ 'jdebug'
+focus_jhs_ 'jijx'
 load 'git/addons/data/jd/jd.ijs'
-myname=: 666777
+testdata=: i.3 4
+echo testdata
 )
 
-splist_jsp_'' NB. echo recallable project lines
+splist'' NB. echo project sentences
