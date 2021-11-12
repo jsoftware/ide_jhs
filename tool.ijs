@@ -60,13 +60,13 @@ securely access your JHS server from any device on lan or remote
 NB. jhslinkurl'www.d3js.org' NB. link to D3 home page
 tool_jd3=: 0 : 0
 plot d3 uses D3 javascript library
-see menu help>JHS help>libraries for more info
+see menu wiki>JHS>help>libraries for more info
    jd3''
 )
 
 tool_table=: 0 : 0
 table (spreadsheet) uses Handsontable javascript library
-see menu help>JHS help>libraries for more info
+see menu wiki>JHS>help>libraries for more info
    'jtable;0 0'cojhs'n' [ n=. i.3 4
 n immediately reflects any changes
 edit cells and add new rows/cols
@@ -114,7 +114,7 @@ simple printing
      printscript_jhs_ '~addons/ide/jhs/config/jhs.cfg'
    0 printscript_jhs_ '~addons/ide/jhs/config/jhs.cfg'
    printwidth_jhs_=: 80 NB. truncate longer lines with ... 
-   printstyle_jhs_=: 'font-family"courier new";font-size:16px;'
+   printstyle_jhs_=: 'font-family:"courier new";font-size:16px;'
 )
 
 tool_demos=: 0 : 0
@@ -137,6 +137,8 @@ will make more sense after that
 12 WebGL 3d graphics
 13 D3 line and bar plots
 14 iframes - spreadsheet/graph
+15 Flip - no javascript
+16 pswd gen - no javascript
    rundemo_jhs_ 1
 )
 

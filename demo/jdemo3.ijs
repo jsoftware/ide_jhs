@@ -27,6 +27,7 @@ jhrajax (8 u:|.7 u: t1),JASEP,(8 u:|.7 u: t2)
 jev_get=: create NB. browser get request
 
 JS=: 0 : 0
+
 // send t1 and t2 name/value pairs to J
 function ev_flip_click(){jdoajax(["t1","t2"],"");}
 

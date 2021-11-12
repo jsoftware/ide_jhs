@@ -216,6 +216,18 @@ if. 'NB.spxhr:'-:9{.deb d do.
  goto_top.
 end.
 
+if. 'NB.spxaction:'-:13{.deb d do.
+ SEMN=:>:SEMN
+ d=. 13}.d
+ if. IFJHS do.
+  jhtml_jhs_ '<div><font style="color:red;font-style:bold;">action required: <TEXT></font></div>'rplc'<TEXT>';d
+ else.
+  echo 'action: ',d
+ end.
+ return.
+ goto_top.
+end.
+
 if. 'NB.spxhtml:'-:11{.deb d do.
  SEMN=:>:SEMN
  d=. 11}.d

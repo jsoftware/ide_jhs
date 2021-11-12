@@ -1,8 +1,8 @@
-NB. JHS is (unfortunately) not maintained as a normal addon
+NB. JHS is (unfortunately) not developed in the git/addons folder
 NB. development is done in the ~addons folder
 NB. and periodically is moved to the git/addons folder with the help of this script
 
-NB. dupicated - be careful and fix
+NB. duplicated - be careful and fix
 bup=: 3 : 0
 p=. jpath y
 t=. jpath'~/'
@@ -23,6 +23,9 @@ help=: 0 : 0
   dobup''           NB. backup up git and ~addons
   status''
   copy_dev_to_git'' NB. be very careful
+  status''
+  NB. manual update of git/addons/ide/jhs/manifest.ijs
+  status''          NB. must be clean
 
   bump_version''
 )

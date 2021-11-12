@@ -35,7 +35,8 @@ codestroy''
 
 HBS=: 0 : 0
 jhclose''
-'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jtable: <Y>'
+'<br/>'
+'jtable: <Y>'
 '<div id="hots">'
 '<iframe id="hot" name="hot" src="',(;hot),'"  ></iframe>'
 '</div>'
@@ -53,6 +54,7 @@ jhrajax''
 
 ev_close_click=: 3 : 0
 jhrajax''
+shown=: 0 NB. already closed
 destroy''
 )
 

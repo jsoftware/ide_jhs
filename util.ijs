@@ -80,11 +80,11 @@ smoutput jmarka_jhs_,y,jmarkz_jhs_
 i.0 0
 )
 
-NB.* jjs - jjs 'alert("foo");' - eval javascript sentences
-NB.*    starting without ';' is evaluated only in ajax
-NB.*    starting with ';' is also evaluated in refresh
+NB.* jjs - jjs 'alert("foo");' - eval javascript sentences in ajax response
+NB. y starting with ; is run in refresh and in ajax
+NB. blank first char is added if there is no ; - indicates run in ajax and refresh
 jjs=:3 : 0
-jhtml jmarkjsa,y,jmarkjsz
+jhtml jmarkjsa,((';'={.y){' ;'),y,jmarkjsz
 )
 
 NB.* jsfromtable - jsfromtable i.3 4 - javascript table from J table
@@ -103,27 +103,21 @@ x gd_set_jwatch_ y
 open_jhs_ ('jwatch?jwid=',x);x
 )
 
-PUBLOCKED=: 0 : 0 rplc LF;'\n'
-pop-up blocked
-adjust browser settings to allow localhost pop-up
-see: jijx>wiki>JHS>>Help>pop-up
-)
-
 NB. javascript to open/reopen a window
 NB. close required so S parmeter has an effect
 jsopen=: 0 : 0 NB. URL window-name specs
 w=window.open("","<WNM>");
 if(null==w)
- alert("<M>")
+ alert(PUBLOCKED)
 else 
 {
   if(""==w.document.title)
   {
    w.close();  
-   window.open("<URL>","<WNM>","<S>");
+   w=window.open("<URL>","<WNM>","<S>");
   }
   else
-   w.setTimeout(function(){w.focus();},50);
+  w.setTimeout(function(){w.focus();},50);
 }
 )
 
@@ -147,7 +141,7 @@ open=: 3 : 0
 :
 a=. boxopen y
 if. 1=#a do. a=. a,a end.
-'a b'=. a
+'a b'=. ,each a
 if. ''-:x do.
  s=: ''
 else.
@@ -169,7 +163,7 @@ if. i<#a do.
 end. 
 JWID=: b
 m=. a,' pop-up blocked\nadjust browser settings to allow localhost pop-up\nsee wiki JHS help pop-up section'
-jjs q__=: jsopen rplc '<URL>';a;'<WNM>';b;'<S>';s;'<M>';PUBLOCKED
+jjs jsopen rplc '<URL>';a;'<WNM>';b;'<S>';s
 )
 
 NB. focus wid - focus 'jfif' - focus 'jijs?jwid=~temp/sp/spfile.ijs'
@@ -197,7 +191,7 @@ end.
 NB.* utf8_from_jboxdraw - utf8_from_jboxdraw string - rplc i.11 boxdraw with utf8
 utf8_from_jboxdraw=: 3 : 'y rplc (<"0 [11{.16}.a.),.<"1 [11 3$8 u: u:9484 9516 9488 9500 9532 9508 9492 9524 9496 9474 9472'
 
-NB.* printstyle=: 'font-family"courier new";font-size:16px;'
+NB.* printstyle=: 'font-family:"courier new";font-size:16px;'
 printstyle=: 'font-family:"courier new";font-size:16px;'
 
 NB.* printwidth=: 80 - truncate long lines with ... 
@@ -283,16 +277,21 @@ NB.*
 NB.* cojhs - locale=. 'class;show;title'cojhs data
 NB.*    show _ no show, empty default show, x y [w h] window location
 NB.*    title - tab title -  empty class default
-NB.     'table;10 10;abc'cojhs'n' [ n=. i.2 5
+NB.*    'jtable;10 10;abc'cojhs'n' [ n=. i.2 5
+NB.*    creates locale from ~/addons/ide/jhs/cojhs/locale.ijs if it exists
 cojhs=: 4 : 0
 d=. dltb each<;._2 x,';'
 'c s t'=. 3{.d
-if. -.(<c)e. conl 0 do. load'~addons/ide/jhs/cojhs/',c,'.ijs' end.
+if. -.(<c)e. conl 0 do.
+ f=. '~addons/ide/jhs/cojhs/',c,'.ijs'
+ if. fexist f do. load f end.
+ if. -.(<c)e. conl 0 do. ('locale ',c,' must be created first')assert 0 end.
+end.
 s=. 0".s
 'show invalid'assert (_-:s)+.0 2 4 e.~#s
 r=. conew c
-title__r=: t
 create__r y
+if. -.''-:t do. title__r=: t end.
 if. -._-:s do. show__r s end.
 r
 )
@@ -391,7 +390,7 @@ d=. (('</script>'E.d)i.1){.d
 d=. d,'graph();'
 d=. d rplc'canvas1';canvasname
 jhtml c
-jjs_jhs_ ';',d
+jjs_jhs_ ';',d NB. leading ; has sentence run in ajax and in refresh
 )
 
 NB. f type;window;width height[;output]
@@ -440,3 +439,22 @@ i.0 0
 jhsuqs=: uqs_jhs_  NB. viewmat
 jhtml=: jhtml_jhs_ NB. viewmat
 
+NB. stadard cojhs boilerplate
+show=: 3 : 'y open ,~coname'''''
+
+destroy=: codestroy
+
+ev_close_click=: 3 : 0
+saveonclose''
+jhrajax''
+destroy''
+)
+
+jev_get=: 3 : 0
+title jhrx (getcss''),(getjs''),gethbs''
+)
+
+create=: [
+saveonclose=: [
+NB. override create, jev_get, and savonclose to customize app
+NB. end cojhs boilerplate

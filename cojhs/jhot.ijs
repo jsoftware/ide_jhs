@@ -67,6 +67,7 @@ js=. getjs'CUSTOM';CUSTOM hrplc 'OPTIONS DATA';options;jsfromtable data
 
 ev_close_click=: 3 : 0
 jhrajax''
+shown=: 0 NB. already closed
 destroy''
 )
 

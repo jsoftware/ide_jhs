@@ -20,19 +20,20 @@ codestroy''
 
 ev_close_click=: 3 : 0
 jhrajax''
+shown=: 0 NB. already closed
 destroy''
 )
 
 HBS=: 0 : 0
 jhclose''
-'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' NB. red spacer
+'<br/>'
 'run'jhb''
 'sentence'jhtext'<SENTENCE>';30
 '<div id="data" class="jcode"><TEXT></div>'
 )
 
 CSS=: 0 : 0
-form{margin:2px;}
+form{margin:0px 2px 2px 2px;}
 #sentence{width:50%;}
 )
 

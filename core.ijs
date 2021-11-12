@@ -203,8 +203,15 @@ try.
  if. (6=type)*.URL-:'jijx' do.
   t=. jhtmlfroma s
   if. '<br>'-:_4{.t do. t=. _4}.t end.
+ 
+  a=. LOGN
   LOGN=: LOGN,'<div class="',class,'">',t,'</div><!-- chunk -->'
-  LOG_jhs_=: LOG,LOGN
+  if. jmarkremove-:jmarkrcnt{.s do.
+   LOG_jhs_=: LOG,a NB. jjs ajax only not added to log
+  else. 
+   LOG_jhs_=: LOG,LOGN
+  end.
+
   if. -.CHUNKY do.
    jhrajax_a LOGN
   else.

@@ -64,10 +64,24 @@ div{padding-left:2px;}
  display: none; background: white;
  text-align:center;
 }
-#close{position:absolute;top:0;left:0;width:20px;height:20px;font-size:16px;background-color:firebrick;color:white;font-weight:bold;}
+#redbarclose{top:0;left:0;width:100%;height:15px;
+ background-color:firebrick;padding: 0px;margin: 0px;border: 0px
+}
 )
 
-NB.#close{position:absolute;top:0;left:0;width:20px;height:20px;font-size:16px;background-color:firebrick;color:white;font-weight:bold;}
+0 : 0
+#redbarclose{position:absolute;top:0;left:0;width:50%;
+ height:10px;font-size:10px;background-color:firebrick;color:white;
+ padding: 0px 0px 0px 0px;margin:0px 0px 20px 0px;border: 0px;
+}
+)
+
+NB. top right bottom left
+NB. padding: 2px 2px;margin:0px;
+
+NB.  font-weight:bold;
+
+NB. #redbarclose{position:absolute;top:0;left:0;width:100%;height:20x;font-size:10px;background-color:firebrick;color:white;font-weight:bold;}
 
 NB. extra html - e.g. <script .... src=...> - included after CSS and before JSCORE,JS
 HEXTRA=: '' 
@@ -98,12 +112,12 @@ y rplc '<';LF,'<'
 NB. form template - form, hidden handler sentence, hidden button for form enter (ff)
 formtmpl=: 0 : 0 -. LF
 <form id="j" name="j" method="post" action="<LOCALE>">
-<input type="hidden" name="jdo"     value="">
-<input type="hidden" name="jlocale" value="<LOCALE>">
-<input type="hidden" name="jid"     value="">
-<input type="hidden" name="jtype"   value="">
-<input type="hidden" name="jmid"    value="">
-<input type="hidden" name="jsid"    value="">
+<input type="hidden" id="jdo" name="jdo"     value="">
+<input type="hidden" id="jlocale" name="jlocale" value="<LOCALE>">
+<input type="hidden" id="jid" name="jid"     value="">
+<input type="hidden" id="jtype" name="jtype"   value="">
+<input type="hidden" id="jmid" name="jmid"    value="">
+<input type="hidden" id="jsid" name="jsid"    value="">
 <input type="submit" value="" onclick="return false;" style="display:none;width:0px;height:0px;border:none">
 )
 
@@ -125,13 +139,14 @@ jurlencode=: 3 : 0
 ,'%',.(16 16#:a.i.,y){'0123456789ABCDEF'
 )
 
-jmarkjsa=: '<!-- j js a --><!-- '
-jmarkjsz=: ' --><!-- j js z -->'
-
 jmarka=:     '<!-- j html output a -->'
 jmarkz=:     '<!-- j html output z -->'
 jmarkc=: #jmarka
 
+jmarkjsa        =: '<!-- j js a --><!-- ' NB. next char ; is for refresh+ajax and blank for ajax only
+jmarkjsz        =: ' --><!-- j js z -->'
+jmarkremove     =: jmarka,jmarkjsa,' '
+jmarkrcnt       =: #jmarkremove
 
 NB. unique query string - avoid cache
 uqs=: 3 : 0
@@ -148,6 +163,7 @@ jhfroma y
 
 bad=: 1{a. NB. this character hangs the browser
 
+NB. &amp is a problem - '&amp;&nbsp;'
 jhfroma=: 3 : 0
 y rplc '<';'&lt;';'>';'&gt;';'&';'&amp;';'"';'&quot;';CRLF;'<br>';LF;'<br>';CR;'<br>';' ';'&nbsp;';bad;''
 )
@@ -446,8 +462,9 @@ jgetpath=: 3 : '(>:y i: PS){.y'
 
 NB. standard demo html boilerplate
 jhdemo=: 3 : 0
-c=. '.ijs',~>coname''
-p=. jpath'~addons/ide/jhs/demo/',c
+c=. ;coname''
+c=. '.ijs',~;(_~:_".c){c;{.copath coname''
+p=. '~addons/ide/jhs/demo/',c
 '<hr>',jhref_jhs_ 'jijs';p;c
 )
 
@@ -476,7 +493,7 @@ t hrplc 'ID VALUE';x;y
 
 NB.* jhclose*jhclose'' - cojhs close button and spacer
 jhclose=: 3 : 0
-'close'jhb''
+'redbarclose'jhb''
 )
 
 NB.* jhcheckbox*id jhcheckbox text;checked (checked 0 or 1)
@@ -709,6 +726,8 @@ jhtr=: 3 : 0
 '<tr>','</tr>',~;(<'<td>'),each y,each<'</td>'
 )
 
+
+
 NB.* 
 NB.* HBS nouns
 NB.* jhtablea*jhtablea - <table>
@@ -731,6 +750,15 @@ seebox s,.LF-.~each jhbsex each s
 
 NB.* jnv*jnv_jhs_ 1 - toggle display of event name/value pairs
 jnv=: 3 : 'NVDEBUG=:y' NB. toggle event name/value display
+
+NB.*
+NB.* html utils
+
+NB.* jhevids*jevids 'id1 abc foo'
+jhjevids=: 3 : 0
+d=. }:;'"',each (;:y),each<'",'
+LF,~'var JEVIDS= [',d,'];'
+)
 
 NB.* 
 NB.* html response verbs
@@ -800,6 +828,11 @@ gethbs=: 3 : 0
 NB.* jhrajax*jhrajax data - JASEP delimited data
 jhrajax=: 3 : 0
 htmlresponse y,~hajax rplc '<LENGTH>';":#y
+)
+
+NB.* jhrcmds*jhrcmds ajax cmds - 0 or more boxed cmds - 'set a value *abc'
+jhrcmds=: 3 : 0
+jhrajax (-''-:y)}.(2 1{a.),}:;JASEP,~each boxopen y
 )
 
 chunk=: 3 : 0

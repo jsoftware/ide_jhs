@@ -98,6 +98,18 @@ LS+= ".";
 var logit= "";
 var closing=0; // set 1 when page/locale is closing to prevent events 
 
+const jmarka=     '<!-- j html output a -->';
+const jmarkz=     '<!-- j html output z -->';
+
+const jmarkjsa    = '<!-- j js a --><!-- ';
+const jmarkjsz    = ' --><!-- j js z -->';
+const jmarkremove = jmarka+jmarkjsa+" " // ; is refresh and ajax and blank is ajax only
+const jmarkrcnt   = jmarkremove.length;
+
+const PUBLOCKED= "pop-up blocked\n\
+adjust browser settings to allow localhost pop-up\n\
+see: jijx>wiki>JHS>Help>pop-up";
+
 function jbyid(id){return document.getElementById(id);}
 function jsubmit(s){jform.jdo.value=jevsentence;jform.submit();}
 
@@ -358,6 +370,11 @@ function jev(event){
  var i= id.indexOf('*');
  jform.jid.value  = id;
  jform.jmid.value = (-1==i)?id:id.substring(0,i);
+ 
+// alert(jform.mid.value);
+// alert("mid: "+jbyid(jform.mid.value).type);
+ 
+ 
  jform.jsid.value = (-1==i)?"":id.substring(++i,id.length);
  if(type=='keydown'&&27==jevev.keyCode)return false; // IE ignore esc
  if(type=='keydown'&&13==jevev.keyCode&&!jevev.ctrlKey&&!jevev.shiftKey)
@@ -373,8 +390,19 @@ function jevdo()
  //catch(ex)
  if('undefined'==eval("typeof "+JEV))
  {
+ 
   // undef returns true or does alert and returns false for events that should have handlers 
   if(null==jevtarget)return true;
+ 
+  // undefined JS handler with JEVIDS defined does jdoajx with JEVIDS
+  if(!("undefined"==typeof JEVIDS))
+  {
+   if("keydown"==jform.jtype.value) return true; // ignore keydown events
+   jdoajax(JEVIDS,"");
+   var t= jbyid(jform.jmid.value).type;
+   return "checkbox"==t || "radio"==t; // true lets checkbox/radiobutton state change
+  }
+  
   if(jform.jtype.value=="click"||jform.jtype.value=="enter"){alert("not defined: function "+JEV+"()");return false;}
   return true;
  }
@@ -429,13 +457,20 @@ function jdoajax(ids,data,sentence,async)
  if(!async)jdor();
 }
 
+//!!! now that jbyid("jmid") works, it might be be possible to avoid some use of eval
+
 // return post args from standard form ids and extra form ids
 function jpostargs(ids)
 {
  var d,t="",s="",a=["jdo","jtype","jmid","jsid"].concat(ids);
  for(var i=0;i<a.length;++i)
  {
-  d= eval("jform."+a[i]+".value");
+  d= jbyid(a[i]);
+  if(null==d) continue;
+  if("undefined"==typeof d.value)
+   d= d.textContent; // works for simple cases, but not general
+  else 
+   d= ("checkbox"==d.type||"radio"==d.type)?(d.checked?1:0):d.value;
   t+= s+a[i]+"="+jencode(d);
   s= "&";
  }
@@ -498,21 +533,69 @@ function jdor()
   else
   {
    d=rq.responseText.split(JASEP);
-   
-   if(  "undefined"==eval("typeof "+f) && "undefined"==typeof ajax)
+   if("\2"===d[0])
    {
-     alert("not defined: function "+f+"()");
-   }
+     try{ajaxcmds(d)}catch(e){alert("ajax result cmds failed: "+e);}
+   }  
    else
    {
-    if("function"==eval("typeof "+f))
-     f+="(d)";
+    if(  "undefined"==eval("typeof "+f) && "undefined"==typeof ajax)
+    {
+      alert("not defined: function "+f+"()");
+    }
     else
-     f="ajax(d)";
-    try{eval(f)}catch(e){alert(f+" failed: "+e);}
+    {
+     if("function"==eval("typeof "+f))
+      f+="(d)";
+     else
+      f="ajax(d)";
+     try{eval(f)}catch(e){alert(f+" failed: "+e);}
+    }
    }
   }
   rqstate= 0; rqoffset= 0;
+ }
+}
+
+// 1 or more blank delimited cmd [args] and *value
+function ajaxcmds(ts)
+{
+ for(i=1;i<ts.length;++i) // first one is JACMDS
+ {
+  j= ts[i].indexOf('*')
+  val= ts[i].substring(j+1);
+  cmd= ts[i].substring(0,j);
+  cmd= cmd.split(' ');
+  switch(cmd[0])
+  {
+   case 'set' :
+    id= jbyid(cmd[1]);
+    if(null==id) throw cmd[1]+" is invalid id";
+    if("undefined"==typeof id.value)
+     id.innerHTML= val;
+    else
+     id.value= val;
+    break; 
+
+   case 'css' :
+    var sheet= document.getElementById('JCSS');
+    if(null!=sheet) sheet.parentNode.removeChild(sheet);
+    if(0!=val.length)
+    {
+     sheet = document.createElement('style');
+     sheet.id= "JCSS";
+     sheet.innerHTML= val;
+     document.body.appendChild(sheet);
+    }
+    break;
+    
+   case 'copy':
+    navigator.clipboard.writeText(val);
+    break;
+    
+   default: 
+    throw cmd[0]+" is invalid command";
+  }
  }
 }
 
@@ -867,8 +950,8 @@ function debcodes(t)
 function jseval(ajax,s)
 {
  var i,j,a,z,q;
- a= "<!-- j html output a --><!-- j js a --><!-- ";
- z= " --><!-- j js z --><!-- j html output z -->";
+ a= jmarka+jmarkjsa;
+ z= jmarkjsz+jmarkz;
  while(0!=s.length)
  {
   i= s.indexOf(a);
@@ -881,6 +964,7 @@ function jseval(ajax,s)
    
    if('!'==q.charAt(0))
    {
+    alert("jseval !"); //! kill this off?
     var cmd= q.split(" ");
     if(4==cmd.length&&cmd[0]=="!open")
      window.open(cmd[1]+cmd[3],cmd[2]);
@@ -896,7 +980,29 @@ function jseval(ajax,s)
  }
 }
 
-// 784 adsf    das f a sdf  a sdf a sdf asdf asdf asdf a
+// remove jjs ajax only from s
+function jjsremove(s)
+{
+ var i,j;
+ var z= jmarkjsz+jmarkz;
+ var d= "";
+ while(0!=s.length)
+ {
+  i= s.indexOf(jmarkremove);
+  if(-1!=i)
+  {
+   d+= s.substring(0,i);
+   j= s.indexOf(z);
+   s= s.substring(j+z.length);
+  }
+  else
+  {
+   d+= s;
+   s= "";
+  } 
+ }
+ return d;
+}
 
 function getlstf(key)
 {
@@ -985,6 +1091,13 @@ function ev_pageclose_click()
  closing= 0;
 }
 
+const confirmtxt= "May have unsaved data.\n\
+Cancel for chance to save.\n\n\
+CTRL+\\ avoids this dialog.\n\n\
+REDBAR or CTRL+\\\n\
+preferred to browser close\n\
+so the J server is informed."
+
 function ev_close_click()
 {
  if(window.frameElement)
@@ -995,6 +1108,12 @@ function ev_close_click()
   {jdoajax([],'');window.close();}
 }
 
-function ev_close_click_ajax(ts){;}
+function ev_close_click_ajax(){;}
 
-)
+
+function ev_redbarclose_click()
+{
+ //if(false==confirm(confirmtxt)) return;
+ jform.jmid.value="close";
+ ev_close_click();
+}

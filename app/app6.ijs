@@ -40,6 +40,7 @@ codestroy''
 
 ev_close_click=: 3 : 0
 jhrajax''
+shown=: 0 NB. already closed
 destroy''
 )
 
@@ -52,7 +53,7 @@ jhh1'explicit verb - debug line numbers'
 )
 
 CSS=: 0 : 0
-form{margin:2px;}
+form{margin:0px 2px 2px 2px;}
 )
 
 jev_get=: 3 : 0

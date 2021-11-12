@@ -1018,25 +1018,7 @@ outside comment text
 in quoted string
 outside quoted string
 )
-FIF=: 0 : 0
-pc fif;
-menupop "&Options";
-menu print "&Print" "" "" "";
-menusep ;
-menu clip "&Clip" "" "" "";
-menusep ;
-menu refresh "&Refresh Project" "" "" "";
-menusep ;
-menu help "&Help" "" "" "";
-menusep ;
-menu exit "E&xit" "" "" "";
-menupopz;
-xywh 2 2 255 91;cc tabs tab rightmove;
-xywh 229 2 28 11;cc ptop checkbox leftmove rightmove;cn "&Top";
-xywh 0 94 259 80;cc found editm ws_hscroll ws_vscroll rightmove bottommove;
-pas 0 0;pcenter;
-rem form end;
-)
+
 fif_run=: 3 : 0
 getfoldernames''
 FIFFOLDERS=: 2 {."1 USERFOLDERS
@@ -1249,28 +1231,6 @@ fifshow''
 )
 fif=: fif_run
 
-FIFF=: 0 : 0
-pc fiff;
-xywh 3 6 37 11;cc s0 static ss_right;cn "Fi&nd what:";
-xywh 43 5 150 12;cc what edit ws_border rightmove;
-xywh 3 20 37 11;cc s1 static ss_right;cn "In &context:";
-xywh 43 19 93 200;cc econtext combolist cbs_autohscroll rightmove;
-xywh 3 34 37 11;cc s2 static ss_right;cn "File ty&pe:";
-xywh 43 33 93 200;cc etype combodrop ws_vscroll cbs_autohscroll rightmove;
-xywh 3 48 37 11;cc s3 static ss_right;cn "In fo&lders:";
-xywh 43 47 93 200;cc edir combodrop ws_vscroll cbs_autohscroll rightmove;
-xywh 138 34 11 10;cc selecttype button leftmove rightmove;cn ">>";
-xywh 153 22 44 11;cc regex checkbox leftmove rightmove;cn "&Regex";
-xywh 153 35 76 11;cc case checkbox leftmove rightmove;cn "&Match case";
-xywh 153 49 94 11;cc subdir checkbox leftmove rightmove;cn "&Search sub&directories";
-xywh 210 4 40 12;cc insert button leftmove rightmove;cn "&Insert...";
-xywh 210 17 40 12;cc find button bs_defpushbutton leftmove rightmove;cn "&Find";
-xywh 4 63 102 12;cc nameonly checkbox;cn "File n&ames only";
-xywh 169 62 40 12;cc open button leftmove rightmove;cn "&Open";
-xywh 210 62 40 12;cc cancel button leftmove rightmove;cn "Cancel";
-pas 0 0;
-rem form end;
-)
 fiff_cancel_button=: fif_cancel_button
 fiff_open_button=: fif_open_button
 fiff_insert_button=: fif_insert_button
@@ -1324,24 +1284,6 @@ end.
 )
 fiff_selecttype_button=: wptype_run
 FIFHELPS=: '' NB. not suppported in JHS
-FIFH=: 0 : 0
-pc fifh;
-xywh 3 7 37 11;cc s0 static ss_right;cn "Fi&nd what:";
-xywh 43 5 150 12;cc hwhat edit ws_border rightmove;
-xywh 3 20 37 11;cc s1 static ss_right;cn "In &context:";
-xywh 43 19 93 200;cc hcontext combolist cbs_autohscroll rightmove;
-xywh 3 34 37 11;cc s3 static ss_right;cn "Look &In:";
-xywh 43 33 93 200;cc hlook combolist ws_vscroll rightmove;
-xywh 153 22 44 11;cc hregex checkbox leftmove rightmove;cn "&Regex";
-xywh 153 35 68 11;cc hcase checkbox leftmove rightmove;cn "&Match case";
-xywh 153 49 95 11;cc hsubdir checkbox leftmove rightmove;cn "&Search sub&directories";
-xywh 210 4 40 12;cc insert button leftmove rightmove;cn "&Insert...";
-xywh 210 17 40 12;cc find button bs_defpushbutton leftmove rightmove;cn "&Find";
-xywh 169 62 40 12;cc open button leftmove rightmove;cn "&Open";
-xywh 210 62 40 12;cc cancel button leftmove rightmove;cn "Cancel";
-pas 0 0;pcenter;
-rem form end;
-)
 fifh_cancel_button=: fif_cancel_button
 fifh_insert_button=: fif_insert_button
 fifh_open_button=: fif_open_button

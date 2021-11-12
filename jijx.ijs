@@ -6,19 +6,20 @@ HBS=: 0 : 0
 jhma''
 jhjmlink''
 'tool'   jhmg'tool';1;7
- 'node'    jhmab'https'
- 'table'   jhmab'table'
- 'jd3'     jhmab'plot-d3'
- 'print'   jhmab'print'
- 'watch'   jhmab'watch'
- 'sp'      jhmab'sp'
- 'doc'     jhmab'doc'
+ 'app'     jhmab'app'
  'debug'   jhmab'debug'
-'tour'     jhmg'tour';1;5
+ 'demo'    jhmab'demo'
+ 'doc'     jhmab'doc'
+ 'jd3'     jhmab'plot-d3'
+ 'node'    jhmab'https'
+ 'print'   jhmab'print'
+ 'sp'      jhmab'sp'
+ 'table'   jhmab'table'
+ 'watch'   jhmab'watch'
+'tour'     jhmg'tour';1;7
+ 'canvas'  jhmab'canvas'
  'plot'    jhmab'plot'
  'spx'     jhmab'spx'
- 'demo'    jhmab'demo'
- 'app'     jhmab'app'
  'labs'    jhmab'labs'
 'wiki'     jhmg 'wiki';1;10
  'helpwikijhs'       jhmab'JHS'
@@ -108,7 +109,9 @@ rundemo_jhs_=: 3 : 0
 t=. 'jdemo',":y
 require'~addons/ide/jhs/demo/jdemo',(":y),'.ijs'
 select. y
-case. 14 do. 'jdemo14;0 0 800 600;'cojhs 'temp' [ temp__=: ?5 12$200
+case. 14 do. 'jdemo14;1 1 800 600'cojhs 'temp' [ temp__=: ?5 12$200
+case. 15 do. 'jdemo15;1 1 500 500'cojhs '' 
+case. 16 do. 'jdemo16;1 1 600 600;my-pswd'cojhs '' 
 case.    do. open t
 end.
 )
@@ -153,6 +156,10 @@ ev_j3_click=:  3 : 0
 
 ev_plot_click=:  3 : 0
 'plot tour'tour'plot.ijs'
+)
+
+ev_canvas_click=: 3 : 0
+'canvas tour'tour'canvas.ijs'
 )
 
 ev_spx_click=:  3 : 0
@@ -267,8 +274,8 @@ function removeid(id)
 
 function updatelog(t)
 {
- var p,parent,n= document.createElement("div");
- n.innerHTML= t;
+ var n= document.createElement("div");
+ n.innerHTML= jjsremove(t);
  removeid("prompt");
  jbyid("log").appendChild(n);
  setTimeout(scrollz,TOT); // allow doc to update
@@ -287,16 +294,19 @@ function scrollchunk(){jbyid("chunk").scrollIntoView(false);}
 // ajax update window with new output
 function ajax(ts)
 {
- updatelog(ts[0]);
- jseval(true,ts[0]);
+ var a= ts[0];
+ updatelog(a);
+ jseval(true,a);
 }
 
 // ajax update window with new output
 function ev_log_enter_ajax()
 {
- updatelog(rq.responseText.substr(rqoffset));
- jseval(true,rq.responseText.substr(rqoffset));
+ a= rq.responseText.substr(rqoffset);
+ updatelog(a);
+ jseval(true,a);
 }
+
 
 function ev_log_enter_ajax_chunk()
 {
@@ -307,10 +317,17 @@ function ev_log_enter_ajax_chunk()
  {
   if(rqoffset==0) removeid("prompt"); // 1st chunk contains input line so must remove original
   rqchunk= rq.responseText.substr(rqoffset,i-rqoffset);
+  
+  //var a= jssplit(rqchunk);
+  //alert("chunk");
+  //alert(a[0]);
+  //alert(a[1]);
+  
+  
   rqoffset= i+14; // skip <!-- chunk -->
   var n= document.createElement("div");
   removeid("chunk");
-  n.innerHTML= rqchunk+'<div id="chunk"></div>';
+  n.innerHTML= jjsremove(rqchunk)+'<div id="chunk"></div>';
   jbyid("log").appendChild(n);
   jseval(true,rqchunk);
   setTimeout(scrollchunk,1);
@@ -424,6 +441,7 @@ function ev_j1_click(){jdoajax([]);}
 function ev_j2_click(){jdoajax([]);}
 function ev_j3_click(){jdoajax([]);}
 function ev_plot_click(){jdoajax([]);}
+function ev_canvas_click(){jdoajax([]);}
 function ev_table_click(){jdoajax([]);}
 function ev_node_click(){jdoajax([]);}
 function ev_jd3_click(){jdoajax([]);}

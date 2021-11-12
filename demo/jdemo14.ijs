@@ -52,6 +52,7 @@ codestroy''
 
 ev_close_click=: 3 : 0
 jhrajax''
+shown=: 0 NB. already closed
 destroy''
 )
 

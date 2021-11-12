@@ -34,6 +34,8 @@ spx 0 NB. echo spx status
 NB. spx 19 will execute line 19
 NB. spx 1 19 will execute lines 1 to 19
 
+NB.spxaction: this line displays in red as an action required line
+
 NB.spxhr:
 NB. previous line displays as horizontal rule
 NB.  sequential lines starting with NB.
