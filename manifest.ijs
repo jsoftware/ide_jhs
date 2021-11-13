@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.325'
+VERSION=: '1.0.326'
 
 FILES=: 0 : 0
 app/app1.ijs
@@ -18,6 +18,7 @@ app/app6.ijs
 cojhs/jd3.ijs
 cojhs/jhot.ijs
 cojhs/jtable.ijs
+cojhs/jcanvas.ijs│
 cojhs/jwatch.ijs
 config/jhs.cfg
 core.ijs
@@ -36,12 +37,15 @@ demo/jdemo6.ijs
 demo/jdemo7.ijs
 demo/jdemo8.ijs
 demo/jdemo9.ijs
+demo/jdemo15.ijs
+demo/jdemo16.ijs
 favicon.ico
 gnuplot.ijs
 gpdemo.ijs
 history.txt
 installer.ijs
 jal.ijs
+jbeacon.ijs
 jbinfo.ijs
 jfif.ijs
 jfile.ijs
@@ -102,6 +106,7 @@ readme.txt
 sp.ijs
 spx/plot.ijs
 spx/spx.ijs
+spx/canvas.ijs
 tool.ijs
 util.ijs
 utilh.ijs
