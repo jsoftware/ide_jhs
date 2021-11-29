@@ -16,7 +16,8 @@ jhjmlink''
  'sp'      jhmab'sp'
  'table'   jhmab'table'
  'watch'   jhmab'watch'
-'tour'     jhmg'tour';1;7
+'tour'     jhmg'tour';1;9
+ 'overview'jhmab'overview'
  'canvas'  jhmab'canvas'
  'plot'    jhmab'plot'
  'spx'     jhmab'spx'
@@ -111,7 +112,7 @@ require'~addons/ide/jhs/demo/jdemo',(":y),'.ijs'
 select. y
 case. 14 do. 'jdemo14;1 1 800 600'cojhs 'temp' [ temp__=: ?5 12$200
 case. 15 do. 'jdemo15;1 1 500 500'cojhs '' 
-case. 16 do. 'jdemo16;1 1 600 600;my-pswd'cojhs '' 
+case. 16 do. 'jdemo16;1 1 400 600;my-pswd'cojhs '' 
 case.    do. open t
 end.
 )
@@ -158,8 +159,16 @@ ev_plot_click=:  3 : 0
 'plot tour'tour'plot.ijs'
 )
 
+ev_overview_click=: 3 : 0
+'overview tour'tour'overview.ijs'
+)
+
 ev_canvas_click=: 3 : 0
 'canvas tour'tour'canvas.ijs'
+)
+
+ev_overview_click=: 3 : 0
+'overview tour'tour'overview.ijs'
 )
 
 ev_spx_click=:  3 : 0
@@ -441,6 +450,7 @@ function ev_j1_click(){jdoajax([]);}
 function ev_j2_click(){jdoajax([]);}
 function ev_j3_click(){jdoajax([]);}
 function ev_plot_click(){jdoajax([]);}
+function ev_overview_click(){jdoajax([]);}
 function ev_canvas_click(){jdoajax([]);}
 function ev_table_click(){jdoajax([]);}
 function ev_node_click(){jdoajax([]);}

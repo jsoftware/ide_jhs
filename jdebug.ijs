@@ -65,8 +65,6 @@ coinsert'jhs'
 JMP=: 0 NB. flag to clear all stops for jmp
 nosus=: 'no suspension'
 
-title=: 'jdebug'
-
 HBS=: 0 : 0
 'stops'    jhdiv'<STOPS>';'jcode'
 jhhr
@@ -294,7 +292,7 @@ r=. r;(":line);a;stps
 )
 
 jev_get=: 3 : 0
-title jhrx (getcss''),(getjs''),gethbs'FILES CURLINE STACK STOPS';getdata''
+'jdebug' jhrx (getcss''),(getjs''),gethbs'FILES CURLINE STACK STOPS';getdata''
 )
 
 reply=: 3 : 0

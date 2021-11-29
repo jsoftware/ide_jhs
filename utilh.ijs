@@ -706,6 +706,11 @@ jhh1=: 3 : 0
 '<h1>',y,'</h1>'
 )
 
+NB.* jhhn*jhhn n;text - <hn>text</hn>
+jhhn=: 3 : 0
+'<hn>t</hn>'rplc'n';(":;{.y);'t';{:y
+)
+
 NB.* jhma*jhma'' - menu start
 jhma=: 3 : 0
 MSTATE=:1[MINDEX=:100
@@ -756,8 +761,8 @@ NB.* html utils
 
 NB.* jhevids*jevids 'id1 abc foo'
 jhjevids=: 3 : 0
-d=. }:;'"',each (;:y),each<'",'
-LF,~'var JEVIDS= [',d,'];'
+a=. }:;',',~each'"',each,'"',~each<;._1 ' ',deb y
+LF,~'var JEVIDS= [','];',~a
 )
 
 NB.* 
@@ -830,7 +835,10 @@ jhrajax=: 3 : 0
 htmlresponse y,~hajax rplc '<LENGTH>';":#y
 )
 
-NB.* jhrcmds*jhrcmds ajax cmds - 0 or more boxed cmds - 'set a value *abc'
+NB.* jhrcmds*jhrcmds ajax cmds - 0 or more boxed cmds
+NB.* *set id *value     - html elements (e.g. jhtext) with value
+NB.* *set id *innerHTML - html elements with HTML (e.g. jhspan)
+NB.* *css *css          - set new extra CSS
 jhrcmds=: 3 : 0
 jhrajax (-''-:y)}.(2 1{a.),}:;JASEP,~each boxopen y
 )

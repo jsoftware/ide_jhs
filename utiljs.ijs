@@ -370,11 +370,6 @@ function jev(event){
  var i= id.indexOf('*');
  jform.jid.value  = id;
  jform.jmid.value = (-1==i)?id:id.substring(0,i);
- 
-// alert(jform.mid.value);
-// alert("mid: "+jbyid(jform.mid.value).type);
- 
- 
  jform.jsid.value = (-1==i)?"":id.substring(++i,id.length);
  if(type=='keydown'&&27==jevev.keyCode)return false; // IE ignore esc
  if(type=='keydown'&&13==jevev.keyCode&&!jevev.ctrlKey&&!jevev.shiftKey)
@@ -385,7 +380,6 @@ function jev(event){
 function jevdo()
 {
  JEV= "ev_"+jform.jmid.value+"_"+jform.jtype.value;
- //alert(JEV);
  //try{eval(JEV)}
  //catch(ex)
  if('undefined'==eval("typeof "+JEV))
@@ -399,7 +393,7 @@ function jevdo()
   {
    if("keydown"==jform.jtype.value) return true; // ignore keydown events
    jdoajax(JEVIDS,"");
-   var t= jbyid(jform.jmid.value).type;
+   var t= jbyid(jform.jid.value).type; // jid is jmid+*+jsid
    return "checkbox"==t || "radio"==t; // true lets checkbox/radiobutton state change
   }
   
@@ -468,7 +462,7 @@ function jpostargs(ids)
   d= jbyid(a[i]);
   if(null==d) continue;
   if("undefined"==typeof d.value)
-   d= d.textContent; // works for simple cases, but not general
+   d= d.innerHTML;
   else 
    d= ("checkbox"==d.type||"radio"==d.type)?(d.checked?1:0):d.value;
   t+= s+a[i]+"="+jencode(d);

@@ -95,7 +95,6 @@ shown=: 0
 
 create=: 3 : 0
 'width height'=: y
-title=: 'jcanvas'
 )
 
 show=: 3 : 0

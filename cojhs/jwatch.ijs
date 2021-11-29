@@ -5,7 +5,6 @@ shown=: 0
 
 create=: 3 : 0
 sentence=: y
-title=: 'jwatch'
 )
 
 show=: 3 : 0

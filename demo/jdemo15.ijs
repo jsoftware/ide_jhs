@@ -1,7 +1,6 @@
 coclass'jdemo15'
 coinsert'jhs'
 NB. override create, jev_get, saveonclose verbs to customize app
-title=: ;coname'' NB. tab title unless replaced by create or cojhs
 
 NB. html form definition
 HBS=:  0 : 0

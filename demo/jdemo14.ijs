@@ -81,6 +81,9 @@ jev_get=: 3 : 0
 
 NB. gets all the data - could get and apply just changes
 jev_change=: 3 : 0
+
+echo 'change'
+
 b=. 5{.data__hot1
 d=. tablefromjs getv'jdata' NB. data and summary data
 for_i. i.#d do.

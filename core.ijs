@@ -411,7 +411,7 @@ i=. (0{"1 NV)i.<,y
 
 NB. get values for names
 getvs=: 3 : 0
-((0{"1 NV)i.;:y){(1{"1 NV),<''
+((0{"1 NV)i.<;._1 ' ',deb y){(1{"1 NV),<''
 )
 
 NB. ~name from full name
@@ -597,6 +597,14 @@ if. _1=nc<'TARGET' do. TARGET=: '_blank' end.
 if. _1=nc<'OKURL' do. OKURL=: '' end. NB. URL allowed without login
 )
 
+NB. leading &nbsp; for Chrome delete all
+welcome=: 0 : 0
+<div>&nbsp;<font style="font-size:16px; color:red;" >J Http Server</font>
+<br/><font style="font-size:12px; color:red;" >
+menu>tour>overview : good place to start
+</font></div>
+)
+
 NB. SO_REUSEADDR allows server to kill/exit and restart immediately
 init=: 3 : 0
 'already initialized' assert _1=nc<'SKLISTEN'
@@ -610,8 +618,7 @@ LOCALHOST=: >2{sdgethostbyname_jsocket_'localhost'
 logappfile=: <jpath'~user/.applog.txt' NB. username
 SETCOOKIE=: 0
 NVDEBUG=: 0 NB. 1 shows NV on each input
-NB. leading &nbsp; for Chrome delete all
-LOG=: jmarka,'<div>&nbsp;<font style="font-size:20px; color:red;" >J Http Server</font></div>',jmarkz
+LOG=: jmarka,welcome,jmarkz
 LOGN=: ''
 PDFOUTPUT=: 'output pdf "',(jpath'~temp\pdf\plot.pdf'),'" 480 360;'
 DATAS=: ''

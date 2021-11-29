@@ -7,7 +7,6 @@ create=: 3 : 0
 try.
  'opt d'=. y
  data=: (opt rplc LF;'\n'),jd3data d
- title=: ;(''-:title){title;'jd3'
 catchd.
  ('create failed:',LF,13!:12'') assert 0
 end.
@@ -53,7 +52,7 @@ tabdata="<TABDATA>"; // set by J jev_get handler
 
 function ev_body_load()
 {
- if (window.frameElement){jhide("close");}
+ if (window.frameElement){jhide("redbarclose");}
  resize();
  window.onresize= resize;
 }

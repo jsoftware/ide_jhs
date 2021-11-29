@@ -290,8 +290,8 @@ end.
 s=. 0".s
 'show invalid'assert (_-:s)+.0 2 4 e.~#s
 r=. conew c
+title__r=: ;(''-:t){t;c
 create__r y
-if. -.''-:t do. title__r=: t end.
 if. -._-:s do. show__r s end.
 r
 )
@@ -347,7 +347,6 @@ jhslink=: 3 : 0
 '_blank' jhslink y
 :
 UQS=. (+./'~/\'e. y){:: '';uqs_jhs_'' NB. ? cache only for file
-decho UQS
 t=. '<a href="<REF><UQS>" target="<TARGET>" class="jhref" ><TEXT></a>'
 t=. t hrplc_jhs_ 'TARGET REF UQS TEXT';x;y;UQS;y
 jhtml'<div contenteditable="false">',t,'</div>'

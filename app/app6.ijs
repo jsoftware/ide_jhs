@@ -25,7 +25,6 @@ shown=: 0
 
 create=: 3 : 0
 sentence=: y
-title=: 'app6'
 )
 
 show=: 3 : 0
@@ -46,8 +45,8 @@ destroy''
 
 HBS=: 0 : 0
 jhclose''
-jhh1'explicit verb - debug line numbers'
-'run'jhb''
+jhh1'explicit display'
+'run'jhb'display'
 'name'jhtext'<NAME>';30
 '<div id="data" class="jcode"><TEXT></div>'
 )
@@ -56,13 +55,15 @@ CSS=: 0 : 0
 form{margin:0px 2px 2px 2px;}
 )
 
+format=: 3 : 'jhtmlfroma 5!:5<y'
+
 jev_get=: 3 : 0
-title jhrx (getcss''),(getjs''),gethbs'NAME TEXT';sentence;jhtmlfroma dbsd sentence
+title jhrx (getcss''),(getjs''),gethbs'NAME TEXT';sentence;format sentence
 )
 
 ev_run_click=: 3 : 0
 sentence=: getv'name'
-jhrajax jhtmlfroma dbsd sentence
+jhrajax format sentence
 )
 
 JS=: 0 : 0

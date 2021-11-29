@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.326'
+VERSION=: '1.0.327'
 
 FILES=: 0 : 0
 app/app1.ijs
@@ -18,7 +18,7 @@ app/app6.ijs
 cojhs/jd3.ijs
 cojhs/jhot.ijs
 cojhs/jtable.ijs
-cojhs/jcanvas.ijs│
+cojhs/jcanvas.ijs
 cojhs/jwatch.ijs
 config/jhs.cfg
 core.ijs
@@ -107,6 +107,8 @@ sp.ijs
 spx/plot.ijs
 spx/spx.ijs
 spx/canvas.ijs
+spx/overview.ijs
+spx/overview_example.ijs
 tool.ijs
 util.ijs
 utilh.ijs

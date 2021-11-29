@@ -121,7 +121,7 @@ tool_demos=: 0 : 0
 simple apps showing JHS gui programming
 run demos to see some of the possibilities
 study the source to see how it is done
-study menu tour>app first as the source
+study menu tool>app first as the source
 will make more sense after that
 1  Roll submit
 2  Roll ajax
@@ -148,7 +148,6 @@ tool_watch=: 0 : 0
 
 tool_labs_txt=: 0 : 0
 labs - interactive tutorials - a good way to learn J
-labs are installed by jal (menu ide>jal)
 labs are not always current and may run with errors
 labs are organized into categories
 run one of the following sentences:

@@ -9,7 +9,6 @@ try.
  shown=: 0
  header=: dltb y
  header=: header,>('_'={:header){'__';''
- title=: ;(''-:title){title;header
  assert 0=nc<header
  d=. header~
  assert 2>:$$d
