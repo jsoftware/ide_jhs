@@ -167,10 +167,6 @@ ev_canvas_click=: 3 : 0
 'canvas tour'tour'canvas.ijs'
 )
 
-ev_overview_click=: 3 : 0
-'overview tour'tour'overview.ijs'
-)
-
 ev_spx_click=:  3 : 0
 'spx tour'tour'spx.ijs'
 )
