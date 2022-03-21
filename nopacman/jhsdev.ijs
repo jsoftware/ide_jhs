@@ -1,10 +1,16 @@
+jhs_create_symbolic_link=: 3 : 0
+'already linked to ~Addons'assert 0=fexist'~addons/ide/jhs/.git'
+ rmdir_j_ jpath'~addons/ide/jhs' NB. delete pacman ~addons folder
+ hostcmd_j_ 'ln -s ',(jpath'~Addons/ide/jhs/'),' ',jpath '~addons/ide/jhs'
+'link to ~Addons did not work'assert 1=fexist'~addons/ide/jhs/.git'
+)
+
 man=: 0 : 0
 JHS development
 
-editing/testing done with code in git/addons/ide/jhs
+editing/testing done with git/addons/ide/jhs
 
-JHS runs with git code due to the following link:
-...$ ln -s ~/git/addons/ide/jhs/ ~/j903/addons/ide/jhs
+JHS runs with git code due to symbolic link set by: jhs_create_symbolic_link''
 
 ~Addons -> git/addons
 ~addons -> j90x/addons -> git/addons
@@ -12,38 +18,30 @@ JHS runs with git code due to the following link:
 git manifest version numbers should always increase
  so pacman update should never see that pacman update as required
 
-force pacman update for testing pacman release by:
+*** pacman release build (from ~Addons/ide/jhs):
  bup'git/addons/ide/jhs'
- setp'ide/jhs'
 
- 
-
- update manifest FILES
- bump manifest VERSION
+ ...$ cd git/addons/ide/jhs
  ...$ git pull
- ...$ git status
- start JHS
- delete jhs folder (the link to git/addon/ide/jhs)
- pacman update not installed
- shutdown/restart/test
- shutdown
- delete j903/addons/ide/jhs folder
- ...$ ln -s ... - restore testing from git
-JHS is development/testing is done in git folder
+ ...$ git status - resolve problems
 
-pacman release requires:
- update manifest FILES
- bump manifest VERSION
- check git status etc
- git commit
- git push
- delete JHS folder with ln to git
- pacman not installed
- install not installed
- exit''
- start JHS and test
- exit''
- delete j90x/addons/ide/jhs folder
- ...$ ln -s ~/git/addons/ide/jhs/ ~/j903/addons/ide/jhs
- start JHS and test and verify new version
+ setp'ide/jhs'
+ manifest_status'' NB. edit manifest to resolve problems
+ bump_version''
+
+ ...$ git status
+ ...$ git commit -a -m "pacman release ..."
+ ...$ git push
+
+*** test pacman build:
+ ferase'~addons/ide/jhs' NB. erase ln symbolic link file to git/addons/ide/jhs
+ jijx>pacman>Not Installed
+ check ide/jhs
+ install selected
+
+ shutdown/start/test
+
+*** ln to ~Addons for development:
+ start JHS
+ jhs_create_symbolic_link''
 )
