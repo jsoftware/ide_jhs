@@ -7,17 +7,25 @@ t=. jpath'~Addons/',y,'/'
 gitp=: t
 )
 
+NB. FILESWIN64 etc
+specials=: 3 : 0
+ns=. }.'FILES'nl 0
+r=. ''
+for_n. ns do.
+ r=. r,<;._2 (;n)~
+end.
+(<gitp),each r
+)
+
 NB. manifest_status ''
 NB. setp must be run first - e.g. setp'ide/jhs'
 NB. files in nopacman folder are not in the manifest
+NB. files listed in FILESWIN64 etc. are ignored
 manifest_status=: 3 : 0
 'gitp is not path to git manifest'assert gitp,'manifest.ijs'
 f=. [: {."1 dirtree
 gfiles=. f gitp
 gfiles=. gfiles-.f gitp,'nopacman'
-gfiles=. gfiles-.f gitp,'*.exe'
-gfiles=. gfiles-.f gitp,'*.so'
-gfiles=. gfiles-.f gitp,'*.dylib'
 gfiles=. /:~(#gitp)}.each gfiles
 
 load gitp,'manifest.ijs'
@@ -25,20 +33,16 @@ mfiles=. dltb each <;._2 FILES
 dirs=. ('/'=;{:each mfiles)#mfiles
 mfiles=. mfiles-.dirs
 dirs=. ;{."1 each dirtree each  (<gitp),each dirs
-dirs=. (#gitp)}.each dirs
-mfiles=. /:~dirs,mfiles
+mfiles=. /:~mfiles,(#gitp)}.each dirs,specials''
 
 if. gfiles-:mfiles do. echo 'manifest is current' return. end.
-
 t=. gfiles-.mfiles
 if. #t do.
- echo 'git files not in manifest'
- echo t
+ echo LF,'git files not in manifest',,LF,;t,each LF
 end.
 t=. mfiles-.gfiles
 if.  #t do.
- echo 'manifest files not in git'
- echo t
+ echo LF,'manifest files not in git',LF,;t,each LF
 end.
 )
 

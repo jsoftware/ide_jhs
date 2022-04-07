@@ -614,6 +614,7 @@ function jdostdsc(c)
   case 'k': window.open("jfiles",TARGET); break;
   case 'J': window.open("jijs",TARGET); break;
   case 'F': window.open("jfif",TARGET); break;
+  case 'q': alert(window.location+"\n"+window.name+"\n"+window.opener); break;
  }
 }
 

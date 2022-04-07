@@ -100,6 +100,7 @@ t=. _8{.timestamp''
 try.
  save f
  if. 'runw'-:getv'jmid' do.
+  echo'   load ',f
   load__ f
  else.
   loadd__ f
@@ -227,7 +228,26 @@ function ro(only)
 
 function click(){ta.value= cm.getValue().replace(/\t/g,' ');jdoajax(["filename","textarea","saveasx"]);dirty=false;}
 function ev_save_click() {click();}
+
 function ev_runw_click() {click();}
+
+/*
+orphaned (jijx that opened it has closed)
+ close this page
+  if necessary, open a jijx page
+   open this page again from a jijx page
+*/
+
+/*
+function ev_runw_click()
+{
+ if(null==window.opener)
+   jbyid("rep").innerHTML= "orphaned";
+ else
+  window.opener.jdoajax([],"","   load'"+jbyid("filename").value+"'",true);
+}
+*/
+
 function ev_runwd_click(){click();}
 
 var searchtxt= "<pre>             ctrl+ (cmd+)</pre>"  
@@ -257,6 +277,11 @@ function ev_numbers_click()
 function ajax(ts)
 {
  rep.innerHTML= ts[0];
+ 
+ //! try to get jijx to show new stuff
+ window.opener.jdoajax([],"","jev_empty_jijx_ 0",true); //!!!
+ 
+ 
  if(2==ts.length&&(jform.jmid.value=="saveasx"||jform.jmid.value=="saveasdo"))
  {
   jhide("saveasdlg");

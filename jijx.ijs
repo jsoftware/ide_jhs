@@ -179,10 +179,12 @@ ev_slash_ctrl  =: 3 : 'i.0 0'
 ev_less_ctrl   =: 3 : 'i.0 0'
 ev_larger_ctrl =: 3 : 'i.0 0'
 ev_query_ctrl =: 3 : 'i.0 0'
-ev_semicolon_ctrl =:   3 : 'echo''semicolon'''
+ev_semicolon_ctrl =:   3 : 'loadx__ 0'
 ev_colon_ctrl =:       3 : 'echo''colon'''
 ev_quote_ctrl_jijx_=: 3 : 'dbover dbxup'''''
 ev_doublequote_ctrl =: 3 : 'dbinto dbxup'''''
+
+load'~addons/ide/jhs/loadx.ijs'
 
 jhjmlink=: 3 : 0
 t=.   'jmlink' jhmg 'ide';1;13

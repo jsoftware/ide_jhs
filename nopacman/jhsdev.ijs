@@ -25,9 +25,11 @@ git manifest version numbers should always increase
  ...$ git pull
  ...$ git status - resolve problems
 
- setp'ide/jhs'
- manifest_status'' NB. edit manifest to resolve problems
- bump_version''
+start J
+    load'~Addons/ide/jhs/nopacman/dev.ijs'
+   setp'ide/jhs'
+   manifest_status'' NB. edit manifest to resolve problems
+   bump_version''
 
  ...$ git status
  ...$ git commit -a -m "pacman release ..."

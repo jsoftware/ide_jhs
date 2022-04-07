@@ -37,6 +37,7 @@ jdebug.ijs
 jj.ijs
 jjserver.ijs
 jlogin.ijs
+loadx.ijs
 spfile_template.ijs
 jum.ijs
 manifest.ijs

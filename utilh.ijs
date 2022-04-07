@@ -32,6 +32,7 @@ INC_handsontable_basic=: INC_handsontable NB. no jsoftware stuff yet
 NB.framework styles for all pages
 CSSCORE=: 0 : 0
 *{font-family:<PC_FONTVARIABLE>;}
+*.jhb{padding: 2px 2px;margin:0px;background-color:aqua;border:0px;}
 *.jcode{font-family:<PC_FONTFIXED>;white-space:pre;}
 *.jhab:hover{cursor:pointer;color:black;background:#ddd;}
 *.jhab{text-decoration:none;}

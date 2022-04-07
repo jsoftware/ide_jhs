@@ -3,18 +3,16 @@ coclass'jfile'
 coinsert'jhs'
 
 HBS=: 0 : 0
-jhma''
- 'action'    jhmg'action';1;12
- 'edit'     jhmab'edit'
- 'del'      jhmab'delete'
- 'deltemps' jhmab'delete temps'
- 'copy'     jhmab'copy        c^'
- 'cut'      jhmab'cut         x^'
- 'paste'    jhmab'paste       v^'
- 'rename'   jhmab'rename as...'
- 'newfi'    jhmab'new file'
- 'newfo'    jhmab'new folder'
-jhmz''
+'edit'     jhb 'edit'
+'load'     jhb 'load'
+'del'      jhb 'del'
+'deltemps' jhb 'del temps'
+'copy'     jhb 'copy'
+'cut'      jhb 'cut'
+'paste'    jhb 'paste'
+'rename'   jhb 'rename'
+'newfi'    jhb 'new file'
+'newfo'    jhb 'new folder'
 
 'renamedlg'     jhdivadlg''
  'renamedo'     jhb'rename as'
@@ -216,15 +214,27 @@ NB. ev_files_dblclick=: ev_edit_click
 ev_edit_click=: 3 : 0
 f=. jgetfile F=. jpath getv'path'
 if. f-:'' do.
- create'No file selected to edit.';F
+ create'No file selected to edit';F
 else.
  require'~addons/ide/jhs/jijs.ijs' NB. ensure loaded
- create_jijs_ F
+ create_jijs_ 'file loaded';F
 end.
 )
 
-ev_close_click=: 3 : 0
-jhrajax''
+ev_load_click=: 3 : 0
+echo'ev_load_click'
+f=. jgetfile F=. jpath getv'path'
+if. f-:'' do.
+ create'No file selected to load';F
+else.
+ try.
+  load__ F
+  create'file loaded';F
+ catch.
+  smoutput 13!:12''
+  create 'load error';F
+ end. 
+end.
 )
 
 copy=: _1 NB. _1 not ready, 0 copy, 1 cut 
@@ -432,7 +442,8 @@ function ajax(ts)
 }
 
 // handler must be defined - no longer defaults to jsubmit if not defined
-function ev_edit_click(){jsubmit();}
+function ev_edit_click(){ev_files_dblclick();}
+function ev_load_click(){jsubmit();}
 function ev_deltemps_click(){jsubmit();}
 function ev_copy_click(){jsubmit();}
 function ev_cut_click(){jsubmit();}
