@@ -47,6 +47,8 @@ jhresize''
 
 jev_get=: create
 
+jev_flush=: 3 : 'i.0 0' NB. jijs calls to flush output without display
+
 NB. move new transaction(s) to log
 uplog=: 3 : 0
 LOG_jhs_=: LOG,LOGN
@@ -227,6 +229,15 @@ var globalajax; // sentence for enter setTimeout ajax
 var TOT= 1;     // timeout time to let DOM settle before change
 //var TOT= 100; // might need more time on slow devices???
 var wjdebug= null; // jdebug window object
+
+/* this works - but is annoying
+window.addEventListener('beforeunload', function (e) {
+  // Cancel the event
+  e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+  // Chrome requires returnValue to be set
+  e.returnValue = '';
+});
+*/
 
 function ev_body_focus(){if(!jisiX)setTimeout(ev_2_shortcut,TOT);}
 

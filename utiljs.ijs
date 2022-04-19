@@ -14,6 +14,31 @@ browsers block popups if not 'directly' the result of a user action - click on l
  $("#dialog").dialog("open");
 
 *** unload/beforeunload
+april 2022 update:
+
+onbeforeunload is OK to warn user they are about to leave a dirty page
+the user gets a standard brower defined warning about leaving the page
+
+ajax/alert/... can not be used in the handler - depends on user staying and using close button
+
+firefox triggers the event on a new page
+
+chrome does NOT trigger the event on a new page (no interactions)
+ in that case the user is not warned about leaving
+ and cojhs locale will be orphaned
+
+----
+
+Jan 2017 - conclusion again that unload/beforeunload are not useful
+start to use standard close button on numbered locale pages
+ this can free locales and resource properly
+
+unload can free locales - but refresh is an unload and thed a reload from the locale that no longer exists
+beforeunload does not ask permission to leave if page has not been touched by user (no good for freeing locale)
+beforeunload can prevent unload of changed page - but gets confusing on if being replaced by J open_jhs_
+
+----
+
 onunload/onbeforeunload events would be nice if they worked 'properly'
 would allow app to clean up client side and (ajax) server side
 there are limitations (ajax, etc.) in the handlers
@@ -41,14 +66,6 @@ function xxxclose(){return dirty?""prefered way to leave this page is menu close
 
 a page could manage the dirty flag and do proper shutdown in the close handler
 
-
-Jan 2017 - conclusion again that unload/beforeunload are not useful
-start to use standard close button on numbered locale pages
- this can free locales and resource properly
-
-unload can free locales - but refresh is an unload and thed a reload from the locale that no longer exists
-beforeunload does not ask permission to leave if page has not been touched by user (no good for freeing locale)
-beforeunload can prevent unload of changed page - but gets confusing on if being replaced by J open_jhs_
 
 *** contenteditable to/from text
 IE:
@@ -377,6 +394,15 @@ function jev(event){
  return jevdo();
 }
 
+// return window reference for jijx
+function getjijx()
+{
+ var w= window.opener;
+ if(w!=null && "jijx"!=w.name) w= w.opener;
+ if(w!=null && "jijx"!=w.name) w= null; // jijx->jfile->jijs
+ return w;
+}
+
 function jevdo()
 {
  JEV= "ev_"+jform.jmid.value+"_"+jform.jtype.value;
@@ -451,7 +477,7 @@ function jdoajax(ids,data,sentence,async)
  if(!async)jdor();
 }
 
-//!!! now that jbyid("jmid") works, it might be be possible to avoid some use of eval
+//! now that jbyid("jmid") works, it might be be possible to avoid some use of eval
 
 // return post args from standard form ids and extra form ids
 function jpostargs(ids)
@@ -614,7 +640,16 @@ function jdostdsc(c)
   case 'k': window.open("jfiles",TARGET); break;
   case 'J': window.open("jijs",TARGET); break;
   case 'F': window.open("jfif",TARGET); break;
-  case 'q': alert(window.location+"\n"+window.name+"\n"+window.opener); break;
+  case 'q': 
+   t= decodeURI(window.location)+"\n"+window.name;
+   if(null!=window.opener)
+   {
+    t= t+"  "+window.opener.name;
+    if(null!=window.opener.opener) t= t+"  "+window.opener.opener.name;
+   } 
+   //+"\n"+window.opener+"\n"+window.opener.name;
+   // t+= "\n"+window.opener.opener+"\n"+window.opener.opener.name;
+   alert(t); break;
  }
 }
 
@@ -956,19 +991,7 @@ function jseval(ajax,s)
    j= s.indexOf(z);
    q= s.substring(i,j);
    s= s.substring(j+z.length);
-   
-   if('!'==q.charAt(0))
-   {
-    alert("jseval !"); //! kill this off?
-    var cmd= q.split(" ");
-    if(4==cmd.length&&cmd[0]=="!open")
-     window.open(cmd[1]+cmd[3],cmd[2]);
-   }
-   else
-   {
-    if(ajax||';'==q.charAt(0))
-     try{eval(q);}catch(e){alert(e+"\n"+q);}
-   }  
+   if(ajax||';'==q.charAt(0)) try{eval(q);}catch(e){alert(e+"\n"+q);}
   }
   else
    s= "";
@@ -999,15 +1022,7 @@ function jjsremove(s)
  return d;
 }
 
-function getlstf(key)
-{
-// var t= getls(key);
-// return (t==null || t=="true")?1:0;
- return 1;
-}
-
 function getls(key){return localStorage.getItem(LS+key);}
-
 function setls(key,v){localStorage.setItem(LS+key,v);}
 
 function adrecall(id,a,start)

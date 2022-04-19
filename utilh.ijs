@@ -280,7 +280,8 @@ t=. t,'.',gid,'_rf{text-align:right;width:',width,';}',LF
 t=. t,'.',gid,'_xx{text-align:right;width:',width,';}',LF
 )
 
-NB. Cache-Control: no-cache
+NB. Cache-Control: no-cache vs n-store 
+NB. no-store and no-cache both seem to have no effect with firefox
 
 NB. html template <XXX>
 NB. TITLE
@@ -291,6 +292,7 @@ hrtemplate=: toCRLF 0 : 0
 HTTP/1.1 200 OK
 Content-Type: text/html; charset=utf-8
 Connection: close
+Cache-Control: no-cache
 
 <!DOCTYPE html>
 <html>
@@ -458,8 +460,8 @@ formtmpl hrplc 'LOCALE';>coname''
 
 JASEP=: 1{a. NB. delimit substrings in ajax response
 
-jgetfile=: 3 : '(>:y i: PS)}.y'
-jgetpath=: 3 : '(>:y i: PS){.y'
+jgetfile=: 3 : '(>:y i: PS)}.y=.jshortname y'
+jgetpath=: 3 : '(>:y i: PS){.y=.jshortname y'
 
 NB. standard demo html boilerplate
 jhdemo=: 3 : 0
@@ -640,7 +642,6 @@ NB.* jhref*jhref page;target;text
 NB.* jhref*id jhref text - <a href="id">text</a> (deprecated - use monadic form)
 jhref=: 3 : 0
 'page target text'=. y
-NB.! if. '~'={.target do. target=. jpath target end.
 t=. '<a href="<REF>?jwid=<TARGET>" target="<TARGET>" class="jhref" ><TEXT></a>'
 t hrplc 'REF TARGET TEXT';page;target;text
 :

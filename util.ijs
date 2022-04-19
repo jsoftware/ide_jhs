@@ -1,4 +1,5 @@
 NB. utils
+decho_z_=: echo_z_
 
 coclass'jhs'
 NB.* see ~addons/ide/jhs/util.ijs for complete information
@@ -154,7 +155,6 @@ if. NOPOPUP do.
  jhslinknopu a
  return.
 end.
-
 i=. 1 i.~'?jwid='E.a
 if. i<#a do.
  i=. i+6
@@ -163,7 +163,9 @@ if. i<#a do.
 end. 
 JWID=: b
 m=. a,' pop-up blocked\nadjust browser settings to allow localhost pop-up\nsee wiki JHS help pop-up section'
+a=. a,(('?'e.a){'?&'),'nocache=',}.uqs''
 jjs jsopen rplc '<URL>';a;'<WNM>';b;'<S>';s
+NB.! jjs jsopen rplc '<URL>';a;'<WNM>';b;'<S>';s
 )
 
 NB. focus wid - focus 'jfif' - focus 'jijs?jwid=~temp/sp/spfile.ijs'

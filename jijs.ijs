@@ -13,7 +13,7 @@ HBS=: 0 : 0 rplc 'CMV';'4.2'
 '<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/j/jtheme.CMV.css">'
 '<script src="~addons/ide/jhs/js/codemirror/j/j.CMV.js"></script>'
 jhma''
- 'action'    jhmg'action';1;11
+ 'action'   jhmg'action';1;11
  'runw'     jhmab'run     r*'
  'runwd'    jhmab'run display'
  'save'     jhmab'save    s*'
@@ -52,7 +52,7 @@ try.
  addrecent_jsp_ jshortname y
 catch.
  d=. ''
- rep=. 'WARNING: file read failed!'
+ rep=. 'file read failed ',(ftype y){::'(does not exist)';'';'(it is a folder)'
 end.
 (jgetfile y) jhr 'FILENAME REP DATA';y;rep;d
 )
@@ -74,64 +74,32 @@ ev_close_click=: 3 : 0
 jhrajax''
 )
 
-save=: 3 : 0
-if. #USERNAME do.
- fu=. jpath'~user'
- 'save only allowed to ~user paths' assert fu-:(#fu){.y
-end.
-(toHOST getv'textarea')fwrite y
-)
-
+NB. save only if dirty
 ev_save_click=: 3 : 0
-f=. jpath getv'filename'
-t=. _8{.timestamp''
-try.
- save f
- jhrajax 'saved ',t
-catch.
- smoutput 13!:12''
- jhrajax 'save ',t,' failed'
-end.
+if. -.'dirty'-:getv'jdata' do. jhrajax'' return. end.
+f=. getv'filename'
+mkdir_j_ (f i:'/'){.f
+r=. (toHOST getv'textarea')fwrite f
+jhrajax (r>:0){::'file save failed';''
 )
 
-ev_runw_click=: 3 : 0
-f=. jpath getv'filename'
-t=. _8{.timestamp''
-try.
- save f
- if. 'runw'-:getv'jmid' do.
-  echo'   load ',f
-  load__ f
- else.
-  loadd__ f
- end.
- jhrajax  'ran ',t
-catch.
- smoutput 13!:12''
- jhrajax 'ran ',t,' ',13!:12''
-end.
-)
-
-ev_runwd_click=: ev_runw_click
+ev_runw_click=: ev_runwd_click=: ev_save_click
 
 ev_saveasdo_click=:ev_saveasx_enter
 
 NB. should have replace/cancel option if file exists
 ev_saveasx_enter=: 3 : 0
 f=. getv'filename'
-n=. getv'saveasx'
-if. n-:n-.'~/\' do.
- new=. (jgetpath f),n
-else.
- new=. jpath n
-end.
-if. fexist new do. jhrajax 'file already exists' return. end.
+new=. jpath getv'saveasx'
+if. '/'e. new do. jhrajax'path not supported'   return. end.
+new=. (jgetpath f),new
+if. fexist new do. jhrajax'already exists' return. end.
 try.
- save new
- addrecent_jsp_ jshortname new
- jhrajax ('saved as ',n),JASEP,new
+ decho new
+ r=. (toHOST getv'textarea')fwrite new
+ addrecent_jsp_ new
+ jhrajax JASEP,new
 catch.
- smoutput 13!:12''
  jhrajax 'save failed'
 end.
 )
@@ -146,6 +114,11 @@ f=. <jpath'~temp\',a,'.ijs'
 >f
 )
 
+NB. jdoajax load/loadd need response - mimic jijx
+urlresponse=: 3 : 0
+jhrajax''
+)
+
 NB. p{} klduge because IE inserts <p> instead of <br> for enter
 NB. codemirror needs jresizeb without scroll
 NB. codemirror requires no div padding (line number vs caret) so set padding-left:0
@@ -158,7 +131,7 @@ div{padding-left:0;}
 )
 
 JS=: 0 : 0
-var ta,rep,readonly,saveasx,cm,dirty=false;
+var fubar,ta,rep,readonly,saveasx,cm,dirty=false;
 
 function ev_body_load()
 {
@@ -172,13 +145,13 @@ function ev_body_load()
    mode:  "j",
    tabSize: 1,
    gutter: false,
-   onChange: setdirty,
    extraKeys: {
     "Ctrl-S": function(instance){setTimeout(TOsave,1);},
     "Ctrl-R": function(instance){setTimeout(TOrunw,1);}
    }
   }
  );
+ cm.on("change",setdirty);
  ro(0!=ce.innerHTML.length);
  dresize();
 }
@@ -209,9 +182,14 @@ function jgpwindoww()
   return document.documentElement.clientWidth;
 }
 
-window.onbeforeunload = confirmExit;
-function setdirty(){dirty=true;}
-function confirmExit(){return dirty?"Page has unsaved changes.":null;}
+window.addEventListener('beforeunload', function (e) {
+  if(!dirty) return;
+  e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+  e.returnValue = ''; // Chrome requires returnValue to be set
+});
+
+function setdirty(){jbyid("filenamed").style.color="red";dirty=true;}
+function setclean(){jbyid("filenamed").style.color="blue";dirty=false;}
 
 function setnamed()
 {
@@ -226,29 +204,20 @@ function ro(only)
  ce.focus();
 }
 
-function click(){ta.value= cm.getValue().replace(/\t/g,' ');jdoajax(["filename","textarea","saveasx"]);dirty=false;}
+function click(){ta.value= cm.getValue().replace(/\t/g,' ');jdoajax(["filename","textarea","saveasx"],dirty?"dirty":"clean");setclean();}
 function ev_save_click() {click();}
-
 function ev_runw_click() {click();}
+function ev_runwd_click() {click();}
 
-/*
-orphaned (jijx that opened it has closed)
- close this page
-  if necessary, open a jijx page
-   open this page again from a jijx page
-*/
-
-/*
-function ev_runw_click()
+function load(t)
 {
- if(null==window.opener)
-   jbyid("rep").innerHTML= "orphaned";
+ t= "   "+t+" '"+jbyid("filename").value.replaceAll("'","''")+"'";
+ w= getjijx();
+ if(w!=null)
+  w.jdoajax([],"",t,true); // run sentence in jijx
  else
-  window.opener.jdoajax([],"","   load'"+jbyid("filename").value+"'",true);
+  alert("orphaned (jijx that opened this page has closed)\n close this page and reopen from a jijx page");
 }
-*/
-
-function ev_runwd_click(){click();}
 
 var searchtxt= "<pre>             ctrl+ (cmd+)</pre>"  
 searchtxt+=    "<pre>search       f\nnext         g\nprevious     G\nreplace      F\nreplace all  R</pre>"
@@ -276,12 +245,12 @@ function ev_numbers_click()
 // called with ajax response
 function ajax(ts)
 {
+ var t= jform.jmid.value;
+ if(t=="runw") load("load");
+ if(t=="runwd")load("loadd");
+
  rep.innerHTML= ts[0];
- 
- //! try to get jijx to show new stuff
- window.opener.jdoajax([],"","jev_empty_jijx_ 0",true); //!!!
- 
- 
+
  if(2==ts.length&&(jform.jmid.value=="saveasx"||jform.jmid.value=="saveasdo"))
  {
   jhide("saveasdlg");

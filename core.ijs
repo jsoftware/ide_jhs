@@ -414,9 +414,13 @@ getvs=: 3 : 0
 ((0{"1 NV)i.<;._1 ' ',deb y){(1{"1 NV),<''
 )
 
-NB. ~name from full name
+NB. shortest full name with ~.../
 jshortname=: 3 : 0
-p=. <jpath y
+p=. jpath y
+if. -.'/'e.p do.
+  p=. (1!:43''),'/',p NB. c:a.ijs ends up as a bad file name - what to do?
+end.
+p=. <p
 'a b'=.<"1 |:UserFolders_j_,SystemFolders_j_
 c=. #each b
 f=. p=(jpath each b,each'/'),each (>:each c)}.each p
@@ -424,7 +428,7 @@ if.-.+./f do. >p return. end.
 d=. >#each f#b
 m=. >./d
 f=. >{.(d=m)#f#a
-'~',f,m}.>p
+('~',f,m}.>p)rplc '~home/';'~/'
 )
 
 NB. new ijs temp filename
