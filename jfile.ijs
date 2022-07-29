@@ -5,55 +5,75 @@ coinsert'jhs'
 HBS=: 0 : 0
 'edit'     jhb 'edit'
 'load'     jhb 'load'
+'rename'   jhb 'rename'
+'new'      jhb 'new'
 'del'      jhb 'del'
-'deltemps' jhb 'del temps'
 'copy'     jhb 'copy'
 'cut'      jhb 'cut'
 'paste'    jhb 'paste'
-'rename'   jhb 'rename'
-'newfi'    jhb 'new file'
-'newfo'    jhb 'new folder'
+'adrecall' jhb 'addrecall'
 
-'renamedlg'     jhdivadlg''
- 'renamedo'     jhb'rename as'
-  'renamex'     jhtext'';10
-   'renameclose'jhb'X'
+'renamedlg'  jhdivadlg''
+ jhbr
+ 'renamedo'  jhb'rename as'
+ 'renpx'    jhtext'';20
+ 'rennx'    jhtext'';10
+ 'rensx'    jhtext'';4
+ 'renameclose'jhb'X'
 '<hr></div>'
 
 'deletedlg'    jhdivadlg''
+ jhbr
  'deletedo'    jhb'delete'
  'deletename'  jhspan''
  'deleteclose' jhb'X'
+'<hr></div>'
+
+'newdlg' jhdivadlg''
+ jhbr
+ 'newfile'   jhb'newfile'
+ 'newname'   jhtext'';10
+ 'newfolder' jhb'newfolder'
+ 'newclose'  jhb'X'
 '<hr></div>'
 
 'report'    jhdiv'<R>'
 shorts''
 jhhr
 'path'      jhhidden'<F>'
- 'pathd'    jhdiv'<F>'
-
+'pathd'    jhdiv'<F>'
 jhresize''
 
 'sel'       jhdiv'<FILES>'
 )
 
-LASTPATH=: jpath'~temp\'
+LASTPATH=: jpath'~temp/'
 
+NB. get valid path (based on folderinfo) ; folderinfo
+getfandp=: 3 : 0
+d=. folderinfo remlev y
+if. '/'={:y do. y;<d return. end.
+n=. <jgetfile y
+i=. d i. n
+if. i<#d do. y;<d return. end.
+b=. ((;{:each d)i:'/')}.d 
+i=. (<:#b)<.>:(nsort b,n)i.n 
+if. '/'={:;i{b do. ('/',~remlev y);<d return. end.
+((remlev y),'/',;i{b);<d 
+)
 
 NB. y - error;file
 create=: 3 : 0
 'r f'=. y
-if. 0=#1!:0<(-PS={:f)}.f do. f=. jpath'~temp\' end. NB. ensure valid f
-'jfile' jhr 'R F FILES';r;(jshortname f);(buttons 'files';(2#<folderinfo remlev f),<'<br>') 
+if. r-:'' do. r=. '&nbsp;' end. NB. so div does not collapse
+'f d'=. getfandp f
+d=. (<d),<(('/'=;{:each d){'';'&#x25B6;'),each d
+'jfile' jhr 'R F FILES';r;(jshortname f);(buttons 'files';d,<'<br>')
 )
 
 NB. get file with mid/path opens the file
 jev_get=: 3 : 0
-if. 'open'-:getv'mid' do.
- ev_edit_click''
-else.
- create '&nbsp;';LASTPATH
-end.
+create '&nbsp;';LASTPATH
 )
 
 buttons=: 3 : 0
@@ -66,25 +86,21 @@ end.
 )
 
 shorts=: 3 : 0
-buttons 'paths';(2#<((roots''),~{."1 UserFolders_j_,SystemFolders_j_)-.<'Demos'),<' '
+buttons 'paths';(2#<((roots''),~{."1 UserFolders_j_,SystemFolders_j_)-.;:'Demos User bin config system break snap tools'),<' '
 )
 
 ev_paths_click=: 3 : 0
 f=. getv'jsid'
-if. ':'={:f do.
- f=. f,'/'
-elseif. -.f-:,'/' do.
- f=. '~',f,'/'
-end. 
+if. -.f-:,'/' do. f=. '~',f,'/' end. 
 LASTPATH=: f=. jpath f
-jhrajax (jshortname f),JASEP,buttons 'files';(2#<folderinfo remlev f),<'<br>'
+create '';f
 )
 
-ev_recall_click=: 3 : 0
+ev_recall_click=: 3 : 0 NB. recall previous folders
 sid=. getv'jsid'
 f=. jpath sid
 LASTPATH=: f
-jhrajax (jshortname f),JASEP,buttons 'files';(2#<folderinfo remlev f),<'<br>'
+create '';f
 )
 
 NB. folder clicked (file click handled in js)
@@ -92,137 +108,109 @@ ev_files_click=: 3 : 0
 sid=. getv'jsid'
 path=. jpath getv'path'
 sid=. sid-.PS
-sid=. 6}.sid NB. drop markfolder prefix
 if. sid-:'..' do.
  f=. PS,~remlev remlev path 
 else.
  f=. (remlev path),PS,sid,PS
 end.
 LASTPATH=: f
-jhrajax (jshortname f),JASEP,buttons 'files';(2#<folderinfo remlev f),<'<br>'
+create '';f
 )
 
 nsort=: 3 : '/:~y'
-
-markfolder=: <'&nbsp;&nbsp;&nbsp;'
 
 NB. y path - result is folders,files
 folderinfo=: 3 : 0
 a=. 1!:0 <jpath y,'/*'
 n=. {."1 a
 d=. 'd'=;4{each 4{"1 a
-(markfolder,each'/',~each(<'..'),nsort d#n),nsort (-.d)#n
+('/',~each(<'..'),nsort d#n),nsort (-.d)#n
 )
 
-NFI=: 'newfile'
-NFO=: 'newfolder'
-
-ev_newfi_click=: 3 : 0
+NB. y '' for file and '/' for folder
+new=: 3 : 0
 F=. jpath getv'path'
-f=. (remlev F),PS,NFI
-if. fexist f do.
- r=. NFI,' already exists'
+n=. getv'newname'
+f=. (remlev F),PS,n
+if. +./ '/\' e. n do.
+ r=. n,' must not contain / or \'
+elseif. fexist f do.
+ r=. n,' already exists'
 else.
  try. 
-  ''1!:2<f
-  r=. NFI,' created'
+  if. ''-:y do. ''1!:2<f else. 1!:5<f end.
+  r=. n,' created'
  catch.
-  r=. NFI,' create failed'
+  r=. n,' create failed'
  end.
 end.
 create r;f
 )
 
-ev_newfo_click=: 3 : 0
-F=. jpath getv'path'
-f=. (remlev F),PS,NFO,PS
-try.
- 1!:5<f
- r=. NFO,' created'
-catch.
- r=. NFO,' create failed'
-end.
-create r;f
-)
+ev_newfile_click=: 3 : 'new'''''
 
-ev_renamedo_click=: ev_renamex_enter
+ev_newfolder_click=: 3 : 'new''/'''
 
-ev_renamex_enter=: 3 : 0
+ev_renamedo_click=: 3 : 0
 F=. jpath getv'path'
-n=. getv'renamex'
-if. PS-:{:F do.
- f=. (remlev remlev F),PS,n,PS
-else.
- f=. (remlev F),PS,n
+s=. getv'rensx'
+f=. jpath (getv'renpx'),(getv'rennx'),s
+if. '/'={:F do. f=. f,('/'~:{:f)#'/' end.
+if. F-:f do. 
+ r=. 'to same name'
+elseif. fexist f do.
+ r=. 'failed - already exists'
+else. 
+ if. f frename F do.
+  r=. 'ok'
+  F=. f
+  else.
+  r=. 'failed'
+ end.
 end.
-if. f frename F do.
- create'Rename: ok';f
-else.
- create'Rename: failed';F
-end.
+create F;~'Rename: ',r 
 )
 
 ev_deletedo_click=: 3 : 0
-f=. jgetfile F=. jpath getv'path'
-newf=. PS,~remlev F
-t=. jpath'~temp/deleted/'
-if. PS={:F do. NB. delete folder 
- srcfolder=. F
- snkfolder=. jpath'~temp/deleted/',jgetfile remlev srcfolder
- if. '~temp/'-:6{.jshortname srcfolder do.
-  deletefolder }:srcfolder
-  create ('Delete: deleted ',jshortname srcfolder);newf
-  return.
- end.
- deletefolder snkfolder
- 1!:5<snkfolder
- copyfiles (srcfolder,'*');snkfolder
- deletefolder }:srcfolder
- create ('Delete: folder saved as ',jshortname snkfolder);newf 
- return.
-else. NB. delete file
- try.
-  if. t-:(#t){.F do.
+create delete getv'path'
+)
+
+delete=: 3 : 0
+newf=. p=. y
+F=. jpath p
+try.
+ t=. jpath'~temp/deleted/'
+ if. PS={:F do. NB. delete folder 
+  srcfolder=. F
+  snkfolder=. t,p
+  if. -.t-:(#t){.F do. NB. backup folder
+   deletefolder snkfolder
+   copyfiles (srcfolder,'*');snkfolder
+   deletefolder srcfolder
+   r=. 'deleted ',p,' (backup at ~temp/deleted/...)'
+  else. 
+   deletefolder srcfolder
+   r=. 'deleted ',p
+  end. 
+ else. NB. delete file
+  if. -.t-:(#t){.F do. NB. backup file
+   mkdir_j_ t,remlev p
+   (1!:1 <F) 1!:2 <jpath t,p
    1!:55 <F
-   create ('Delete: deleted ',jshortname F);newf
-   return.
-  end.
-  d=. 1!:1<jpath F
-  1!:5 :: [ <jpath'~temp/deleted'
-  d 1!:2    <jpath'~temp/deleted/',jgetfile F
-  1!:55 <F
-  create ('Delete: file saved as ~temp/deleted/',f);newf
- catch.
-  create ('Delete "',f,'" failed.');newf
+   r=. 'deleted ',p,' (backup at ~temp/deleted/...)'
+  else.
+   1!:55 <F
+   r=. 'deleted ',p
+  end. 
  end.
+catch.
+  echo 13!:12''
+  r=. 'delete ',p,' failed'
 end.
-)
-
-ev_deltemps_click=: 3 : 0
-t=.{."1[1!:0 jpath'~temp/*ijs'
-n=. (_4}.each t)-.each<'0123456789'
-t=.(-.n~:<'')#t
-t=. (<jpath'~temp/'),each t
-for_f. t do. 1!:55 f end. 
-create '&nbsp;';jpath'~temp\'
-)
-
-NB. folder dblclick??? not a problem, but is puzzling
-
-NB. ev_files_dblclick=: ev_edit_click
-
-ev_edit_click=: 3 : 0
-f=. jgetfile F=. jpath getv'path'
-if. f-:'' do.
- create'No file selected to edit';F
-else.
- require'~addons/ide/jhs/jijs.ijs' NB. ensure loaded
- create_jijs_ 'file loaded';F
-end.
+r;newf
 )
 
 ev_load_click=: 3 : 0
-echo'ev_load_click'
 f=. jgetfile F=. jpath getv'path'
 if. f-:'' do.
  create'No file selected to load';F
@@ -286,14 +274,6 @@ if. copy=1 do. try. 1!:55 <srcfile catch. end. end.
 create ('Paste: created file ',f);F
 )
 
-NB. createfolder path - ensure path y exists
-createfolder=: 3 : 0
-for_n. (PS=t)#i.#t=. jpath y,'\'  do.
- 1!:5 :: [ <n{.jpath y
-end.
-i.0 0
-)
-
 NB. copyfiles src;snk
 NB. src ends with \fspec which can have wildcards
 copyfiles=: 3 : 0
@@ -303,7 +283,7 @@ snk=. jpath snk
 i=. src i:PS
 fspec=. (>:i)}.src
 src=. i{.src
-createfolder snk
+mkdir_j_ snk
 ns=. 1!:0 <jpath src,'\',fspec
 for_n. ns do.
  pn=. jpath'\',>{.n
@@ -326,6 +306,7 @@ i.0 0
 
 NB. deletefolder y
 deletefolder=: 3 : 0
+y=. (-PS={:y)}.y NB. remove trailing /
 p=. <jpath y
 if. 1=#1!:0 p do.
  if. 'd'=4{,>4{"1 (1!:0) p do.
@@ -349,16 +330,6 @@ for_n. ns do.
 end.
 )
 
-NB. newname frename oldname - return 1 if rename ok
-frename=: 4 : 0
-if. x -: y do. return. end.
-if. IFUNIX do.
-  0=((unxlib 'c'),' rename > i *c *c') 15!:0 y;x
-else.
-  'kernel32 MoveFileA > i *c *c' 15!:0 y;x
-end.
-)
-
 remlev=: 3 : '(y i: PS){.y'    NB. remove level from path
 
 roots=: 3 : 0
@@ -379,80 +350,115 @@ CSS=: 0 : 0
 )
 
 JS=: 0 : 0
-var recall=1
+var anchor=null;
 
-function ev_body_load(){jresize();}
+function ev_body_load(){
+ jijxset();jresize();
+ setanchor(true);
+}
 
-function repclr(){jbyid("report").innerHTML = "&nbsp;";}
 function setpath(t){jform.path.value= t;jbyid("pathd").innerHTML= t;}
-function ev_paths_click(){repclr();jdoajax(["path"]);}
+function ev_paths_click(){jsubmit();}
 function ev_paths_dblclick(){;}
-function ev_recall_click(){repclr();jdoajax(["path"]);}
+function ev_recall_click(){jsubmit();}
 
-function document_recall(v){recall=0;jform.path.value= v;jbyid("pathd").innerHTML= v;jscdo("recall",v);}
+function document_recall(v){jform.path.value= v;jbyid("pathd").innerHTML= v;jscdo("recall",v);}
 
 function ev_x_shortcut(){jscdo("cut");}
 function ev_c_shortcut(){jscdo("copy");}
 function ev_v_shortcut(){jscdo("paste");}
 function ev_2_shortcut(){jbyid("sel").childNodes[0].focus();}
 
+function setanchor(scroll){
+ t= path.value;
+ i= t.lastIndexOf('/');
+ if(i==t.length-1) return;
+ t= t.substring(i+1);
+ if(anchor!=null) anchor.style.color=  jbyid('sel').firstElementChild.style.color;
+ anchor= jbyid('files*'+t);  
+ anchor.style.color='red';
+ if(scroll) anchor.scrollIntoView({behavior: 'auto', block: 'nearest'});
+}
+
 function ev_files_click() // file select
 {
- repclr();
+ clr();
  if('/'!=jform.jsid.value.charAt(jform.jsid.value.length-1))
  {
   var t= jform.path.value;
   var i= t.lastIndexOf('/');
   setpath(t.substring(0,++i)+jform.jsid.value);
+  setanchor(false);
  }
  else
- {
-  jdoajax(["path"]);
- }
+  jsubmit();
 }
 
 function ev_files_dblclick()
 {
  if('/'!=jform.jsid.value.charAt(jform.jsid.value.length-1))
-  //window.open('jijs?mid=open&path='+jform.path.value,TARGET);
-  window.open('jijs?jwid='+jform.path.value,jform.path.value);
+ {
+  t= 'jijs?jwid='+encodeURIComponent(jform.path.value);
+  pageopen(t,t);
+ }
 } 
 
-function ev_rename_click()     {jdlgshow("renamedlg","renamex");}
-function ev_renameclose_click(){jhide("renamedlg");}
+function clr(){
+ jbyid('report').innerHTML = "&nbsp;";
+ jhide("renamedlg");jhide("deletedlg");jhide('newdlg');
+ }
+
+function ev_rename_click()
+{
+ clr();
+ t= jbyid("path").value;
+ i= t.lastIndexOf('/');
+ if(i==t.length-1)
+ {
+  t= t.substring(0,i); // remove trailing /
+  i= t.lastIndexOf('/');
+ }
+  jbyid("renpx").value= t.substring(0,i+1);
+  t= t.substring(i+1);
+  i= t.lastIndexOf('.');
+  if(i==-1) i= t.length;
+  jbyid("rennx").value= t.substring(0,i);
+  jbyid("rensx").value= t.substring(i);
+  jdlgshow("renamedlg","rennx");
+}
+ 
+function ev_renameclose_click(){clr();}
+
+function ev_new_click(){
+ clr();
+ jdlgshow('newdlg','newname');
+}
+
+function ev_newclose_click(){clr();}
 
 function ev_del_click()
 {
+ clr();
  jbyid("deletename").innerHTML=jform.path.value;
  jdlgshow("deletedlg","deleteclose");
 }
 
-function ev_deleteclose_click(){jhide("deletedlg");}
-
-function ajax(ts)
-{
- if(2!=ts.length) alert("wrong number of ajax results");
- setpath(ts[0]);
- if(recall)
- {
-  adrecall("document",ts[0],"0");
- }
- recall=1;
- jbyid("sel").innerHTML= ts[1];
-}
+function ev_deleteclose_click(){clr();}
 
 // handler must be defined - no longer defaults to jsubmit if not defined
 function ev_edit_click(){ev_files_dblclick();}
 function ev_load_click(){jsubmit();}
-function ev_deltemps_click(){jsubmit();}
 function ev_copy_click(){jsubmit();}
 function ev_cut_click(){jsubmit();}
 function ev_paste_click(){jsubmit();}
-function ev_newfi_click(){jsubmit();}
-function ev_newfo_click(){jsubmit();}
-function ev_deletedo_click(){jsubmit();}
+function ev_newfile_click(){jsubmit();}
+function ev_newfolder_click(){jsubmit();}
 function ev_renamedo_click(){jsubmit();}
-function ev_renamex_enter(){jsubmit();}
+function ev_renpx_enter(){jscdo('renamedo');}
+function ev_rennx_enter(){jscdo('renamedo');}
+function ev_rensx_enter(){jscdo('renamedo');}
+function ev_newname_enter(){jscdo('newfile');}
+function ev_deletedo_click(){jsubmit();}
+function ev_adrecall_click(){adrecall("document",jbyid('path').value,"0");} //!
 
 )
-

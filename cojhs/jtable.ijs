@@ -4,34 +4,6 @@ NB. 'jtable'cojhs'n'[n=. i.3 9
 coclass'jtable'
 coinsert'jhs'
 
-create=: 3 : 0
-try.
- shown=: 0
- header=: dltb y
- header=: header,>('_'={:header){'__';''
- assert 0=nc<header
- d=. header~
- assert 2>:$$d
- assert 2>L.d
- (header)=: (,:^:({.2-$$d)) d
- hot=: 'jhot;_'cojhs ''
- setdata__hot header~
-catchd.
- ('create failed:',LF,13!:12'') assert 0
-end.
-)
-
-show=: 3 : 0
-shown=: 1
-y open ,~coname''
-)
-
-destroy=: 3 : 0
-if. shown do. close ;coname'' end.
-destroy__hot''
-codestroy''
-)
-
 HBS=: 0 : 0
 jhclose''
 '<br/>'
@@ -39,6 +11,24 @@ jhclose''
 '<div id="hots">'
 '<iframe id="hot" name="hot" src="',(;hot),'"  ></iframe>'
 '</div>'
+)
+
+NB. cojhs boilerplate from util.ijs
+
+create=: 3 : 0
+try.
+ header=: dltb y
+ header=: header,>('_'={:header){'__';''
+ assert 0=nc<header
+ d=. header~
+ assert 2>:$$d
+ assert 2>L.d
+ (header)=: (,:^:({.2-$$d)) d
+ hot=: 'jhot;_'cojhs 'EMPTY_z_'
+ setdata__hot header~
+catchd.
+ ('create failed:',LF,13!:12'') assert 0
+end.
 )
 
 jev_get=: 3 : 0
@@ -51,12 +41,6 @@ jev_change=: 3 : 0
 jhrajax''
 )
 
-ev_close_click=: 3 : 0
-jhrajax''
-shown=: 0 NB. already closed
-destroy''
-)
-
 CSS=: 0 : 0
 body{margin:5px;}
 #hots{height:90vh;}
@@ -64,7 +48,6 @@ body{margin:5px;}
 )
 
 JS=: 0 : 0 NB. javascript
-
 function ev_body_load()
 {
  window.frames[0].hot.addHook('afterChange', function(change,source)

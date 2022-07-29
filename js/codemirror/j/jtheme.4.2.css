@@ -5,4 +5,4 @@
 .cm-s-default span.cm-control{color: #708;}
 .cm-s-default span.cm-string {color: #a11;}
 .cm-s-default span.cm-comment{color: #090;}
-
+.CodeMirror-activeline-background {background: gainsboro;}

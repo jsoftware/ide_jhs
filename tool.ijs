@@ -72,7 +72,7 @@ n immediately reflects any changes
 edit cells and add new rows/cols
 initial data was numeric, so non-numeric is red
    'jtable;20 20'cojhs's' [ s=: 2 2$'aa';'b';'c';'dd'
-ctrl+\ or red button in corner to properly close app
+close with red button or Esc-q as this informs J server
 )
 
 tool_app=: 0 : 0
@@ -203,6 +203,7 @@ t
 )
 
 lablist=: 3 : 0
+getlabs''
 titles=. /:~(LABCATS = <dltb y)#LABTITLES
 echo'run one of the following sentences:'
 echo ;LF,~each (<'   labrun_jijx_ '),each'''',~each'''',each titles

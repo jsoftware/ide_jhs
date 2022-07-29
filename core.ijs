@@ -1,139 +1,9 @@
 NB. JHS - core services
 require 'socket'
 
+JHSVERSION_z_=: ' '''-.~9}.(d i. LF){.d=. (1 i.~ 'VERSION=:' E. d)}.d=. fread'~addons/ide/jhs/manifest.ijs'
+
 coclass'jhs'
-
-0 : 0
-
-*** timer - wd docs
-timer i ; set interval timer to i milliseconds.
-Event systimer occurs when time has elapsed.
-The timer keeps triggering events until the timer is turned off.
-An argument of 0 turns the timer off.
-The systimer event may be delayed if J is busy,
-and it is possible for several delayed events to be reported as a single event.
-
-*** Cache-Control: no-cache
-Browser caching can be confusing and is quite different
-from a desktop application.
-
-Back/forward, switching tabs, switching browser apps, are
-showing cached pages. A get (typed into the URL box or from
-favorites) shows a cached page if possible. And exactly when
-it shows a cached page and when it gets a fresh page varies
-from browser to browser and the phase of the moon. This can
-be confusing if you have the expectation of a new page with
-current information.
-
-Ajax requests (in particular JIJX) have no-cache as old
-pages in this area are more confusing and than useful.
-
-All other pages allow cache as the efficiency of mucking
-around pages without dealing with the server is significant.
-Sometimes this means that when you want a fresh page with
-latest info you are in getting a cached version.
-
-Some browsers have a transmission progress bar indicator.
-No flash means you are getting a cached page and a flash
-means you getting a new page.
-
-Refresh (F5 on some browsers) gets a fresh page and is a
-useful stab poke if confused.
-
-*** login/bind/cookie/security overview
-
-listening socket binds to any
-localhost is relatively secure
-firewalls provide protection
-localhost is relatively secure and would gain little from login
-tunnel to localhost provides good security
-non-localhost requires a login
-login is provided by a cookie
-cookie set in the response to providing a valid password
-cookie is then included in the header of all requests - validated by server
-cookie is non-persistent and is deleted when browser closes.
-tabs do not need to login, but a new browser does.
-
-*** app overview
-URL == APP == LOCALE
-
-Browser request runs first available sentence from:
- post          - jdo
- get URL has . - jev_get_jfilesrc_ URL_jhs_
- get           - jev_get_URL_''
-
-Post can be submit (html for new page) or ajax (for page upates).
-
-The sentence can send a response (closing SKSERVER).
-
-urlresponse_URL_ run if response has not been sent
-when new input required. jijx does this as the response
-requires J output/prompt that are not available until then.
-
-Use XMLHttpRequest() for AJAX style single page app.
-Post request for new data to update page. jijx app does
-this for significant benefit (faster and no flicker).
-
-Form has hidden:
- button to absorb enter not in input text (required in FF)
- jdo="" submit sentence
-
-Enter in input text field caught by element keydown event handler.
-
-*** event overview
-Html element id has main part and optional sub part mid[*sid].
-
-<... id="mid[*sid]" ... ontype="return jev(e)"
-
-jev(event)
-{
- sets evid,evtype,evmid,evsid,evev
- onclick is type click etc
- try eval ev_mid_type()
- returns true or false
-}
-
-If ev_mid_type returns value, it is returned to the onevent caller,
-otherwise a calculated value is returned.
-
-ev_mid_type can ajax or submit J sentence.
-Ajax has explicit nv pairs in post data and result.
-Submit has normal form nv pairs in post data and result is new page
-
-*** gotchas
-
-Form elements use name="...". Submit of hidden element requires
-name and the element will not be included in post data with just id.
-
-Javascript works with id. In general a form input element should have
-the same value for both id and name. The exception is radio where id
-is unique and name is the same across a set of radio buttons.
-
-***
-1. depends on cross platform javascript and styles
-
-2. 127.0.0.1 seems faster than localhost
-   wonder if dot ip name is faster than www.jsoftware.com
-
-3. Enter with only text has no button.
-   Enter with buttons submits as if first button pressed.
-
-4. html pattern
-<!DOCTYPE html>
-<html>
- <head>
-  <meta...>
-  <title>...</title>
-  [<style type="text/css">...</style>...]
- </head>
- <body>
-  ...
- </body>
- [<script>...</script>...]
-</html>
-
-5. autocomplete and wrap fail validator - but are necessary
-)
 
 JIJSAPP=: 'jijs' NB. 'jijsm' for simple jijs editor
 PROMPT=: '   '
@@ -172,13 +42,6 @@ end.
 
 CHUNKY_jhs_=: 0
 
-jhsexit=: 0 : 0
-Your JHS server has exited.
-Manually close all pages for that server.
-They won't work properly without a server
-and will be confused if the server restarts.
-)
-
 NB. J has output - x is type, y is string
 NB. MTYOFM  1 formatted result array
 NB. MTYOER  2 error
@@ -189,12 +52,7 @@ NB. MTYOFILE 6 output 1!:2[2
 NB. x is type, y is string
 output=: 4 : 0
 logapp 'output type : ',":x
-if. 5=x do.
- NB. jhrajax 'Your J HTTP Server has exited.<br/><div id="prompt" class="log">&nbsp;&nbsp;&nbsp;</div>'[PROMPT_jhs_=:'   '
- jhrajax'<font style="color:red;"><pre>',jhsexit,'</pre></font>'
- jfe_jhs_ 0
- 2!:55[0
-end.
+if. 5=x do. 'we should never get here'fappend 'log.txt' end.
 try.
  s=. y NB. output string
  type=. x NB. MTYO type
@@ -221,7 +79,7 @@ try.
   CHUNKY_jhs_=: 1
  
  elseif. (3~:type)+.-.'jev_'-:4{.dlb s do. NB. jev_... lines not logged
-  if. 3=type do. s=. PROMPT,dlb s end.
+  NB. if. 3=type do. s=. PROMPT,dlb s end. NB. cleaning input is bad
   t=. jhtmlfroma s
   if. '<br>'-:_4{.t do. t=. _4}.t end.
   LOGN=: LOGN,'<div class="',class,'">',t,'</div>'
@@ -421,14 +279,14 @@ if. -.'/'e.p do.
   p=. (1!:43''),'/',p NB. c:a.ijs ends up as a bad file name - what to do?
 end.
 p=. <p
-'a b'=.<"1 |:UserFolders_j_,SystemFolders_j_
+'a b'=.<"1 |:SystemFolders_j_,UserFolders_j_
 c=. #each b
 f=. p=(jpath each b,each'/'),each (>:each c)}.each p
 if.-.+./f do. >p return. end.
 d=. >#each f#b
 m=. >./d
 f=. >{.(d=m)#f#a
-('~',f,m}.>p)rplc '~home/';'~/'
+('~',f,m}.>p) NB.! rplc '~home/';'~/'
 )
 
 NB. new ijs temp filename
@@ -469,26 +327,49 @@ jhtml'<audio controls="controls"><source src="',y,'" type="audio/mp3">not suppor
 NB. z locale utilities
 
 
-console_welcome=: 0 : 0
+auto_welcome=: 0 : 0
 
-J HTTP Server - init OK
+if you don't see a new jijx tab in your browser,
+ manually browse to: http://<LOCALHOST>:<PORT>/jijx
+
+best practice:
+ close server with shortcut Esc-q (Escape then q) in the jijx page
 
 Ctrl+c here signals an interrupt to J.
 
-Browse to: http://<LOCAL>:<PORT>/jijx
 )
 
-console_failed=: 0 : 0
+noauto_welcome=: 0 : 0
 
-J HTTP Server - init failed
+manually browse to: http://<LOCALHOST>:<PORT>/jijx
 
-Port <PORT> already in use by JHS or another service.
+best practice:
+ close server with shortcut Esc-q (Escape then q) in the jijx page
 
-If JHS is serving the port, close this task and use the running server.
+Ctrl+c here signals an interrupt to J.
+)
 
-If JHS server is not working, close it, close this task, and restart.
+setsid=: 0 : 0
 
-See file "~addons/ide/jhs/config/jhs.cfg" on using another PORT.
+setsid not available for properly starting browser 
+you can install setsid with something like:
+...$ sudo apt-get install util-linux
+
+**************************************************
+)
+
+bind_failed=: 0 : 0
+
+bind to port <PORT> failed - <ERROR>
+
+if another JHS server is already on the port, close this task,
+ and use the already running server
+
+if another service is on the port, close this task,
+ and edit file ~addons/ide/jhs/config/jhs.cfg to use another port
+
+to run a new JHS session on the next free port, run the following:
+   nextport_jhs_''
 )
 
 NB. html config parameters
@@ -497,11 +378,15 @@ PORT=: 65001       NB. private port range 49152 to 65535
 USER=: ''          NB. 'john' - login
 PASS=: ''          NB. 'abra' - login
 TIPX=: ''          NB. tab title prefix - distinguish sessions
-AUTO=: (UNAME-:'Linux')*:0-:2!:5'DISPLAY'  NB. startup browse to http:/localhost:PORT/jijx
+AUTO=: 1           NB. start browser (if necessary) and browse to http:/localhost:PORT/jijx
 
 PC_FONTFIXED=:     '"courier new","courier","monospace"'
 PC_FONTVARIABLE=:  '"sans-serif"'
 PC_BOXDRAW=:       0        NB. 0 utf8, 1 +-, 2 oem
+
+PC_BUTTON=:        'aqua'
+PC_MENU_FOCUS=:    'lightgrey'
+PC_MENU_HOVER=:    'lightgrey'
 
 PC_FM_COLOR=:      'black'  NB. formatted output
 PC_ER_COLOR=:      'red'    NB. error
@@ -559,13 +444,15 @@ sdbind_jsocket_ SKLISTEN;AF_INET_jsocket_;y;PORT
 nextport=: 3 : 0
 while.
  PORT=: >:PORT
+ TIPX=: ":PORT
  r=.dobind y
  shutdownJ_jsocket_ SKLISTEN ; 2
  sdclose_jsocket_ ::0: SKLISTEN
  sdcleanup_jsocket_''
  erase'SKLISTEN_jhs_'
- 10048=r
+ 0~:r
 do. end.
+init''
 )
 
 addOKURL=: 3 : 0
@@ -577,16 +464,12 @@ rmOKURL=: 3 : 0
 OKURL=: OKURL-.<y
 )
 
-lcfg=: 3 : 0
-try. load jpath y catch. ('load failed: ',y) assert 0 end.
-NB. current locale possibly changed
-cocurrent 'jhs'
-)
-
 NB. simplified config
 jhscfg=: 3 : 0
-configdefault''
-if. 3=nc<'config' do. config'' end.
+if. _1=nc<'PORT' do. NB. avoid if config already done or manually adjusted
+ configdefault''
+ if. 3=nc<'config' do. config'' end.
+end. 
 'PORT invalid' assert (PORT>49151)*.PORT<2^16
 'PASS invalid' assert 2=3!:0 PASS
 if. _1=nc<'USER' do. USER=: '' end. NB. not in JUM config
@@ -611,14 +494,15 @@ menu>tour>overview : good place to start
 
 NB. SO_REUSEADDR allows server to kill/exit and restart immediately
 init=: 3 : 0
+echo'JHS - J HTTP Server'
 'already initialized' assert _1=nc<'SKLISTEN'
 IFJHS_z_=: 1
-if. 3=nc<'getignore_j_' do. getignore_j_'' end. NB. not defined in 801
 canvasnum_jhs_=: 1
 jhscfg''
 PATH=: jpath'~addons/ide/jhs/'
 NB. IP=: getexternalip''
-LOCALHOST=: >2{sdgethostbyname_jsocket_'localhost'
+NB. LOCALHOST=: >2{sdgethostbyname_jsocket_'localhost'
+LOCALHOST=: '127.0.0.1'
 logappfile=: <jpath'~user/.applog.txt' NB. username
 SETCOOKIE=: 0
 NVDEBUG=: 0 NB. 1 shows NV on each input
@@ -629,35 +513,36 @@ DATAS=: ''
 PS=: '/'
 cfgfile=. jpath'~addons/ide/jhs/config/jhs_default.ijs'
 r=. dobind''
-if. r=10048 do.
- echo console_failed hrplc 'PORT';":PORT
- 'JHS init failed'assert 0
+if. 0~:r do.
+ echo bind_failed hrplc 'PORT ERROR';(":PORT);sderror_jsocket_ r
+ return.
 end.
-sdcheck_jsocket_ r
 sdcheck_jsocket_ sdlisten_jsocket_ SKLISTEN,5 NB. queue length
 SKSERVER_jhs_=: _1
 boxdraw_j_ PC_BOXDRAW
-smoutput console_welcome hrplc 'PORT LOCAL';(":PORT);LOCALHOST
 startupjhs''
 cookie=: 'jcookie=',":{:6!:0''
 input_jfe_=: input_jhs_  NB. only use jfe locale to redirect input/output
 output_jfe_=: output_jhs_
 
+if. AUTO *. UNAME-:'Linux' do. NB. require linux manual start if no setsid
+ try. 2!:0'which setsid' catch. echo setsid[AUTO=: 0 end.
+end. 
+
 if. AUTO do.
- url=. 'http://localhost:PORT/jijx'rplc'PORT';":PORT
- try.
-  select. UNAME
-  case. 'Win'    do. shell_jtask_'start ',url
-  case. 'Linux'  do.
-   if. (0;'') -.@e.~ <2!:5 'DISPLAY' do.
-    assert. *#t=. dfltbrowser_j_''
-    2!:1 t,' ',url,' >/dev/null 2>&1 &'
-   end.
-  case. 'Darwin' do. 2!:0'open ',url,' &'
+ url=. 'http://<LOCALHOST>:<PORT>/jijx'hrplc'LOCALHOST PORT';LOCALHOST;":PORT
+ select. UNAME
+ case. 'Win'    do. shell_jtask_'start ',url
+ case. 'Linux'  do.
+  if. (0;'') -.@e.~ <2!:5 'DISPLAY' do.
+   assert. *#t=. dfltbrowser_j_''
+   2!:0 'setsid ',t,' ',url,' </dev/null >/dev/null 2>&1 &'
   end.
- catch.
-  echo'AUTO failed: ',url
+ case. 'Darwin' do. 2!:0'open ',url,' &'
  end.
+ echo auto_welcome hrplc 'LOCALHOST PORT';LOCALHOST;":PORT
+else.
+ echo noauto_welcome hrplc 'LOCALHOST PORT';LOCALHOST;":PORT
 end.
 jfe 1
 )
@@ -669,9 +554,13 @@ load__'~addons/ide/jhs/utiljs.ijs'
 load__'~addons/ide/jhs/sp.ijs'
 load__'~addons/ide/jhs/tool.ijs'
 load__'~addons/ide/jhs/d3.ijs'
+load__'~addons/ide/jhs/vocabhelp.ijs'
 
 NB. load addons, but do not fail init if not found
 load__ :: ['~addons/convert/json/json.ijs'
+
+NB. jev_... inputs are not displayed in log
+jev_run_z_=: 0!:111[ NB. tacit - run sentence in jijx
 
 stub=: 3 : 0
 'jev_get y[load''~addons/ide/jhs/',y,'.ijs'''
@@ -683,7 +572,7 @@ jev_get_jfile_=:   3 : (stub'jfile')
 jev_get_jfiles_=:  3 : (stub'jfiles')
 jev_get_jijs_=:    3 : (stub'jijs')
 jev_get_jfif_=:    3 : (stub'jfif')
-jev_get_jal_=:     3 : (stub'jal')
+jev_get_jpacman_=:  3 : (stub'jpacman')
 jev_get_jdemo_=:   3 : (stub'jdemo')
 jev_get_jlogin_=:  3 : (stub'jlogin')
 jev_get_jfilesrc_=:3 : (stub'jfilesrc')
@@ -774,7 +663,7 @@ if. 1<#r do. echo 'multiple lan ips: ',LF,;LF,~each' ',each r end.
 
 0 : 0 NB. getlanip with old ifconfig
 elseif. UNAME-:'Darwin' do.
- r=. <;._2[2!:0'ifconfig'
+ r=. <;._2[2!:0'ifconfig';
  r=. deb each r rplc each <TAB;' ' 
  r=. ((<'inet ')=5{.each r)#r
  r=. 5}.each r
@@ -787,7 +676,7 @@ end.
 
 getexternalip=: 3 : 0
 z=. >2{sdgethostbyname_jsocket_ >1{sdgethostname_jsocket_''
-if. ('255.255.255.255'-:z) +. ('127.0.'-:6{.z) +. '192.168.'-:8{.z do.
+if. ('255.255.255.255'-:z) +. (';.'-:6{.z) +. '192.168.'-:8{.z do.
  if. UNAME-:'Linux' do.
   a=. , 2!:0 ::_1: 'wget -q --timeout=3 --waitretry=0 --tries=3 --retry-connrefused -O - http://www.checkip.org/'
  elseif. UNAME-:'Darwin' do.

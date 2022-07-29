@@ -1,5 +1,4 @@
 NB. utils
-decho_z_=: echo_z_
 
 coclass'jhs'
 NB.* see ~addons/ide/jhs/util.ijs for complete information
@@ -10,7 +9,19 @@ NB.*
 NB.*
 NB.* close - close wid
 close=: 3 : 0
-jjs_jhs_'w=window.open("","',y,'");w.close();'
+jjs_jhs_'getwindow("',y,'").close();'
+)
+
+NB.*
+NB.* focus - focus wid - focus 'jfif' - focus 'jijs?jwid=~temp/sp/spfile.ijs'
+focus=: 3 : 0
+jjs_jhs_'getwindow("',y,'").focus();'
+)
+
+NB.*
+NB.* reload - reload wid
+reload=: 3 : 0
+jjs_jhs_'getwindow("',y,'").location.reload();'
 )
 
 NB.* doc - doc '' or 'html' or 'js'
@@ -104,27 +115,9 @@ x gd_set_jwatch_ y
 open_jhs_ ('jwatch?jwid=',x);x
 )
 
-NB. javascript to open/reopen a window
-NB. close required so S parmeter has an effect
-jsopen=: 0 : 0 NB. URL window-name specs
-w=window.open("","<WNM>");
-if(null==w)
- alert(PUBLOCKED)
-else 
-{
-  if(""==w.document.title)
-  {
-   w.close();  
-   w=window.open("<URL>","<WNM>","<S>");
-  }
-  else
-  w.setTimeout(function(){w.focus();},50);
-}
-)
-
 NB. note that ugs (cache avoidance is on url) - it not on wid!
 NB.* open - [xywh] open url [; jwid ]
-NB.* open new tab if not already open - reload url?xxx into existing tab
+NB.* open new tab if not already open - reload url?... into existing tab
 NB.*    xywh elided is broswer default (probably new tab)
 NB.*    xywh gives xywh for new window
 NB.*    wh elided defaults to 500 500
@@ -140,6 +133,9 @@ NB. cojhs (table/watch/... use open - locale is url - jwid???
 open=: 3 : 0
 ''open y
 :
+
+decho '*********************************************************** open'
+
 a=. boxopen y
 if. 1=#a do. a=. a,a end.
 'a b'=. ,each a
@@ -162,15 +158,9 @@ if. i<#a do.
  a=. (i{.a),jurlencode i}.a NB. jurlencode just the parameter
 end. 
 JWID=: b
-m=. a,' pop-up blocked\nadjust browser settings to allow localhost pop-up\nsee wiki JHS help pop-up section'
-a=. a,(('?'e.a){'?&'),'nocache=',}.uqs''
-jjs jsopen rplc '<URL>';a;'<WNM>';b;'<S>';s
-NB.! jjs jsopen rplc '<URL>';a;'<WNM>';b;'<S>';s
-)
-
-NB. focus wid - focus 'jfif' - focus 'jijs?jwid=~temp/sp/spfile.ijs'
-focus=: 3 : 0
-jjs_jhs_'setTimeout(function(){w=window.open("","<WID>");if(""==w.document.title) w.close(); else w.focus();},50)' rplc '<WID>';y
+NB.a=. a,(('?'e.a){'?&'),'nocache=',}.uqs''
+b=. jurlencode b
+jjs 'pageopen(''',a,''',''',b,''',''',s,''');'
 )
 
 NB.* openreport - openreport'' - report wid,tab,class,locale
@@ -230,7 +220,7 @@ x printsub t
 
 printsub=: 4 : 0
 s=. printstyle rplc '"';''''
-jjs'win=window.open("");win.document.write("<style type=''text/css''>pre{',s,'}</style><pre>',y,'<pre/>");',x#'win.print();win.close();'
+jjs'win=urlopen("");win.document.write("<style type=''text/css''>pre{',s,'}</style><pre>',y,'<pre/>");',x#'win.print();win.close();'
 )
 
 NB.* tablefromjs - tablefromjs '[[1,2,3],[4,5,6]]' 
@@ -376,7 +366,7 @@ NB. TARGET f URL
 jhsshow=: 3 : 0
 '_blank' jhsshow y
 :
-jjs_jhs_ 'window.open("',(y,uqs_jhs_''),'","',x,'");'
+jjs_jhs_ 'pageshow("',(y,uqs_jhs_''),'","',x,'");'
 )
 
 plotjijx=: 3 : 0
@@ -441,14 +431,23 @@ jhsuqs=: uqs_jhs_  NB. viewmat
 jhtml=: jhtml_jhs_ NB. viewmat
 
 NB. stadard cojhs boilerplate
-show=: 3 : 'y open ,~coname'''''
+shown=: 0
 
-destroy=: codestroy
+show=: 3 : 0
+shown=: 1
+y open ,~coname''
+)
+
+destroy=: 3 : 0
+if. shown do. close ;coname'' end.
+codestroy''
+)
 
 ev_close_click=: 3 : 0
-saveonclose''
 jhrajax''
+shown=: 0 NB. already closed
 destroy''
+i.0 0
 )
 
 jev_get=: 3 : 0
@@ -457,5 +456,5 @@ title jhrx (getcss''),(getjs''),gethbs''
 
 create=: [
 saveonclose=: [
-NB. override create, jev_get, and savonclose to customize app
+NB. override jev_get, create, and savonclose to customize app
 NB. end cojhs boilerplate

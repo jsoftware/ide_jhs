@@ -1,10 +1,12 @@
 coclass'jfif'
 coinsert'jhs'
 
+MAXFILES=: 100000 NB. fails if too many files in search path
+
 HBS=: 0 : 0
 'find'     jhb'Find'
-'what'     jhtext '';20
-'where'    jhtext '';25
+'what'     jhtext '';25
+'where'    jhtext '';20
 'context'  jhselect(<;._2 FIFCONTEXT);1;0
 'mcase'    jhb 'Aa'
 'mfolders' jhb '/...'
@@ -14,67 +16,56 @@ jhresize''
 'area'     jhdiv''
 )
 
-fiff_find_button=: 3 : 0
-if. #FIFWHAT do.
-  dat=. ffss''
-  if. #dat do.
-    if. # 0 pick dat do.
-      'FIFFOUND FIFLINES FIFHITS FIFMSK FIFFILES'=: dat
-      FIFFOUNDFILES=: ''
-    elseif. 0 e. # 2 pick dat do.
-      finfo 'No match found'
-    elseif. 1 do.
-      finfo 'No files found'
-    end.
-  else.
-    finfo 'No match found'
-  end.
-else.
- finfo 'Nothing to find'
-end.
-)
-
-create=: 3 : 0
+jev_get=: 3 : 0
 'jfif'jhr''
 )
-
-jev_get=: create
 
 ev_find_click=: 3 : 0
 t=. <;._2 getv'jdata'
 'FIFWHAT FIFCONTEXTNDX FIFTYPE FIFDIR FIFCASE FIFSUBDIR FIFNAMEONLY'=: t
 
 FIFTYPE=: '*.ijs'
-if. '/'~:{:FIFDIR do.
- i=. FIFDIR i:'/'
- t=. }.i}.FIFDIR
- if. '*'={.t do.
-  FIFTYPE=: t
-  FIFDIR=: i{.FIFDIR
+if. 0~:#FIFDIR do.
+ if. '/'~:{:FIFDIR do.
+  i=. FIFDIR i:'/'
+  t=. }.i}.FIFDIR
+  if. '*'={.t do.
+   FIFTYPE=: t
+   FIFDIR=: i{.FIFDIR
+  end.
+  FIFDIR=: FIFDIR,'/'
  end.
- FIFDIR=: FIFDIR,'/'
-end.
+end. 
 
 FIFCONTEXTNDX=: ".FIFCONTEXTNDX
 FIFCASE=: ".FIFCASE
 FIFSUBDIR=: ".FIFSUBDIR
 FIFNAMEONLY=: ".FIFNAMEONLY
+FIFFOUND=: ''
 FIFINFO=: ''
 JHSFOUNDFILES=: ''
 fiff_find_button''
-jhrajax FIFINFO,>FIFNAMEONLY{JHSFOUNDFILES;FIFFOUND
+
+t=. FIFINFO
+if. 0~:#t do. t=. t,'<br><br>find WHAT WHERE<br>find abcd ~addons<br>find abcd ~addons/*.txt' end. 
+ 
+jhrajax t,>FIFNAMEONLY{JHSFOUNDFILES;FIFFOUND
 )
 
-ev_close_click=: 3 : 0
-jhrajax''
+fiff_find_button=: 3 : 0
+if. 0=#FIFWHAT    do. finfo 'WHAT is empty - nothing to find' return. end.
+if. 0=#FIFDIR     do. finfo 'WHERE is empty' return. end.
+if. 0=#dir FIFDIR do. finfo 'WHERE is not a folder' return. end.
+dat=. ffss''
+if. ''-:dat  do. return. end. NB. finfo called
+if. 0=# 0 pick dat do. finfo'no match' return. end.
+'FIFFOUND FIFLINES FIFHITS FIFMSK FIFFILES'=: dat
 )
 
 termLF=: , (0: < #) # LF"_ -. _1&{.
-groupndx=: [: <: I. + e.~
 toLF=: (10{a.)&(I. @(e.&(13{a.))@]})
 
-ffmatches=: {.@{."2 @ rxmatches_jregex_
-fifplain=: ;@(,~&.> e.&'[](){}$^.*+?|\' #&.> (<'\')"_) NB. escape NOT pathsep!
+fifplain=: ;@(,~&.> e.&'[](){}$^.*+?|\' #&.> (<'\')"_) NB. escape NOT /
 
 3 : 0''
 if. IFUNIX do. filecase=: [ else. filecase=: tolower end.
@@ -83,23 +74,21 @@ if. IFUNIX do. filecase=: [ else. filecase=: tolower end.
 
 ffssinit=: 3 : 0
 p=. y
-s=. ''
 nna=. '(^|[^[:alnum:]_])'
 nnz=. '($|[^[:alnum:]_.:])'
 ass=. '[[:space:]]*='
 select. FIFCONTEXTNDX
 case. 0 do. p=. fifplain y
 case. 1 do. p=. nna,p,nnz              
-case. 2 do. p=. nna,p,s=. ass,':'   
-case. 3 do. p=. nna,p,s=. ass,'\.'      
-case. 4 do. p=. nna,p,s=. ass,'[:.]'     
+case. 2 do. p=. nna,p,ass,':'    
+case. 3 do. p=. nna,p,ass,'\.'        
+case. 4 do. p=. nna,p,ass,'[:.]'        
 case. 5 do. p=. y NB. regex          
 end.
-
 FIFCOMP=: rxcomp_jregex_ :: _1: p
-(_1=FIFCOMP){1 0
 )
 
+NB. return '' if finfo called
 ffss=: 3 : 0
 JHSFOUNDFILES=: ''
 
@@ -109,8 +98,8 @@ else.
   what=. FIFWHAT
 end.
 fls=. ffgetfiles''
-if. 0 e. #fls do. '' return. end.
-if. 0=ffssinit what do. '' return. end.
+if.  ''-:fls         do. '' return. end.
+if. _1=ffssinit what do. finfo'regex failed'       return. end.
 fnd=. ''
 lns=. ''
 msk=. ''
@@ -118,21 +107,21 @@ hit=. ''
 dr=. fls
 read=. (1!:1 :: _1:) @ <
 read=. toLF @ (read f.)
-
 while. #dr do.
   dat=. read fl=. >{.dr
   dr=. }.dr
   if. dat -: _1 do. msk=. msk,0 continue. end.
   dat=. termLF dat
   if. FIFCASE do. txt=. dat else. txt=. tolower dat end.
-  ndx=. FIFCOMP ffmatches txt
+  ndx=. FIFCOMP rxmatches_jregex_ txt
+  ndx=. +/"1 {."2 ndx
   if. rws=. #ndx do.
     msk=. msk,1
     t=. jhsfixfl fl
     fnd=. fnd,t,' (',(":#ndx),')'
     JHSFOUNDFILES=: JHSFOUNDFILES,t
     txt=. dat
-    ind=. (0,}:I. txt=LF) groupndx ndx
+    ind=. +/ ndx >"1 0 I.txt=LF NB. display found line just from LF
     b=. ~: ind
     ind=. b#ind
     hit=. hit, <b#ndx
@@ -148,46 +137,41 @@ rxfree_jregex_ FIFCOMP
 fnd;lns;hit;msk;<fls
 )
 
+NB. return list of files or finfo
 ffgetfiles=: 3 : 0
 dirs=. <FIFDIR
 r=. ''
 dirs=. fullname_j_ each dirs
 
 while. #dirs do.
+  if. MAXFILES<#r do. finfo 'too many files to search' return. end.
   fpath=. (>{.dirs) &,
   dirs=. }.dirs
   dat=. a: -.~ 1!:0 each fpath each <FIFTYPE
 
   if. #dat do.
-    dat=. {."1 ;dat
+    dat=.('d'~:;4{each 4{"1 ;dat)#{."1 ;dat
     r=. r, fpath each /:~ dat
   end.
 
   if. FIFSUBDIR do.
     if. #j=. 1!:0 fpath '*' do.
       if. #j=. ({."1 ffgetsubdir j) do.
-        dirs=. ((fpath @ (,&PATHSEP_j_)) each j),dirs
+        dirs=. ((fpath @ (,&'/')) each j),dirs
       end.
     end.
   end.
 end.
-
-r=. ( ;@:((# {. 1:)&.>) <;.1 filecase@;) r
-
-if. 0 = #r do.
-  finfo 'No files found'
-else.
-  ~. jpath each r
-end.
+r=. ~.jpath each ( ;@:((# {. 1:)&.>) <;.1 filecase@;) r
+if. 0=#r do. finfo'no files to search' return. end.
+r
 )
 
 ffgetsubdir=: #~ '-d'&-:"1 @ (1 4&{"1) @ > @ (4&{"1)
 
 finfo=: 3 : 0
 FIFINFO=: y
-FIFFOUND=: ''
-FIFFOUNDFILES=: ''
-JHSFOUND=: ''
+''
 )
 
 FIFCONTEXT=: 0 : 0
@@ -215,6 +199,7 @@ CSS=: 0 : 0
 JS=: 0 : 0
 function ev_body_load()
 {
+ jijxset();
  setlast("what");
  setlast("where");
  jform.context.selectedIndex= getls("context");
@@ -231,6 +216,7 @@ function ev_find_click_ajax(ts){jbyid("area").innerHTML=ts[0];}
 
 function ev_find_click()
 {
+ jbyid('area').innerHTML= 'searching...';
  adrecall("what",jform.what.value,"0");
  adrecall("where",jform.where.value,"0");
  setls("context",   jform.context.selectedIndex);
@@ -247,7 +233,10 @@ function ev_find_click()
  jdoajax([],t);
 }
 
-function ev_file_click(){window.open('jijs?jwid='+jsid.value,jsid.value);}
+function ev_file_click(){
+ t= 'jijs?jwid='+jsid.value,jsid.value;
+ pageopen(t,t);
+}
 
 function ev_mcase_click(){flipchkstate('mcase');jscdo('find');}
 function ev_mfolders_click(){flipchkstate('mfolders');jscdo('find');}

@@ -65,8 +65,8 @@ desc=: 0 : 0
 <hr>Modeled after J602 app documented in
 J wiki (User:Andrew_Nikitin/Literate).<br><br>
 All events are passed to J handlers and no javascript code is required.<br><br>
-Close with redbarclose or ctrl+\ as this informs J server and runs verb saveonclose.
-Tab/browser close do not run saveonclose.
+Close with red button or Esc-q as this informs J server.
+Tab/browser close does not inform J server.
 )
 
 NB. html cascading style sheet - document look and feel

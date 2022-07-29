@@ -3,100 +3,11 @@ coclass'jhs'
 NB. JS could be src= and with cache would load faster
 NB. JS is small and doing it inline (not src=) is easier
 
-0 : 0
-*** menu ide>jfile/jijs/etc
-browsers block popups if not 'directly' the result of a user action - click on link or button
-
-*** jquery dialog stuff
- '<div id="dialog" title="Table Editor Error"></div>'
- $(function(){$("#dialog").dialog({autoOpen:false,modal:true});});
- $("#dialog").html(ts[0]);
- $("#dialog").dialog("open");
-
-*** unload/beforeunload
-april 2022 update:
-
-onbeforeunload is OK to warn user they are about to leave a dirty page
-the user gets a standard brower defined warning about leaving the page
-
-ajax/alert/... can not be used in the handler - depends on user staying and using close button
-
-firefox triggers the event on a new page
-
-chrome does NOT trigger the event on a new page (no interactions)
- in that case the user is not warned about leaving
- and cojhs locale will be orphaned
-
-----
-
-Jan 2017 - conclusion again that unload/beforeunload are not useful
-start to use standard close button on numbered locale pages
- this can free locales and resource properly
-
-unload can free locales - but refresh is an unload and thed a reload from the locale that no longer exists
-beforeunload does not ask permission to leave if page has not been touched by user (no good for freeing locale)
-beforeunload can prevent unload of changed page - but gets confusing on if being replaced by J open_jhs_
-
-----
-
-onunload/onbeforeunload events would be nice if they worked 'properly'
-would allow app to clean up client side and (ajax) server side
-there are limitations (ajax, etc.) in the handlers
-and nasty cross browser differences
-problems mostly in the ajax call
-
-chrome requires onbeforeunload with async false
-firefox requires onbeforeunload but doesn't care about async
-who knows about safari and other
-and if the server is hung then there are other problems
-
-the framework set the unload event the same way it set load event
-but it doesn't trigger and something is wrong
-
-the ajax calls with body are suspect - sid "" should probably be null to avoid body*
-
-no current pages really require client/server side cleanup
-the main requirement would be a page that required a locale to hold state
-that needed to be properly released
-
-this could probably be handled by the framework as follows:
-
-window.onbeforeunload= xxxclose;
-function xxxclose(){return dirty?""prefered way to leave this page is menu close or close button ×;null;
-
-a page could manage the dirty flag and do proper shutdown in the close handler
-
-
-*** contenteditable to/from text
-IE:
- <BR>             <-> N (\n)
- </P>              -> N
- <P>&nbsp;</P      -> N (can not tell emtpy from 1 blank)
- can have \r\n !
-
-Chrome:
- <br>            <-> N
- <div>            -> N
- <div><br></div>  -> N
- saw nested divs, but do not know how to get them
- starting div so break on div rather than /div
- 
-FF:
- <br>            <-> N
- has (and needs) <br> at end
-
-Portable rules (all case insensitive):
- remove \r \n
- <p>&nbsp;</p>    -> N
- <div><br></div>  -> N
- <br>            <-> N
- </p>             -> N
- </div>           -> N
- always have <br> at end (read/write)
- &lt;...         <-> < > & space
-)
 
 JSCORE=: 0 : 0
+var jijxwindow;  // jijx (could be closed) or null - that led (jijx->jfile->jijs) to this window
+var jlogwindow;  // set by jjhs - ~temp/jlog.ijs logging window
+var dirty=false;
 var JASEP= '\1'; // delimit substrings in ajax response
 var jform;       // page form
 var jevev;       // event handler event object
@@ -126,6 +37,13 @@ const jmarkrcnt   = jmarkremove.length;
 const PUBLOCKED= "pop-up blocked\n\
 adjust browser settings to allow localhost pop-up\n\
 see: jijx>wiki>JHS>Help>pop-up";
+
+window.addEventListener('beforeunload', function (e) {
+  if(!isdirty()) return;
+  e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
+  e.returnValue = ''; // Chrome requires returnValue to be set
+});
+
 
 function jbyid(id){return document.getElementById(id);}
 function jsubmit(s){jform.jdo.value=jevsentence;jform.submit();}
@@ -274,7 +192,7 @@ function jhfromthit(t)
 function jhfromt(d){return d.replace(JREGHFROMT,jhfromthit);}
 
 //* jshow(id)
-function jshow(id){jbyid(id).style.display="block";jresize();}
+function jshow(id,type= 'block'){jbyid(id).style.display=type;jresize();}
 
 //* jhide(id)
 function jhide(id){jbyid(id).style.display="none";jresize();}
@@ -362,7 +280,8 @@ function jresize()
 function jevload()
 {
  jform= document.j;
- jevsentence= "jev_"+jform.jlocale.value+"_ 0"; 
+ jevsentence= "jev_"+jform.jlocale.value+"_ 0";
+ dirty= !isNaN(parseInt(jbyid('jlocale').value)); // cojhs always dirty 
  jscdo("body","","load");
  return false
 }
@@ -394,13 +313,17 @@ function jev(event){
  return jevdo();
 }
 
-// return window reference for jijx
-function getjijx()
+// run sentence(s) in jijxwindow - false runs with jev_run and true runs bare sentenc
+function jijxrun(t,flag=true)
 {
- var w= window.opener;
- if(w!=null && "jijx"!=w.name) w= w.opener;
- if(w!=null && "jijx"!=w.name) w= null; // jijx->jfile->jijs
- return w;
+ if(jijxwindow!=null) {if(jijxwindow.closed) jijxwindow= null;}
+ t= t.replaceAll("'","''");
+ if(0==t.length) t= "\n"; // so '' displays as empty line
+ if(flag) t= "jev_run'"+t+"'";
+ try{jijxwindow.jdoajax([],"",t,true);}
+ catch(e){alert('orphaned (jijx that led to this page was closed)\n\
+this action requires access to that jijx page\n\
+close this page and reopen from jijx');}
 }
 
 function jevdo()
@@ -534,20 +457,14 @@ function jdor()
    else
    {
     var t;
-    var code= rq.status;
-    if(0==code)
-    {
-     // kludge - text copied from core.ijs
-     t= "Your JHS server has exited.\nManually close all pages for that server.\nThey won't work properly without a server\nand will be confused if the server restarts."
-    }
-    else
+    if(0!=rq.statue)
     {
      t="ajax request failed\n"
      t+=   "response code "+code+"\n";
-     t+=   "application did not produce result\n"
-     t+=   "press enter in jijx for additional info"
+     t+=   "server did not produce result\n"
+     t+=   "press enter in jijx for more info"
+     alert(t);
     }
-    alert(t);
    }
   }
   else
@@ -619,6 +536,57 @@ function ajaxcmds(ts)
  }
 }
 
+// log lines in ~temp/jlog.ijs file
+// printf/echo debugging tool
+function jlog(t)
+{
+ if(jlogwindow==null) return;
+ a= jlogwindow.cm.doc.getValue()+'\n'+t;
+ jlogwindow.cm.doc.setValue(a);
+}
+
+// used by edit'...' jfif jfile jfiles ...
+// open existing window or open it fresh
+// new window added to jijxwindow.allwins
+// returned window must not be used until the url has loaded
+function pageopen(url,wid,specs){
+ wid= decodeURIComponent(wid);
+ w= jijxwindow.getwindow(wid);
+ if(null!=w){w.setTimeout(function(){w.focus();},25);return;}
+ w=window.open(url,wid,specs); // pageopen
+ if(null==w){alert(PUBLOCKED);return w;}
+ if(ifjijxwindow()) jijxwindow.allwins.push(w);
+ return w;
+}
+
+// similar to pageopen, but not same origin - e.g. wiki pages
+function urlopen(url,specs){
+ wid= decodeURIComponent(url);
+ w=window.open(wid,wid,specs); // urlopen
+ if(null==w) alert(PUBLOCKED)
+ return w
+}
+
+// used by plot etc to show files
+// uqs used to get new file values
+// sets new location in existing window or opens new window
+function pageshow(url,wid,specs){
+ wid= decodeURIComponent(wid);
+ w= jijxwindow.getwindow(wid);
+ if(null!=w) w.location= url; else pageopen(url,wid,specs);
+}
+
+function ifjijxwindow(){return (jijxwindow==null || jijxwindow.closed) ? false:true;}
+
+// set jijxwindow as jijx that led to this window
+function jijxset()
+{
+ var w= window.opener;
+ if(w!=null && "jijx"!=w.name) w= w.opener;
+ if(w!=null && "jijx"!=w.name) w= null; // jijx->jfile->jijs
+ jijxwindow= w;
+}
+
 // app keyboard shortcuts
 
 document.onkeyup= keyup; // bad things happen if this is keydown
@@ -635,21 +603,7 @@ function jdostdsc(c)
  switch(c)
  {
   case '1': jactivatemenu('1'); break;
-  case 'j': window.open("jijx",TARGET);  break;
-  case 'f': window.open("jfile",TARGET); break;
-  case 'k': window.open("jfiles",TARGET); break;
-  case 'J': window.open("jijs",TARGET); break;
-  case 'F': window.open("jfif",TARGET); break;
-  case 'q': 
-   t= decodeURI(window.location)+"\n"+window.name;
-   if(null!=window.opener)
-   {
-    t= t+"  "+window.opener.name;
-    if(null!=window.opener.opener) t= t+"  "+window.opener.opener.name;
-   } 
-   //+"\n"+window.opener+"\n"+window.opener.name;
-   // t+= "\n"+window.opener.opener+"\n"+window.opener.opener.name;
-   alert(t); break;
+  case 'q': jscdo('close');break;
  }
 }
 
@@ -686,7 +640,6 @@ function keyup(ev)
   if(c==191){jscdo(e.shiftKey?"query":"slash",undefined,"ctrl");return false;}
   if(c==59){jscdo(e.shiftKey?"colon":"semicolon",undefined,"ctrl");return false;}
   if(c==222){jscdo(e.shiftKey?"doublequote":"quote",undefined,"ctrl");return false;}
-  if(c==220&&!e.shiftKey){jscdo("close");return false;} // ctrl+\
   if(c==38&&e.shiftKey&&'function'==typeof uarrow){uarrow();return false;}
   if(c==40&&e.shiftKey&&'function'==typeof darrow){darrow();return false;}
  }
@@ -809,6 +762,7 @@ function jactivatemenu(n)
  var node= jfindmenu(n);
  if('undefined'==typeof node) return;
  node.focus(); 
+ jmenushow(node);
 }
 
 var menublock= null; // menu ul element with display:block
@@ -1091,39 +1045,16 @@ function setlast(id)
   udarrow(a,1);
 }
 
-var pagedirty=0;
-
-function ev_pageclose_click()
-{
- var ok=1;
- if(pagedirty){closing= 1; ok= confirm("Unsaved changes. Confirm close or Cancel.")} // closing - avoid jev_body_focus error
- if(ok){window.onbeforeunload=null;jdoajax();window.close();}
- closing= 0;
-}
-
-const confirmtxt= "May have unsaved data.\n\
-Cancel for chance to save.\n\n\
-CTRL+\\ avoids this dialog.\n\n\
-REDBAR or CTRL+\\\n\
-preferred to browser close\n\
-so the J server is informed."
-
-function ev_close_click()
-{
- if(window.frameElement)
- {
-  window.top.jscdo("close");
- }
- else
-  {jdoajax([],'');window.close();}
+// jfif/... just close - cojhs call J ev_close_click
+// overidden by jijx, jijs and cojhs that need extra dirty work
+function ev_close_click(){
+ if(dirty) jdoajax();
+ dirty= false;
+ window.close();
 }
 
 function ev_close_click_ajax(){;}
 
+function isdirty(){return dirty;} // default - override
 
-function ev_redbarclose_click()
-{
- //if(false==confirm(confirmtxt)) return;
- jform.jmid.value="close";
- ev_close_click();
-}
+)

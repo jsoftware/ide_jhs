@@ -1,11 +1,10 @@
-NB. J HTTP Server - jal/pacman app
-coclass'jal'
+NB. J HTTP Server - jpacman
+coclass'jpacman'
 coinsert'jhs'
 require'pacman'
 
 HBS=: 0 : 0
-'J Active Library - pacman - Package Manager<br/>'
-'<a href="http://code.jsoftware.com/wiki/addons">code.jsoftware.com/wiki/addons</a>'
+'J Package Manager <a href="http://code.jsoftware.com/wiki/addons">code.jsoftware.com/wiki/addons</a>'
 '<hr>'
 'upable' jhb'Upgradeable'
 'remable'jhb'Removeable'
@@ -29,15 +28,11 @@ t,jhtablez
 )
 
 create=: 3 : 0 NB. create - y replaces <RESULT> in body
-'jal'jhr'BUTTONS RESULT';y
+'jpacman'jhr'BUTTONS RESULT';y
 )
 
 jev_get=: 3 : 0
 create '';('update'jpkg'')rplc LF;'<br>'
-)
-
-ev_close_click=: 3 : 0
-jhrajax''
 )
 
 ev_all_click=: 3 : 0
@@ -46,7 +41,6 @@ ev_all_click=: 3 : 0
 'install'jpkg,<'all'
 jev_get''
 )
-
 
 ev_upable_click=: 3 : 0
 'update'jpkg'' NB. update to make current

@@ -32,16 +32,18 @@ INC_handsontable_basic=: INC_handsontable NB. no jsoftware stuff yet
 NB.framework styles for all pages
 CSSCORE=: 0 : 0
 *{font-family:<PC_FONTVARIABLE>;}
-*.jhb{padding: 2px 2px;margin:0px;background-color:aqua;border:0px;}
+*.jhb{padding: 2px 2px;margin:0px;background-color:<PC_BUTTON>;border:0px;}
 *.jcode{font-family:<PC_FONTFIXED>;white-space:pre;}
 *.jhab:hover{cursor:pointer;color:black;background:#ddd;}
 *.jhab{text-decoration:none;}
-*.jhmab:hover{cursor:pointer;}
+*.jhmab:hover{cursor:pointer;background:<PC_MENU_HOVER>;}
 *.jhmab{text-decoration:none;color:black;}
-*.jhmg:hover{cursor:pointer;}
+*.jhmab:focus{background-color:<PC_MENU_FOCUS>}
+*.jhmg:hover{cursor:pointer;background:<PC_MENU_HOVER>;}
 *.jhmg:visited{color:black;}
 *.jhmg{color:black;background:#eee;}
 *.jhmg{text-decoration:none;}
+*.jhmg:focus{background-color:<PC_MENU_FOCUS>}
 *.jhml{color:black;}
 *.jhml:visited{color:black;}
 *.jhsel{background-color:buttonface;font-family:<PC_FONTFIXED>;}
@@ -53,7 +55,7 @@ div{padding-left:2px;}
  font-family:<PC_FONTFIXED>;
 }
 .menu a{font-family:<PC_FONTFIXED>;}
-.menu a:hover{cursor:pointer;color:#000;background:#ddd;width:100%;}
+.menu a:hover{cursor:pointer;color:#000;background:<PC_MENU_HOVER>;width:100%;}
 .menu span{float:left;position:relative;}
 .menu ul{
  position:absolute;top:100%;left:0%;display:none;
@@ -65,24 +67,8 @@ div{padding-left:2px;}
  display: none; background: white;
  text-align:center;
 }
-#redbarclose{top:0;left:0;width:100%;height:15px;
- background-color:firebrick;padding: 0px;margin: 0px;border: 0px
-}
+.jhb#close{background-color:red;font-weight:bold;} /* quit close esc-q button */
 )
-
-0 : 0
-#redbarclose{position:absolute;top:0;left:0;width:50%;
- height:10px;font-size:10px;background-color:firebrick;color:white;
- padding: 0px 0px 0px 0px;margin:0px 0px 20px 0px;border: 0px;
-}
-)
-
-NB. top right bottom left
-NB. padding: 2px 2px;margin:0px;
-
-NB.  font-weight:bold;
-
-NB. #redbarclose{position:absolute;top:0;left:0;width:100%;height:20x;font-size:10px;background-color:firebrick;color:white;font-weight:bold;}
 
 NB. extra html - e.g. <script .... src=...> - included after CSS and before JSCORE,JS
 HEXTRA=: '' 
@@ -90,8 +76,8 @@ HEXTRA=: ''
 NB. core plus page styles with config replaces
 NB. apply outer style tags after removing inner ones
 css=: 3 : 0
-t=. 'PC_FONTFIXED PC_FONTVARIABLE PC_FM_COLOR PC_ER_COLOR PC_LOG_COLOR PC_SYS_COLOR PC_FILE_COLOR'
-t=. (CSSCORE,y) hrplc t;PC_FONTFIXED;PC_FONTVARIABLE;PC_FM_COLOR;PC_ER_COLOR;PC_LOG_COLOR;PC_SYS_COLOR;PC_FILE_COLOR
+t=. 'PC_FONTFIXED PC_FONTVARIABLE PC_FM_COLOR PC_ER_COLOR PC_LOG_COLOR PC_SYS_COLOR PC_FILE_COLOR PC_BUTTON PC_MENU_HOVER PC_MENU_FOCUS'
+t=. (CSSCORE,y) hrplc t;PC_FONTFIXED;PC_FONTVARIABLE;PC_FM_COLOR;PC_ER_COLOR;PC_LOG_COLOR;PC_SYS_COLOR;PC_FILE_COLOR;PC_BUTTON;PC_MENU_HOVER;PC_MENU_FOCUS
 '<style type="text/css">',LF,t,'</style>',LF
 )
 
@@ -280,10 +266,7 @@ t=. t,'.',gid,'_rf{text-align:right;width:',width,';}',LF
 t=. t,'.',gid,'_xx{text-align:right;width:',width,';}',LF
 )
 
-NB. Cache-Control: no-cache vs n-store 
-NB. no-store and no-cache both seem to have no effect with firefox
-
-NB. html template <XXX>
+NB. html template <...>
 NB. TITLE
 NB. CSS   - styles
 NB. JS    - javascript
@@ -439,7 +422,7 @@ t=. t,' onkeydown="return jmenukeydown(event);"'
 
 jhmx=: 3 : 0
 if. '^'={:y do.
- s=. ' ','Esc+',_2{y
+ s=. ' ','Esc-',_2{y
  t=. _2}.y
 elseif. '*'={:y do.
  s=. ' ','Ctrl+',_2{y
@@ -496,7 +479,7 @@ t hrplc 'ID VALUE';x;y
 
 NB.* jhclose*jhclose'' - cojhs close button and spacer
 jhclose=: 3 : 0
-'redbarclose'jhb''
+'close'jhb' • '
 )
 
 NB.* jhcheckbox*id jhcheckbox text;checked (checked 0 or 1)

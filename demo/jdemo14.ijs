@@ -1,6 +1,15 @@
 coclass'jdemo14'
 coinsert'jhs'
 
+HBS=: 0 : 0
+jhclose''
+'<span id="title">budget 2016</span>'
+'<div id="hots">'
+'<iframe id="hot1" name="hot1" src="',(;hot1),'"></iframe>'
+'<iframe id="jd3" name="jd3" src="',(;loc),'"></iframe>'
+'</div>'
+)
+
 months=: '"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"'
 
 create=: 3 : 0
@@ -11,8 +20,8 @@ try.
  assert 0=nc<header
  d=. 0+header~
  'data must be 5 12 $ integers' assert (5 12-:$d)*.4=3!:0 d
- hot1=: 'jhot;_'cojhs ''
-
+ hot1=: 'jhot;_'cojhs 'EMPTY_z_'
+ 
  NB. sets background-color of rows 6 and later (n+6)
  CSS__hot1=: CSS__hot1,'.handsontable tr:nth-child(n+6) > td {background-color: bisque;}'
 
@@ -38,31 +47,11 @@ catch.
 end. 
 )
 
-show=: 3 : 0
-shown=: 1
-y open ,~coname''
-)
-
 destroy=: 3 : 0
 if. shown do. close ;coname'' end.
 destroy__hot1''
 destroy__loc''
 codestroy''
-)
-
-ev_close_click=: 3 : 0
-jhrajax''
-shown=: 0 NB. already closed
-destroy''
-)
-
-HBS=: 0 : 0
-jhclose''
-'<span id="title">budget 2016</span>'
-'<div id="hots">'
-'<iframe id="hot1" name="hot1" src="',(;hot1),'"></iframe>'
-'<iframe id="jd3" name="jd3" src="',(;loc),'"></iframe>'
-'</div>'
 )
 
 NB. new CSS3 calc will allow better layout control
@@ -75,15 +64,8 @@ CSS=: 0 : 0
 
 calc=: 3 : '(<./y),(>./y),(<.(+/%#) y),(+/y),:+/\ +/y'
 
-jev_get=: 3 : 0
-'jdemo14' jhrx (getcss''),(getjs''),gethbs''
-)
-
 NB. gets all the data - could get and apply just changes
 jev_change=: 3 : 0
-
-echo 'change'
-
 b=. 5{.data__hot1
 d=. tablefromjs getv'jdata' NB. data and summary data
 for_i. i.#d do.
@@ -95,11 +77,6 @@ d=. b,calc b
 setdata__hot1 d
 jhrajax (jsfromtable d),JASEP,jd3options,jd3data b
 NB.jhrajax jsfromtable d
-)
-
-ev_close_click=: 3 : 0
-jhrajax''
-destroy''
 )
 
 JS=: 0 : 0

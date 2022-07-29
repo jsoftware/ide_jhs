@@ -24,9 +24,9 @@ b1 NB. list of ints - command count args ...
 NB. 1st int is for command beginPath and it has 0 args
 NB. 3rd int is for command lineWidth and it has 1 arg which is 1
 
-NB.spxaction: refresh (F5) canvas-tour page - blank
+reload_jhs_ ;p NB. same as pressing F5 on canvas page
 refresh__p=: jsxarg b1 NB. 
-NB.spxaction: refresh (F5) canvas-tour page - red line
+reload_jhs_ ;p NB. same as pressing F5 on canvas page
 
 NB. common setup: pen width; pen color ; brush color
 common=: 3 : 0

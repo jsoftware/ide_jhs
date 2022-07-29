@@ -332,10 +332,10 @@ function jdoit(t)
  }
  else
   v= "''";
- window.opener.jdoajax([],"",t+" dbxup"+v,true);
+ jijxrun(t+" dbxup"+v,false);
 }
 
-function ev_body_load(){jresize();}
+function ev_body_load(){jijxset();jresize();}
 function ev_files_click() {jdoajax(["val"]);}
 function ev_dbrun_click()    {jdoit('dbrun');}
 function ev_dbover_click()   {jdoit('dbover');}
@@ -346,5 +346,5 @@ function ev_val_enter()      {ev_dbjmp_click();}
 function ev_dbcut_click(){jdoit('dbcut');}
 function ev_dbreset_click()  {jdoit('dbxreset');}
 function ev_nox_click(){jdoajax();}
-function ev_help_click(){window.opener.jdoajax([],"","dohelp_jdebug_''",true);}
+function ev_help_click(){jijxrun("dohelp_jdebug_''");}
 )

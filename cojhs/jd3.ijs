@@ -1,7 +1,16 @@
 coclass'jd3'
 coinsert'jhs'
 
-shown=: 0
+NB. css/js library files to include
+INC=: INC_d3_basic 
+
+NB. J sentences - create html body
+HBS=: 0 : 0
+jhclose''
+'ga'jhd3_basic'' NB. ga,ga_... divs for d3_basic plot
+)
+
+NB. cojhs boilerplate from util.ijs
 
 create=: 3 : 0
 try.
@@ -12,34 +21,9 @@ catchd.
 end.
 )
 
-show=: 3 : 0
-shown=: 1
-y open ,~coname''
-)
-
-destroy=: 3 : 0
-if. shown do. close ;coname'' end.
-codestroy''
-)
-
 NB. J handlers for app events
 jev_get=: 3 : 0
 title jhrx(getcss''),(getjs'TABDATA';data),gethbs''
-)
-
-ev_close_click=: 3 : 0
-jhrajax''
-shown=: 0 NB. already closed
-destroy''
-)
-
-NB. css/js library files to include
-INC=: INC_d3_basic 
-
-NB. J sentences - create html body
-HBS=: 0 : 0
-jhclose''
-'ga'jhd3_basic'' NB. ga,ga_... divs for d3_basic plot
 )
 
 CSS=: 0 : 0
@@ -52,7 +36,7 @@ tabdata="<TABDATA>"; // set by J jev_get handler
 
 function ev_body_load()
 {
- if (window.frameElement){jhide("redbarclose");}
+ if (window.frameElement){jhide("close");} // demo14.ijs - only 1 close button in iframe set
  resize();
  window.onresize= resize;
 }

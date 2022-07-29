@@ -22,32 +22,26 @@ jhjmlink''
  'plot'    jhmab'plot'
  'spx'     jhmab'spx'
  'labs'    jhmab'labs'
-'wiki'     jhmg 'wiki';1;10
+'help'          jhmg'help';1;16
  'helpwikijhs'       jhmab'JHS'
- 'helpwikinuvoc'     jhmab'NuVoc'
+ 'helpwikinuvoc'     jhmab'vocabulary'
  'helpwikiconstant'  jhmab'constant'
  'helpwikicontrol'   jhmab'control'
  'helpwikiforeign'   jhmab'foreign'
- 'helpwikiancillary'jhmab'Ancillary'
-'help'          jhmg'help';1;10
- 'helphelp'      jhmab'help'
- 'helpinfo'      jhmab'info'
- 'helpvocab'     jhmab'vocabulary'
- 'helpconstant'  jhmab'constant'
- 'helpcontrol'   jhmab'control'
- 'helpforeign'   jhmab'foreign'
- 'helpdictionary'jhmab'dictionary'
- 'helpstdlib'    jhmab'stdlib'
+ 'helpwikiancillary' jhmab'ancillary'
+ 'helpwikistdlib'        jhmab'standard library'
+ 'helpwikirelnotes'  jhmab'release notes'
+ 'helphelp'      jhmab'807 html legacy'
+ 'wiki'          jhmab'wiki look up'
  'about'         jhmab'about'
 'adv'jhmg '>';0;10
 jhmz''
 jhresize''
 'log' jhec'<LOG>'
+'ijs' jhhidden'<IJS>'
 )
 
 jev_get=: create
-
-jev_flush=: 3 : 'i.0 0' NB. jijs calls to flush output without display
 
 NB. move new transaction(s) to log
 uplog=: 3 : 0
@@ -82,10 +76,15 @@ else.
 end.
 )
 
+NB. next ijs temp file number
+nexttemp=: 3 : 0
+>./;0".each _4}.each{."1 [1!:0 jpath '~temp\*.ijs'
+)
+
 NB. refresh response - not jajax
 create=: 3 : 0
 uplog''
-'jijx' jhr 'LOG';LOG
+'jijx' jhr 'LOG IJS';LOG;":nexttemp''
 )
 
 ev_advance_click=: 3 : 0
@@ -100,11 +99,26 @@ jloadnoun_z_=: 0!:100
 
 ev_clearrefresh_click=: 3 : 'LOG_jhs_=: '''''
 
+wikilu=: 0 : 0
+look up things in the wiki
+   wiki''    NB. vocabulary
+   wiki'i.'  NB. i. y (click Dyad for x i. y)
+   wiki'if.' NB. control words
+   wiki'12x' NB. constants
+   wiki'a'   NB. ancilliary 
+)
+
+ev_wiki_click=: 3 : 0
+jhtml'<hr/>'
+echo wikilu
+jhtml'<hr/>'
+)
+
 ev_about_click=: 3 : 0
 jhtml'<hr/>'
 echo JVERSION
 echo' '
-echo'Copyright 1994-2021 Jsoftware Inc.'
+echo'Copyright 1994-2022 Jsoftware Inc.'
 jhtml'<hr/>'
 )
 
@@ -139,22 +153,6 @@ jhtml'<hr>'
 echo x
 spx '~addons/ide/jhs/spx/',y
 jhtml'<hr/>'
-)
-
-ev_jijs_click=: 3 : 0
-edit jnew_jhs_''
-)
-
-ev_j1_click=:  3 : 0
-'J 1'tour'j1.ijs'
-)
-
-ev_j2_click=:  3 : 0
-'J 2'tour'j2.ijs'
-)
-
-ev_j3_click=:  3 : 0
-'J 3'tour'j3.ijs'
 )
 
 ev_plot_click=:  3 : 0
@@ -194,8 +192,7 @@ t=. t,'jfile'  jhmab'jfile    f^'
 t=. t,'jfiles' jhmab'jfiles   k^'
 t=. t,JIJSAPP  jhmab'jijs     J^'
 t=. t,'jfif'   jhmab'jfif     F^'
-t=. t,'jal'    jhmab'pacman'
-t=. t,'jijx'   jhmab'jijx     j^'
+t=. t,'jpacman'jhmab'jpacman'
 t=. t,'jdebug' jhmab'jdebug'
 
 if. 1=#gethv'node-jhs:' do.
@@ -206,6 +203,7 @@ end.
 t=. t,'clearwindow'jhmab'clear window'
 t=. t,'clearrefresh'jhmab'clear refresh'
 t=. t,'clearLS'jhmab'clear LS'
+t=. t,'close'jhmab'quit q^'
 t
 )
 
@@ -223,6 +221,7 @@ NB. *#log:focus{border:1px solid red;}
 NB. *#log:focus{outline: none;} /* no focus mark in chrome */
 
 JS=: 0 : 0
+var allwins= []; // all windows created by jijx
 var phead= '<div id="prompt" class="log">';
 var ptail= '</div>';
 var globalajax; // sentence for enter setTimeout ajax
@@ -230,24 +229,18 @@ var TOT= 1;     // timeout time to let DOM settle before change
 //var TOT= 100; // might need more time on slow devices???
 var wjdebug= null; // jdebug window object
 
-/* this works - but is annoying
-window.addEventListener('beforeunload', function (e) {
-  // Cancel the event
-  e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
-  // Chrome requires returnValue to be set
-  e.returnValue = '';
-});
-*/
-
 function ev_body_focus(){if(!jisiX)setTimeout(ev_2_shortcut,TOT);}
 
 function ev_body_load()
 {
- if(""==window.name) window.name= "jijx";
+ jijxwindow= window;
+ window.name= "jijx";
  jseval(false,jbyid("log").innerHTML); // redraw canvas elements
  newpline("   ");
  jresize();
 }
+
+function isdirty(){return 0!=allwins.length;}
 
 var setvkb = function()
 {
@@ -471,22 +464,42 @@ function ev_sp_click(){jdoajax([]);}
 function ev_spx_click(){jdoajax([]);}
 function ev_labs_click(){jdoajax([]);}
 function ev_about_click(){jdoajax([]);}
+function ev_wiki_click(){jdoajax([]);}
+
 function ev_clearwindow_click(){jbyid("log").innerHTML= "";newpline("   ");}
 function ev_clearrefresh_click(){jdoajax([]);}
 function ev_clearLS_click(){localStorage.clear();};
 
-// cache
-//function linkclick(a){window.open(a+'?'+Date.now(),a);return false;} // open new tab or refresh old
-function linkclick(a){window.open(a,a);return false;} // open new tab or old
+function linkclick(a){pageopen(a,a);return false;} // open new tab or old - cache
 
 function ev_jfile_click(){linkclick("jfile");}
 function ev_jfiles_click(){linkclick("jfiles");}
 function ev_jfif_click(){linkclick("jfif");}
-function ev_jal_click(){linkclick("jal");}
-function ev_jijs_click(){linkclick("jijs")} 
+function ev_jpacman_click(){linkclick("jpacman");}
 function ev_jijx_click(){linkclick("jijx");}
 
-function ev_jdebug_click(){wjdebug= window.open("jdebug","jdebug");return false;;}
+function ev_jijs_click(){
+ id= jbyid('ijs');
+ id.value= 1+parseInt(id.value)+'';
+ linkclick("jijs?jwid=~temp/"+id.value+".ijs")
+} 
+
+function ev_f_shortcut(){ev_jfile_click();}
+function ev_k_shortcut(){ev_jfiles_click();}
+function ev_F_shortcut(){ev_jfif_click();}
+function ev_J_shortcut(){ev_jijs_click();}
+
+function ev_9_shortcut(){jlogwindow= pageopen('jijs?jwid=~temp/jlog.ijs','jijs?'+encodeURIComponent('jwid=~temp/jlog.ijs'));}
+
+function ev_8_shortcut(){
+ jlog('\nesc-8 '+allwins.length);
+ allwins.forEach(function (el){
+  try{t= el.name;}catch(e){t= 'error'};
+  jlog(el.closed?'closed':t)
+});
+}
+
+function ev_jdebug_click(){wjdebug= pageopen('jdebug','jdebug');return false;;}
 
 function ev_jbreak_click()
 {
@@ -510,23 +523,15 @@ function ev_jlogoff_click()
  window.location= "jlogoff";
 }
 
-function ev_helphelp_click(){linkclick("https://www.jsoftware.com/help/index.htm")};
-function ev_helpinfo_click(){linkclick("https://www.jsoftware.com/help/user/product.htm")};
-function ev_helpvocab_click(){linkclick("https://www.jsoftware.com/help/dictionary/vocabul.htm")};
-function ev_helpwikinuvoc_click(){linkclick("http://code.jsoftware.com/wiki/NuVoc")};
-function ev_helpwikiancillary_click(){linkclick("http://code.jsoftware.com/wiki/NuVoc#bottomrefs")};
-
-function ev_helpwikiconstant_click(){linkclick("http://code.jsoftware.com/wiki/Vocabulary/Constants")};
-function ev_helpwikicontrol_click(){linkclick("http://code.jsoftware.com/wiki/Vocabulary/ControlStructures")};
-function ev_helpwikiforeign_click(){linkclick("http://code.jsoftware.com/wiki/Vocabulary/Foreigns")};
-
-
-function ev_helpconstant_click(){linkclick("https://www.jsoftware.com/help/dictionary/dcons.htm")};
-function ev_helpcontrol_click(){linkclick("https://www.jsoftware.com/help/dictionary/ctrl.htm")};
-function ev_helpforeign_click(){linkclick("https://www.jsoftware.com/help/dictionary/xmain.htm")};
-function ev_helpdictionary_click(){linkclick("https://www.jsoftware.com/help/dictionary/contents.htm")};
-function ev_helpstdlib_click(){linkclick("https://www.jsoftware.com/help/user/library.htm")};
-function ev_helpwikijhs_click(){linkclick("http://code.jsoftware.com/wiki/Guides/JHS")};
+function ev_helphelp_click(){urlopen("https://www.jsoftware.com/help/index.htm")};
+function ev_helpwikinuvoc_click(){urlopen("https://code.jsoftware.com/wiki/NuVoc")};
+function ev_helpwikiancillary_click(){urlopen("https://code.jsoftware.com/wiki/NuVoc#bottomrefs")};
+function ev_helpwikirelnotes_click(){urlopen("https://code.jsoftware.com/wiki/System/ReleaseNotes")};
+function ev_helpwikiconstant_click(){urlopen("https://code.jsoftware.com/wiki/Vocabulary/Constants")};
+function ev_helpwikicontrol_click(){urlopen("https://code.jsoftware.com/wiki/Vocabulary/ControlStructures")};
+function ev_helpwikiforeign_click(){urlopen("https://code.jsoftware.com/wiki/Vocabulary/Foreigns")};
+function ev_helpwikijhs_click(){urlopen("https://code.jsoftware.com/wiki/Guides/JHS")};
+function ev_helpwikistdlib_click(){urlopen("https://code.jsoftware.com/wiki/Standard_Library/Overview")};
 
 function ev_comma_ctrl(){jdoajax([]);}
 function ev_dot_ctrl(){jdoajax([]);}
@@ -538,5 +543,41 @@ function ev_semicolon_ctrl(){jdoajax([]);}
 function ev_quote_ctrl(){jdoajax([]);}
 function ev_colon_ctrl(){jdoajax([]);}
 function ev_doublequote_ctrl(){jdoajax([]);}
-function ev_close_click(){window.close();} // close ignored if not opened by another window
+
+function ev_close_click(){
+ allwins_clean();
+ for(let i = 0; i < allwins.length; i++) {allwins[i].jscdo("close");} //!
+ allwins_clean();
+ if(0==allwins.length)
+ {
+  updatelog('<div id="prompt" class="log"><b><font style="color:red;"><br>JHS server for this page has exited.</font></b></div>')
+  jijxrun("exit''")
+  // kill all page events
+  document.addEventListener("click", deadhandler, true);
+  document.addEventListener("keyup", deadhandler, true);
+  document.addEventListener("keypress", deadhandler, true);
+  document.addEventListener("keydown", deadhandler, true);
+ }
+} 
+
+function deadhandler(e) {
+  e.stopPropagation();
+  e.preventDefault();
+  scrollz();
+}
+
+// allwins stuff
+
+function allwins_clean(){allwins= allwins.filter(el => !el.closed)} // remove closed
+
+// return allwins window object for wid or null
+function getwindow(wid){
+ allwins_clean()
+ for(let i = 0; i < allwins.length; i++) {
+  w= allwins[i]
+  if(wid==w.name) return w;
+ }
+ return null; 
+}
+
 )

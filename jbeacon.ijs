@@ -4,6 +4,7 @@ coclass'jbeacon'
 coinsert'jhs'
 
 jev_post_raw=: 3 : 0
+decho NV_jhs_
 bnv__=: NV_jhs_
 NV_jhs_=: parse NV_jhs_
 op=. getv'op'

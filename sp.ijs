@@ -8,8 +8,8 @@ sp_z_       =: sp_jsp_
 spf_z_      =: spf_jsp_
 spr_z_      =: spr_jsp_
 spx_z_      =: spx_jsp_
-sprunner_z_ =: 3 : '0!:111 y'
-sprunnerx_z_=: 3 : '0!:110 y'
+sprunner_z_ =: 0!:111[ NB. tacit, but called from explicit so =. must still map to =:
+sprunnerx_z_=: 0!:110[
 sptable_z_  =: sptable_jsp_
 
 sphelp_z_=: 0 : 0

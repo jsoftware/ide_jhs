@@ -1,9 +1,22 @@
 NB. handsontable - minimal
-NB. 'jhot'cojhs'n'[n=..3 9
+NB. 'jhot'cojhs'n__'[n__=: i.3 9
 
 coclass'jhot'
 coinsert'jhs'
-shown=: 0
+
+NB. cojhs boilerplate from util.ijs
+
+NB.! create=: 3 : 'setdata y~'
+create=: 3 : 0
+q__=: y
+setdata y~
+)
+
+jev_get=: 3 : 0
+js=. getjs'CUSTOM';CUSTOM hrplc 'OPTIONS DATA';options;jsfromtable data
+'jhot' jhrx (getcss''),js,gethbs''
+)
+
 options=: 0 : 0
 data: data,
 minSpareRows: 1,
@@ -11,21 +24,6 @@ minSpareCols: 1,
 contextMenu: true,
 undo: true,
 )  
-
-create=: 3 : 0
-shown=: 0
-setdata i.2 3
-)
-
-show=: 3 : 0
-shown=: 1
-y open ,~coname''
-)
- 
-destroy=: 3 : 0
-if. shown do. close ;coname'' end.
-codestroy''
-)
 
 setdata=: 3 : 0
 'bad data'assert (2=$$y)*.2>L.y
@@ -57,22 +55,10 @@ CUSTOM=: 0 : 0
  data= <DATA>
  $('#hot').handsontable({<OPTIONS>});
  hot = $('#hot').handsontable("getInstance");
- // hot.addHook('afterChange', function(){pagedirty=1;});
+ // hot.addHook('afterChange', function(){dirty= true;});
 ) 
-
-jev_get=: 3 : 0
-js=. getjs'CUSTOM';CUSTOM hrplc 'OPTIONS DATA';options;jsfromtable data
-'jhot' jhrx (getcss''),js,gethbs''
-)
-
-ev_close_click=: 3 : 0
-jhrajax''
-shown=: 0 NB. already closed
-destroy''
-)
 
 JS=: 0 : 0 NB. javascript
 function ev_body_load(){<CUSTOM>}
-
 
 )

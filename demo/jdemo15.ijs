@@ -26,8 +26,8 @@ ev_t1_enter=: ev_flip_click
 
 desc=: 0 : 0
 <hr>All events are passed to J handlers and no javascript code is required.<br><br>
-Close with redbarclose or ctrl+\ as this informs J server and runs verb saveonclose.
-Tab/browser close do not run saveonclose.
+Close with red button or Esc-q as this informs J server.
+Tab/browser close does not inform J server.
 )
 
 NB. cascading style sheets - the look and feel of the document

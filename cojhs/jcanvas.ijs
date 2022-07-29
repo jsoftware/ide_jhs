@@ -56,6 +56,12 @@ end.
 coclass'jcanvas'
 coinsert'jhs'
 
+NB. cojhs boilerplate from util.ijs
+
+create=: 3 : 0
+'width height'=: y
+)
+
 NB. jsc... commands and asserts
 t=. <;._2 [ 0 : 0
 fillStyle     0<#
@@ -91,28 +97,6 @@ run=: 3 : 0
 jjs_jhs_ q=: 'w=window.open("","',(;coname''),'");w.doit("',(jsxarg y),'");'
 )
 
-shown=: 0
-
-create=: 3 : 0
-'width height'=: y
-)
-
-show=: 3 : 0
-shown=: 1
-y open ,~coname''
-)
-
-destroy=: 3 : 0
-if. shown do. close ;coname'' end.
-codestroy''
-)
-
-ev_close_click=: 3 : 0
-jhrajax''
-shown=: 0 NB. already closed
-destroy''
-)
-
 markmouse=: 3 : 0
 'a b c'=. 0".getv_jhs_'jdata'
 jsxnew''
@@ -137,6 +121,7 @@ NB. ev_mouse_move=: 3 : 0
 
 HBS=: 0 : 0
 jhclose''
+jhbr
 '<canvas id="can" width="<WIDTH>" height="<HEIGHT>"></canvas>'
 )
 

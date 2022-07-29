@@ -22,8 +22,6 @@ jd3'reset;type bar;label "a","b","c","d"'
 
 jd3'reset;type pie'
 'jd3;10 10;ghi'cojhs jd3x;?4$100
-
-ctrl+\ or red button properly closes app
 )
 
 jd3docoptions=: 0 : 0
