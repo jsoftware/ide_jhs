@@ -19,6 +19,9 @@ ev_debug_click=: 3 : 'tool tool_debug'
 ev_sp_click=:    3 : 'tool sphelp'
 ev_labs_click=:  3 : 'tool tool_labs 0'
 
+ev_shortcuts_click=: 3 :'tool tool_shortcuts'
+ev_popups_click=:    3 :'tool tool_popups'
+ev_closing_click=:   3 :'tool tool_closing'
 
 tool_debug=: 0 : 0
 debug facilities: suspend execution at stop or error
@@ -151,6 +154,40 @@ labs - interactive tutorials - a good way to learn J
 labs are not always current and may run with errors
 labs are organized into categories
 run one of the following sentences:
+)
+
+tool_shortcuts=: 0 : 0
+Esc-q (Escape key then q) - close page
+ jijx close closes all pages and exits server
+Esc-1 - focus menu - arrow keys
+ctrl+shift+↑/↓ - recall previous line/input
+ctrl shortcuts are supported for
+ ,./<>? (comma,dot,slash,less,larger,query)
+jijx ctrl shortcuts
+ ctrl+. lab/spx advance
+ ctrl+, load project (see sphelp)
+ ctrl+' debug step
+ ctrl+" debug stepin
+custom jijx shortcut handler for ctrl+?
+ ev_query_ctrl_jijx_=: 3 : 'i.5'
+see menu>help>JHS for more info
+)
+
+tool_popups=: 0 : 0
+if browser is set to block pop-ups, you will
+ get an alert when JHS tries to create one
+most browsers let you configure to allow them
+ (if possible, just allow from localhost:65001)
+see menu>help>JHS for more info
+)
+
+tool_closing=: 0 : 0
+close JHS page with Esc-q
+ or, if present, the page red close button
+this lets JHS manage the close
+ (save changes and free up resources)
+browser close button misses these steps
+see menu>help>JHS for more info
 )
 
 getlabs=: 3 : 0

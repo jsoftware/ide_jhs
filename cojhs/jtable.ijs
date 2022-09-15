@@ -6,7 +6,6 @@ coinsert'jhs'
 
 HBS=: 0 : 0
 jhclose''
-'<br/>'
 'jtable: <Y>'
 '<div id="hots">'
 '<iframe id="hot" name="hot" src="',(;hot),'"  ></iframe>'

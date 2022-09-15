@@ -26,7 +26,7 @@ git manifest version numbers should always increase
  ...$ git status - resolve problems
 
 start J
-    load'~Addons/ide/jhs/nopacman/dev.ijs'
+   load'~Addons/ide/jhs/nopacman/dev.ijs'
    setp'ide/jhs'
    manifest_status'' NB. edit manifest to resolve problems
    bump_version''

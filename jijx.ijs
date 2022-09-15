@@ -23,6 +23,9 @@ jhjmlink''
  'spx'     jhmab'spx'
  'labs'    jhmab'labs'
 'help'          jhmg'help';1;16
+ 'shortcuts'         jhmab'shortcuts' 
+ 'popups'            jhmab'pop-ups'
+ 'closing'           jhmab'close'
  'helpwikijhs'       jhmab'JHS'
  'helpwikinuvoc'     jhmab'vocabulary'
  'helpwikiconstant'  jhmab'constant'
@@ -465,6 +468,10 @@ function ev_spx_click(){jdoajax([]);}
 function ev_labs_click(){jdoajax([]);}
 function ev_about_click(){jdoajax([]);}
 function ev_wiki_click(){jdoajax([]);}
+
+function ev_shortcuts_click(){jdoajax([]);}
+function ev_popups_click(){jdoajax([]);}
+function ev_closing_click(){jdoajax([]);}
 
 function ev_clearwindow_click(){jbyid("log").innerHTML= "";newpline("   ");}
 function ev_clearrefresh_click(){jdoajax([]);}

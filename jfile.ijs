@@ -11,7 +11,6 @@ HBS=: 0 : 0
 'copy'     jhb 'copy'
 'cut'      jhb 'cut'
 'paste'    jhb 'paste'
-'adrecall' jhb 'addrecall'
 
 'renamedlg'  jhdivadlg''
  jhbr
@@ -32,7 +31,7 @@ HBS=: 0 : 0
 'newdlg' jhdivadlg''
  jhbr
  'newfile'   jhb'newfile'
- 'newname'   jhtext'';10
+ 'newname'   jhtext'';20
  'newfolder' jhb'newfolder'
  'newclose'  jhb'X'
 '<hr></div>'
@@ -96,7 +95,7 @@ LASTPATH=: f=. jpath f
 create '';f
 )
 
-ev_recall_click=: 3 : 0 NB. recall previous folders
+xxx_ev_recall_click=: 3 : 0 NB. recall previous folders
 sid=. getv'jsid'
 f=. jpath sid
 LASTPATH=: f
@@ -220,7 +219,7 @@ else.
   create'file loaded';F
  catch.
   smoutput 13!:12''
-  create 'load error';F
+  create ('load error: ',13!:12'');F
  end. 
 end.
 )
@@ -360,9 +359,9 @@ function ev_body_load(){
 function setpath(t){jform.path.value= t;jbyid("pathd").innerHTML= t;}
 function ev_paths_click(){jsubmit();}
 function ev_paths_dblclick(){;}
-function ev_recall_click(){jsubmit();}
 
-function document_recall(v){jform.path.value= v;jbyid("pathd").innerHTML= v;jscdo("recall",v);}
+//function ev_recall_click(){jsubmit();}
+//function document_recall(v){jform.path.value= v;jbyid("pathd").innerHTML= v;jscdo("recall",v);}
 
 function ev_x_shortcut(){jscdo("cut");}
 function ev_c_shortcut(){jscdo("copy");}
@@ -459,6 +458,6 @@ function ev_rennx_enter(){jscdo('renamedo');}
 function ev_rensx_enter(){jscdo('renamedo');}
 function ev_newname_enter(){jscdo('newfile');}
 function ev_deletedo_click(){jsubmit();}
-function ev_adrecall_click(){adrecall("document",jbyid('path').value,"0");} //!
+//function ev_adrecall_click(){adrecall("document",jbyid('path').value,"0");} //!
 
 )

@@ -67,8 +67,10 @@ div{padding-left:2px;}
  display: none; background: white;
  text-align:center;
 }
-.jhb#close{background-color:red;font-weight:bold;} /* quit close esc-q button */
+.jhb#close{background-color:red;font-weight:bold;position:fixed;left:0px;top;0px;} /* quit esc-q button */
 )
+
+NB. .jhb#close{background-color:red;font-weight:bold;padding:0px;margin:0px 6px 0px 0px;} /* quit esc-q button */
 
 NB. extra html - e.g. <script .... src=...> - included after CSS and before JSCORE,JS
 HEXTRA=: '' 
@@ -479,7 +481,7 @@ t hrplc 'ID VALUE';x;y
 
 NB.* jhclose*jhclose'' - cojhs close button and spacer
 jhclose=: 3 : 0
-'close'jhb' • '
+('close'jhb' x '),;3#<'&nbsp;'
 )
 
 NB.* jhcheckbox*id jhcheckbox text;checked (checked 0 or 1)

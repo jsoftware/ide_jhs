@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.330'
+VERSION=: '1.0.331'
 
 FILES=: 0 : 0
 app/
@@ -23,7 +23,7 @@ gnuplot.ijs
 gpdemo.ijs
 history.txt
 installer.ijs
-jal.ijs
+jpacman.ijs
 jbeacon.ijs
 jbinfo.ijs
 jfif.ijs
@@ -49,6 +49,7 @@ tool.ijs
 util.ijs
 utilh.ijs
 utiljs.ijs
+vocabhelp.ijs
 )
 
 FILESWIN=: 0 : 0
