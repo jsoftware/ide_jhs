@@ -19,7 +19,7 @@ git manifest version numbers should always increase
  so pacman update should never see that pacman update as required
 
 *** pacman release build (from ~Addons/ide/jhs):
- bup'git/addons/ide/jhs'
+...$ bin/buptar git/addons/ide/jhs
 
  ...$ cd git/addons/ide/jhs
  ...$ git pull

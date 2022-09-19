@@ -77,7 +77,6 @@ form{margin:0px 2px 2px 2px;}
 
 fancycss=: 0 : 0
 form{margin:0px 40px;}
-*.jhb{padding: 2px 2px;margin:0px;background-color:aqua;color:red;border:0px;}
 #pswd{background-color:salmon;font-size:20px}
 )
 

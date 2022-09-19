@@ -112,7 +112,6 @@ help
 
 CSS=: 0 : 0
 form{margin:0px 2px 2px 2px;}
-*.jhb{padding: 2px 2px;margin:0px;background-color:aqua;border:0px;}
 *.jhab{font-family:<PC_FONTFIXED>;white-space:pre;}
 *.jhac{font-family:<PC_FONTFIXED>;white-space:pre;text-decoration:none;background-color:aqua;} 
 )

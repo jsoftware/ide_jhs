@@ -384,7 +384,7 @@ PC_FONTFIXED=:     '"courier new","courier","monospace"'
 PC_FONTVARIABLE=:  '"sans-serif"'
 PC_BOXDRAW=:       0        NB. 0 utf8, 1 +-, 2 oem
 
-PC_BUTTON=:        'aqua'
+PC_BUTTON=:        'lightgrey'
 PC_MENU_FOCUS=:    'lightgrey'
 PC_MENU_HOVER=:    'lightgrey'
 

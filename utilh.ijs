@@ -32,7 +32,7 @@ INC_handsontable_basic=: INC_handsontable NB. no jsoftware stuff yet
 NB.framework styles for all pages
 CSSCORE=: 0 : 0
 *{font-family:<PC_FONTVARIABLE>;}
-*.jhb{padding: 2px 2px;margin:0px;background-color:<PC_BUTTON>;border:0px;}
+*.jhb{padding:0px;margin:1px;background-color:<PC_BUTTON>;border:1px solid black;}
 *.jcode{font-family:<PC_FONTFIXED>;white-space:pre;}
 *.jhab:hover{cursor:pointer;color:black;background:#ddd;}
 *.jhab{text-decoration:none;}
@@ -69,8 +69,6 @@ div{padding-left:2px;}
 }
 .jhb#close{background-color:red;font-weight:bold;position:fixed;left:0px;top;0px;} /* quit esc-q button */
 )
-
-NB. .jhb#close{background-color:red;font-weight:bold;padding:0px;margin:0px 6px 0px 0px;} /* quit esc-q button */
 
 NB. extra html - e.g. <script .... src=...> - included after CSS and before JSCORE,JS
 HEXTRA=: '' 
@@ -395,7 +393,8 @@ NB. HBS is LF delimited list of sentences
 NB. jhbs returns list of sentence results
 jhbs=: 3 : 0
 t=. <;._2 y
-t=. ;LF,~each jhbsex each t
+NB.! t=. ;LF,~each jhbsex each t
+t=. ;jhbsex each t
 i=. 1 i.~'</div><div id="jresizeb">'E.t
 if. i~:#t do.
  t=. '<div id="jresizea">',t,'</div>'
