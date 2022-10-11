@@ -133,9 +133,6 @@ NB. cojhs (table/watch/... use open - locale is url - jwid???
 open=: 3 : 0
 ''open y
 :
-
-decho '*********************************************************** open'
-
 a=. boxopen y
 if. 1=#a do. a=. a,a end.
 'a b'=. ,each a

@@ -36,6 +36,7 @@ start J
  ...$ git push
 
 *** test pacman build:
+ menu>jpacman - so that it is loaded and will run after next ferase
  ferase'~addons/ide/jhs' NB. erase ln symbolic link file to git/addons/ide/jhs
  jijx>pacman>Not Installed
  check ide/jhs
