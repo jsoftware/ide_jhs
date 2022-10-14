@@ -424,6 +424,61 @@ end.
 i.0 0
 )
 
+rundemo=: 3 : 0
+t=. 'jdemo',":y
+require'~addons/ide/jhs/demo/jdemo',(":y),'.ijs'
+select. y
+case. 14 do. 'jdemo14;1 1 800 600'cojhs 'temp' [ temp__=: ?5 12$200
+case. 15 do. 'jdemo15;1 1 500 500'cojhs '' 
+case. 16 do. 'jdemo16;1 1 400 600;my-pswd'cojhs '' 
+case.    do. open t
+end.
+)
+
+runapp=: 3 : 0
+t=. 'app',":y
+a=. t,'.ijs'
+f=. '~temp/app/',a
+1!:5 :: [ <jpath'~temp/app'
+(fread '~addons/ide/jhs/app/',a)fwrite f
+load f
+edit f
+if. y=6 do.
+ 'app6'cojhs'calendar'
+else.
+ open t
+end. 
+)
+
+NB. push ~temp changes to git
+pushreact=: 3 : 0
+name=. y
+src=. '~temp/jhs/react/',name,'/'
+('does not exist: ',t) assert fexist t=. src,name,'.ijs'
+snk=. '~addons/ide/jhs/react/',name,'/addj/'
+n=. {."1 [1!:0 <jpath src,'*'
+(fread each (<src),each n) fwrite each (<snk),each n
+n
+)
+
+NB. create ~temp folder with all files required for react app
+runreact=: 3 : 0
+name=. y
+src=. '~addons/ide/jhs/react/',name,'/addj/'
+snk=. '~temp/jhs/react/',name,'/'
+('does not exist: ',t) assert fexist t=. src,name,'.ijs'
+('already exists - backup folder and delete to allow runrect: ',t) assert -.fexist t=. snk,name,'.ijs'
+mkdir_j_ snk
+n=. {."1 [1!:0 <jpath src,'*'
+(fread each (<src),each n) fwrite each (<snk),each n
+
+f=. snk,name,'.ijs'
+load f
+edit f
+c=. conew name
+open_jhs_ name
+)
+
 jhsuqs=: uqs_jhs_  NB. viewmat
 jhtml=: jhtml_jhs_ NB. viewmat
 

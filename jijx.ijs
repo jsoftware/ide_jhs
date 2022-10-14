@@ -125,32 +125,6 @@ echo'Copyright 1994-2022 Jsoftware Inc.'
 jhtml'<hr/>'
 )
 
-rundemo_jhs_=: 3 : 0
-t=. 'jdemo',":y
-require'~addons/ide/jhs/demo/jdemo',(":y),'.ijs'
-select. y
-case. 14 do. 'jdemo14;1 1 800 600'cojhs 'temp' [ temp__=: ?5 12$200
-case. 15 do. 'jdemo15;1 1 500 500'cojhs '' 
-case. 16 do. 'jdemo16;1 1 400 600;my-pswd'cojhs '' 
-case.    do. open t
-end.
-)
-
-runapp_jhs_=: 3 : 0
-t=. 'app',":y
-a=. t,'.ijs'
-f=. '~temp/app/',a
-1!:5 :: [ <jpath'~temp/app'
-(fread '~addons/ide/jhs/app/',a)fwrite f
-load f
-edit f
-if. y=6 do.
- 'app6'cojhs'calendar'
-else.
- open t
-end. 
-)
-
 tour=: 4 : 0
 jhtml'<hr>'
 echo x

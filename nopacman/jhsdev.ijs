@@ -19,14 +19,15 @@ git manifest version numbers should always increase
  so pacman update should never see that pacman update as required
 
 *** pacman release build (from ~Addons/ide/jhs):
-...$ bin/buptar git/addons/ide/jhs
+...$ cd ~
+cd ~bin/buptar git/addons/ide/jhs
 
  ...$ cd git/addons/ide/jhs
  ...$ git pull
  ...$ git status - resolve problems
 
 start J
-   load'~Addons/ide/jhs/nopacman/dev.ijs'
+   load'~Addons/ide/jhs/nopacman/jhsdev.ijs'
    setp'ide/jhs'
    manifest_status'' NB. edit manifest to resolve problems
    bump_version''
