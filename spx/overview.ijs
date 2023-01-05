@@ -159,7 +159,7 @@ although generic programming terms can be used
     J       - generic
 noun
 verb
-adverb/cpnjunction
+adverb/conjunction
 )
 
 NB.spxhr:
@@ -175,7 +175,7 @@ you need to do ctrl+c in the terminal/console
 
 find the terminal window (not a browser tab/page)
  that starts with the text:
-J HTTP Sever - init OK
+J HTTP Server - init OK
 
 a simple long running sentence is: sleep 20 seconds
 
