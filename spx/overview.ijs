@@ -55,7 +55,7 @@ recall lines with ctrl+shift+up arrow
 
 NB.spxhr:
 0 : 0
-defintions are defined in scripts
+definitions are defined in scripts
  scripts are text files with .ijs suffix
 )
 
