@@ -1,67 +1,62 @@
-coclass'app4' NB. 
+coclass'app4'
 coinsert'jhs'
 
-CSS=: 0 : 0
-form{margin:40px;}             /* CSS comments must be of this form */
-#t1{color:red;}
-#s1{background-color:aqua;}
-)
+NB. css flex allows dynamic sizing
+NB.  you can do almost any layout you can imagine
+NB.   but it can be complicated!
+NB. you can do a lot with cut/paste from examples
+NB.  serious use requires study of extensive online resources
 
+NB. sentences that define html elements
 HBS=: 0 : 0
-    jhh1'app4 - CSS'
-    jhhr
-'b1'jhb'b 1'
-'b2'jhb'b 2' 
-'b3'jhb'b 3'
-'b4'jhb'b 4'
-'b5'jhb'b 5'
-'b6'jhb'b 6'
-'t1'jhtext't1';10
-'t2'jhtext't2';10
-'s1'jhspan'this is text'
-    desc
+NB. base div implicity opened
+      jhclose''
+      'title'  jhtitle 'app4 - css flex - ta textarea'
+      'hbs'jhb'show HBS'
+      'css'jhb'show CSS'
+
+jhdivz NB. base div close - flex active
+
+      'ta'     jhtextarea '';0;20 NB. flex gives element available space
+
+jhdiva'' NB. base div open - flex inactive
+      'footer'jhhn 3;'page footer'
+NB. base div implicity closed
 )
 
-desc=: 0 : 0
-<pre>
-CSS - cascading style sheets - fine tunes document appearance/behavior
-
-skim CSS resources (web or books) to get a basic familiarity
-no need to be an expert, but you need to know a bit
-cut/paste and following patterns can get you a long ways
-search for a well phrased question often gives all the answer you need
-
-form is the html element that is the container for the other elements
-css form{...} gives a margin on all sides
-
-t1 has color red and s1 has a backround-color aqua
-<pre/>
+CSS=: 0 : 0
+#ta{font-family:<PC_FONTFIXED>;resize:none;} /* id ta - fixed font - no resize handle */
+#ta{width:100%;height:100%;}                 /* id ta - fill available space          */
 )
 
-jev_get=: 3 : 0
-'app4'jhrx(getcss''),(getjs''),gethbs''
+NB. J code - initialize and handle events
+create=: 3 : 0 NB. called by page or browser to initialize locale
+t=. y jpagedefault  ,LF,.~20 20$'silly text '
+'must be text'assert 2=3!:0 t
+jsdata=: 'ta';t
 )
 
-ev_b5_click=: 3 : 0
-jhrajax 'J result: ',getv't1'
+jev_get=: jpageget NB. called by browser to load page
+
+ev_hbs_click=: 3 : 0  NB. called by javascript function ev_hbs_click()
+jhrjson 'ta';HBS
 )
 
-ev_b6_click=: 3 : 0
-echo NV
-jhrajax 'J result: ',(getv't1'),' and ',(getv't2'),' and ',getv'jdata'
+ev_css_click=: 3 : 0
+jhrjson 'ta';CSS
 )
 
+NB. javascript code
 JS=: 0 : 0
 
-function set(v){jbyid("s1").innerHTML=v;}
+function ev_body_load(){jset('ta',jsdata.ta);} // init from jsdata dictionary
 
-function ev_b2_click(){set('b2');}
-function ev_b3_click(){set('b3');jdoajax(["t1"]);}
-function ev_b4_click(){set('b4');jdoajax(["t1"]);}
-function ev_b5_click(){set('b5');jdoajax(["t1"]);}
-function ev_b6_click(){         ;jdoajax(["t1","t2"],"extra data");}
+function ev_ta_enter(){return true;} // return true allows enter in text
 
+function ev_hbs_click(){jdoj('');}
+function ev_hbs_click_ajax_json(t){jset('ta',t.ta)};
 
-function ev_b5_click_ajax(ts){set(ts[0]);}
-function ev_b6_click_ajax(ts){set(ts[0]);}
+function ev_css_click(){jdoj('');}
+function ev_css_click_ajax_json(t){jset('ta',t.ta)};
+
 )

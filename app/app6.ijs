@@ -1,56 +1,68 @@
 coclass'app6'
 coinsert'jhs'
 
-0 : 0
-app6 uses a numbered locale for app state
-this is the way apps with state should work
-
-app6 page is created with cojhs:
-   'app6'cojhs'calendar'
-   
-creates numbered locale, does a coinsert of app6,
-calls app6 create with right arg to set sentence,
-and then shows the page
-
-this type of app generally has a red close button (jhclose)
-and close event handlers that can release resources,
-close the window, and destroy locales
-
-much of the required code is the same for all apps
-and is in util.ijs after line NB. standard cojhs boilerplate
-
-in jijx, create new app6 pages with different state:
-   p=: 'app6;10 10'cojhs'tolower'
-   sentence__p
-)
-
-jev_get=: 3 : 0
-title jhrx (getcss''),(getjs''),gethbs'NAME TEXT';sentence;format sentence
-)
-
-create=: 3 : 'sentence=: y'
-
+NB. sentences that define html elements
 HBS=: 0 : 0
-jhclose''
-jhh1'explicit display'
-'run'jhb'display'
-'name'jhtext'<NAME>';30
-'<div id="data" class="jcode"><TEXT></div>'
+NB. base div implicity opened
+      jhclose''
+      'title'  jhtitle 'app6 - css flex - ta/tb - ta above tb'
+      'hbs'jhb'show HBS'
+      'css'jhb'show CSS'
+
+jhdivz NB. base div close - flex active
+
+NB. elements not in main div share remaining space
+'tatitle'jhtitle'tb textarea'
+'ta'jhtextarea'';10;10
+jhdiva''                       NB. reopen main div
+
+'hr'jhline''
+
+jhdivz
+'tbtitle'jhtitle'tb textarea'
+'tb'jhtextarea'';10;10
+
+jhdiva''                       NB. reopen main div
+'footer'jhhn 3;'adsf'
 )
 
 CSS=: 0 : 0
-form{margin:0px 2px 2px 2px;}
+#ta{font-family:<PC_FONTFIXED>;resize:none;} /* id ta - fixed font - no resize handle */
+#tb{font-family:<PC_FONTFIXED>;resize:none;} /* id tb - fixed font - no resize handle */
+#ta{width: 100%;height:70%;}                 /* id ta - fill available space          */
+#tb{width: 100%;height:30%;resize:none;}
+#hr{height: 10px; background-color: red;}
 )
 
-format=: 3 : 'jhtmlfroma 5!:5<y'
-
-ev_run_click=: 3 : 0
-sentence=: getv'name'
-jhrajax format sentence
+NB. J code - initialize and handle events
+create=: 3 : 0 NB. called by page or b;'defaultrowser to initialize locale
+t=. y jpagedefault ,LF,.~20 20$'some text '
+'must be text1'assert 2=3!:0 t
+jsdata=: 'ta';t;'tb';|.t
 )
 
+jev_get=: jpageget         NB. called by browser to load page
+
+ev_hbs_click=: 3 : 0  NB. called by javascript function ev_hbs_click()
+jhrjson 'ta';HBS
+)
+
+ev_css_click=: 3 : 0
+jhrjson 'ta';CSS
+)
+
+NB. javascript code
 JS=: 0 : 0
-function ev_run_click(){jdoajax(["name"]);}
-function ev_run_click_ajax(ts){jbyid("data").innerHTML=ts[0];}
-function ev_name_enter(){jscdo("run");}
+
+function ev_body_load(){jset('ta',jsdata.ta);jset('tb',jsdata.tb);}
+
+function ev_ta_enter(){return true;} // return true allows enter in text
+function ev_tb_enter(){return true;} // return true allows enter in text
+
+function ev_hbs_click(){jdoj('');}
+function ev_hbs_click_ajax_json(t){jset('ta',t.ta)};
+
+function ev_css_click(){jdoj('');}
+function ev_css_click_ajax_json(t){jset('tb',t.ta)};
+
 )

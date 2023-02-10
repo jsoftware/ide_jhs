@@ -6,3 +6,5 @@
 .cm-s-default span.cm-string {color: #a11;}
 .cm-s-default span.cm-comment{color: #090;}
 .CodeMirror-activeline-background {background: powderblue;}
+.CodeMirror-selected { background: lightcoral; }
+.CodeMirror-focused .CodeMirror-selected { background: lightcoral; }

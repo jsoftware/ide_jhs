@@ -8,6 +8,7 @@ coclass'jhs'
 JIJSAPP=: 'jijs' NB. 'jijsm' for simple jijs editor
 PROMPT=: '   '
 JZWSPU8=: 226 128 139{a. NB. empty prompt kludge - &#8203; \200B
+JSPATH=: '~addons/ide/jhs/js/'
 
 NB. prevent child inherit - critical with fork
 cloexec=: 3 : 0
@@ -286,7 +287,7 @@ if.-.+./f do. >p return. end.
 d=. >#each f#b
 m=. >./d
 f=. >{.(d=m)#f#a
-('~',f,m}.>p) NB.! rplc '~home/';'~/'
+('~',f,m}.>p) NB. rplc '~home/';'~/'
 )
 
 NB. new ijs temp filename
@@ -393,6 +394,12 @@ PC_ER_COLOR=:      'red'    NB. error
 PC_LOG_COLOR=:     'blue'   NB. log user input
 PC_SYS_COLOR=:     'purple' NB. system error
 PC_FILE_COLOR=:    'green'  NB. 1!:! file output
+
+PC_CHECK1_BACKGROUND=: 'darkgrey'
+PC_CHECK0_BACKGROUND=: 'white'
+
+pagexywh=:  5   5 900 450  NB. . default new window position
+
 )
 
 NB. undocumneted config parameters
@@ -550,14 +557,16 @@ jfe 1
 NB. load rest of JHS core
 load__'~addons/ide/jhs/util.ijs'
 load__'~addons/ide/jhs/utilh.ijs'
-load__'~addons/ide/jhs/utiljs.ijs'
 load__'~addons/ide/jhs/sp.ijs'
 load__'~addons/ide/jhs/tool.ijs'
 load__'~addons/ide/jhs/d3.ijs'
+load__'~addons/ide/jhs/chart.ijs'
 load__'~addons/ide/jhs/vocabhelp.ijs'
+load__'~addons/ide/jhs/jdoc.ijs'
 
 NB. load addons, but do not fail init if not found
 load__ :: ['~addons/convert/json/json.ijs'
+load__ :: ['~addons/convert/pjson/pjson.ijs' NB. preferred - kill off json.ijs 
 
 NB. jev_... inputs are not displayed in log
 jev_run_z_=: 0!:111[ NB. tacit - run sentence in jijx
@@ -573,10 +582,10 @@ jev_get_jfiles_=:  3 : (stub'jfiles')
 jev_get_jijs_=:    3 : (stub'jijs')
 jev_get_jfif_=:    3 : (stub'jfif')
 jev_get_jpacman_=:  3 : (stub'jpacman')
-jev_get_jdemo_=:   3 : (stub'jdemo')
 jev_get_jlogin_=:  3 : (stub'jlogin')
 jev_get_jfilesrc_=:3 : (stub'jfilesrc')
 jev_get_jdebug_=:  3 : (stub'jdebug')
+
 
 NB. simple wget with sockets - used to get google charts png
 

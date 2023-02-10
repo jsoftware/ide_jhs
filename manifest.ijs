@@ -6,23 +6,26 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.333'
+VERSION=: '1.0.334'
 
 FILES=: 0 : 0
 app/
-cojhs/
 config/
 demo/
 js/
 node/
+page/
+react/
 spx/
 core.ijs
+chart.ijs
 d3.ijs
 favicon.ico
 gnuplot.ijs
 gpdemo.ijs
 history.txt
 installer.ijs
+jdoc.ijs
 jpacman.ijs
 jbeacon.ijs
 jbinfo.ijs
@@ -44,11 +47,11 @@ manifest.ijs
 node.ijs
 port.ijs
 readme.txt
+release.txt
 sp.ijs
 tool.ijs
 util.ijs
 utilh.ijs
-utiljs.ijs
 vocabhelp.ijs
 )
 

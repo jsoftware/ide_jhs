@@ -4,6 +4,7 @@ coinsert'jhs'
 MAXFILES=: 100000 NB. fails if too many files in search path
 
 HBS=: 0 : 0
+jhfcommon''
 'find'     jhb'Find'
 'what'     jhtext '';25
 'where'    jhtext '';20
@@ -199,7 +200,6 @@ CSS=: 0 : 0
 JS=: 0 : 0
 function ev_body_load()
 {
- jijxset();
  setlast("what");
  setlast("where");
  jform.context.selectedIndex= getls("context");
@@ -259,5 +259,12 @@ function getchkstate(id){
 function setchkstate(id,v){jbyid(id).style.backgroundColor= (v==0)?chk0:chk1;}
 
 function flipchkstate(id){setchkstate(id,getchkstate(id)!=1)};
+
+function ev_jfile_click(){window.location.assign('jfile');}
+
+function ev_jfile_click() {window.location.assign('jfile');;}
+function ev_jfiles_click(){window.location.assign('jfiles');}
+function ev_jfif_click()  {;}
+
 
 )

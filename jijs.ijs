@@ -13,6 +13,7 @@ HBS=: 0 : 0 rplc 'CMV';'4.2'
 '<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/util/dialog.CMV.css">'
 '<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/j/jtheme.CMV.css">'
 '<script src="~addons/ide/jhs/js/codemirror/j/j.CMV.js"></script>'
+jhclose''
 jhma''
 'action'   jhmg'action';1;11
  'save'     jhmab'save    s*'
@@ -21,7 +22,7 @@ jhma''
 'run'      jhmg'run';1;11
  'runw'     jhmab'load     r*'
  'runwd'    jhmab'loadd'
- 'lineadv'  jhmab'lineadv    .*'
+ 'lineadv'  jhmab'lineadv   .*'
  'line'     jhmab'line      ,*'
  'sel'      jhmab'selection /*'
 'edit'     jhmg'edit';1;11
@@ -101,7 +102,7 @@ select. getv'jmid'
 case. 'runw'           do. s=. 'load ''',f,''''
 case. 'runwd'          do. s=. 'loadd ''',f,''''
 case. 'line';'lineadv' do.
- s=. ln{::bta
+ s=. 'tell_jhs_ ',ln{::bta
  if. iscolon s  do. NB. collect : lines
   c=. >:(ln}.bta) i. <,')'
   caret=. ln+c
@@ -172,6 +173,7 @@ CSS=: 0 : 0
 *{font-family:<PC_FONTFIXED>;}
 #jresizeb{overflow:visible;border:solid;border-width:1px;clear:left;}
 div{padding-left:0;}
+/*.menu {margin-left:40px;}*/
 )
 
 JS=: 0 : 0
@@ -179,7 +181,6 @@ var fubar,ta,rep,readonly,saveasx,cm;
 
 function ev_body_load()
 {
- jijxset();
  ce= jbyid("ijs");
  rep= jbyid("rep");
  ta= jbyid("textarea");
@@ -219,7 +220,7 @@ function dresize()
  cm.setSize(jgpwindoww()-10,a);
 }
 
-// should be in utiljs.ijs
+// should be in jscore.js
 function jgpwindoww()
 {
  if(window.innerWidth)
@@ -310,8 +311,8 @@ function ajax(ts)
 
 function ev_ijs_enter(){return true;}
 
-function ev_comma_ctrl(){jscdo("lineadv");}
-function ev_dot_ctrl()  {jscdo("line");}
+function ev_comma_ctrl(){jscdo("line");}
+function ev_dot_ctrl()  {jscdo("lineadv");}
 function ev_slash_ctrl(){jscdo("sel");}
 
 function ev_z_shortcut(){cm.undo();}
@@ -322,7 +323,7 @@ function ev_r_shortcut(){jscdo("runw");}
 function ev_s_shortcut(){jscdo("save");}
 function ev_2_shortcut(){ce.focus();}
 
-// override utiljs.ijs defs
+// override jscore.js defs
 function ev_close_click(){if(dirty) click(); else window.close();}
 function ev_close_click_ajax(){setclean();window.close();}
 

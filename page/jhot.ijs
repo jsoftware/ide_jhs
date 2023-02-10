@@ -6,9 +6,8 @@ coinsert'jhs'
 
 NB. cojhs boilerplate from util.ijs
 
-NB.! create=: 3 : 'setdata y~'
+NB. create=: 3 : 'setdata y~'
 create=: 3 : 0
-q__=: y
 setdata y~
 )
 

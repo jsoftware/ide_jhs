@@ -1,10 +1,3 @@
-NB. core javascript utilities for all pages
-coclass'jhs'
-NB. JS could be src= and with cache would load faster
-NB. JS is small and doing it inline (not src=) is easier
-
-
-JSCORE=: 0 : 0
 var jijxwindow;  // jijx (could be closed) or null - that led (jijx->jfile->jijs) to this window
 var jlogwindow;  // set by jjhs - ~temp/jlog.ijs logging window
 var dirty=false;
@@ -21,7 +14,7 @@ var jisiX    = jisiPhone||jisiPod||jisiPad;
 var VKB      = 0;  // iX kb height
 var LS= location.href; // localStorage key
 var i= LS.indexOf("#");
-if(-1!=i) LS= LS.substring(0,i) // strip off # fragment
+if(-1!=i) LS= LS.substring(0,i); // strip off # fragment
 LS+= ".";
 var logit= "";
 var closing=0; // set 1 when page/locale is closing to prevent events 
@@ -31,7 +24,7 @@ const jmarkz=     '<!-- j html output z -->';
 
 const jmarkjsa    = '<!-- j js a --><!-- ';
 const jmarkjsz    = ' --><!-- j js z -->';
-const jmarkremove = jmarka+jmarkjsa+" " // ; is refresh and ajax and blank is ajax only
+const jmarkremove = jmarka+jmarkjsa+" "; // ; is refresh and ajax and blank is ajax only
 const jmarkrcnt   = jmarkremove.length;
 
 const PUBLOCKED= "pop-up blocked\n\
@@ -44,8 +37,40 @@ window.addEventListener('beforeunload', function (e) {
   e.returnValue = ''; // Chrome requires returnValue to be set
 });
 
-
+//* jbyid(id)
 function jbyid(id){return document.getElementById(id);}
+
+//* jget(id) - value
+function jget(id){return jbyid(id).value;}
+
+//* jset(id,v)
+function jset(id,v){jbyid(id).value= v;}
+
+//* jgeth(id) - innerHTML
+function jgeth(id){return jbyid(id).innerHTML;}
+
+//* jseth(id,v)
+function jseth(id,v){jbyid(id).innerHTML= v;}
+
+//* jgetchk(id) - jhchk/jhchk
+function jgetchk(id){return (jbyid(id).style.backgroundColor==PC_CHECK0_BACKGROUND)?0:1;}
+
+//* jsetchk(id)
+function jsetchk(id,v){
+ var b= jbyid(id);
+ if("jhrad"==b.className && jgetchk(id)==0 && v==1)
+ {
+  // rad state from 0 to 1 then need to set others in group to 0
+  let d= document.getElementsByName(b.name);
+  for (let i = 0; i < d.length; i++) jsetchk(d[i].id,0);
+ }
+ b.style.backgroundColor= (v==1)?PC_CHECK1_BACKGROUND:PC_CHECK0_BACKGROUND;
+ //! b.value= (v==1)?"+":"-"
+}
+
+//* jflipchk(id)
+function jflipchk(id){jsetchk(id,jgetchk(id)!=1)};
+
 function jsubmit(s){jform.jdo.value=jevsentence;jform.submit();}
 
 // convert to event for mid [sid=""] [type="click"]
@@ -124,7 +149,7 @@ function jcollapseselection(d)
    tst.collapse(d);
    tst.select();
   }
- }catch(e){;}
+ }catch(e){}
 }
 
 // replace selection with val - collapse -1 none, 0 end, 1 start
@@ -134,7 +159,7 @@ function jreplace(id,collapse,val)
   {
    if(window.getSelection)
    {
-    var sel,rng;
+    let sel,rng;
     sel=window.getSelection();
     rng=sel.getRangeAt(0);
     if(collapse!=-1)rng.collapse(collapse);
@@ -144,7 +169,7 @@ function jreplace(id,collapse,val)
    }
    else
    {
-    var rng;
+    let rng;
     rng= document.selection.createRange();
     if(collapse!=-1)rng.collapse(collapse);
     rng.pasteHTML(val);
@@ -172,7 +197,7 @@ function jtfromh(d)
  d= d.replace(/<\/?[^>]+(>|$)/g,""); // remove all remaining tags
  d= d.replace(/&nbsp;|&lt;|&gt;|&amp;/g,jtfromhhit);
  if('\n'!=d[d.length-1]){d=d+"\n";}
- return d
+ return d;
 }
 
 var JREGHFROMT=RegExp("[ \n<>&]","g");
@@ -270,7 +295,7 @@ function jresize()
  
  a-= jgpbodymh();     // body margin h (top+bottom)
  a-= jgpdivh("jresizea"); // header height
- a-= 6               // fudge extra
+ a-= 6;               // fudge extra
  a-= VKB; // virtual keyboard - does not resize but overlays 
  a=  a<0?0:a;        // negative causes problems
  
@@ -279,19 +304,20 @@ function jresize()
 
 function jevload()
 {
+ jijxset(); // connect jijx to new pages
  jform= document.j;
  jevsentence= "jev_"+jform.jlocale.value+"_ 0";
  dirty= !isNaN(parseInt(jbyid('jlocale').value)); // cojhs always dirty 
  jscdo("body","","load");
- return false
+ return false;
 }
 
 function jevunload(){jscdo("body","","unload");return false;}
  
 function jevfocus()
 {
- if(closing||jform=="")return false;
- jscdo("body","","focus");
+ //if(closing||jform=="")return false; // error prevented javascript debugger from working
+ jscdo("body","","focus"); // used only by jijx to call esc+2 to scroll to botton
  return false;
 }
 
@@ -338,7 +364,7 @@ function jevdo()
   if(null==jevtarget)return true;
  
   // undefined JS handler with JEVIDS defined does jdoajx with JEVIDS
-  if(!("undefined"==typeof JEVIDS))
+  if(!Boolean(("undefined"==typeof JEVIDS)))
   {
    if("keydown"==jform.jtype.value) return true; // ignore keydown events
    jdoajax(JEVIDS,"");
@@ -349,7 +375,8 @@ function jevdo()
   if(jform.jtype.value=="click"||jform.jtype.value=="enter"){alert("not defined: function "+JEV+"()");return false;}
   return true;
  }
- try{var r= eval(JEV+"();")}
+ let r;
+ try{r= eval(JEV+"();");}
  catch(ex){alert(JEV+" failed: "+ex);return false;}
  if('undefined'!=typeof r) return r;
  return false;
@@ -400,6 +427,8 @@ function jdoajax(ids,data,sentence,async)
  if(!async)jdor();
 }
 
+function jdoj(ids){jdoajax(ids.split(' '));}
+
 //! now that jbyid("jmid") works, it might be be possible to avoid some use of eval
 
 // return post args from standard form ids and extra form ids
@@ -413,13 +442,19 @@ function jpostargs(ids)
   if("undefined"==typeof d.value)
    d= d.innerHTML;
   else 
-   d= ("checkbox"==d.type||"radio"==d.type)?(d.checked?1:0):d.value;
+  {
+   if("jhchk"==d.className||"jhrad"==d.className)
+    d= jgetchk(d.id);
+   else
+    d= ("checkbox"==d.type||"radio"==d.type)?(d.checked?1:0):d.value;
+  }
   t+= s+a[i]+"="+jencode(d);
   s= "&";
  }
  return t;
 }
 
+//! jencode
 function jencode(d){return(encodeURIComponent(d)).replace("/%20/g","+");}
 
 // rprocess ajax response(s) from J
@@ -443,7 +478,7 @@ function jdor()
  {
   f+= "_chunk";
   if("function"==eval("typeof "+f))
-    try{eval(f+"()")}catch(e){alert(f+" failed: "+e);}
+    try{eval(f+"()");}catch(e){alert(f+" failed: "+e);}
   return;
  }
  
@@ -459,10 +494,10 @@ function jdor()
     var t;
     if(0!=rq.statue)
     {
-     t="ajax request failed\n"
+     t="ajax request failed\n";
      t+=   "response code "+code+"\n";
-     t+=   "server did not produce result\n"
-     t+=   "press enter in jijx for more info"
+     t+=   "server did not produce result\n";
+     t+=   "press enter in jijx for more info";
      alert(t);
     }
    }
@@ -470,9 +505,16 @@ function jdor()
   else
   {
    d=rq.responseText.split(JASEP);
-   if("\2"===d[0])
+   if('\3'===d[0])
    {
-     try{ajaxcmds(d)}catch(e){alert("ajax result cmds failed: "+e);}
+     f+= '_json(d)';
+     try{
+      d= JSON.parse(d[1]);
+      eval(f);}catch(e){alert(f+" failed: "+e);}
+   }
+   else if("\2"===d[0])
+   {
+     try{ajaxcmds(d);}catch(e){alert("ajax result cmds failed: "+e);}
    }  
    else
    {
@@ -486,7 +528,7 @@ function jdor()
       f+="(d)";
      else
       f="ajax(d)";
-     try{eval(f)}catch(e){alert(f+" failed: "+e);}
+     try{eval(f);}catch(e){alert(f+" failed: "+e);}
     }
    }
   }
@@ -499,7 +541,7 @@ function ajaxcmds(ts)
 {
  for(i=1;i<ts.length;++i) // first one is JACMDS
  {
-  j= ts[i].indexOf('*')
+  j= ts[i].indexOf('*');
   val= ts[i].substring(j+1);
   cmd= ts[i].substring(0,j);
   cmd= cmd.split(' ');
@@ -551,7 +593,7 @@ function jlog(t)
 // returned window must not be used until the url has loaded
 function pageopen(url,wid,specs){
  wid= decodeURIComponent(wid);
- w= jijxwindow.getwindow(wid);
+ if(ifjijxwindow()) w= jijxwindow.getwindow(wid); else w=null;
  if(null!=w){w.setTimeout(function(){w.focus();},25);return;}
  w=window.open(url,wid,specs); // pageopen
  if(null==w){alert(PUBLOCKED);return w;}
@@ -563,8 +605,8 @@ function pageopen(url,wid,specs){
 function urlopen(url,specs){
  wid= decodeURIComponent(url);
  w=window.open(wid,wid,specs); // urlopen
- if(null==w) alert(PUBLOCKED)
- return w
+ if(null==w) alert(PUBLOCKED);
+ return w;
 }
 
 // used by plot etc to show files
@@ -576,7 +618,7 @@ function pageshow(url,wid,specs){
  if(null!=w) w.location= url; else pageopen(url,wid,specs);
 }
 
-function ifjijxwindow(){return (jijxwindow==null || jijxwindow.closed) ? false:true;}
+function ifjijxwindow(){return (jijxwindow===undefined || jijxwindow==null || jijxwindow.closed) ? false:true;}
 
 // set jijxwindow as jijx that led to this window
 function jijxset()
@@ -620,7 +662,7 @@ function keypress(ev)
  if(!jsc)return true;
   jsc=0;
  try{eval("ev_"+s+"_shortcut()");}
- catch(e){jdostdsc(s);}
+ catch(ee){jdostdsc(s);}
  return false;
 }
 
@@ -672,7 +714,7 @@ function jmenunav(tar,c)
 {
  var i,n,nn,nc,node,cnt=0,last,len,cl,m=[];
  var nodes=document.getElementsByTagName("a");
- len=nodes.length
+ len=nodes.length;
  for(i=0;i<len;++i)
  {
   node=nodes[i];
@@ -752,7 +794,7 @@ function jmenunavfocus(m,n)
 function jmenunavinfo(m,n)
 {
  if(n==m.length)return 0;
- return ("jhmg"==m[n].getAttribute("class"))?1:2
+ return ("jhmg"==m[n].getAttribute("class"))?1:2;
 }
 
 // activate menu group n
@@ -821,7 +863,7 @@ var tmenuid= 0;
 function jmenublur(ev)
 {
  if(tmenuid!=0) clearTimeout(tmenuid);
- tmenuid= setTimeout(jmenuhide,500)
+ tmenuid= setTimeout(jmenuhide,500);
  return true;
 }
 
@@ -1006,7 +1048,7 @@ function darrow(a){udarrow(a,0);}
 
 function udarrow(a,up)
 {
- var a,id,v,t,n;
+ var id,v,t,n;
  if(a==null) a= document.activeElement;
  if(a==null || a.type!="text")
   id= "document";
@@ -1050,11 +1092,56 @@ function setlast(id)
 function ev_close_click(){
  if(dirty) jdoajax();
  dirty= false;
- window.close();
+ document.open(); document.write('You guit this JHS page and can now close the browser window.'); // in case close fails
+ window.close(); // close fails if window not opened by javascript
 }
 
-function ev_close_click_ajax(){;}
+function ev_close_click_ajax(){}
 
 function isdirty(){return dirty;} // default - override
 
-)
+function ev_dot_ctrl(){jijxrun("ev_advance_click_jijx_''");} // lab advance lab
+
+// chartjs start
+function cjs(id){return Chart.getChart(id);}
+
+function cjs_init(id){
+  var t= jsdata[id];
+  if(0!=t.length)t= t.split("\n");
+  var q= {};
+  for(i=0;i<t.length;++i){cjs_set(q,t[i]);}
+  new Chart(jbyid(id), q);
+  var c= cjs(id);
+}
+
+function cjs_update(id,defn){
+var d= {};
+var t= defn.split("\n");
+jsdata[id]= defn;
+for(i=0;i<t.length;++i){cjs_set(d,t[i]);}
+var c= cjs(id);
+c.config.type= d.type; // note c.config.type instead of c.type
+c.data= d.data;
+c.options= d.options;
+c.update();
+}
+
+function cjs_set(d,s){
+ if(0==s.length || '/'==s.charAt(0)) return;
+ var i= s.indexOf(' ');
+ var path= s.substr(0,i);
+ var v= s.substr(i).trim();
+ v= JSON.parse(v);
+ cjs_setprop(d,path,v);
+}
+
+function cjs_setprop(obj, path, value) {
+  const arr = path.split(".");
+  while (arr.length > 1) {
+    let t= arr.shift();
+    if('undefined'==typeof obj[t]) obj[t]= {};
+    obj= obj[t];
+  }
+  obj[arr[0]] = value;
+}
+// chartjs end

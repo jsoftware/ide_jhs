@@ -88,12 +88,13 @@ jbyid(g+"_footer").innerHTML=footer;
  az= az+$("#"+g+"_legend").height() + $("#"+g+"_footer").height(); 
  
 // ww,wh are for box container
+
 ww= jbyid(g+"_box").style.width;
 ww= ww.substr(0, ww.length-2);
 
 wh= jbyid(g+"_box").style.height;
 wh= wh.substr(0, wh.length-2);
- 
+
 w= ww-(m+m+ss); // width needs more slop than height
 h= wh-(az+mh+mh+ss);
 

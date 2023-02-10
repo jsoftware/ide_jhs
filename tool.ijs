@@ -7,18 +7,21 @@ echo y
 jhtml'<hr>'
 )
 
-ev_node_click=:  3 : 'tool tool_node'
-ev_table_click=: 3 : 'tool tool_table'
-ev_jd3_click=:   3 : 'tool tool_jd3'
-ev_app_click=:   3 : 'tool tool_app'
-ev_print_click=: 3 : 'tool tool_print'
-ev_doc_click=:   3 : 'tool tool_doc'
-ev_demo_click=:  3 : 'tool tool_demos'
-ev_watch_click=: 3 : 'tool tool_watch'
-ev_debug_click=: 3 : 'tool tool_debug'
-ev_sp_click=:    3 : 'tool sphelp'
-ev_labs_click=:  3 : 'tool tool_labs 0'
+ev_node_click=:    3 : 'tool tool_node'
+ev_react_click=:   3 : 'tool tool_react'
+ev_table_click=:   3 : 'tool tool_table'
+ev_jd3_click=:     3 : 'tool tool_jd3'
+ev_chart_click=:   3 : 'tool tool_chart'
+ev_app_click=:     3 : 'tool tool_app'
+ev_print_click=:   3 : 'tool tool_print'
+ev_demo_click=:    3 : 'tool tool_demos'
+ev_watch_click=:   3 : 'tool tool_watch'
+ev_debug_click=:   3 : 'tool tool_debug'
+ev_debugjs_click=: 3 : 'tool tool_debugjs'
+ev_sp_click=:      3 : 'tool sphelp'
+ev_labs_click=:    3 : 'tool tool_labs 0'
 
+ev_welcome_click=:   3 :'tool tool_welcome'
 ev_shortcuts_click=: 3 :'tool tool_shortcuts'
 ev_popups_click=:    3 :'tool tool_popups'
 ev_closing_click=:   3 :'tool tool_closing'
@@ -51,6 +54,25 @@ press jdebug run button to run to stop on dyadic line 0
 press jdebug over button to step through
 )
 
+tool_debugjs=: 0 : 0
+browser html/css/javascript debuggers are excellent!
+spend time getting familiar with your favorite browser
+online docs are good, but mostly you just have to play
+ctrl+shift+i might open the dbugger sub window
+
+detect syntax errors with visual studio code (jshint extension)
+ or install jshint in nodejs and run jshint cli
+ ~/.jshintrc - {"esversion": 6,"multistr": true}
+)
+
+tool_react=: 0 : 0
+react - popular javascript framework for building apps
+you can take an existing react app and integrate it with J
+tictactoe is a simple example where J is added to play O:
+   load'~addons/ide/jhs/react/runreact.ijs'
+   runreact_jhs_'tictactoe'
+)
+
 tool_node=: 0 : 0
 node - commercial server - https://nodejs.org
 node https proxy server sits between JHS and client
@@ -67,48 +89,43 @@ see menu wiki>JHS>help>libraries for more info
    jd3''
 )
 
+tool_chart=: 0 : 0
+   jcjs'tutorial'
+   jcjs'help'
+)
+
 tool_table=: 0 : 0
 table (spreadsheet) uses Handsontable javascript library
 see menu wiki>JHS>help>libraries for more info
-   'jtable;0 0'cojhs'n' [ n=. i.3 4
+   'jtable;0 0'jpage'n' [ n=. i.3 4
 n immediately reflects any changes
 edit cells and add new rows/cols
 initial data was numeric, so non-numeric is red
-   'jtable;20 20'cojhs's' [ s=: 2 2$'aa';'b';'c';'dd'
+   'jtable;20 20'jpage's' [ s=: 2 2$'aa';'b';'c';'dd'
 close with red button or Esc-q as this informs J server
 )
 
-tool_app=: 0 : 0
+tool_app=: 0 : 0 
 how to build an app
-apps are built with J, JHS framework, html, css,
-DOM (document object model), and javascript
+apps are built with J, JHS framework,
+ HTML, CSS, DOM, and javascript
 learning curve is long, but not steep
-significant rewards along the way
+ significant rewards along the way
 what you learn is applicable not just to J,
-but to every aspect of web programming
+ but to every aspect of web programming
 JHS IDE is built with the same facilities
 run and study each script/app in order
-   runapp_jhs_ N
+   runapp_jhs_ N [;xywh]
     - copies appN.ijs to ~temp/app
     - runs and opens script in a tab
-    - opens the app in a tab
-move the 2 new tabs so you can easily study them
- 1 HBS - html
- 2 JS - javascript event handlers
- 3 J event handlers
- 4 CSS - cascading style sheets
- 5 INC - include css/js libraries
- 6 state info
- 
-   runapp_jhs_ 1
+    - opens app in a tab or at xywh
+move script and app so you can study them
+
+<RUNAPP>
+   runapp_jhs_ 1 NB. ; 10 10 400 400
 )
 
-tool_doc=: 0 : 0
-brief utilities summary
-   doc_jhs_''     NB. general
-   doc_jhs_'html' NB. app building - html
-   doc_jhs_'js'   NB. app building - javascript
-)
+tool_app=: tool_app rplc'<RUNAPP>';runapp''
 
 tool_print=: 0 : 0
 simple printing
@@ -146,7 +163,7 @@ will make more sense after that
 )
 
 tool_watch=: 0 : 0
-   'jwatch;0 0'cojhs '?4 6$100' NB. watch an expression
+   'jwatch;0 0' jpage '?4 6$100' NB. watch an expression
 )
 
 tool_labs_txt=: 0 : 0
@@ -154,6 +171,16 @@ labs - interactive tutorials - a good way to learn J
 labs are not always current and may run with errors
 labs are organized into categories
 run one of the following sentences:
+)
+
+tool_welcome=: 0 : 0
+welcome to the browser interface to J
+chartjs adds powerful new plot facility
+ menu tool>plot-chart jcjs'tutorial'
+building an app has changed over the years
+ for the latest info, see menu tool>app
+jijs script - run current line or selection
+close pages with red box in upper right corner
 )
 
 tool_shortcuts=: 0 : 0

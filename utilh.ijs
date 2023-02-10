@@ -1,7 +1,10 @@
 NB. html templates and utilities
 coclass'jhs'
 
-INC=: CSS=: JS=: HBS=: '' NB. overidden in app locale
+jsdata=: '"unitialized"'   NB. page vs cojhs
+
+
+INC=: CSS=: JS=: HBS=: ''  NB. overidden in app locale
 NOCACHE=: 0                NB. use cached js files
 NOPOPUP=: 0                NB. use popups
 
@@ -28,11 +31,21 @@ INC_handsontable=: INC_jquery, 0 : 0
 
 INC_handsontable_basic=: INC_handsontable NB. no jsoftware stuff yet
 
+INC_chartjs=: 0 : 0
+~addons/ide/jhs/js/chartjs/chart.js
+)
 
-NB.framework styles for all pages
+NB. framework styles for all pages
+NB. later defintions have effect
+NB. only affect initial display - .text[value="foo"] does not work as contents change
 CSSCORE=: 0 : 0
+*,*::before,*::after {box-sizing: border-box;}
+html,body,form {height: 100%;margin: 0;}
+body{min-height: 100vh;display: flex;flex-flow: column;}
+form{min-height: 100vh;display: flex;flex-flow: column;}
+#jflexcol{display: flex; flex-flow: column; flex: 1; height:100%;}
+#jflexrow{display: flex; flex-flow: row   ; flex: 1; width: 100%;}
 *{font-family:<PC_FONTVARIABLE>;}
-*.jhb{padding:0px;margin:1px;background-color:<PC_BUTTON>;border:1px solid black;}
 *.jcode{font-family:<PC_FONTFIXED>;white-space:pre;}
 *.jhab:hover{cursor:pointer;color:black;background:#ddd;}
 *.jhab{text-decoration:none;}
@@ -67,7 +80,15 @@ div{padding-left:2px;}
  display: none; background: white;
  text-align:center;
 }
-.jhb#close{background-color:red;font-weight:bold;position:fixed;left:0px;top;0px;} /* quit esc-q button */
+.jhtitle{margin-left:0px;font-size:16pt;}
+.jhchklabel{padding:0px;margin:1px 10px 1px 0px;background-color:white; border:0px solid black;}
+.jhchk{margin: 0px; transform: scale(0.6); border: 5px solid blue;background-color: <PC_BUTTON>; border-radius: 25%;}
+.jhrad{margin: 0px; transform: scale(0.6); border: 5px solid blue;background-color: <PC_BUTTON>; border-radius:100%;}
+.jhb  {margin: 2px; padding: 0px; background-color: <PC_BUTTON>;border: 2px solid black;}
+.jhb#close{background-color:red;position:fixed;top:0;right:0;margin:0px;padding-left:8px;padding-right:8px;} /* quit esc-q button */
+input[type=text]{padding: 0px; margin: 2px; border: 1px solid black;}
+/* *.jhtext{border: 4px solid red !important;} */
+input[type=password]{padding: 0px; margin: 2px; border: 1px solid black;}
 )
 
 NB. extra html - e.g. <script .... src=...> - included after CSS and before JSCORE,JS
@@ -79,11 +100,6 @@ css=: 3 : 0
 t=. 'PC_FONTFIXED PC_FONTVARIABLE PC_FM_COLOR PC_ER_COLOR PC_LOG_COLOR PC_SYS_COLOR PC_FILE_COLOR PC_BUTTON PC_MENU_HOVER PC_MENU_FOCUS'
 t=. (CSSCORE,y) hrplc t;PC_FONTFIXED;PC_FONTVARIABLE;PC_FM_COLOR;PC_ER_COLOR;PC_LOG_COLOR;PC_SYS_COLOR;PC_FILE_COLOR;PC_BUTTON;PC_MENU_HOVER;PC_MENU_FOCUS
 '<style type="text/css">',LF,t,'</style>',LF
-)
-
-NB. core plus page js
-js=: 3 : 0
-'<script type="text/javascript">',LF,'var TARGET="',TARGET,'"',LF,JSCORE,y,'</script>'
 )
 
 seebox=: 3 : 0
@@ -157,6 +173,7 @@ y rplc '<';'&lt;';'>';'&gt;';'&';'&amp;';'"';'&quot;';CRLF;'<br>';LF;'<br>';CR;'
 
 NB. app did not send response - send one now
 jbad=: 3 : 0
+echo HNV
 echo NV
 smoutput'*** response not sent for ',URL
 if. METHOD-:'get' do.
@@ -381,7 +398,7 @@ Transfer-Encoding: chunked
 hajaxlogoff=: toCRLF 0 : 0
 HTTP/1.1 403 OK
 Content-Type: text/html; charset=utf-8
-Cache-Control: no-cache
+Cache-Control: no-cach
 Content-Length: <LENGTH>
 Set-Cookie: jcookie=0
 
@@ -389,17 +406,19 @@ Set-Cookie: jcookie=0
 
 NB. jhbs body builders
 
+HBSX=: ' id="<ID>" name="<ID>" class="<CLASS>" '
+
 NB. HBS is LF delimited list of sentences
 NB. jhbs returns list of sentence results
 jhbs=: 3 : 0
 t=. <;._2 y
-NB.! t=. ;LF,~each jhbsex each t
 t=. ;jhbsex each t
 i=. 1 i.~'</div><div id="jresizeb">'E.t
 if. i~:#t do.
  t=. '<div id="jresizea">',t,'</div>'
 end.
 t=. '<div id="status-busy"><br>server busy<br>event ignored<br><br></div>',t
+t=. '<div>',t,'</div>' NB. all in a div - used by flex
 '<body onload="jevload();" onunload="jevunload();" onfocus="jevfocus();">',LF,(jhform''),LF,t,LF,'</form></body>'
 )
 
@@ -463,6 +482,8 @@ t hrplc 'ID VALUE SIZE CLASS EXTRAS';5{.y,(#y)}.'';'';'';'ht';''
 
 NB.* see ~addons/ide/jhs/utilh.ijs for complete information
 NB.* 
+
+NB.*
 NB.* HBS verbs with id
 NB.* jhab*id jhab text - anchor button
 jhab=: 4 : 0
@@ -471,19 +492,34 @@ t=. t,' ondblclick="return jev(event)"><VALUE></a>'
 t hrplc 'ID VALUE';x;y
 )
 
-NB.* jhb*id jhb text - button
+NB.* jhb*id jhb text [;class] - button
 jhb=: 4 : 0
-t=. '<input type="submit" id="<ID>" name="<ID>" value="<VALUE>" class="jhb" onclick="return jev(event)">'
-t hrplc 'ID VALUE';x;y
+'value class'=. ;(0=L. y){(<y),<y;'jhb'
+t=. '<input type="submit" id="<ID>" name="<ID>" value="<VALUE>" class="<CLASS>" onclick="return jev(event)">'
+t hrplc 'ID VALUE CLASS';x;value;class
 )
 
+NB.* jhchart*id jhchart '' - chartjs
+jhchart_jhs_=: 4 : 0
+'<div id="<id>_parent" class="jhchart_parent"><canvas id="<id>"></canvas></div>'hrplc 'id';x
+)
 
 NB.* jhclose*jhclose'' - cojhs close button and spacer
 jhclose=: 3 : 0
-('close'jhb' x '),;3#<'&nbsp;'
+'close'jhb'&nbsp;X&nbsp;'
 )
 
-NB.* jhcheckbox*id jhcheckbox text;checked (checked 0 or 1)
+NB.* jhchk*id jhchk text [;checked] (initial state 0 or 1)
+jhchk=: 4 : 0
+'value checked'=.  2{.(boxopen y),<0
+checked=. ;checked{PC_CHECK0_BACKGROUND;PC_CHECK1_BACKGROUND
+t=. '<span><input type="submit" id="<ID>" name="<ID>" value="" class="jhchk" style="background-color:<CHECKED>;" onclick="return jev(event)">'
+t=. t,'<ID>' jhb '<VALUE>';'jhchklabel'
+t=. t,'</span>'
+t hrplc 'ID VALUE CHECKED';x;value;checked
+)
+
+NB.* jhcheckbox*id jhcheckbox text;checked - deprecated - use jhchk
 jhcheckbox=: 4 : 0
 'value checked'=. y
 checked=. >checked{'';'checked="checked"'
@@ -507,8 +543,10 @@ jhdivhidden=: 4 : 0
 )
 
 
-NB.* jhdiva*id jhdiva text - <div id...>text
-jhdiva=: 4 : 0
+NB.* jhdiva*[id] jhdiva text - <div id...>text
+jhdiva=: 3 : 0
+''jhdiva y
+:
 '<div id="',x,'">',y
 )
 
@@ -547,6 +585,29 @@ t=. '<input type="hidden" id="<ID>" name="<ID>" value="<VALUE>">'
 t hrplc 'ID VALUE';x;y
 )
 
+NB.* jhh1*id jhh1 text - <h1>text</h1>
+jhh1=: 3 : 0
+''jhh1 y
+:
+('<h1',HBSX,'><TEXT></h1>')hrplc 'ID CLASS TEXT';x;'jhh1';y
+)
+
+NB.* jhhn*id jhhn n;text - <hn>text</hn>
+jhhn=: 4 : 0
+''jhhn y
+:
+n=. ":;{.y
+a=. '<h',n
+b=. '</h',n,'>'
+(a,HBSX,'><TEXT>',b)hrplc 'ID CLASS TEXT';x;'jhh1';;{:y
+)
+
+NB.* jhline*id jhline '' - jhhr with an id
+jhline=: 4 : 0
+t=. '<hr id="<ID>" name="<ID>" class="jhline" />'
+t hrplc 'ID';x
+)
+
 NB.* jhmab*id jhmab text - menu anchor button (shortcut ^s)
 jhmab=: 4 : 0
 't s'=.jhmx y
@@ -556,8 +617,7 @@ t=. t rplc 'class="jhab"';'class="jhmab"',jmon''
 '<li>',t,'</li>'
 )
 
-NB.* jhmg*id jhmg text;decor;width - menu group
-NB.* *decor 0 for '' and 1 for dropdown
+NB.* jhmg*id jhmg text;decor;width - menu group - 0 for '' and 1 for dropdown
 jhmg=: 4 : 0
 'text dec w'=. y
 text=. text,>dec{'';'&#9660;'
@@ -605,15 +665,24 @@ t=. t,'><VALUE></a><TEXT></li>'
 t hrplc 'REF VALUE TEXT';x;value;text
 )
 
-NB.* jhpassword*id jhpassword text;size - text ignored
+NB.* jhpassword*id jhpassword text;size - text is placeholder
 jhpassword=: 4 : 0
-t=.   '<input type="password" id="<ID>" name="<ID>" class="jhpassword"',jeditatts,'value="" size="<SIZE>"'
-t=. t,' onkeydown="return jev(event)"'
-t=. t,'>'
-t hrplc 'ID VALUE SIZE';x;y
+t=.   '<input type="password" id="<ID>" name="<ID>"  placeholder="<TEXT>" class="jhpassword"',jeditatts,'value="" size="<SIZE>"'
+t=. t,' onkeydown="return jev(event)">'
+t hrplc 'ID TEXT SIZE';x;y
 )
 
-NB.* jhradio*id jhradio value;checked;set (set groups radios)
+NB.* jhrad*id jhrad text;checked;set
+jhrad=: 4 : 0
+'value checked set'=.  y
+checked=. ;checked{PC_CHECK0_BACKGROUND;PC_CHECK1_BACKGROUND
+t=. '<span><input type="submit" id="<ID>" name="<SET>" value="" class="jhrad" style="background-color:<CHECKED>;" onclick="return jev(event)">'
+t=. t,'<ID>' jhb '<VALUE>';'jhchklabel'
+t=. t,'</span>'
+t hrplc 'ID VALUE CHECKED SET';x;value;checked;set
+)
+
+NB.* jhradio*id jhradio value;checked;set - deprecated - use jhrad
 jhradio=: 4 : 0
 'value checked set'=. y
 checked=. >checked{'';'checked="checked"'
@@ -622,8 +691,8 @@ t=. t,' onclick="return jev(event)"/><label for="<ID>"><VALUE></label>'
 t hrplc 'ID VALUE SET CHECKED';x;value;set;checked
 )
 
-NB.* jhref*jhref page;target;text
-NB.* jhref*id jhref text - <a href="id">text</a> (deprecated - use monadic form)
+NB.deprecated * jhref*jhref page;target;text
+NB.deprecated * jhref*id jhref text - <a href="id">text</a> (deprecated - use monadic form)
 jhref=: 3 : 0
 'page target text'=. y
 t=. '<a href="<REF>?jwid=<TARGET>" target="<TARGET>" class="jhref" ><TEXT></a>'
@@ -651,6 +720,11 @@ jhspan=: 4 : 0
 '<span id="',x,'">',y,'</span>'
 )
 
+NB.* jhtable*id jhtable '' - jhtable with id
+jhtable=: 4 : 0
+('<table',HBSX,'>')hrplc 'ID CLASS ';x;'jhtable'
+)
+
 NB.* jhtext*id jhtext text;size
 jhtext=: 4 : 0
 t=.   '<input type="text" id="<ID>" name="<ID>" class="jhtext"',jeditatts,'value="<VALUE>" size="<SIZE>"'
@@ -666,36 +740,23 @@ t=. t,'onkeydown="return jev(event)"',jeditatts,'><DATA></textarea>'
 t hrplc 'ID DATA ROWS COLS';x;y
 )
 
+NB.* jhtitle*id jhtitle text
+jhtitle=: 4 : 0
+'<span id="',x,'" class="jhtitle">',y,'</span><br/>'
+)
+
+NB.* jhurl*id jhurl url [;target [;text] ]
+jhurl=: 4 : 0
+t=. boxopen y
+if. 1=#t do. t=. t,<'_target' end.
+if. 2=#t do. t=. t,{.t        end.
+'page target text'=. t
+t=. '<a id="<ID>" name="<ID>" href="<REF>" target="<TARGET>" class="jhref" ><TEXT></a>'
+t hrplc 'ID REF TARGET TEXT';x;page;target;text
+)
+
 NB.* 
 NB.* HBS verbs without id
-
-NB. should be smarter - no style=, replace style, replace att, : vs =, ... 
-NB.* jhfix*html jhfix list - add styles and attributes to html
-NB.* *html jhfix 'float:left';'tabindex="-1"';
-jhfix=: 4 : 0
-tx=. x
-ty=. boxopen y
-for_t. ty do.
- t=. >t
- if. ':'e.t do.
-  tx=. tx rplc'style="';'style="',t,(';'~:{:t)#';'
- else.
-  i=. tx i. ' '
-  tx=. (i{.tx),' ',t,i}.tx
- end.
-end.
-tx
-)
-
-NB.* jhh1*jhh1 text - <h1>text</h1>
-jhh1=: 3 : 0
-'<h1>',y,'</h1>'
-)
-
-NB.* jhhn*jhhn n;text - <hn>text</hn>
-jhhn=: 3 : 0
-'<hn>t</hn>'rplc'n';(":;{.y);'t';{:y
-)
 
 NB.* jhma*jhma'' - menu start
 jhma=: 3 : 0
@@ -717,12 +778,13 @@ jhtr=: 3 : 0
 '<tr>','</tr>',~;(<'<td>'),each y,each<'</td>'
 )
 
-
-
 NB.* 
 NB.* HBS nouns
-NB.* jhtablea*jhtablea - <table>
-jhtablea=: '<table>'
+
+NB.*jhdivz*jhdivz - </div>
+jhdivz=: '</div>'
+
+jhtablea=: '<table>' NB. deprecated - use jhtable
 
 NB.* jhtablez*jhtablez - </table>
 jhtablez=: '</table>'
@@ -730,8 +792,7 @@ jhtablez=: '</table>'
 NB.* jhbr*jhbr - <br/>
 jhbr=: '<br/>'
 
-NB.* jhhr*jhhr - <hr/>
-jhhr=: '<hr/>'
+jhhr=: '<hr/>' NB. deprecated - use jhline
 
 NB.* jhbshtml*jhbshtml_jdemo1_'' -  show HBS sentences and html
 jhbshtml=: 3 : 0
@@ -739,13 +800,19 @@ s=.<;._2 HBS
 seebox s,.LF-.~each jhbsex each s
 )
 
+NB. file/files/fif - common buttons
+jhfcommon=: 3 : 0
+t=. jhclose''
+t=. t,'jfile'   jhb'jfile'
+t=. t,'jfiles'  jhb'jfiles'
+t=. t,'jfif'    jhb'jfif'
+    t,jhbr
+)
+
 NB.* jnv*jnv_jhs_ 1 - toggle display of event name/value pairs
 jnv=: 3 : 'NVDEBUG=:y' NB. toggle event name/value display
 
-NB.*
-NB.* html utils
-
-NB.* jhevids*jevids 'id1 abc foo'
+NB. used in demo15 and demo16 - jhjevids*jevids 'id1 abc foo'
 jhjevids=: 3 : 0
 a=. }:;',',~each'"',each,'"',~each<;._1 ' ',deb y
 LF,~'var JEVIDS= [','];',~a
@@ -806,10 +873,26 @@ else.
 end. 
 )
 
+jsa=: LF,'<script type="text/javascript">',LF
+jsz=: LF,'</script>',LF
+
+fixPCs=: 3 : 0
+t=. ;:'PC_CHECK0_BACKGROUND PC_CHECK1_BACKGROUND'
+;LF,each((<'var '),each t,each<'= "'),each (".each t),each <'";'
+)
+
 getjs=: 3 : 0
 t=. getincs'.js'
-jsi=. ;LF,~each fixjsi each t 
-y hrplc~jsi,js JS
+t=. ;LF,~each fixjsi each t 
+t=. t,jsa,'function jevload(){alert("load javascript failed:\nsee jijx menu tool>debug javascript")};',jsz
+a=. jsdata
+if. -.a-:'"unitialized"' do. a=. jsencode jsdata end.
+t,jsa,(fread JSPATH,'jscore.js'),(JS hrplc y),'var jsdata= ',a,';',(fixPCs''),jsz
+)
+
+NB. core plus y - used for special pages
+js=: 3 : 0
+jsa,(fread JSPATH,'jscore.js'),y,jsz
 )
 
 gethbs=: 3 : 0
@@ -827,6 +910,11 @@ NB.* *set id *innerHTML - html elements with HTML (e.g. jhspan)
 NB.* *css *css          - set new extra CSS
 jhrcmds=: 3 : 0
 jhrajax (-''-:y)}.(2 1{a.),}:;JASEP,~each boxopen y
+)
+
+NB.* jhrjson*jhrjson list of boxed name/value pairs
+jhrjson=: 3 : 0
+jhrajax (3 1{a.),jsencode y
 )
 
 chunk=: 3 : 0
@@ -855,3 +943,4 @@ sdclose_jsocket_ ::0: SKSERVER
 SKSERVER_jhs_=: _1
 )
 
+jsencode_jhs_=: 3 : 'enc_pjson_ (2,~-:$y)$y'

@@ -3,14 +3,17 @@ coclass'jijx'
 coinsert'jhs'
 
 HBS=: 0 : 0
+jhclose''
 jhma''
 jhjmlink''
-'tool'   jhmg'tool';1;7
+'tool'   jhmg'tool';1;16
  'app'     jhmab'app'
- 'debug'   jhmab'debug'
  'demo'    jhmab'demo'
- 'doc'     jhmab'doc'
+ 'chart'   jhmab'plot-chart'
  'jd3'     jhmab'plot-d3'
+ 'debug'   jhmab'debug'
+ 'debugjs' jhmab'debug javascript'
+ 'react'   jhmab'react'
  'node'    jhmab'https'
  'print'   jhmab'print'
  'sp'      jhmab'sp'
@@ -18,25 +21,28 @@ jhjmlink''
  'watch'   jhmab'watch'
 'tour'     jhmg'tour';1;9
  'overview'jhmab'overview'
+ 'charttour'jhmab'chart'
  'canvas'  jhmab'canvas'
  'plot'    jhmab'plot'
  'spx'     jhmab'spx'
  'labs'    jhmab'labs'
-'help'          jhmg'help';1;16
+'help'               jhmg'help';1;16
+ 'welcome'           jhmab'welcome'
  'shortcuts'         jhmab'shortcuts' 
  'popups'            jhmab'pop-ups'
  'closing'           jhmab'close'
+ 'framework'         jhmab'framework'
  'helpwikijhs'       jhmab'JHS'
  'helpwikinuvoc'     jhmab'vocabulary'
  'helpwikiconstant'  jhmab'constant'
  'helpwikicontrol'   jhmab'control'
  'helpwikiforeign'   jhmab'foreign'
  'helpwikiancillary' jhmab'ancillary'
- 'helpwikistdlib'        jhmab'standard library'
+ 'helpwikistdlib'    jhmab'standard library'
  'helpwikirelnotes'  jhmab'release notes'
- 'helphelp'      jhmab'807 html legacy'
- 'wiki'          jhmab'wiki look up'
- 'about'         jhmab'about'
+ 'helphelp'          jhmab'807 html legacy'
+ 'wiki'              jhmab'wiki look up'
+ 'about'             jhmab'about'
 'adv'jhmg '>';0;10
 jhmz''
 jhresize''
@@ -140,6 +146,10 @@ ev_overview_click=: 3 : 0
 'overview tour'tour'overview.ijs'
 )
 
+ev_charttour_click=: 3 : 0
+'chart tour'tour'chart.ijs'
+)
+
 ev_canvas_click=: 3 : 0
 'canvas tour'tour'canvas.ijs'
 )
@@ -166,9 +176,7 @@ load'~addons/ide/jhs/loadx.ijs'
 jhjmlink=: 3 : 0
 t=.   'jmlink' jhmg 'ide';1;13
 t=. t,'jfile'  jhmab'jfile    f^'
-t=. t,'jfiles' jhmab'jfiles   k^'
 t=. t,JIJSAPP  jhmab'jijs     J^'
-t=. t,'jfif'   jhmab'jfif     F^'
 t=. t,'jpacman'jhmab'jpacman'
 t=. t,'jdebug' jhmab'jdebug'
 
@@ -423,7 +431,6 @@ function ev_advance_click(){jdoajax([]);}
 
 function ev_print_click() {jdoajax([]);}
 function ev_app_click() {jdoajax([]);}
-function ev_doc_click() {jdoajax([]);}
 function ev_demo_click(){jdoajax([]);}
 function ev_j1_click(){jdoajax([]);}
 function ev_j2_click(){jdoajax([]);}
@@ -433,16 +440,21 @@ function ev_overview_click(){jdoajax([]);}
 function ev_canvas_click(){jdoajax([]);}
 function ev_table_click(){jdoajax([]);}
 function ev_node_click(){jdoajax([]);}
-function ev_jd3_click(){jdoajax([]);}
+function ev_jd3_click(){jdoj('');}
+function ev_chart_click(){jdoj('');}
+function ev_react_click(){jdoj('');}
+function ev_charttour_click(){jdoj('');}
 function ev_spx_click(){jdoajax([]);}
 function ev_watch_click(){jdoajax([]);}
 function ev_debug_click(){jdoajax([]);}
+function ev_debugjs_click(){jdoajax([]);}
 function ev_sp_click(){jdoajax([]);}
 function ev_spx_click(){jdoajax([]);}
 function ev_labs_click(){jdoajax([]);}
 function ev_about_click(){jdoajax([]);}
 function ev_wiki_click(){jdoajax([]);}
 
+function ev_welcome_click(){jdoajax([]);}
 function ev_shortcuts_click(){jdoajax([]);}
 function ev_popups_click(){jdoajax([]);}
 function ev_closing_click(){jdoajax([]);}
@@ -458,6 +470,7 @@ function ev_jfiles_click(){linkclick("jfiles");}
 function ev_jfif_click(){linkclick("jfif");}
 function ev_jpacman_click(){linkclick("jpacman");}
 function ev_jijx_click(){linkclick("jijx");}
+function ev_framework_click(){linkclick("jdoc");}
 
 function ev_jijs_click(){
  id= jbyid('ijs');
@@ -527,7 +540,7 @@ function ev_doublequote_ctrl(){jdoajax([]);}
 
 function ev_close_click(){
  allwins_clean();
- for(let i = 0; i < allwins.length; i++) {allwins[i].jscdo("close");} //!
+ for(let i = 0; i < allwins.length; i++) {allwins[i].jscdo("close");}
  allwins_clean();
  if(0==allwins.length)
  {

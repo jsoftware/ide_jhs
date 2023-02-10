@@ -334,7 +334,7 @@ function jdoit(t)
  jijxrun(t+" dbxup"+v,false);
 }
 
-function ev_body_load(){jijxset();jresize();}
+function ev_body_load(){}
 function ev_files_click() {jdoajax(["val"]);}
 function ev_dbrun_click()    {jdoit('dbrun');}
 function ev_dbover_click()   {jdoit('dbover');}

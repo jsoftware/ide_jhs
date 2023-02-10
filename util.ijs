@@ -6,6 +6,57 @@ NB.*
 NB.* jhs locale definitions:
 NB.* 
 
+NB.* jpage - locale=. 'class;show;title' jpage data
+NB.*    show: empty default show , _ no show , . pagexywh , x y [w h] window location
+NB.*    title: tab title -  empty class default
+NB.*    'jwatch;10 10;abc' jpage '?4 6$100'
+NB.*    creates locale from ~/addons/ide/jhs/page/locale.ijs if it exists
+jpage=: 4 : 0
+d=. dltb each<;._2 x,';'
+'c s t'=. 3{.d
+if. -.(<c)e. conl 0 do.
+ f=. '~addons/ide/jhs/page/',c,'.ijs'
+ if. fexist f do. load f end.
+ if. -.(<c)e. conl 0 do. ('locale ',c,' must be created first')assert 0 end.
+end.
+s=. fixshow s
+r=. conew c
+title__r=: ;(''-:t){t;c,'-',;r
+create__r y
+if. -._={.s do. show__r s end.
+r
+)
+
+NB.* jpagedefault - arg jpagedefault defaultarg - default if x is ''
+jpagedefault=: 4 : 0
+if. x-:'' do. y else. x end.
+)
+
+NB.* jpageget - jev_get for a page
+jpageget=: 3 : 0
+n=. <getv'jlocale'
+if. a:-:n do.
+ n=. conew ;coname''
+ title__n=: (;coname''),'-',;n
+ create__n'' NB. with default args
+end.
+cocurrent n NB. run in app locale
+title jhrx (getcss''),(getjs''),gethbs''
+)
+
+NB.* 
+
+NB. return valid open show
+fixshow=: 3 : 0
+s=. y
+if. '_'={.s do. _ return. end.
+if. '.'={.s do. s=. pagexywh else. s=. _".s end.
+if. (_ e. s)+.(-.0 2 4 e.~#s)+.0><./s do. '' return. end.
+s
+)
+
+cojhs=: jpage
+
 NB.*
 NB.* close - close wid
 close=: 3 : 0
@@ -46,11 +97,11 @@ case. 'html' do.
 case. 'js'   do.
  NB. should be expanded and use simpler comments similar to util.ijs
  r=. docjsn
- t=. <;.2 LF,~fread jpath'~addons/ide/jhs/utiljs.ijs'
+ t=. <;.2 LF,~fread jpath JSPATH,'jscore.js'
  for_n. t do.
   n=. >n
   if. '//* '-:4{.n do.
-   n=. 5}.n
+   n=. 4}.n
    i=. n i.'*'
    if. i~:#n do.
     n=.(10{.i{.n),' ',}.i}.n
@@ -68,6 +119,13 @@ end.
 NB. thanks to Raul Miller for this forum contribution
 fmt0=:3 :0 L:0
 if.#$y do. ,@(,"1&LF)"2^:(_1 + #@$) ":y else. ":y end.
+)
+
+NB. jijs  run line - truncated display
+tell_jhs_=: 3 : 0
+t=. fmt0 y
+n=. (t=LF)#i.#t
+if. 3>:#n do. t else. t=. ((1{n){.t),LF,'...' end.
 )
 
 NB.* jbd - jbd 0 or 1 - select boxdraw
@@ -108,13 +166,6 @@ d=. enc_json <"1 d
 if. d-:'[]' do. d=. '[[]]' end.
 )
 
-NB.* jwatch - 'W1' jwatch '?2 3$100' - watch any expression
-jwatch=: 4 : 0
-require'~addons/ide/jhs/cojhs/jwatch.ijs'
-x gd_set_jwatch_ y
-open_jhs_ ('jwatch?jwid=',x);x
-)
-
 NB. note that ugs (cache avoidance is on url) - it not on wid!
 NB.* open - [xywh] open url [; jwid ]
 NB.* open new tab if not already open - reload url?... into existing tab
@@ -129,7 +180,7 @@ NB.*    javascript window open URL,jwid,specs,replace
 NB.*    jwid is the window id - javascript uses term window name
 NB.*    jwid is not the page or tab title
 NB. NOPOPUP is supported
-NB. cojhs (table/watch/... use open - locale is url - jwid???
+NB. page (table/watch/... use open - locale is url - jwid???
 open=: 3 : 0
 ''open y
 :
@@ -160,13 +211,13 @@ b=. jurlencode b
 jjs 'pageopen(''',a,''',''',b,''',''',s,''');'
 )
 
-NB.* openreport - openreport'' - report wid,tab,class,locale
-openreport=: 3 : 0
+NB.* pages - pages'' - report locale wid,tab,class,locale
+pages=: 3 : 0
 t=. conl 1
 t=. t#~;(<'jhs')=>1{each copath each conl 1
 loc=. tab=. wid=. class=. ''
 for_c. t do.
- if. COCREATOR__c-:<'base' do.
+ if. COCREATOR__c-:<'jhs' do.
   try. tab=. tab,<JTITLE__c catch. tab=. tab,<,'?' end.
   try. wid=. wid,<JWID__c   catch. wid=. wid,<,'?' end.
   loc=. loc,c
@@ -232,6 +283,10 @@ if. -.2 e. ,>3!:0 each d do. d=. >d end.
 d
 )
 
+NB.* 
+NB.* z locale definitions:
+NB.* 
+
 docjsn=: 0 : 0
 see ~addons/ide/jhs/utiljs.ijs for complete information
 
@@ -259,31 +314,9 @@ documented functions:
 )
 
 coclass'z'
-NB.* 
-NB.* z locale definitions:
-NB.* 
 
-NB.* cojhs - locale=. 'class;show;title'cojhs data
-NB.*    show _ no show, empty default show, x y [w h] window location
-NB.*    title - tab title -  empty class default
-NB.*    'jtable;10 10;abc'cojhs'n' [ n=. i.2 5
-NB.*    creates locale from ~/addons/ide/jhs/cojhs/locale.ijs if it exists
-cojhs=: 4 : 0
-d=. dltb each<;._2 x,';'
-'c s t'=. 3{.d
-if. -.(<c)e. conl 0 do.
- f=. '~addons/ide/jhs/cojhs/',c,'.ijs'
- if. fexist f do. load f end.
- if. -.(<c)e. conl 0 do. ('locale ',c,' must be created first')assert 0 end.
-end.
-s=. 0".s
-'show invalid'assert (_-:s)+.0 2 4 e.~#s
-r=. conew c
-title__r=: ;(''-:t){t;c
-create__r y
-if. -._-:s do. show__r s end.
-r
-)
+cojhs=: cojhs_jhs_
+jpage=:  jpage_jhs_
 
 NB.* edit - [xywh] edit'~temp/abc.ijs
 edit=: 3 : 0
@@ -430,24 +463,35 @@ require'~addons/ide/jhs/demo/jdemo',(":y),'.ijs'
 select. y
 case. 14 do. 'jdemo14;1 1 800 600'cojhs 'temp' [ temp__=: ?5 12$200
 case. 15 do. 'jdemo15;1 1 500 500'cojhs '' 
-case. 16 do. 'jdemo16;1 1 400 600;my-pswd'cojhs '' 
+case. 16 do. 'jdemo16;1 1 400 600;my-pswd'cojhs ''
 case.    do. open t
 end.
 )
 
+gettitles=: 3 : 0
+f=. 1 dir'~addons/ide/jhs/app/app*.ijs'
+n=. }.each(f i: each '/')}.each f
+a=. fread each f
+i=. 1 i.~each (<'jhtitle')E.each a
+a=. i}.each a
+a=. (a i.each  LF){.each a
+a=. }.each (a i. each '''')}.each a
+a=. (a i.each ''''){.each a
+'mismatch: file name - jhtitle' assert (4{.each n)=4{.each a
+;a,each LF
+)
+
 runapp=: 3 : 0
-t=. 'app',":y
+if. ''-:y do. gettitles'' return. end.
+'n xywh'=. 2{.(boxopen y),<''
+t=. 'app',":n
 a=. t,'.ijs'
 f=. '~temp/app/',a
 1!:5 :: [ <jpath'~temp/app'
 (fread '~addons/ide/jhs/app/',a)fwrite f
 load f
 edit f
-if. y=6 do.
- 'app6'cojhs'calendar'
-else.
- open t
-end. 
+(t,';',":xywh)jpage''
 )
 
 NB. push ~temp changes to git
@@ -485,9 +529,11 @@ jhtml=: jhtml_jhs_ NB. viewmat
 NB. stadard cojhs boilerplate
 shown=: 0
 
+NB. jsdata defined indicates new style app
 show=: 3 : 0
 shown=: 1
-y open ,~coname''
+c=. coname''
+y open ;(-.jsdata-:'"unitialized"'){(,~c);(;{.copath c),'?jlocale=',;c
 )
 
 destroy=: 3 : 0

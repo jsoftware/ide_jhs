@@ -1,43 +1,67 @@
 coclass'app1'
 coinsert'jhs'
 
+0 : 0
+best practice for building JHS app (page)
+page is numbered locale with class in its path
+close button (red box x) closes page and locale
+4 parts: HBS, CSS, J code, JS javascript code
+J passes data to javascript as a JSON string
+javascript passes data to J in a dictionary (accessed by getv) 
+)
+
+NB. sentences that define html elements
 HBS=: 0 : 0
-     jhh1'app1 - HBS - html'
-     jhhr
- 'b1'jhb'b 1'
- 't1'jhtext'text field 1';10
-     desc
+jhclose''
+'title'    jhtitle 'app1 - overview'
+'flipone'  jhb     'flipone'
+'fliptwo'  jhb     'fliptwo'
+'flipboth' jhb     'flip one and two'
+'one'      jhtext  '';5
+'two'      jhtext  '';5
 )
 
-desc=: 0 : 0
-<pre>
-JHS app is built from 5 parts:
-   HBS - html elements - buttons, input fields, text, ...
-   JS - javascript event handlers
-   J event handlers (called by javascript event handlers)
-   CSS - colors, margins, borders, ...
-   INC - css/js library files
-
-HBS - J sentences that define html for the document
-
-skim HTML resources (web or books) to get a basic familiarity
-no need to be an expert, but you need to know a bit
-cut/paste and following patterns can get you a long ways
-search for a well phrased question often gives all the answer you need
-
-study app1.ijs to see how it creates app1 document
-
-try some HBS sentences to see the HTML they create - note defined in jhs locale
-   jhh1_jhs_'an h1 header'
-
-try editing HBS to change the text on the b1 button - run script and F5 refresh app
-
-pressing b1 gets an alert as a handler is not defined
-</pre>
+NB. cascading style sheet statments - how html elements look
+CSS=: 0 : 0
+.jhb{background-color:lightgreen;} /* buttons are green */
 )
 
-NB. verb that responds to browser request for app1 page
-NB. (tab title) jhrx (browser source to create the page)
-jev_get=: 3 : 0
-'app1'jhrx(getcss''),(getjs''),gethbs''
+NB. J code - initialize and handle events
+create=: 3 : 0 NB. called by page or browser to initialize locale
+t=. y jpagedefault 'test';'default'
+'must be text1;text2'assert (1=L. t)*.(2=#t)*.2~:3!:0 each t
+jsdata=: 'one';({.t);'two';{:t NB. javascript uses jsdata initialize page
+)
+
+jev_get=: jpageget         NB. called by browser to load page
+
+NB. user clicks button one
+NB.  -> browser calls javascript function ev_click_one()
+NB.   -> javascript calls J verb ev_flipone_click
+NB.    -> jhrjson returns json result to ev_click_one_ajax_json()
+NB.     -> jset sets value t.one in text field one
+
+ev_flipone_click=: {{ jhrjson 'one';|.getv'one' }} NB. return {'one': flipped-value }
+ev_fliptwo_click=: {{ jhrjson 'two';|.getv'two' }}
+ev_flipboth_click=: {{ jhrjson 'one';(|.getv 'one');'two';|.getv 'two' }}
+
+NB. javascript code - initialize page and handle events
+JS=: 0 : 0
+function ev_body_load(){ // initialize page when loaded
+ jset('one',jsdata.one); // set text field 'one' with value from jsdata
+ jset('two',jsdata.two);
+}
+
+function ev_flipone_click(){jdoj('one');} // event handler - calls J event handler
+function ev_flipone_click_ajax_json(t){jset('one',t.one);} // called when J finishes
+
+function ev_fliptwo_click(){jdoj('two');} // html element 'two' value passed to J
+function ev_fliptwo_click_ajax_json(t){jset('two',t.two);}
+
+function ev_flipboth_click(){jdoj('one two');} // html values 'one' and 'two' passed
+function ev_flipboth_click_ajax_json(t){jset('one',t.one);jset('two',t.two);}
+
+function ev_one_enter(){jscdo('flipone');} // enter key calls ev_flipone_click()
+function ev_two_enter(){jscdo('fliptwo');}
+
 )

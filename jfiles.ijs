@@ -3,6 +3,7 @@ coclass'jfiles'
 coinsert'jhs'
 
 HBS=: 0 : 0
+jhfcommon''
 jhresize''
 files''
 )
@@ -32,12 +33,17 @@ CSS=: 0 : 0
 )
 
 JS=: 0 : 0
-function ev_body_load(){jijxset();jresize();}
+function ev_body_load(){jresize();}
 
 function ev_file_click(){
  t= 'jijs?jwid='+jsid.value,jsid.value;
- pageopen(t,t); //! nocache???
+ pageopen(t,t); //? nocache???
 }
+
+function ev_jfile_click() {window.location.assign('jfile');}
+function ev_jfiles_click(){;}
+function ev_jfif_click()  {window.location.assign('jfif');}
+
 
 )
 

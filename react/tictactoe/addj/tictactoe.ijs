@@ -1,31 +1,6 @@
 coclass'tictactoe'
 coinsert'jhs'
 
-man=: 0 : 0
-load'~addons/ide/jhs/react/tictactoe/addj/tictactoe.ijs'
-c=: conew'tictactoe'
-open_jhs_ c
-)
-
-name=: ;coname''
-
-src=: '~addons/ide/jhs/react/',name,'/'
-snk=: '~temp/jhs/react/',name,'/'
-
-NB. create ~temp folder with all files from src/dist/
-NB.  and then all files (possibly replacing) from src/adj/
-3 : 0''
-echo 'create: ',snk
-mkdir_j_ snk
-
-n=. {."1 [1!:0 <jpath src,'dist/*'
-(fread each (<src,'dist/'),each n) fwrite each (<snk),each n
-
-n=. {."1 [1!:0 <jpath src,'addj/*'
-(fread each (<src,'addj/'),each n) fwrite each (<snk),each n
-(fread src,'addj/',name,'.js') fwrite snk,'script.js'
-)
-
 NB. fix css/script path - if tictactoe locale, do conew and add location change
 fixhtml=: 3 : 0
 d=. y rplc './';snk
@@ -92,11 +67,11 @@ else.
   i=. 'X' getwinner q
   if. i=9 do.
    NB. play random
-   i=. q i. '*' NB.! should be more random
+   i=. q i. '*' NB. should be more random
   end.
  end.  
 end. 
 if. i<#q do. q=. 'O' i}q end.
 last=: q
-jhrajax enc_json_jhs_ |:2 2$'oplay';i;'winner';a
+jhrajax jsencode 'oplay';i;'winner';a
 )

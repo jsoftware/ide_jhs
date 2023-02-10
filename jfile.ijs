@@ -3,6 +3,9 @@ coclass'jfile'
 coinsert'jhs'
 
 HBS=: 0 : 0
+
+jhfcommon''
+
 'edit'     jhb 'edit'
 'load'     jhb 'load'
 'rename'   jhb 'rename'
@@ -352,7 +355,7 @@ JS=: 0 : 0
 var anchor=null;
 
 function ev_body_load(){
- jijxset();jresize();
+ jresize();
  setanchor(true);
 }
 
@@ -458,6 +461,10 @@ function ev_rennx_enter(){jscdo('renamedo');}
 function ev_rensx_enter(){jscdo('renamedo');}
 function ev_newname_enter(){jscdo('newfile');}
 function ev_deletedo_click(){jsubmit();}
-//function ev_adrecall_click(){adrecall("document",jbyid('path').value,"0");} //!
+//function ev_adrecall_click(){adrecall("document",jbyid('path').value,"0");}
+
+function ev_jfile_click() {;}
+function ev_jfiles_click(){window.location.assign('jfiles');}
+function ev_jfif_click()  {window.location.assign('jfif');}
 
 )
