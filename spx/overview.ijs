@@ -20,7 +20,7 @@ NB.spxhr:
 read-eval-print loop
  this jijx page is your repl interface to J
 )
-+/1 2 3      NB. sum over - (Note Bene) starts comment
++/1 2 3      NB. sum over - (Nota Bene) starts comment
 a=: ?2 6$100 NB. a is random values from 2 by 6 array of 100s
 a            NB. display a
 +/a          NB. sum over columns (last dimension)
