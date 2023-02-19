@@ -122,8 +122,8 @@ if.#$y do. ,@(,"1&LF)"2^:(_1 + #@$) ":y else. ":y end.
 )
 
 NB. jijs  run line - truncated display
-tell_jhs_=: 3 : 0
-t=. fmt0 y
+tell=: 3 : 0
+t=. fmt0 ":y
 n=. (t=LF)#i.#t
 if. 3>:#n do. t else. t=. ((1{n){.t),LF,'...' end.
 )
