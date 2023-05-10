@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.337'
+VERSION=: '1.0.338'
 
 FILES=: 0 : 0
 app/
@@ -17,6 +17,7 @@ node/
 page/
 react/
 spx/
+extra/
 core.ijs
 chart.ijs
 d3.ijs
