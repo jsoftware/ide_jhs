@@ -1,0 +1,134 @@
+UNDER CONSTRUCTION
+
+== your personal JHS server machine in the cloud ==
+
+* always available
+* fixed ip address 
+* 16 GIB storage
+* JHS - ready for you from any hardware anywhere withinternet
+* less than $10/month!
+* costs are under your control - increase for a bigger machine and easily cancelled
+
+== steps are for Amazon Web Services (aws) from a unix desktop
+Could easily be adjusted for any similar cloud service. Unix build scripts need to be reworked to allow build from Windows.
+
+== costs
+A small machine (t2.micro - 1 core, 2 GiB ram, 16 GiB storage) with a fixed IP that ran all the time would cost less than $10/month.
+
+This could be significantly reduced with additional inconvenience (no fixed IP) and more management overhead (starting and terminating the instance).
+
+The t2.micro can be easily upgraded. For example, a t4g.medium (2 cores, 4 GiB ram, 16 GiB storage) for $25/mo.
+
+Your first year with t2.micro wiht a new account is free.
+
+== with luck and care you could be running on JHS server (aws instance) within an hour
+
+== aws console navigation
+The aws web pages are complicated and are much easier on a larger screen. There can be a response lag and the console is not always updated. If you don't see what you expect, press the refresh button (circular arrow).
+
+In the following:
+abc:      - fill in text box
+>abc      - click checkbox/button/link
+>>abc>def - click abc dropdown and select item
+
+== create an account (only required once)
+browse: aws.amazon.com
+>Sign in to the Console (upper right corner)
+>Create a new AWS account
+follow the steps to get your root account and password
+
+== create things required by an instance (only required once or for changes)
+browse: aws.amazon.com
+>Sign in to the Console
+Root user email address:
+Password:
+>Sign in
+Search: ec2 dashboard (enter)
+
+An aws instance requires a few things that can be created in advance.
+ Key pair       - ssh security credentials - ssh management of the instance
+ Security Group - firewall info for your instance
+ Elastic IP     - a fixed IP address that makes it easier to work with the instance
+
+Choose a base name that you will use for your creations. For example: jhs1
+
+Create key pair (EC2 dashboard)
+ >Key pairs
+ >Create key pair (orange - upper right corner)
+ name: jhs1
+ >Create key pair (page lower right)
+ >download-save file-OK
+ move the downloaded jhs1.pem file to your ~/.ssh folder
+
+Create Security group (EC2 dashboard)
+ >Security groups
+ >Create Security group
+ Security group name: jhs1
+ Description: ssh 22 jhs 65101
+ Inbound rules
+ >Add rule
+  >>Type>>SSH (will set port 22)
+  >>Source>Anywhere-IPv4
+ >Add rule
+  >>Type>Custom TCP
+  Port range: 65101 (this is the JHS server port)
+  >>Source>Anywhere-IPv4
+ >Create security group (page lower right corner)
+
+Create Elastic IP (EC2 dashboard)
+ >Elastic IPs
+ >Allocate Elastic IP address
+ >Amazon's pool of IPv4 addresses
+ >Allocate (page lower right)
+ Name: jhs1
+
+copy Allocated IPv4 address (form a.b.c.d - e.g. 54.88.234.170) to clipboard
+
+unix terminal:
+$ cd path-to-ide/jhs/aws-folder # e.g. j9.4/addons/ide/jhs/aws
+$ ./aws.sh set paste-eip-here   # write eip to file
+
+== Launch an instance (EC2 dashboard)
+ >>Launch instance>Launch instance
+ Name: jhs1
+ >Application and OS Images (Amazon Machine Image)
+  >Quick start
+  >Amazon Linux aws
+ >>Instance type>t2.micro
+ >>Key pair (login)>>Key pair name>jhs1 
+ >>Network settings
+  >Select existing security group
+  >>Security groups>jhs1
+ >>Configure storage
+  16 GiB gp3
+ >Advance details
+  hibernate? shutdown? ?
+
+ >Launch Instance (orange)
+
+Associate elastic ip with the instance (EC2 dashboard)
+ >Elastic IPs
+ >mark checkbox of Elastic IP you want to use
+ >>Actions>Associate Elastic IP address
+ >>Instance>select your jhs1 instance
+ >Associate
+
+== Configure the instance by loading software and running JHS
+From a unix terminal window:
+$ cd j9.4/addons/ide/jhs/aws # path to addon ide/jhs
+$ ./aws.sh set a.b.c.d       # necessary when elastic ip is created
+$ ./aws.sh clr               # necessary with new instance to avoid known host error
+$ ./aws.sh bld hownow        # necessary with new instance to build system and start JHS https with logon key
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+
+***
+billing dashboard
+terminate instance
+release eip
+run jhs
+rebuild
+aws-utils.ijs
+templates
+ checkbox instance 
+ Actions>Image and template>Create template from instance>Create launch template
+

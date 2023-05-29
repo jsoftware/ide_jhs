@@ -1,0 +1,12 @@
+commands: 
+ how         - how to use this script
+ clr         - remove old entry from known_hosts for new instance
+ set a.b.c.d - write ip address to file - persistence - elastic ip!
+ ssh
+ get remote-file local-file
+ put local-file  remote-file
+ run "command to run on remote"
+ bld logon-key
+ https path-to-cert-key-pem-files
+
+

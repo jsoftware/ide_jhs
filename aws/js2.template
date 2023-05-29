@@ -1,0 +1,82 @@
+{
+  "MaxCount": 1,
+  "MinCount": 1,
+  "ImageId": "ami-02396cdd13e9a1257",
+  "InstanceType": "t2.micro",
+  "InstanceInitiatedShutdownBehavior": "stop",
+  "KeyName": "ericaws",
+  "DisableApiTermination": false,
+  "EbsOptimized": false,
+  "UserData": "IyEvYmluL2Jhc2gKZWNobyBidWdnZXIgPiAvaG9tZS9lYzItdXNlci9maXNo",
+  "DisableApiStop": false,
+  "BlockDeviceMappings": [
+    {
+      "DeviceName": "/dev/xvda",
+      "Ebs": {
+        "Encrypted": true,
+        "DeleteOnTermination": true,
+        "Iops": 3000,
+        "KmsKeyId": "arn:aws:kms:us-east-1:592502858441:key/2fbe8391-0074-4d9b-838e-e12c8390cecd",
+        "VolumeSize": 8,
+        "VolumeType": "gp3",
+        "Throughput": 125
+      }
+    }
+  ],
+  "NetworkInterfaces": [
+    {
+      "SubnetId": "subnet-810f24a9",
+      "DeleteOnTermination": true,
+      "AssociatePublicIpAddress": true,
+      "DeviceIndex": 0,
+      "Groups": [
+        "sg-c936aaac"
+      ]
+    }
+  ],
+  "LaunchTemplate": {
+    "LaunchTemplateId": "lt-0c3eca40fe44c8205",
+    "Version": "1"
+  },
+  "HibernationOptions": {
+    "Configured": true
+  },
+  "Monitoring": {
+    "Enabled": false
+  },
+  "CreditSpecification": {
+    "CpuCredits": "standard"
+  },
+  "CapacityReservationSpecification": {
+    "CapacityReservationPreference": "open"
+  },
+  "TagSpecifications": [
+    {
+      "ResourceType": "instance",
+      "Tags": [
+        {
+          "Key": "Name",
+          "Value": "jserver"
+        }
+      ]
+    }
+  ],
+  "Placement": {
+    "Tenancy": "default"
+  },
+  "MetadataOptions": {
+    "HttpTokens": "required",
+    "HttpEndpoint": "enabled",
+    "HttpProtocolIpv6": "disabled",
+    "HttpPutResponseHopLimit": 2,
+    "InstanceMetadataTags": "disabled"
+  },
+  "PrivateDnsNameOptions": {
+    "HostnameType": "ip-name",
+    "EnableResourceNameDnsARecord": true,
+    "EnableResourceNameDnsAAAARecord": false
+  },
+  "MaintenanceOptions": {
+    "AutoRecovery": "default"
+  }
+}
