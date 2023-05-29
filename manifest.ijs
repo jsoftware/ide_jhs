@@ -10,6 +10,7 @@ VERSION=: '1.0.339'
 
 FILES=: 0 : 0
 app/
+aws/
 config/
 demo/
 js/
