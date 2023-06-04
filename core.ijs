@@ -375,11 +375,12 @@ to run a new JHS session on the next free port, run the following:
 
 NB. html config parameters
 configdefault=: 3 : 0
-PORT=: 65001       NB. private port range 49152 to 65535
-USER=: ''          NB. 'john' - login
-PASS=: ''          NB. 'abra' - login
-TIPX=: ''          NB. tab title prefix - distinguish sessions
-AUTO=: 1           NB. start browser (if necessary) and browse to http:/localhost:PORT/jijx
+PORT=:   65001       NB. private port range 49152 to 65535
+USER=:   ''          NB. 'john' - login
+PASS=:   ''          NB. 'abra' - login
+TIPX=:   ''          NB. tab title prefix - distinguish sessions
+AUTO=:   1           NB. start browser (if necessary) and browse to http:/localhost:PORT/jijxNOEXIT=: 1
+NOEXIT=: 0           NB. jijx red button close - if 1 then exit'' is not run
 
 PC_FONTFIXED=:     '"courier new","courier","monospace"'
 PC_FONTVARIABLE=:  '"sans-serif"'

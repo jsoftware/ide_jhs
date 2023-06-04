@@ -205,7 +205,8 @@ form{margin-top:0;margin-bottom:0;}
 NB. *#log:focus{border:1px solid red;}
 NB. *#log:focus{outline: none;} /* no focus mark in chrome */
 
-JS=: 0 : 0
+JS=: 0 : 0 rplc'<NOEXIT>';":NOEXIT
+var noexit=<NOEXIT>;
 var allwins= []; // all windows created by jijx
 var phead= '<div id="prompt" class="log">';
 var ptail= '</div>';
@@ -542,6 +543,14 @@ function ev_close_click(){
  allwins_clean();
  for(let i = 0; i < allwins.length; i++) {allwins[i].jscdo("close");}
  allwins_clean();
+ 
+ if(noexit==1)
+ {
+  updatelog('<div class="log"><b><font style="color:red;"><br>JHS server still running. Can not close this page with red button.</font></b><br></div>')
+  updatelog('<div id="prompt" class="log">&nbsp;&nbsp;&nbsp;</div>')
+  return;
+ }
+ 
  if(0==allwins.length)
  {
   updatelog('<div id="prompt" class="log"><b><font style="color:red;"><br>JHS server for this page has exited.</font></b></div>')
