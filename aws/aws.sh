@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pem=~/.ssh/ericaws.pem
+pem=~/.ssh/jhs1-kp.pem
 
 IFS=''
 ip=`cat ~/.ssh/jhs_aws_ip.txt`
@@ -12,7 +12,10 @@ ssh-keygen -f ~/.ssh/known_hosts -R $ip # new instance will not match known_host
 ;;
 
 set)
-ip=$1
+ip=$2
+re='^(0*(1?[0-9]{1,2}|2([0-4][0-9]|5[0-5]))\.){3}'
+re+='0*(1?[0-9]{1,2}|2([‌​0-4][0-9]|5[0-5]))$'
+if [[ ! $ip =~ $re ]]; then echo "invalid ip" ; exit 2 ; fi
 echo $2 > ~/.ssh/jhs_aws_ip.txt 
 ;;
 
@@ -39,6 +42,9 @@ bld)
 ./aws.sh put aws-utils.ijs
 ./aws.sh run ./cloud-bld.sh # build j and nodejs
 ./aws.sh run "./cloud-run.sh $2" # start JHS and nodejs
+echo " "
+echo "browse to:"
+echo "https://$ip:65101/jijx"
 ;;
 
 # $2 is path to folder with key.pem and cert.pem files
