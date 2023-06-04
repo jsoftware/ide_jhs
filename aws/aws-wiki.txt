@@ -80,7 +80,7 @@ EC2 dashboard
  >Allocate (lower right)
  Name%jhs1-ip
  # copy Allocated IPv4 address (form a.b.c.d - e.g. 54.88.234.170) to clipboard
- $ cd j9.4/addons/ide/jhs/aws/aws # path to aws - adjust as necessary
+ $ cd j9.4/addons/ide/jhs/aws # path to aws - adjust as necessary
  $ ./aws.sh set paste-eip-here # write eip to file
 
 === launch an instance ===
@@ -111,7 +111,7 @@ EC2 dashboard
  >Associate
 
 === configure instance - install software and run JHS ===
- $ cd j9.4/addons/ide/jhs/aws/aws # path to aws - adjust as necessary
+ $ cd j9.4/addons/ide/jhs/aws # path to aws - adjust as necessary
  $ ./aws.sh clr           # required for new instance - avoid known host error
  $ ./aws.sh bld logon-key # required for new instance - build and start JHS
  #  Are you sure you want to continue connecting (yes/no/[fingerprint])? yes

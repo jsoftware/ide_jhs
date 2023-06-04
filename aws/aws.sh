@@ -42,7 +42,7 @@ bld)
 ./aws.sh put aws-utils.ijs
 ./aws.sh run ./cloud-bld.sh # build j and nodejs
 ./aws.sh run "./cloud-run.sh $2" # start JHS and nodejs
-echo " "
+echo "starting JHS and nodejs..."
 echo "browse to:"
 echo "https://$ip:65101/jijx"
 ;;
