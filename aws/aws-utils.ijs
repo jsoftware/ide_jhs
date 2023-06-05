@@ -40,7 +40,7 @@ er assert 2=#y
 er assert 'G'={:y
 er assert ({.y)e.'1234'
 'swap already exists'assert ''-:shell'swapon --show'
-shell'sudo fallocate -l ',(":y),'G /swapfile'
+shell'sudo fallocate -l ',y,' /swapfile'
 shell'sudo chmod 600 /swapfile'
 shell'sudo mkswap /swapfile'
 shell'sudo swapon /swapfile'
