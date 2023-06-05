@@ -39,7 +39,6 @@ bld)
 [ "$#" -ne 2 ] && echo "missing logon key parameter" && exit 1
 ./aws.sh put cloud-bld.sh
 ./aws.sh put cloud-run.sh
-./aws.sh put aws-utils.ijs
 ./aws.sh run ./cloud-bld.sh # build j and nodejs
 ./aws.sh run "./cloud-run.sh $2" # start JHS and nodejs
 echo "starting JHS and nodejs..."
