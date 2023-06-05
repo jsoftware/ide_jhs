@@ -31,9 +31,20 @@ download=: 3 : 0
 jhtml_jhs_'<div contenteditable="false"><a href="xxx.txt" download>download: xxx.txt</a>'
 )
 
-NB. https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-22-04
+NB. create_swap '1G'
 NB. swap 1G required for jdrt'pandas'
+NB. https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-22-04
 create_swap=: 3 : 0
+er=. 'arg must be of form nG for n GiB swap file'
+er assert 2=#y
+er assert 'G'={:y
+er assert ({.y)e.'1234'
+'swap already exists'assert ''-:shell'swapon --show'
+shell'sudo fallocate -l ',(":y),'G /swapfile'
+shell'sudo chmod 600 /swapfile'
+shell'sudo mkswap /swapfile'
+shell'sudo swapon /swapfile'
+shell'swapon --show'
 )
 
 run=: 3 : 0

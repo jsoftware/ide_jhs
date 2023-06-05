@@ -107,7 +107,7 @@ EC2 dashboard
  >Elastic IPs
  >jhs1-ip
  >>Actions>Associate Elastic IP address
- >>Instance>jhs1
+ >>Instance>jhs1 (may have to wait a minute and refresh for the instance to get started)
  >Associate
 
 === configure instance - install software and run JHS ===
