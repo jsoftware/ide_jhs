@@ -2,14 +2,16 @@ coclass'jaws'
 
 NB. utils for aws instance
 
+NB. kill JHS/nodejs servers and restart
+NB. key rerun key - logon key repeated to try to avoid typos
 rerun=: 4 : 0
-'keys x and y must be same'assert x-:y
+'x and y must be same'assert x-:y
 'key must not contain blank'assert -.' 'e. y
 echo 'JHS/nodejs servers killed and restarted'
 shell'./cloud-run.sh ',y,' &'
 )
 
-NB. python3 already installed
+NB. install pip3/pandas/pyarrow - python3 already installed
 install_pandas=: 3 : 0
 run'sudo yum -y install python3-pip'
 run'pip3 install pandas'
@@ -27,14 +29,15 @@ shutdown=: 3 : 0
 shell'sudo shutdown ',y
 )
 
-# hibernates instance
-# costs for eip start and it may be more effective to keep smaller machines running
+NB. hibernate instance - easy to restart with saved state
+NB. eip costs start and it might be better to keep smaller machines running
 hibernate=: 3 : 0
 shell'sudo /etc/acpi/actions/sleep.sh button/sleep SBTN 00000080 00000000'
 )
 
+NB. download file - create download link in jijx
 download=: 3 : 0
-jhtml_jhs_'<div contenteditable="false"><a href="xxx.txt" download>download: xxx.txt</a>'
+jhtml_jhs_'<div contenteditable="false"><a href="<file>" download>download: <file></a>'rplc'<file>';jpath y
 )
 
 NB. create_swap '1G'
@@ -58,4 +61,3 @@ echo y
 echo shell y
 echo LF
 )
-
