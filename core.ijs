@@ -564,6 +564,7 @@ load__'~addons/ide/jhs/d3.ijs'
 load__'~addons/ide/jhs/chart.ijs'
 load__'~addons/ide/jhs/vocabhelp.ijs'
 load__'~addons/ide/jhs/jdoc.ijs'
+load__'~addons/ide/jhs/extra/man.ijs'
 
 NB. load addons, but do not fail init if not found
 load__ :: ['~addons/convert/json/json.ijs'

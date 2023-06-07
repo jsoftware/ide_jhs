@@ -2,9 +2,12 @@ coclass'jman'
 man_z_=: man_jman_
 zloc=: <,'z'
 
+NB.! perhaps base9 (<500k) should be included in base library
+
 NB. y is name - abc abc_jd_ abc__c or locale - _jhs_
 NB. display comments before definition in defining script
 NB. if defining script is in ~system it looks for source script in base9
+NB. would be nice to support f* to return all matches
 man=: 3 : 0
 n=. dltb y
 if. '_'={.n do.
@@ -38,6 +41,7 @@ f=. i{4!:3''
 t=. jpath'~system/'
 if. t-: (#t){.;f do.
  if._1=nc<'base9p' do.
+  NB.! would be good to use adduserfolder
   d=. dirpath'~'
   base9p=: ;{.(;+./each (<'/base9') E. each d)#d NB. look for folder named base9 for ~system source
  end. 
@@ -91,3 +95,18 @@ r=. (>:h)}.(>:i){.bdx
 )
 
 doin=: 4 : '(<x)(4 : ''do__y x'')each<"0 y' NB. run sentence in each locale
+
+NB.! experimental 
+adduserfolder_j_=: 3 : 0
+f=. '~config/folders.cfg'
+d=. fread f
+d=. d,(LF~:{:d)#LF
+
+i=. y i. ' '
+n=. i{.y
+'first letter must be uppercase'assert ({.n)=toupper{.n
+p=. dltb i}.y
+d=. d,n,((1>.9-#n)#' '),p,LF
+d fwrite f
+UserFolders_j_=: UserFolders_j_,n;jpath p 
+)
