@@ -40,13 +40,16 @@ i=. 4!:4<n
 f=. i{4!:3''
 t=. jpath'~system/'
 if. t-: (#t){.;f do.
- if._1=nc<'base9p' do.
-  NB.! would be good to use adduserfolder
+ NB. look for defn in base9
+ p=. jpath'~Base9'
+ if. p-:'~Base9' do.
+  NB. ~Base9 not defined - look for base9 folder
   d=. dirpath'~'
-  base9p=: ;{.(;+./each (<'/base9') E. each d)#d NB. look for folder named base9 for ~system source
+  p=. ;{.(;+./each (<'/base9') E. each d)#d NB. look for folder named base9 for ~system source
+  if. 0=#p do. echo 'install git base9 source for ~system script defn comments' return.  end.
+  adduserfolder_j_'Base9 ',p
  end. 
- if. 0=#base9p do. echo 'install git base9 source for ~system script defn comments' return.  end.
- dt=. {."1 dirtree base9p,'/*.ijs'
+ dt=. {."1 dirtree p,'/*.ijs'
  for_f. dt do.
   r=. (fread f) manx n
   if. -.r-:'not found' do. r break. end.
