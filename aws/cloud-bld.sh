@@ -19,8 +19,8 @@ ln -s j9.4/bin/jconsole jc
 # put default self-signed certificates in .ssh
 sudo cp j9.4/addons/ide/jhs/node/key.pem  .ssh
 sudo cp j9.4/addons/ide/jhs/node/cert.pem .ssh
-sudo chmod 400 .ssh/key.pem
-sudo chmod 400 .ssh/cert.pem
+sudo chmod 644 .ssh/key.pem
+sudo chmod 644 .ssh/cert.pem
 
 # install nodejs
 sudo yum -y install nodejs
