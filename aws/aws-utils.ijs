@@ -12,24 +12,14 @@ shell'./cloud-run.sh ',y,' &'
 
 NB. upload 'a.tgz';'~user/temp';'1.ijs'
 NB. upload 'b.tgz';'~user';'config'
-NB. tar file in ~/Uploads folder and download link in jijx
+NB. tar file created in in aws ~/Uploads folder
+NB.  and then downloaded to browser Download folder
 upload=: 3 : 0
 'name path source'=. y
 mkdir_j_'Uploads'
 name=. '~/Uploads/',name
 shell q__=: 'cd ',(dquote jpath path),' && tar czf ',name,' ',dquote source
 jhtml_jhs_ qq__=: '<div contenteditable="false"><a href="<file>" download>download: <file></a>'rplc'<file>';name
-)
-
-NB. install pip3/pandas/pyarrow - python3 already installed
-install_pandas=: 3 : 0
-run'sudo yum -y install python3-pip'
-run'pip3 install pandas'
-run'pip3 install pyarrow'
-)
-
-install_git=: 3 : 0
-run'sudo yum -y install git'
 )
 
 NB. shutdown args same as for terminal command shutdown
@@ -43,6 +33,18 @@ NB. hibernate instance - easy to restart with saved state
 NB. eip costs start and it might be better to keep smaller machines running
 hibernate=: 3 : 0
 shell'sudo /etc/acpi/actions/sleep.sh button/sleep SBTN 00000080 00000000'
+)
+
+NB. install pip3/pandas/pyarrow - python3 already installed
+NB. required for jdrt'pandas'
+install_pandas=: 3 : 0
+run'sudo yum -y install python3-pip'
+run'pip3 install pandas'
+run'pip3 install pyarrow'
+)
+
+install_git=: 3 : 0
+run'sudo yum -y install git'
 )
 
 NB. create_swap '1G'
