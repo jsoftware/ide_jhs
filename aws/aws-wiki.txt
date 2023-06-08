@@ -127,17 +127,27 @@ logon with key from bld step
 ...
    edit'~addons/ide/jhs/aws/aws-utils.ijs'
 (activate jijx tab)
-   shutdown_jaws_'now'
+   man'shutdown'
+   shutdown_jaws_'now' NB. will terminate instance
+
+=== billing dashboard ===
+Search%aws billing dashboard (or >>account name right top bar)
+stay on top of your costs!
 
 
-***
-billing dashboard
-terminate instance
-release eip
-run jhs
-rebuild
-aws-utils.ijs
-templates
- checkbox instance 
- Actions>Image and template>Create template from instance>Create launch template
+=== terminate instance
+EC2 dashboard
+ >Instances
+ >instance
+ *Instance state>Terminate instance
+ 
+=== release elastic ip ===
+You pay for an elastic ip that is not used!
 
+EC2 dashboard
+ >Elastic IPs
+ >jhs1-ip
+ *Actions>Release Elastic IP addresses
+ 
+=== launch templates ===
+If you are repeatedly going throught the same steps to launch an instance, you should probably look at using a launch template.
