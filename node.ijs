@@ -172,7 +172,7 @@ bin=. LF-.~fread'nodebin'
 t=. '"<BIN>" "<FILE>" <ARG> > "<OUT>" 2>&1' 
 a=. t rplc '<BIN>';bin;'<FILE>';file;'<ARG>';arg;'<OUT>';nodeout
 fork_jtask_ a
-if. _1=pidfromport_jport_ port do. NB. pidfromport has delays
+if. _1=pidfromport_jport_ nodeport do. NB. pidfromport has delays
  echo a,LF,fread nodeout_jhs_
  'NODE server failed to start' assert 0
 end. 

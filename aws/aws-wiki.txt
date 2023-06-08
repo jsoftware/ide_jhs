@@ -104,13 +104,17 @@ EC2 dashboard
  >Launch Instance (lower right)
 
 EC2 dashboard
+ >Instances
+ >refresh until jhs1 instance state is Running
+
+EC2 dashboard
  >Elastic IPs
  >jhs1-ip
  >>Actions>Associate Elastic IP address
  >>Instance>jhs1 (may have to wait a minute and refresh for the instance to get started)
  >Associate
 
-=== configure instance - install software and run JHS ===
+=== initialize instance - install software and run JHS ===
  $ cd j9.4/addons/ide/jhs/aws # path to aws - adjust as necessary
  $ ./aws.sh clr           # required for new instance - avoid known host error
  $ ./aws.sh bld logon-key # required for new instance - build and start JHS

@@ -706,10 +706,10 @@ end.
 z
 )
 
-NB. shutdown JHS
+NB. shutdownx JHS
 NB. y: integer return code for 2!:55
 NB.    ''  just shutdown JHS, J not exit
-shutdown=: 3 : 0
+shutdownx=: 3 : 0
  shutdownJ_jsocket_ SKLISTEN ; 2
  sdclose_jsocket_ ::0: SKLISTEN
  sdcleanup_jsocket_''
