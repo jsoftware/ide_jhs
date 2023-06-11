@@ -1,4 +1,15 @@
 #!/bin/bash
+how="commands: 
+ ?           - how to use this script
+ clr         - remove old entry from known_hosts for new instance
+ set a.b.c.d - write ip address to file - persistence - elastic ip!
+ ssh
+ get remote-file local-file
+ put local-file  remote-file
+ run command-to-run-on-remote
+ bld logon-key
+ pem path-to-cert-key-pem-files
+"
 
 pem=~/.ssh/jhs1-kp.pem
 
@@ -47,7 +58,7 @@ echo "https://$ip:65101/jijx"
 ;;
 
 # $2 is path to folder with key.pem and cert.pem files
-https)
+pem)
 [ "$#" -ne 2 ] && echo "missing path to key/cert .pem files" && exit 1
 ./aws.sh run "rm .ssh/key.pem"
 ./aws.sh run "rm .ssh/cert.pem"
@@ -55,13 +66,33 @@ https)
 ./aws.sh put $2/cert.pem .ssh/cert.pem
 ;;
 
-how)
-while read line; do echo $line; done < aws-how.txt
+cloud)
+# install j
+rm j9.4_linux64.tar.gz
+wget -nv www.jsoftware.com/download/j9.4/install/j9.4_linux64.tar.gz
+tar -zxf j9.4_linux64.tar.gz
+
+# update j
+rm jc
+ln -s j9.4/bin/jconsole jc
+./jc -js "load'pacman'" "'update'jpkg''" "'install'jpkg'all'" "exit''"
+
+# put default self-signed certificates in .ssh
+sudo cp j9.4/addons/ide/jhs/node/key.pem  .ssh
+sudo cp j9.4/addons/ide/jhs/node/cert.pem .ssh
+sudo chmod 644 .ssh/key.pem
+sudo chmod 644 .ssh/cert.pem
+
+# install nodejs
+sudo yum -y install nodejs
+echo `which node` > nodebin
+;;
+
+cloud_start)
+./jc -js "load'~addons/ide/jhs/node.ijs'" "startJHS_jhs_''" "startNODE_jhs_ 65101 ; '.ssh' ; 'hownow'" "exit''"
 ;;
 
 *)
-while read line; do echo $line; done < aws.txt
+echo "$how"
 ;;
-
 esac
-
