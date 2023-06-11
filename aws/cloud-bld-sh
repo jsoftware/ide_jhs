@@ -1,10 +1,5 @@
 #!/bin/bash
-cd ~
-
-if [ -f jc ]; then
- echo 'jc already exists!'
- #exit 1
-fi
+#avoid .suffix so git/pacman preserver eol lf on windows
 
 # install j
 rm j9.4_linux64.tar.gz
