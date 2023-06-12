@@ -1,5 +1,5 @@
 #!/bin/bash
-#avoid .suffix so git/pacman preserver eol lf on windows
+# avoid .suffix so git/pacman preserve eol lf on windows
 
 # install j
 rm j9.4_linux64.tar.gz

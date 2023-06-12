@@ -1,5 +1,5 @@
 #!/bin/bash
-#avoid .suffix so git/pacman preserver eol lf on windows
+# avoid .suffix so git/pacman preserve eol lf on windows
 
 how="commands: 
  ?           - how to use this script
