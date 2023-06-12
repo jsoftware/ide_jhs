@@ -60,8 +60,10 @@ echo "https://$ip:65101/jijx"
 ;;
 
 # $2 is path to folder with key.pem and cert.pem files
-pem)
+https)
 [ "$#" -ne 2 ] && echo "missing path to key/cert .pem files" && exit 1
+[ ! -f $2/cert.pem ] && echo "cert.pem not in path" && exit 1
+[ ! -f $2/key.pem ]  && echo "key.pem not in path"  && exit 1
 ./aws-sh run "rm .ssh/key.pem"
 ./aws-sh run "rm .ssh/cert.pem"
 ./aws-sh put $2/key.pem  .ssh/key.pem
