@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.360'
+VERSION=: '1.0.361'
 
 FILES=: 0 : 0
 app/
@@ -34,6 +34,7 @@ jbinfo.ijs
 jfif.ijs
 jfile.ijs
 jfiles.ijs
+jcopy.ijs
 jfilesrc.ijs
 jgcp.ijs
 jijs.ijs

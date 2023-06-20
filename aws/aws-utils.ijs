@@ -10,16 +10,26 @@ echo 'JHS/nodejs servers killed and restarted'
 shell'./cloud-run.sh ',y,' &'
 )
 
-NB. upload 'a.tgz';'~user/temp';'1.ijs'
-NB. upload 'b.tgz';'~user';'config'
-NB. tar file created in in aws ~/Uploads folder
-NB.  and then downloaded to browser Download folder
-upload=: 3 : 0
-'name path source'=. y
-mkdir_j_'Uploads'
-name=. '~/Uploads/',name
-shell q__=: 'cd ',(dquote jpath path),' && tar czf ',name,' ',dquote source
-jhtml_jhs_ qq__=: '<div contenteditable="false"><a href="<file>" download>download: <file></a>'rplc'<file>';name
+NB. see jijx menu jfile>jcopy for put/get services
+NB. download 'a.tgz';'~user/temp/1.ijs'
+NB. download 'b.tgz';'~user/config'
+NB. tar file created on server in ~/uploads
+NB.  and then downloaded to browser downloads folder
+download=: 3 : 0
+'name source'=. y
+s=. jpath source
+i=. s i: '/'
+if. i=#s do.
+ p=. ''
+ s=. source
+else.
+ p=. dquote i{.s
+ s=. }.i}.s
+end. 
+mkdir_j_'~/uploads'
+file=. '~/uploads/',name
+shell 'cd ',p,' && tar czf ',file,' ',dquote s
+jhtml_jhs_ '<div contenteditable="false"><a href="<file>" download>download: <name></a>'rplc'<file>';file;'<name>';name
 )
 
 NB. shutdown args same as for terminal command shutdown
