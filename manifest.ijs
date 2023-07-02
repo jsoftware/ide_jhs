@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.361'
+VERSION=: '1.0.362'
 
 FILES=: 0 : 0
 app/
