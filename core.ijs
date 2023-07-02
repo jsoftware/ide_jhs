@@ -523,7 +523,7 @@ cookie=: 'jcookie=',":{:6!:0''
 input_jfe_=: input_jhs_  NB. only use jfe locale to redirect input/output
 output_jfe_=: output_jhs_
 
-if. AUTO *. UNAME-:'Linux' do. NB. require linux manual start if no setsid
+if. AUTO *. (<UNAME)e.'Linux';'FreeBSD';'OpenBSD' do. NB. require linux manual start if no setsid
  try. 2!:0'which setsid' catch. echo setsid[AUTO=: 0 end.
 end. 
 
@@ -531,7 +531,7 @@ if. AUTO do.
  url=. 'http://<LOCALHOST>:<PORT>/jijx'hrplc'LOCALHOST PORT';LOCALHOST;":PORT
  select. UNAME
  case. 'Win'    do. shell_jtask_'start ',url
- case. 'Linux'  do.
+ case. 'Linux';'FreeBSD';'OpenBSD'  do.
   if. (0;'') -.@e.~ <2!:5 'DISPLAY' do.
    assert. *#t=. dfltbrowser_j_''
    2!:0 'setsid ',t,' ',url,' </dev/null >/dev/null 2>&1 &'
@@ -679,7 +679,7 @@ end.
 getexternalip=: 3 : 0
 z=. >2{sdgethostbyname_jsocket_ >1{sdgethostname_jsocket_''
 if. ('255.255.255.255'-:z) +. (';.'-:6{.z) +. '192.168.'-:8{.z do.
- if. UNAME-:'Linux' do.
+ if. (<UNAME)e.'Linux';'FreeBSD';'OpenBSD' do.
   a=. , 2!:0 ::_1: 'wget -q --timeout=3 --waitretry=0 --tries=3 --retry-connrefused -O - http://www.checkip.org/'
  elseif. UNAME-:'Darwin' do.
   a=. , 2!:0 ::_1: 'curl -s --max-time 7 -o - http://www.checkip.org/'
