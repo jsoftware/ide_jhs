@@ -290,16 +290,6 @@ f=. >{.(d=m)#f#a
 ('~',f,m}.>p) NB. rplc '~home/';'~/'
 )
 
-NB. new ijs temp filename
-jnew=: 3 : 0
-d=. 1!:0 jpath '~temp\*.ijs'
-a=. 0, {.@:(0&".)@> _4 }. each {."1 d
-a=. ": {. (i. >: #a) -. a
-f=. <jpath'~temp\',a,'.ijs'
-'' 1!:2 f
->f
-)
-
 logclear=: 3 : ''''' 1!:2 logappfile'
 
 NB. log timestamp

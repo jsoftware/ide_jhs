@@ -150,6 +150,8 @@ f=. <jpath'~temp\',a,'.ijs'
 >f
 )
 
+NB. 1+ >./0,;0 ". each _4}.each {."1 d
+
 NB. jdoajax load/loadd need response - mimic jijx
 urlresponse=: 3 : 0
 jhrajax''
