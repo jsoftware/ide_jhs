@@ -85,15 +85,10 @@ else.
 end.
 )
 
-NB. next ijs temp file number
-nexttemp=: 3 : 0
->./;0".each _4}.each{."1 [1!:0 jpath '~temp\*.ijs'
-)
-
 NB. refresh response - not jajax
 create=: 3 : 0
 uplog''
-'jijx' jhr 'LOG IJS';LOG;":nexttemp''
+'jijx' jhr 'LOG';LOG
 )
 
 ev_advance_click=: 3 : 0
@@ -181,7 +176,7 @@ t=. t,'jpacman'jhmab'jpacman'
 t=. t,'jdebug' jhmab'jdebug'
 
 if. 1=#gethv'node-jhs:' do.
- t=. t,'jlogoff' jhmab'logoff'
+ NB. t=. t,'jlogoff' jhmab'logoff'
  t=. t,'jbreak'  jhmab'break'
 end.
 
@@ -471,13 +466,9 @@ function ev_jfiles_click(){linkclick("jfiles");}
 function ev_jfif_click(){linkclick("jfif");}
 function ev_jpacman_click(){linkclick("jpacman");}
 function ev_jijx_click(){linkclick("jijx");}
+var jijsnum=0;
+function ev_jijs_click(){linkclick("jijs?"+jijsnum);jijsnum+=1;} 
 function ev_framework_click(){linkclick("jdoc");}
-
-function ev_jijs_click(){
- id= jbyid('ijs');
- id.value= 1+parseInt(id.value)+'';
- linkclick("jijs?jwid=~temp/"+id.value+".ijs")
-} 
 
 function ev_f_shortcut(){ev_jfile_click();}
 function ev_k_shortcut(){ev_jfiles_click();}
@@ -544,12 +535,7 @@ function ev_close_click(){
  for(let i = 0; i < allwins.length; i++) {allwins[i].jscdo("close");}
  allwins_clean();
  
- if(noexit==1)
- {
-  updatelog('<div class="log"><b><font style="color:red;"><br>JHS server still running. Can not close this page with red button.</font></b><br></div>')
-  updatelog('<div id="prompt" class="log">&nbsp;&nbsp;&nbsp;</div>')
-  return;
- }
+ if(noexit==1){ev_jlogoff_click();return;t}
  
  if(0==allwins.length)
  {

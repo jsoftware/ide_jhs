@@ -143,8 +143,8 @@ end.
 NB. new ijs temp filename
 jnew=: 3 : 0
 d=. 1!:0 jpath '~temp\*.ijs'
-a=. 0, {.@:(0&".)@> _4 }. each {."1 d
-a=. ": {. (i. >: #a) -. a
+a=. ":>:>./0, {.@:(0&".)@> _4 }. each {."1 d
+NB. a=. ": {. (i. >: #a) -. a
 f=. <jpath'~temp\',a,'.ijs'
 '' 1!:2 f
 >f
