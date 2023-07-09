@@ -225,11 +225,7 @@ function isdirty(){return 0!=allwins.length;}
 
 var setvkb = function()
 {
- var sx = document.body.scrollLeft, sy = document.body.scrollTop;
- var naturalHeight = window.innerHeight;
- window.scrollTo(sx, document.body.scrollHeight);
- VKB= naturalHeight - window.innerHeight;
- window.scrollTo(sx, sy);
+ VKB= window.innerHeight - window.visualViewport.height;
  jresize();
 }
 
