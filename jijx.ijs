@@ -214,6 +214,8 @@ function ev_body_focus(){if(!jisiX)setTimeout(ev_2_shortcut,TOT);}
 
 function ev_body_load()
 {
+
+ if(jisiX){visualViewport.onresize = onvpresize;}
  jijxwindow= window;
  window.name= "jijx";
  jseval(false,jbyid("log").innerHTML); // redraw canvas elements
@@ -221,29 +223,23 @@ function ev_body_load()
  jresize();
 }
 
-function isdirty(){return 0!=allwins.length;}
-
-var setvkb = function()
-{
- VKB= window.innerHeight - window.visualViewport.height;
- jresize();
+// iX devices only
+function onvpresize(){
+   VKB= (VKB==0)?window.innerHeight-window.visualViewport.height : 0;
+   jresize();
+   // scrollz/scrollintoview is required -scrollz without setcaret
+   //setfocus(); // required by ff
+   if(null==jbyid("prompt"))return;
+   jbyid("prompt").scrollIntoView(false);
 }
+
+function isdirty(){return 0!=allwins.length;}
 
 function setfocus(){jbyid("log").focus();}
 
-// iX must get VKB and resize when log gets focus
-// iX does not call onfocus the first time - so we also do setvkb in enter
-function jecfocus()
-{
- if(jisiX)
- { 
-  setTimeout(setvkb(),TOT);
-  setTimeout(scrollz(),TOT);
- }
-}
-
-// iX must get VKB and resize when log loses focus
-function jecblur(){if(jisiX)setTimeout(setvkb(),TOT);}
+// iX - replaced by onvpresize - eventually kill off setting handlers for ecfocus/ecblur
+function jecfocus(){}
+function jecblur(){;}
 
 // remove id - normally 1 but could be none or multiples
 // remove id parent if removal of id makes it empty
@@ -346,7 +342,6 @@ function ev_dn_click(){darrow();}
 function ev_log_enter()
 {
  var t,sel,rng,tst,n,i,j,k,p,q,recall=0,name;
- if(jisiX)setvkb();
  if(window.getSelection)
  {
   sel= window.getSelection();
