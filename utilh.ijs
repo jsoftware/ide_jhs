@@ -40,55 +40,62 @@ NB. later defintions have effect
 NB. only affect initial display - .text[value="foo"] does not work as contents change
 CSSCORE=: 0 : 0
 *,*::before,*::after {box-sizing: border-box;}
-html,body,form {height: 100%;margin: 0;}
+html,body,form {height:100%;margin:0;}
 body{min-height: 100vh;display: flex;flex-flow: column;}
 form{min-height: 100vh;display: flex;flex-flow: column;}
 #jflexcol{display: flex; flex-flow: column; flex: 1; height:100%;}
 #jflexrow{display: flex; flex-flow: row   ; flex: 1; width: 100%;}
 *{font-family:<PC_FONTVARIABLE>;}
 *.jcode{font-family:<PC_FONTFIXED>;white-space:pre;}
+
 *.jhab:hover{cursor:pointer;color:black;background:#ddd;}
 *.jhab{text-decoration:none;}
-*.jhmab:hover{cursor:pointer;background:<PC_MENU_HOVER>;}
-*.jhmab{text-decoration:none;color:black;}
-*.jhmab:focus{background-color:<PC_MENU_FOCUS>}
-*.jhmg:hover{cursor:pointer;background:<PC_MENU_HOVER>;}
-*.jhmg:visited{color:black;}
-*.jhmg{color:black;background:#eee;}
-*.jhmg{text-decoration:none;}
-*.jhmg:focus{background-color:<PC_MENU_FOCUS>}
-*.jhml{color:black;}
-*.jhml:visited{color:black;}
+
 *.jhsel{background-color:buttonface;font-family:<PC_FONTFIXED>;}
-body{margin:0;}
 div{padding-left:2px;}
-.menu li{
- display:block;white-space:nowrap;
- padding:2px;color:#000;background:#eee;
- font-family:<PC_FONTFIXED>;
-}
-.menu a{font-family:<PC_FONTFIXED>;}
-.menu a:hover{cursor:pointer;color:#000;background:<PC_MENU_HOVER>;width:100%;}
-.menu span{float:left;position:relative;}
-.menu ul{
- position:absolute;top:100%;left:0%;display:none;
- list-style:none;border:1px black solid;margin:0;padding:0;
-}
+
 #jresizeb{overflow:scroll;border:solid;border-width:1px;clear:left;}
+
 #status-busy{
  position: absolute; top: 0px; left: 70%; border: thick red solid; margin: 20px; padding: 10px;
  display: none; background: white;
  text-align:center;
 }
-.jhtitle{margin-left:0px;font-size:16pt;}
+
+.jhtitle{margin-left:0px;font-size:2em;}
 .jhchklabel{padding:0px;margin:1px 10px 1px 0px;background-color:white; border:0px solid black;}
 .jhchk{margin: 0px; transform: scale(0.6); border: 5px solid blue;background-color: <PC_BUTTON>; border-radius: 25%;}
 .jhrad{margin: 0px; transform: scale(0.6); border: 5px solid blue;background-color: <PC_BUTTON>; border-radius:100%;}
-.jhb  {margin: 2px; padding: 0px; background-color: <PC_BUTTON>;border: 2px solid black;}
+.jhb  {color:black;margin: 2px; padding: 0px; background-color: <PC_BUTTON>;border: 2px solid black;}
 .jhb#close{background-color:red;position:fixed;top:0;right:0;margin:0px;padding-left:8px;padding-right:8px;} /* quit esc-q button */
 input[type=text]{padding: 0px; margin: 2px; border: 1px solid black;}
-/* *.jhtext{border: 4px solid red !important;} */
 input[type=password]{padding: 0px; margin: 2px; border: 1px solid black;}
+
+.menu span{float:left;position:relative;}
+.menu a{display:inline-block;font-family:<PC_FONTFIXED>;color:black;text-decoration:none;background-color:#eee;border:0px solid black;padding:0px;width:100%;margin:0;}
+.menu a:focus{background-color:<PC_MENU_FOCUS>}
+.menu a:hover{cursor:pointer;background-color:<PC_MENU_HOVER>}
+.menu ul{position:absolute;top:100%;left:0%;display:none;list-style:none;border:0;padding:0;margin:0;}
+.menu li{display:block;white-space:nowrap;border:0;padding:0px;}
+
+/* tablet */
+@media screen and (max-device-width: 992px){
+ *{font-size:24px;}
+ .menu a{min-height:2em;min-width:2em;padding-top:0.5em;}
+ .jhab{display:inline-block;min-height:2em;min-width:2em;}
+ .jhb{min-height:2em;min-width:2em;}
+ input::file-selector-button{font-size:24px;color:green;}
+}
+
+/* phone */
+@media screen and (max-device-width: 640px){
+ *{font-size:48px}
+ .menu a{min-height:2.5em;min-width:2.5em;}
+ .jhab{display:inline-block;min-height:2.5em;min-width:2.5em;}
+ .jhb{min-height:2.5em;min-width:2.5em;}
+ input::file-selector-button{font-size:48px;color:red;} /*min-height:180px;min-width:180px;*/
+}
+
 )
 
 NB. extra html - e.g. <script .... src=...> - included after CSS and before JSCORE,JS
@@ -412,7 +419,7 @@ NB. HBS is LF delimited list of sentences
 NB. jhbs returns list of sentence results
 jhbs=: 3 : 0
 t=. <;._2 y
-t=. ;jhbsex each t
+t=. LF,~LF,~LF,;jhbsex each t
 i=. 1 i.~'</div><div id="jresizeb">'E.t
 if. i~:#t do.
  t=. '<div id="jresizea">',t,'</div>'
@@ -424,7 +431,7 @@ t=. '<div>',t,'</div>' NB. all in a div - used by flex
 
 jhbsex=: 3 : 0
 try.
- t=. }.' ',,".y NB. need lit list
+ t=. LF,}.' ',,".y NB. need lit list
 catch.
  smoutput t=.'HBS error:',(>coname''),' ',y
  t=.'<div>',t,'</div>'
@@ -767,7 +774,7 @@ MSTATE=:1[MINDEX=:100
 NB.* jhmz*jhmz'' - menu end
 jhmz=: 3 : 0
 MSTATE=:0
-'</ul></span></div><br>'
+'</ul></span></div><br style="clear:both"/>'
 )
 
 NB.* jhresize*jhresize'' - separate fixed div from resizable div

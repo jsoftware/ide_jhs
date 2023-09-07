@@ -9,7 +9,7 @@ NB. J event handler is ev_mid_type
 NB. easy to have a single handler for different events
 HBS=:  0 : 0
         jhclose''                      NB. redbar close    
-        jhhn 3;'pswd app - no javascript' NB. header size 3
+'head'  jhhn 3;'pswd app - no javascript' NB. header size 3
 'pswd'  jhspan '&nbsp;'                NB. pswd text - non-breaking space
         jhhr                           NB. html horizonatal rule
 'len'   jhspan'length: ',":length

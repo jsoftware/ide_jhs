@@ -25,12 +25,14 @@ end.
 fx=: 3 : 0
 s=. ;shorts_jsp_ y
 t=. jshortname y
-(('file*',jurlencode t)jhab s),(;(1>.20-#s)#<'&nbsp;'),y,'<br>'
+f=. ;(1>.10-#s)#<'&nbsp;'
+(('file*',jurlencode t)jhb s,f,t),jhbr
 )
 
 CSS=: 0 : 0
 #jfiles{color:blue}
 *{font-family:<PC_FONTFIXED>;}
+.jhb[id^="file*"]{text-align:left;background:white;border:0;}
 )
 
 JS=: jsfcommon,0 : 0

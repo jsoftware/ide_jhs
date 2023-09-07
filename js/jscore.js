@@ -5,7 +5,7 @@ var JASEP= '\1'; // delimit substrings in ajax response
 var jform;       // page form
 var jevev;       // event handler event object
 var jevtarget=null;   // event handler target object
-var jisiX    = iOS();
+// var jisiX    = iOS();
 var VKB      = 0;  // iX kb height
 var LS= location.href; // localStorage key
 var i= LS.indexOf("#");
@@ -32,12 +32,14 @@ window.addEventListener('beforeunload', function (e) {
   e.returnValue = ''; // Chrome requires returnValue to be set
 });
 
+/*
 function iOS() {
  return ['iPad Simulator','iPhone Simulator','iPod Simulator','iPad','iPhone','Pod'
   ].includes(navigator.platform)
   ||
   (navigator.userAgent.includes("Mac") && "ontouchend" in document)
 }
+*/
 
 //* jbyid(id)
 function jbyid(id){return document.getElementById(id);}
@@ -67,7 +69,6 @@ function jsetchk(id,v){
   for (let i = 0; i < d.length; i++) jsetchk(d[i].id,0);
  }
  b.style.backgroundColor= (v==1)?PC_CHECK1_BACKGROUND:PC_CHECK0_BACKGROUND;
- //! b.value= (v==1)?"+":"-"
 }
 
 //* jflipchk(id)
@@ -456,7 +457,6 @@ function jpostargs(ids)
  return t;
 }
 
-//! jencode
 function jencode(d){return(encodeURIComponent(d)).replace("/%20/g","+");}
 
 // rprocess ajax response(s) from J
@@ -656,7 +656,7 @@ function keypress(ev)
 {
  var e=window.event||ev;
  var c=e.charCode||e.keyCode;
- if(jisiX&&e.key=='è'){jsc=!jsc;return false;}  // esc shortcut - letter e + slide up
+ // if(jisiX&&e.key=='è'){jsc=!jsc;return false;}  // esc shortcut - letter e + slide up
  var s= String.fromCharCode(c);
  if(!jsc)return true;
  jsc=0;

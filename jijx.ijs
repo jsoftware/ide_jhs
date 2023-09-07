@@ -43,7 +43,7 @@ jhjmlink''
  'helphelp'          jhmab'807 html legacy'
  'wiki'              jhmab'wiki look up'
  'about'             jhmab'about'
-'adv'jhmg '>';0;10
+'adv'   jhmg '>';0;10
 jhmz''
 jhresize''
 'log' jhec'<LOG>'
@@ -200,8 +200,7 @@ form{margin-top:0;margin-bottom:0;}
 NB. *#log:focus{border:1px solid red;}
 NB. *#log:focus{outline: none;} /* no focus mark in chrome */
 
-JS=: 0 : 0 rplc'<NOEXIT>';":NOEXIT
-var noexit=<NOEXIT>;
+JS=: 0 : 0
 var allwins= []; // all windows created by jijx
 var phead= '<div id="prompt" class="log">';
 var ptail= '</div>';
@@ -210,12 +209,11 @@ var TOT= 1;     // timeout time to let DOM settle before change
 //var TOT= 100; // might need more time on slow devices???
 var wjdebug= null; // jdebug window object
 
-function ev_body_focus(){if(!jisiX)setTimeout(ev_2_shortcut,TOT);}
+function ev_body_focus(){setTimeout(ev_2_shortcut,TOT);}
 
 function ev_body_load()
 {
-
- if(jisiX){visualViewport.onresize = onvpresize;}
+ if(window.visualViewport) window.visualViewport.onresize = onvpresize;
  jijxwindow= window;
  window.name= "jijx";
  jseval(false,jbyid("log").innerHTML); // redraw canvas elements
@@ -526,7 +524,9 @@ function ev_close_click(){
  for(let i = 0; i < allwins.length; i++) {allwins[i].jscdo("close");}
  allwins_clean();
  
- if(noexit==1){ev_jlogoff_click();return;t}
+ 
+ // do not exit for cliens on other machines
+ if(location.hostname!='localhost' && location.hostname!='127.0.0.1'){jijxrun("jlogoff_jijx_''");return;}
  
  if(0==allwins.length)
  {

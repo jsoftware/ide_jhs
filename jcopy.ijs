@@ -8,16 +8,16 @@ NB. sentences that define html elements
 HBS=: 0 : 0
 jhfcommon''
 'puttitle'    jhtitle 'copy client file xxx to server ~/uploads/xxx'
-'put'      jhb 'put'
 '<input id="fileupload" type="file" name="fileupload" />'
 'putf'     jhhidden''
 'putrep'   jhdiv'&nbsp;'
+'put'      jhb 'put'
 '<hr>'
 'gettitle'    jhtitle 'copy server file ~/uploads/xxx to client downloads'
-'get'      jhb 'get'
 'selspan' jhspan 'getsel'jhselect ((#jpath'~/uploads/')}.each 1 dir'~/uploads/');1;0
 'refresh'  jhb'refresh select list'
 'getrep'   jhdiv'&nbsp;'
+'get'      jhb 'get'
 )
 
 create=: 3 : 0

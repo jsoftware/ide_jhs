@@ -369,11 +369,11 @@ PORT=:   65001       NB. private port range 49152 to 65535
 USER=:   ''          NB. 'john' - login
 PASS=:   ''          NB. 'abra' - login
 TIPX=:   ''          NB. tab title prefix - distinguish sessions
-AUTO=:   1           NB. start browser (if necessary) and browse to http:/localhost:PORT/jijxNOEXIT=: 1
-NOEXIT=: 0           NB. jijx red button close - if 1 then exit'' is not run
+AUTO=:   1           NB. start browser (if necessary) and browse to http:/localhost:PORT/jijx
 
 PC_FONTFIXED=:     '"courier new","courier","monospace"'
 PC_FONTVARIABLE=:  '"sans-serif"'
+PC_FONTSIZES=:     '"640 48px 820 36px"' NB. w0 css0 w1 css1 ...
 PC_BOXDRAW=:       0        NB. 0 utf8, 1 +-, 2 oem
 
 PC_BUTTON=:        'lightgrey'
@@ -484,8 +484,8 @@ if. _1=nc<'OKURL' do. OKURL=: '' end. NB. URL allowed without login
 
 NB. leading &nbsp; for Chrome delete all
 welcome=: 0 : 0
-<div>&nbsp;<font style="font-size:16px; color:red;" >J Http Server</font>
-<br/><font style="font-size:12px; color:red;" >
+<div>&nbsp;<font style="font-size:2em; color:red;" >J Http Server</font>
+<br/><font style="color:red;" >
 menu>tour>overview : good place to start
 </font></div>
 )
