@@ -159,7 +159,7 @@ NB. y is user
 starttask=: 3 : 0
 t=. '-js "load''~addons/ide/jhs/core.ijs''" "init_jhs_''',y,'''"'
 if. IFUNIX do.
- 2!:1 ('"',jpath'~bin/jconsole'),'" ',t,' &'
+ 2!:1 q__=: ('"',jpath'~bin/jconsole'),'" ',t,' &'
 else.
  doscmd ('"',jpath'~bin/jconsole.exe'),'"  ',t
 end.

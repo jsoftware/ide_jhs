@@ -525,8 +525,14 @@ function ev_close_click(){
  allwins_clean();
  
  
- // do not exit for cliens on other machines
- if(location.hostname!='localhost' && location.hostname!='127.0.0.1'){jijxrun("jlogoff_jijx_''");return;}
+ // do not exit for clients on other machines
+ if(location.hostname!='localhost' && location.hostname!='127.0.0.1'){
+  if(-1==document.cookie.indexOf('jhs-cookie='))
+   jijxrun("jlogoff_jijx_''"); // nodejs https
+  else
+   ev_jlogoff_click();         // lan http
+  return;
+ }
  
  if(0==allwins.length)
  {
