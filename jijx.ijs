@@ -526,11 +526,13 @@ function ev_close_click(){
  
  
  // do not exit for clients on other machines
+ // lan    http  jcookie= 
+ // nodejs https jhs_cookie= - not in document.cookie because of httponly
  if(location.hostname!='localhost' && location.hostname!='127.0.0.1'){
-  if(-1==document.cookie.indexOf('jhs-cookie='))
-   jijxrun("jlogoff_jijx_''"); // nodejs https
+  if(-1==document.cookie.indexOf('jcookie='))
+   ev_jlogoff_click();         // nodejs
   else
-   ev_jlogoff_click();         // lan http
+   jijxrun("jlogoff_jijx_''"); // lan
   return;
  }
  
