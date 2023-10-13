@@ -12,7 +12,7 @@ t=`pwd` could be passed as parameter
 
 *** guest run/test on local
 jconsole
-   load'git/jplay/node_util.ijs'
+   load'~addons/ide/jhs/guest/node_util.ijs'
    start_jplay''
 
 browse: https://localhost:65101/
