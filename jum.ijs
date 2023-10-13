@@ -165,6 +165,19 @@ else.
 end.
 )
 
+NB.!
+starttask=: 3 : 0
+t=. '-js "load''~addons/ide/jhs/core.ijs''" "PORT_jhs_=:65002" "USER_jhs_=:''ericx''" "PASS_jhs_=:''ericx''" "AUTO_jhs_=:0" "init_jhs_''''"'
+t=. '-js "load''~addons/ide/jhs/core.ijs''" "PORT_jhs_=:65003" "USER_jhs_=:''''" "PASS_jhs_=:''''" "AUTO_jhs_=:0" "init_jhs_''''"'
+if. IFUNIX do.
+ 2!:1 q__=: ('"',jpath'~bin/jconsole'),'" ',t,' &'
+else.
+ doscmd ('"',jpath'~bin/jconsole.exe'),'"  ',t
+end.
+)
+
+
+
 NB. & at end of command is critical
 unixshell=: 3 : 0
 smoutput y

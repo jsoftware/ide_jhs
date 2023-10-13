@@ -494,7 +494,7 @@ function jdor()
    else
    {
     var t;
-    if(0!=rq.statue)
+    if(0!=rq.status)
     {
      t="ajax request failed\n";
      t+=   "response code "+code+"\n";

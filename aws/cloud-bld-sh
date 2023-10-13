@@ -20,3 +20,6 @@ sudo chmod 644 .ssh/cert.pem
 # install nodejs
 sudo yum -y install nodejs
 echo `which node` > nodebin
+
+
+
