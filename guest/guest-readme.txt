@@ -5,11 +5,6 @@ jhs guest server
 
 confusion between server.html jlogin and jlogon and 403 response
 
-*** next todo
-kill off /home/eric and git/jplay in scripts
-consider creating soft links in /home/p...
-t=`pwd` could be passed as parameter
-
 *** guest run/test on local
 jconsole
    load'~addons/ide/jhs/guest/node_util.ijs'

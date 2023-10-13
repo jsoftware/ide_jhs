@@ -17,5 +17,7 @@ shell_jtask_'rm jc ; ln -s j9.4/bin/jconsole jc'
 load'~addons/ide/jhs/guest/node.ijs' NB.! load'~addons/ide/jhs/node.ijs'
 shell_jtask_'echo `which node` > nodebin'
 startJHS_jhs_''
-startNODE_jhs_ 65101;'/home/eric/git/addons/ide/jhs/node';'frown';'--inspect';'/home/eric/git/jplay/guest'
+
+NB. startNODE_jhs_ 65101;'/home/eric/git/addons/ide/jhs/node';'frown';'--inspect';'/home/eric/git/jplay/guest'
+    startNODE_jhs_ 65101;'/home/eric/git/addons/ide/jhs/node';'frown';'--inspect';'/home/eric/git/addons/ide/jhs/guest/server'
 )
