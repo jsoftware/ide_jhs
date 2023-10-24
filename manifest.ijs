@@ -6,13 +6,14 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.368'
+VERSION=: '1.0.369'
 
 FILES=: 0 : 0
 app/
 aws/
 config/
 demo/
+guest/
 js/
 node/
 page/
