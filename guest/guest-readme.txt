@@ -1,5 +1,8 @@
 jhs guest server
 
+*** aws visudo
+need to update sudo file on cloud to allow guest to run
+
 *** ajax woes
 403 ajax response causes location="jlogin"
 
@@ -24,6 +27,7 @@ $ sudo userdel -r p65002
 *** edit sudoers to allow sudo without password
 $ sudo visudo
 eric ALL=(ALL:ALL) NOPASSWD: /home/eric/git/addons/ide/jhs/guest-sudo-sh
+ec2-user ALL=(ALL:ALL) NOPASSWD: /home/ec2-user/j9.4/addons/ide/jhs/guest-sudo-sh
 
 *** build it
 create aws machine

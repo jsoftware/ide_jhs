@@ -9,7 +9,7 @@ homebase=`pwd`
 case $1 in
  jhs)
 
-  if [ ! -d p$2 ]; then
+  if [ ! -d /home/p$2 ]; then
     sudo useradd -m p$2
   fi
 
