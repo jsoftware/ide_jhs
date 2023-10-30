@@ -1,5 +1,11 @@
 jhs guest server
 
+*** create multi-use J install
+$ sudo cp -r ~/j9.4 /j9.4
+$ sudo ln -s /j9.4 /j
+
+$ ln -s /home/eric/j9.4 /j
+
 *** aws visudo
 need to update sudo file on cloud to allow guest to run
 

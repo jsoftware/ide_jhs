@@ -32,8 +32,9 @@ lastlog=: 0
 rawlog''
 )
 
-path_key_cert=: jpath'~addons/ide/jhs/node'
-path_server=:   jpath'~addons/ide/jhs/guest/guest'
+NB. asssume /j soft link to j install
+path_key_cert=: '/j/addons/ide/jhs/node'
+path_server=:   '/j/addons/ide/jhs/guest/guest'
 
 NB.        node  ;               ; userkey  ; flags      ; quest.js    ; guests ; limit ; maxage
 nodeargs=: 65101 ; path_key_cert ; 'frown'  ; '--inspect'; path_server ; 3      ; 300    ; 60
