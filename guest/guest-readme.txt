@@ -7,8 +7,8 @@ confusion between server.html jlogin and jlogon and 403 response
 
 *** guest run/test on local
 jconsole
-   load'~addons/ide/jhs/guest/node_util.ijs'
-   start_jplay''
+   load'~addons/ide/jhs/guest/guest_util.ijs'
+   start nodeargs
 
 browse: https://localhost:65101/
 
@@ -18,12 +18,12 @@ debug> scripts
        exec('jhsport')
        watch('postdata')
 
-*** start guest jhs
- node exec('sudo git/jplay/guest-sudo-sh '+port)
+*** p65002 ... users created as required by guest-sudo-sh
+$ sudo userdel -r p65002
 
 *** edit sudoers to allow sudo without password
 $ sudo visudo
-eric ALL=(ALL:ALL) NOPASSWD: /home/eric/git/jplay/guest-sudo-sh
+eric ALL=(ALL:ALL) NOPASSWD: /home/eric/git/addons/ide/jhs/guest-sudo-sh
 
 *** build it
 create aws machine
@@ -34,19 +34,6 @@ $ ~/git/jplay/put.sh
 $ ./aws-sh run cloud-run-sh frown  # run node with server mods
 
 # consider change cloud-bld-sh to not do run if parameter is elided
-
-$ login blank - execsync "sudo runuser -u p65002 /jplay/startjhs"
-
-sudo runuser p65002
-   /jplay/jc
-  load'~addons/ide/jhs/core.ijs'
-  configdefault_jhs_''
-   PORT_jhs_=: 65002
-   AUTO_jhs_=: 0
-   init_jhs_''
-
-*** map client ip address to jhs port
-app.set('trust proxy', true), req.ip will return the real IP address even if behind proxy
 
 *** start nodejs server and jhs port servers
 .ssh questions
@@ -71,39 +58,3 @@ $ must kill all user processes before userdel will work
 $ userdel -r port65002
 $ kill processes ; rm /home/port -r * ; rm hidden ; start jhs again
 
-*** ip mapping
-server.js nodejs
-
-if !ipmap then all ips map to single 65001 port
-
-if ipmap then ip is added to iptable if necessary
- and ip maps to baseport+iptable i. ip
-
-once per day - all users deleted and server restarted with empty iptable
-
-if ip connects to port that is valid, but closed - report as closed - retry???
-
-ip beyond limit reports system full
-
-if ip reports busy
-
-var ip = req.connection.remoteAddress; // could avoid logon for localhost
-
-{
- req.headers['myip'] = ip;
- jhsreq(...
-}
-
-logon:
- user...
- pass...
- new or reconnect
-
-
-if no jhs_cookie then add to table and get port
-if    jhs_cookie then lookup and use port
-
-
-NOTE: all devices connecting to server from a lan have the same IP address
-
-how to distinguish users?

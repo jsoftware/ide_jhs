@@ -18,20 +18,22 @@
 </style>
 
 <body onload="load()"><div><h2>JHS</h2>
-<p>log in as user or log on as guest</p>
+<p>login as user or as guest</p>
 <hr/>  
-<button type="button" id="login" onclick="login()">log in as user</button>
+<button type="button" id="login" onclick="login()">login as user</button>
 key: <input type="password" id="key" value="" size="12">
 <hr/>
-<div id='status'></div>
+<div id='status'>STATUS</div>
 <hr/>
-<button type="button" id="guest" onclick="logon()">log on as quest</button>
+<button type="button" id="guest" onclick="logon()">login as quest</button>
 <p>
-A guest session is a JHS front end to a J engine running as a linux user. It terminates when it hits the limit of <b>60</b> minutes or if it uses excessive resources (e.g. cpu or disk space).<br/><br/>
+A guest session is a JHS front end to a J engine running as a linux user. It terminates when it hits the limit of <b>LIMIT</b> minutes or if it uses excessive resources (e.g. cpu or disk space).<br/><br/>
 
 This is a good way to learn about J. Run some tutorials and experiment before you take the step of installing on your own machine. With J on your machine you can run the same JHS front end or have a choice of jconsole or Jqt.<br/><br/>
 
-All files created during your session are deleted when the session ends. Use menu>file>jcopy to move files between the guest machine and your browser machine.<br/><br/>
+The session is maintained over a jijx close (esc+q) or browser close. A wait period is enforced before starting a new session.<br/><br/>
+
+All files created during the session are deleted when the session ends. Use menu>file>jcopy to move files between the guest machine and your browser machine.<br/><br/>
 
 Use jijx menu>jbreak to break out of a long running loop.
 </p>
@@ -66,11 +68,12 @@ function ajax()
   if(rq.readyState==4)
   {
     busy= 0;
-    if("valid"==rq.responseText)
+    var t= rq.responseText;
+    if("valid"==t)
      setTimeout(gojijx,1000); // timeout to let server spin up
     else
     {
-     byid('status').innerHTML= (idv('key')=='') ? 'all guest ports busy (try again later)' :'wrong key' ;
+     byid('status').innerHTML= t;
      idvs('key','');
      byid('key').focus();
     }

@@ -370,6 +370,7 @@ USER=:   ''          NB. 'john' - login
 PASS=:   ''          NB. 'abra' - login
 TIPX=:   ''          NB. tab title prefix - distinguish sessions
 AUTO=:   1           NB. start browser (if necessary) and browse to http:/localhost:PORT/jijx
+NOEXIT=: 0           NB. 1 to avoid esc+q exit''
 
 PC_FONTFIXED=:     '"courier new","courier","monospace"'
 PC_FONTVARIABLE=:  '"sans-serif"'

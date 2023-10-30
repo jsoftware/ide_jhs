@@ -126,6 +126,17 @@ echo'Copyright 1994-2022 Jsoftware Inc.'
 jhtml'<hr/>'
 )
 
+ev_close_click=: 3 : 0
+a=. '<div id="prompt" class="log"><b><font style="color:red;"><br>'
+b=. '</font></b></div>'
+if. NOEXIT do.
+ jhrajax a,'JHS server not closed. Page disabled.',b
+else.
+ jhrajax a,'JHS server closed. Page disabled.',b
+ exit''
+end.
+)
+
 tour=: 4 : 0
 jhtml'<hr>'
 echo x
@@ -523,29 +534,16 @@ function ev_close_click(){
  allwins_clean();
  for(let i = 0; i < allwins.length; i++) {allwins[i].jscdo("close");}
  allwins_clean();
- 
- 
- // do not exit for clients on other machines
- // lan    http  jcookie= 
- // nodejs https jhs_cookie= - not in document.cookie because of httponly
- if(location.hostname!='localhost' && location.hostname!='127.0.0.1'){
-  if(-1==document.cookie.indexOf('jcookie='))
-   ev_jlogoff_click();         // nodejs
-  else
-   jijxrun("jlogoff_jijx_''"); // lan
-  return;
- }
- 
- if(0==allwins.length)
- {
-  updatelog('<div id="prompt" class="log"><b><font style="color:red;"><br>JHS server for this page has exited.</font></b></div>')
-  jijxrun("exit''")
-  // kill all page events
-  document.addEventListener("click", deadhandler, true);
-  document.addEventListener("keyup", deadhandler, true);
-  document.addEventListener("keypress", deadhandler, true);
-  document.addEventListener("keydown", deadhandler, true);
- }
+ jdoajax([]);
+}
+
+function ev_close_click_ajax(ts){ 
+ updatelog(ts);
+ // kill all page events
+ document.addEventListener("click", deadhandler, true);
+ document.addEventListener("keyup", deadhandler, true);
+ document.addEventListener("keypress", deadhandler, true);
+ document.addEventListener("keydown", deadhandler, true);
 } 
 
 function deadhandler(e) {
