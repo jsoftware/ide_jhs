@@ -15,8 +15,8 @@ var t= process.argv[1];
 const guestpath= t.substring(0,t.lastIndexOf('/')+1); // path to guest folder
 
 var a= process.argv.slice(2);
-const nodeport=a[0];const key=a[1];const jhsport=a[2];const breakfile=a[3];const pem=a[4];
-const guests= a[5];const limit= a[6];const maxage= a[7];
+const nodeport=a[0];const key=a[1];const jhsport=a[2];const breakfile=a[3];  //! a[4] unused - was pem
+const guests=parseInt(a[5]);const limit=parseInt(a[6]);const maxage=parseInt(a[7]);
 
 const https  = require('https');
 const http   = require('http');
@@ -37,11 +37,10 @@ var gtimes= Array(guests).fill(0); // 0 or time when port was allocated
 var gsnums= Array(guests).fill(0); // 0 or serial number of valid port
 var snum=1;
 
-//! clearquests and getguest should start at 0 not 1 - that is, not include log in user(s)
 // mark OLD ports as free
 function clearguests(){
  for (let i = 0; i < gtimes.length; i++) {
-  if(Date.now()>gtimes[i]+1000*limit){ gtimes[i]=0; gsnums[i]=0;}
+  if(Date.now()>gtimes[i]+(1000*limit)){ gtimes[i]=0; gsnums[i]=0;}
  }
 }
 
@@ -93,8 +92,10 @@ function replyhb(code,res,p)
 }
 
 const options = {
-  key: fs.readFileSync(pem+'/key.pem'),
-  cert: fs.readFileSync(pem+'/cert.pem'),
+  //key: fs.readFileSync(pem+'/key.pem'),
+  //cert: fs.readFileSync(pem+'/cert.pem'),
+  key:  fs.readFileSync('/jguest/jkey'),
+  cert: fs.readFileSync('/jguest/jcert'),
   'trust proxy': true
 };
 

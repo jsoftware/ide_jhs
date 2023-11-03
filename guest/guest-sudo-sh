@@ -17,14 +17,14 @@ case $1 in
 
   # aws server may have quota (man quota) and this could limit users disk usage
   limits="--cpu=30 --nofile=1000 --fsize=1000000000"
-  su -l -c "timeout $3 prlimit $limits /j/bin/jconsole /j/addons/ide/jhs/guest/guest.ijs $2 &" p$2
+  su -l -c "timeout $3 prlimit $limits /jguest/j/bin/jconsole /jguest/j/addons/ide/jhs/guest/guest.ijs $2 &" p$2
   ;;
 
  break)
   echo $1 > 'opx.txt'
   echo $2 > 'portx.txt'
 
-  su -l -c "/j/bin/jconsole -js break\'node\' exit\'\' " p$2
+  su -l -c "/jguest/j/bin/jconsole -js break\'node\' exit\'\' " p$2
   ;;
 
 esac

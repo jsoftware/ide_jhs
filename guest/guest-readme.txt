@@ -1,18 +1,21 @@
 jhs guest server
 
-*** create multi-use J install
-$ sudo cp -r ~/j9.4 /j9.4
-$ sudo ln -s /j9.4 /j
+*** pkexec
+$ pkexec visudo (or whatever) can recoved from damaged sudo
+$ pkexec rm /etc/sudoers.d jguest
 
-$ ln -s /home/eric/j9.4 /j
+*** nodejs debug
+desktop version 10.19.0 seems to be buggy with display of names
+breakpoint exec('guests')
+
+*** j server setup - create /jguest folder
+$ sudo git/addons/ide/jhs/guest/setup-sh j9.4
+
+allow guest-sudo-sh to run without passwd
+$echo "$USER ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/$USER
 
 *** aws visudo
 need to update sudo file on cloud to allow guest to run
-
-*** ajax woes
-403 ajax response causes location="jlogin"
-
-confusion between server.html jlogin and jlogon and 403 response
 
 *** guest run/test on local
 jconsole
@@ -32,8 +35,12 @@ $ sudo userdel -r p65002
 
 *** edit sudoers to allow sudo without password
 $ sudo visudo
+desktop requires following line to allow guest-sudo-sh to run
 eric ALL=(ALL:ALL) NOPASSWD: /home/eric/git/addons/ide/jhs/guest-sudo-sh
 ec2-user ALL=(ALL:ALL) NOPASSWD: /home/ec2-user/j9.4/addons/ide/jhs/guest-sudo-sh
+pke
+aws - does not require edit as the following is already in file /etc/sudoers.d/90-cloud-init-users
+ec2-user ALL=(ALL) NOPASSWD:ALL
 
 *** build it
 create aws machine

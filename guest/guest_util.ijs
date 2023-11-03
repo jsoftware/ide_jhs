@@ -32,16 +32,21 @@ lastlog=: 0
 rawlog''
 )
 
-NB. asssume /j soft link to j install
-path_key_cert=: '/j/addons/ide/jhs/node'
-path_server=:   '/j/addons/ide/jhs/guest/guest'
+NB. asssume /jguest/j soft link to j install
+path_server=:   '/jguest/j/addons/ide/jhs/guest/guest'
 
-NB.        node  ;               ; userkey  ; flags      ; quest.js    ; guests ; limit ; maxage
-nodeargs=: 65101 ; path_key_cert ; 'frown'  ; '--inspect'; path_server ; 3      ; 300    ; 60
+NB.        node  ;    ; userkey  ; flags      ; guest.js    ; guests ; limit ; maxage
+nodeargs=: 65101 ; '' ; 'frown'  ; '--inspect'; path_server ; 3      ; 300    ; 60
 
 NB. guest version of startNODE_jhs_
 startNODE=: 3 : 0
 'not from JHS'assert -.IFJHS
+
+NB. verify setup-sh has been run to create /jguest folder
+'/jguest/j j install folder does not exist'assert 2=ftype'/jguest/j'
+'/jquest/j/jcert' assert 1=ftype'/jguest/jcert'
+'/jguest/j/jkey'  assert 1=ftype'/jguest/jkey'
+
 'nodeport pem key flags server guests limit maxage'=. y
 'nodeport must be 65101'assert nodeport-:65101
 mkdir_j_ '~temp/jhsnode'
