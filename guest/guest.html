@@ -18,25 +18,32 @@
 </style>
 
 <body onload="load()"><div><h2>JHS</h2>
-<p>login as user or as guest</p>
+<p>login as guest or as user</p>
 <hr/>  
-<button type="button" id="login" onclick="login()">login as user</button>
-key: <input type="password" id="key" value="" size="12">
-<hr/>
 <div id='status'>STATUS</div>
 <hr/>
 <button type="button" id="guest" onclick="logon()">login as quest</button>
 <p>
-A guest session is a JHS front end to a J engine running as a linux user. It terminates when it hits the limit of <b>LIMIT</b> minutes or if it uses excessive resources (e.g. cpu or disk space).<br/><br/>
+A guest session runs JHS in your browser as front end to J running as your user task on a linux server.<br/><br/>
 
 This is a good way to learn about J. Run some tutorials and experiment before you take the step of installing on your own machine. With J on your machine you can run the same JHS front end or have a choice of jconsole or Jqt.<br/><br/>
 
-The session is maintained over a jijx close (esc+q) or browser close. A wait period is enforced before starting a new session.<br/><br/>
+A guest session ends when it:<br/>
+&bull;has run for <b>LIMIT</b> minutes<br/>
+&bull;is idle for <b>IDLE</b> minutes<br/>
+&bull;uses excessive resources (e.g. cpu or disk space)<br/><br/>
 
-All files created during the session are deleted when the session ends. Use menu>file>jcopy to move files between the guest machine and your browser machine.<br/><br/>
+Use jijx menu>jbreak to break out of a long running loop.<br/><br/>
 
-Use jijx menu>jbreak to break out of a long running loop.
+The session is maintained over a jijx close (esc+q) or browser close.<br/><br/>
+
+A wait is enforced before starting a new session.<br/><br/>
+
+All files created during the session are deleted when the session ends. Use jijx menu>file>jcopy to move files between the guest machine and your browser machine.
 </p>
+<hr/>
+<button type="button" id="login" onclick="login()">login as user</button>
+key: <input type="password" id="key" value="" size="12">
 </div>
 
 <script>
@@ -45,7 +52,7 @@ var busy= 0; // prevent new request until previous has completed
 
 function load()
 {
-  document.title= 'jlogon'
+  document.title= 'jserver'
   var input = byid("key");
   input.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {event.preventDefault(); byid("login").click();}

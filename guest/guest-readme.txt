@@ -1,46 +1,58 @@
 jhs guest server
 
-*** pkexec
-$ pkexec visudo (or whatever) can recoved from damaged sudo
-$ pkexec rm /etc/sudoers.d jguest
+*** https and firewall must allow nodeport
+browser: https://ip//nodeport/jserver
 
-*** nodejs debug
-desktop version 10.19.0 seems to be buggy with display of names
-breakpoint exec('guests')
+*** aws guest
+normal aws bld and the setup-sh to create /jguest folders
+setup-sh could be added to bld
+aws bld frown
+aws ssh
+$ sudo j9.4/addons/ide/jhs/guest/setup-sh j9.4
+aws already has "$USER ALL=(ALL:ALL) NOPASSWD: ALL" in sudoers.d file to avoid guest-sudo-sh password 
 
-*** j server setup - create /jguest folder
+$ /jguest/j/bin/jconsole
+   load'~addons/ide/jhs/guest/guest_util.ijs'
+   start nodeargs
+
+*** lan guest 
+depends on firewall allowing nodeport!
+
 $ sudo git/addons/ide/jhs/guest/setup-sh j9.4
+note: /jguest/j/addons/ide/jhs -> git/addons/ide/jhs
 
-allow guest-sudo-sh to run without passwd
-$echo "$USER ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/$USER
-
-*** aws visudo
-need to update sudo file on cloud to allow guest to run
-
-*** guest run/test on local
 jconsole
    load'~addons/ide/jhs/guest/guest_util.ijs'
    start nodeargs
 
 browse: https://localhost:65101/
 
-$ node inspect 127.0.0.1:9229
+$ v
 debug> scripts
        sb('guest',xx)
        exec('jhsport')
        watch('postdata')
 
+*** pkexec
+$ pkexec visudo can recover from damaged sudo
+$ pkexec rm /etc/sudoers.d jguest
+
+*** node debug
+desktop version 10.19.0 seems to be buggy with display of names
+breakpoint exec('guests')
+
+*** sudo
+lan guest requires edit to allow guest-sudo-sh to run - use visudo to add line:
+eric     ALL=(ALL:ALL) NOPASSWD: /jguest/j/addons/ide/jhs/guest-sudo-sh
+
+aws guest - does not require edit as it already has /etc/sudoers.d/90-cloud-init-users
+ec2-user ALL=(ALL) NOPASSWD:ALL
+
+possibly automate - following works but chmod 440 fails
+$ echo "$USER ALL=(ALL:ALL) NOPASSWD: /jguest/j/addons/ide/jhs/guest-sudo-sh" | sudo tee /etc/sudoers.d/jguest
+
 *** p65002 ... users created as required by guest-sudo-sh
 $ sudo userdel -r p65002
-
-*** edit sudoers to allow sudo without password
-$ sudo visudo
-desktop requires following line to allow guest-sudo-sh to run
-eric ALL=(ALL:ALL) NOPASSWD: /home/eric/git/addons/ide/jhs/guest-sudo-sh
-ec2-user ALL=(ALL:ALL) NOPASSWD: /home/ec2-user/j9.4/addons/ide/jhs/guest-sudo-sh
-pke
-aws - does not require edit as the following is already in file /etc/sudoers.d/90-cloud-init-users
-ec2-user ALL=(ALL) NOPASSWD:ALL
 
 *** build it
 create aws machine
@@ -51,27 +63,4 @@ $ ~/git/jplay/put.sh
 $ ./aws-sh run cloud-run-sh frown  # run node with server mods
 
 # consider change cloud-bld-sh to not do run if parameter is elided
-
-*** start nodejs server and jhs port servers
-.ssh questions
-
-#!./jc
-# avoid .suffix so git/pacman preserve eol lf on windows
-load'~addons/ide/jhs/node.ijs'
-startJHS_jhs_ ''
-startNODE_jhs_ 65101 ; '.ssh' ; {:ARGV NB. key
-exit''
-
-*** ssh
-$ sudo adduser eric
-$ sudo passwd eric
-$ sudo cp -r * /home/eric
-$ sudo cp -r .ssh /home/eric
-
-$ sudo adduser port65002
-$ sudo runuser port65002
-
-$ must kill all user processes before userdel will work
-$ userdel -r port65002
-$ kill processes ; rm /home/port -r * ; rm hidden ; start jhs again
 
