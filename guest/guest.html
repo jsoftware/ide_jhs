@@ -41,24 +41,13 @@ A wait is enforced before starting a new session.<br/><br/>
 
 All files created during the session are deleted when the session ends. Use jijx menu>file>jcopy to move files between the guest machine and your browser machine.
 </p>
-<hr/>
-<button type="button" id="login" onclick="login()">login as user</button>
-key: <input type="password" id="key" value="" size="12">
 </div>
 
 <script>
 var rq;    
 var busy= 0; // prevent new request until previous has completed
 
-function load()
-{
-  document.title= 'jserver'
-  var input = byid("key");
-  input.addEventListener("keyup", function(event) {
-    if (event.keyCode === 13) {event.preventDefault(); byid("login").click();}
-  });
-  input.focus(); //! causes false click - kill in ajax with bad cookie - ugh
-}
+function load(){document.title= 'jguest';byid('status').innerHTML= 'login required';}
 
 function ajaxrun(p)
 {
@@ -79,30 +68,15 @@ function ajax()
     if("valid"==t)
      setTimeout(gojijx,1000); // timeout to let server spin up
     else
-    {
      byid('status').innerHTML= t;
-     idvs('key','');
-     byid('key').focus();
-    }
   }
 }
 
 function gojijx(){window.location.href= "jijx";}
 
-function login(){
- key= idv('key');
- if(''==key) return; //! ignore false click from input.focus
- ajaxrun(encode("jserver-user?"+key));
-}
-
-function logon(){
- idvs('key','');
- ajaxrun(encode("jserver-guest?"));
-}
+function logon(){ajaxrun(encode("jserver-guest?"));}
 
 function byid(id){return document.getElementById(id);}
-function idv(id){return byid(id).value;}
-function idvs(id,v){byid(id).value=v;}
 function encode(d){return(encodeURIComponent(d)).replace("/%20/g","+");}
 </script>
 </body></html>

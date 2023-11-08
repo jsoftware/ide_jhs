@@ -32,13 +32,17 @@ const jhshost= "localhost";
 const cookiename= "jhs_cookie";
 const token=  crypto.randomBytes(16).toString("hex");
 
-var logonhtml= fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/guest.html'),'utf8'); // not const to allow dynamic changes
+var htmlguest= fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/guest.html'),'utf8').replace("LIMIT",limit/60).replace("IDLE",idle/60);
+var htmluser=  fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/user.html'),'utf8');
+var htmlbad=   fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/bad.html'),'utf8');
 
 var gstart= Array(guests).fill(0); // 0 or time when port was allocated
 var gsnums= Array(guests).fill(0); // 0 or serial number of valid port
 var genter= Array(guests).fill(0); // time of last enter
 var gcount= Array(guests).fill(0); // request count
 var snum=1;
+
+var usersnum=0; // detect user task requires exec to start server
 
 // mark OLD ports (limit) and IDLE ports (idle)  as free
 function clearguests(){
@@ -60,35 +64,43 @@ function getguest(){
 
 // cookie: token+snum+port+ontime
 function createcookie(port){
- let i= port-guestbase;
- gstart[i]=Date.now();
- genter[i]=gstart[i];
+ if(port==0) return NOC;
  snum= 1+snum;
- gsnums[i]= snum;
+ if(port==jhsport)
+  usersnum= snum; 
+ else
+ {
+  let i= port-guestbase;
+  gstart[i]=Date.now();
+  genter[i]=gstart[i];
+  snum= 1+snum;
+  gsnums[i]= snum;
+ }
  return token+'+'+snum+'+'+port+'+'+Date.now();
 }
-
-function gethtml(status){return logonhtml.replace("STATUS",status).replace("LIMIT",limit/60).replace("IDLE",idle/60)};
 
 // client reponse with text
 function replyx(code,res,p){res.writeHead(code, "OK", {'Content-Type': 'text/html'});res.end(p);}
 
 // client response with cookie and text
-function replyc(code,res,p,cval)
+function replyc(code,res,p,port)
 {
-  res.writeHead(code, "OK", {'Set-Cookie':cookiename+"="+cval+";Max-Age="+maxage+";Secure;Httponly",'Content-Type': 'text/html'});
-  res.end(p);
+ var cval= createcookie(port);
+ var max= (port>=guestbase)? ';Max-Age='+maxage : '';
+ var c= cval+max+";Secure;Httponly";
+ res.writeHead(code, "OK", {'Set-Cookie':cookiename+"="+c,'Content-Type': 'text/html'});
+ res.end(p);
 }
 
-// code 403 aborts ajax request which sets location /jserver
-// code 200 replies with page html with status set as p
+// code 403 aborts ajax request which sets location /jlogin
+// code 200 replies with bad.html
 function replynoc(code,res,p,port){
  // log('noc',code+' '+port+' '+p);
- if(code==200) p= gethtml(p);
+ if(code==200) p= htmlbad;
  replyx(code,res,p);
 }
 
-function markinvalid(port){if(jhsport!=port) gsnums[port-guestbase]= 0;}
+function markinvalid(port){if(jhsport!=port) gsnums[port-guestbase]= 0; else usersnum= 0;} //invalidate guest/user cookie
 function markenter(port)  {if(jhsport!=port){ var i= port-guestbase; genter[i]= Date.now(); ++gcount[i];}}
 
 // client response with headers and body string
@@ -99,15 +111,15 @@ function replyhb(code,res,p)
 }
 
 const options = {
-  //key: fs.readFileSync(pem+'/key.pem'),
-  //cert: fs.readFileSync(pem+'/cert.pem'),
   key:  fs.readFileSync('/jguest/jkey'),
   cert: fs.readFileSync('/jguest/jcert'),
   'trust proxy': true
 };
 
 const server = https.createServer(options, (req, res) => {
-  logonhtml= fs.readFileSync('/jguest/j/addons/ide/jhs/guest/guest.html','utf8'); //! dynamic changes
+  // htmlguest= fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/guest.html'),'utf8').replace("LIMIT",limit/60).replace("IDLE",idle/60);
+  // htmluser=  fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/user.html'),'utf8');
+  // htmlbad=   fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/bad.html'),'utf8');
   clearguests();
   var cval= get_cookies(req)['jhs_cookie'];
   if(typeof(cval)=='undefined') cval= NOC; 
@@ -117,9 +129,9 @@ const server = https.createServer(options, (req, res) => {
   var s= p[1];
   var port= p[2];
   var ontime= parseInt(p[3]); // time session started
-  var valid= port!=0 && c==token && s==gsnums[port-guestbase];
+  var valid= port!=0 && c==token && s==(  (port!=jhsport)?gsnums[port-guestbase]:usersnum );
   var url= decodeURIComponent(req.url);
-  var  ip= req.connection.remoteAddress; //! req.ip is express only
+  var  ip= req.connection.remoteAddress;
 
   if(req.method == 'POST')
   {
@@ -131,7 +143,7 @@ const server = https.createServer(options, (req, res) => {
 
       if("jserver-guest"==cmd) // validate log on as guest
       {
-         if(valid) // continue with valid quest
+         if(valid && port!=jhsport) // continue with valid quest
          {
           replyx(200,res,"valid"); // cookie stays the same
           return;
@@ -153,17 +165,16 @@ const server = https.createServer(options, (req, res) => {
          {
           log('guest',port,ip);
           cp.exec('sudo '+'/jguest/j/addons/ide/jhs/guest/guest-sudo-sh jhs '+port+' '+limit);
-          replyc(200,res,"valid",createcookie(port));
+          replyc(200,res,"valid",port);
          }
       }
       else if("jserver-user"==cmd) // validate logon key
       {
-         port= jhsport;
-         log('user',postdata.substring(7));
-         if(key==val)
-          replyc(200,res,"valid",createcookie(port));
-         else
-          replyx(200,res,"invalid key",port);
+         if(key!=val){replyx(200,res,"invalid key",jhsport); return;}
+         if(port==jhsport && usersnum==s){replyx(200,res,"valid",jhsport); return;}
+         log('user',jhsport,ip);
+         cp.exec('sudo '+'/jguest/j/addons/ide/jhs/guest/guest-sudo-sh user '+jhsport+' '+process.env.USER);
+         replyc(200,res,"valid",jhsport);
       }
       else if(!valid) replynoc(403,res,'login required',port);
       else if("jbreak"==cmd)
@@ -178,15 +189,12 @@ const server = https.createServer(options, (req, res) => {
   }
 
   // get
-  if(url=='/jlogin')
-  {
-   if(valid)
-    jhsreq("GET",jhshost,port,"/jijx","",req,res);
-   else
-    replynoc(200,res,'login required',port)
-  }
+  if(url=='/juser')        replyx(200,res,htmluser);
+  else if(url=='/jguest')  replyx(200,res,htmlguest);
+  else if(url=='/jlogoff') replyc(200,res,htmlbad,0);
+  else if(url=='/jlogin')  replyx(200,res,htmlbad);
   else if(url=="/favicon.ico") // favicon allowed even if not logged on
-    jhsreq("GET",jhshost,port,url,"",req,res); //! needs work - get node local copy???
+    jhsreq("GET",jhshost,port,url,"",req,res);
   else if(!valid)
    replynoc(200,res,'login required',port);
   else
@@ -231,7 +239,7 @@ async function jhsreq(gp,host,port,url,body,req,res)
  let promise= dorequest(gp,host,port,url,body,req);
  promise.then(good,bad);
  function good(data){replyhb(200,res,data);}
- function bad(data) {markinvalid(port);replynoc(403,res,'request failed',port);} //!
+ function bad(data) {markinvalid(port);replynoc(403,res,'request failed - code 403',port);}
 }
 
 function dorequest(gp,host,port,url,body,req){

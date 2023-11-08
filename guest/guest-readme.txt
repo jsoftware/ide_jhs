@@ -38,6 +38,7 @@ $ pkexec visudo can recover from damaged sudo
 $ pkexec rm /etc/sudoers.d jguest
 
 *** node debug
+$ node inspect localhost:9229
 desktop version 10.19.0 seems to be buggy with display of names
 breakpoint exec('guests')
 

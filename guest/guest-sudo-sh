@@ -1,7 +1,10 @@
 #!/bin/bash
-# $1 op - $2 port - $3 timeout
+# jhs   port timeout
+# user  port user
+# break port
+
 # can sudo without password
-# p$2 user created if required
+# jhs p$2 user created if required
 
 # depends on /j soft link to j install folder
 
@@ -18,6 +21,11 @@ case $1 in
   # aws server may have quota (man quota) and this could limit users disk usage
   limits="--cpu=30 --nofile=1000 --fsize=1000000000"
   su -l -c "timeout $3 prlimit $limits /jguest/j/bin/jconsole /jguest/j/addons/ide/jhs/guest/guest.ijs $2 &" p$2
+  ;;
+
+ user)
+  sudo fuser --kill -n tcp $2
+  su -l -c "/jguest/j/bin/jconsole /jguest/j/addons/ide/jhs/guest/guest.ijs $2 &" $3
   ;;
 
  break)

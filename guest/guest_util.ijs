@@ -1,4 +1,3 @@
-
 NB. utils for JHS guest server
 
 nodeout=: 'guest.log'
@@ -19,8 +18,6 @@ fread't.txt'
 )
 
 start=: 3 : 0
-load'~addons/ide/jhs/node.ijs' NB. startJHS
-startJHS_jhs_''
 startNODE y
 6!:3[1
 rawlog''
@@ -35,7 +32,7 @@ nodeargs=: 65101 ; 65001 ; 'frown'  ; '--inspect'; server   ; 3      ; 60    ; 1
 NB. guest version of startNODE_jhs_
 NB. nodeport is https port served by node
 NB. jhsport is jhs user port
-NB. jhsport+i.guests are jhs guest ports
+NB. jhsport+1+i.guests are jhs guest ports
 
 startNODE=: 3 : 0
 'not from JHS'assert -.IFJHS
@@ -63,8 +60,4 @@ a=. t rplc '<BIN>';bin;'<FLAGS>';flags;'<SERVER>';server;'<ARG>';arg;'<OUT>';nod
 echo a
 lastlog=: ''
 fork_jtask_ a
-if. _1=pidfromport_jport_ nodeport do. NB. pidfromport has delays
- echo a,LF,rawlog''
- 'NODE server failed to start' assert 0
-end. 
 )
