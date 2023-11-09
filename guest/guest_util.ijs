@@ -1,5 +1,17 @@
 NB. utils for JHS guest server
 
+man=: 0 : 0
+   default'' NB. set default args
+   seeargs''
+   setarg 'guests';10
+   seeargs''
+   getargs''
+   start getargs''[lan''
+   start getargs''[aws''
+)
+
+reload=: 3 : 'load ''/jguest/j/addons/ide/jhs/guest/guest_util.ijs'''
+
 nodeout=: 'guest.log'
 
 rawlog=: 3 : 'fread nodeout'
@@ -10,11 +22,55 @@ lastlog=: rawlog''
 (#t)}.lastlog
 )
 
-reload=: 3 : 'load ''/jguest/j/addons/ide/jhs/guest/guest_util.ijs'''
-
 ports=: 3 : 0
 shell_jtask_ :: [ 'sudo fuser -n tcp ',(":PORTS),' >t.txt 2>&1'
 fread't.txt'
+)
+
+default=: 3 : 0
+erase'A'nl 0
+A0_nodeport =: 65101
+A1_jhsport  =: 65001
+A2_key      =: 'frown' 
+A3_flags    =: '--inspect'
+A4_server   =: '/jguest/j/addons/ide/jhs/guest/guest'
+A5_guests   =: 3
+A6_limit    =: 60
+A7_maxage   =: 120
+A8_idle     =: 10
+i.0 0
+)
+
+seeargs=: 3 : 0
+n=. 'A'nl 0
+n,.".each n
+)
+
+setarg=: 3 : 0
+'name val'=: y
+n=. 'A'nl 0
+i=. (3}.each n)i.<name
+'invalid name'assert i<#n
+('A',(":i),'_',name)=: val
+i.0 0
+)
+
+getargs=: 3 : 0
+".each 'A'nl 0
+)
+
+lan=: 3 : 0
+default''
+seeargs''
+)
+
+aws=: 3 : 0
+default''
+setarg'guests';10
+setarg'limit' ;60*60
+setarg'maxage';70*60
+setarg'idle'  ; 5*60
+seeargs''
 )
 
 start=: 3 : 0
@@ -23,17 +79,10 @@ startNODE y
 rawlog''
 )
 
-NB. asssume /jguest/j soft link to j install
-server=:   '/jguest/j/addons/ide/jhs/guest/guest'
-
-NB.        node  ; jhs   ; userkey  ; flags      ; guest.js ; guests ; limit ; maxage ; idle
-nodeargs=: 65101 ; 65001 ; 'frown'  ; '--inspect'; server   ; 3      ; 60    ; 120    ; 30
-
 NB. guest version of startNODE_jhs_
 NB. nodeport is https port served by node
 NB. jhsport is jhs user port
 NB. jhsport+1+i.guests are jhs guest ports
-
 startNODE=: 3 : 0
 'not from JHS'assert -.IFJHS
 'nodeport jhsport key flags server guests limit maxage idle'=. y

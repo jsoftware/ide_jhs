@@ -44,13 +44,13 @@ breakpoint exec('guests')
 
 *** sudo
 lan guest requires edit to allow guest-sudo-sh to run - use visudo to add line:
-eric     ALL=(ALL:ALL) NOPASSWD: /jguest/j/addons/ide/jhs/guest-sudo-sh
+eric     ALL=(ALL:ALL) NOPASSWD: /jguest/j/addons/ide/jhs/guest/guest-sudo-sh
 
 aws guest - does not require edit as it already has /etc/sudoers.d/90-cloud-init-users
 ec2-user ALL=(ALL) NOPASSWD:ALL
 
 possibly automate - following works but chmod 440 fails
-$ echo "$USER ALL=(ALL:ALL) NOPASSWD: /jguest/j/addons/ide/jhs/guest-sudo-sh" | sudo tee /etc/sudoers.d/jguest
+$ echo "$USER ALL=(ALL:ALL) NOPASSWD: /jguest/j/addons/ide/jhs/guest/guest-sudo-sh" | sudo tee /etc/sudoers.d/jguest
 
 *** p65002 ... users created as required by guest-sudo-sh
 $ sudo userdel -r p65002
