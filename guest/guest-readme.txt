@@ -11,9 +11,8 @@ aws ssh
 $ sudo j9.4/addons/ide/jhs/guest/setup-sh j9.4
 aws already has "$USER ALL=(ALL:ALL) NOPASSWD: ALL" in sudoers.d file to avoid guest-sudo-sh password 
 
-$ /jguest/j/bin/jconsole
-   load'~addons/ide/jhs/guest/guest_util.ijs'
-   start nodeargs
+$ /jguest/j/bin/jconsole "~addons/ide/jhs/guest/guest_util.ijs"
+   start getargs''[aws''
 
 *** lan guest 
 depends on firewall allowing nodeport!
