@@ -17,20 +17,11 @@ $ /jguest/j/bin/jconsole "~addons/ide/jhs/guest/guest_util.ijs"
 *** lan guest 
 depends on firewall allowing nodeport!
 
-$ sudo git/addons/ide/jhs/guest/setup-sh j9.4
-note: /jguest/j/addons/ide/jhs -> git/addons/ide/jhs
-
 jconsole
    load'~addons/ide/jhs/guest/guest_util.ijs'
-   start nodeargs
+   startlan''
 
-browse: https://localhost:65101/
-
-$ v
-debug> scripts
-       sb('guest',xx)
-       exec('jhsport')
-       watch('postdata')
+browse: https://localhost:65101/jguest
 
 *** pkexec
 $ pkexec visudo can recover from damaged sudo
@@ -40,6 +31,10 @@ $ pkexec rm /etc/sudoers.d jguest
 $ node inspect localhost:9229
 desktop version 10.19.0 seems to be buggy with display of names
 breakpoint exec('guests')
+debug> scripts
+       sb('guest',xx)
+       exec('jhsport')
+       watch('postdata')
 
 *** sudo
 lan guest requires edit to allow guest-sudo-sh to run - use visudo to add line:

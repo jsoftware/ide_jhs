@@ -19,9 +19,12 @@
 
 <body onload="load()"><div><h2>JHS</h2>
 <p>your JHS sesssion has closed</p>
+<p><STATUS></p>
+<button type="button" id="login" onclick="login()">start new guest session</button>
 </div>
 
 <script>
-function load(){document.title= 'jbad';}
+function load(){document.title= 'jclosed';}
+function login(){window.location.href= "jguest";}
 </script>
 </body></html>

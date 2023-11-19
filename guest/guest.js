@@ -3,10 +3,16 @@
  Expect: (chunk) handled in node and complete result passed to client
  see: ~addons/ide/jhs/node.ijs
 
-cookie only created once by replyc on valid login
-cookie expires at max-age - persists over browser restart
-failure does markinvalid to set gsnums port entry so cookie will be invalid in the future
-invalid (but not expired) cookie time prevents new login to soon after previous
+cookie created by replyc with maxage limit on valid start
+ cookie expires at limit - persists over browser restart
+ econn... bad(data) gsnums port entry so cookie will be invalid in the future
+
+cookie created by replynoc with maxage maxage on failure
+ used to enforce wait before new start
+
+guest session ends when:
+ any event marks guest invalid based on limit or time
+ bad result (noc)
 */
 
 var t= process.argv[1];
@@ -16,7 +22,7 @@ const nodeport=a[0];const key=a[1];const jhsport=a[2];
 //! a[4] unused - was pem
 const guests= parseInt(a[5]); // number of guests allowed
 const limit=  parseInt(a[6]); // seconds a session lasts before clearguests clear
-const maxage= parseInt(a[7]); // seconds a cookie persists (stops a new session too soon) 
+const maxage= parseInt(a[7]); // seconds a cookie persists after noc to prevent new session too soon
 const idle=   parseInt(a[8]); // seconds idle (time between enters) before clearguests clear
 
 const https  = require('https');
@@ -32,9 +38,10 @@ const jhshost= "localhost";
 const cookiename= "jhs_cookie";
 const token=  crypto.randomBytes(16).toString("hex");
 
-var htmlguest= fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/guest.html'),'utf8').replace("LIMIT",limit/60).replace("IDLE",idle/60);
 var htmluser=  fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/user.html'),'utf8');
 var htmlbad=   fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/bad.html'),'utf8');
+var htmlredirect=   fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/redirect.html'),'utf8');
+
 
 var gstart= Array(guests).fill(0); // 0 or time when port was allocated
 var gsnums= Array(guests).fill(0); // 0 or serial number of valid port
@@ -47,12 +54,16 @@ var usersnum=0; // detect user task requires exec to start server
 // mark OLD ports (limit) and IDLE ports (idle)  as free
 function clearguests(){
  for (let i = 0; i < gstart.length; i++) {
-  if(gstart[i]!=0 && Date.now()>(gstart[i]+(1000*limit))){log('limit',i+guestbase,gcount[i]);clear(i);}
-  if(gstart[i]!=0 && Date.now()>(genter[i]+(1000*idle))) {log('idle' ,i+guestbase,gcount[i]);clear(i);}
+  if(gstart[i]!=0 && Date.now()>(gstart[i]+(1000*limit))){log('limit',i+guestbase,0,gcount[i]);clear(i+guestbase);}
+  if(gstart[i]!=0 && Date.now()>(genter[i]+(1000*idle))) {log('idle' ,i+guestbase,0,gcount[i]);clear(i+guestbase);}
  }
 }
 
-function clear(i){gstart[i]=0; gsnums[i]=0; genter[i]=0; gcount[i]=0;}
+// mark port as available
+function clear(port){
+ if(jhsport==port) usersnum= 0; //invalidate user
+ else {i= port-guestbase;gstart[i]=0; gsnums[i]=0; genter[i]=0; gcount[i]=0;} // invalidate guest
+}
 
 // return free guest port or 0
 function getguest(){
@@ -62,21 +73,24 @@ function getguest(){
  return 0;
 }
 
-// cookie: token+snum+port+ontime
+function markenter(port)  {if(jhsport!=port){ var i= port-guestbase; genter[i]= Date.now(); ++gcount[i];}}
+
+// cookie: token+snum+port+now
 function createcookie(port){
  if(port==0) return NOC;
+ var now= Date.now();
  snum= 1+snum;
  if(port==jhsport)
   usersnum= snum; 
  else
  {
   let i= port-guestbase;
-  gstart[i]=Date.now();
-  genter[i]=gstart[i];
+  gstart[i]= now;
+  genter[i]= now;
   snum= 1+snum;
   gsnums[i]= snum;
  }
- return token+'+'+snum+'+'+port+'+'+Date.now();
+ return token+'+'+snum+'+'+port+'+'+now;
 }
 
 // client reponse with text
@@ -86,7 +100,7 @@ function replyx(code,res,p){res.writeHead(code, "OK", {'Content-Type': 'text/htm
 function replyc(code,res,p,port)
 {
  var cval= createcookie(port);
- var max= (port>=guestbase)? ';Max-Age='+maxage : '';
+ var max= (port>=guestbase)? ';Max-Age='+limit : '';
  var c= cval+max+";Secure;Httponly";
  res.writeHead(code, "OK", {'Set-Cookie':cookiename+"="+c,'Content-Type': 'text/html'});
  res.end(p);
@@ -94,14 +108,18 @@ function replyc(code,res,p,port)
 
 // code 403 aborts ajax request which sets location /jlogin
 // code 200 replies with bad.html
+// cookie set to enforce wait
 function replynoc(code,res,p,port){
- // log('noc',code+' '+port+' '+p);
- if(code==200) p= htmlbad;
- replyx(code,res,p);
+ if(code==200)
+  p= htmlbad;
+ else
+  p= htmlbad.replace('<STATUS>',p);
+ var cval= token+'+'+'x'+'+'+port+'+'+Date.now(); // note 'x' for snum
+ var max= (port>=guestbase)? ';Max-Age='+maxage : '';
+ var c= cval+max+";Secure;Httponly";
+ res.writeHead(code, "OK", {'Set-Cookie':cookiename+"="+c,'Content-Type': 'text/html'});
+ res.end(p);
 }
-
-function markinvalid(port){if(jhsport!=port) gsnums[port-guestbase]= 0; else usersnum= 0;} //invalidate guest/user cookie
-function markenter(port)  {if(jhsport!=port){ var i= port-guestbase; genter[i]= Date.now(); ++gcount[i];}}
 
 // client response with headers and body string
 function replyhb(code,res,p)
@@ -117,7 +135,6 @@ const options = {
 };
 
 const server = https.createServer(options, (req, res) => {
-  // htmlguest= fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/guest.html'),'utf8').replace("LIMIT",limit/60).replace("IDLE",idle/60);
   // htmluser=  fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/user.html'),'utf8');
   // htmlbad=   fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/bad.html'),'utf8');
   clearguests();
@@ -132,7 +149,6 @@ const server = https.createServer(options, (req, res) => {
   var valid= port!=0 && c==token && s==(  (port!=jhsport)?gsnums[port-guestbase]:usersnum );
   var url= decodeURIComponent(req.url);
   var  ip= req.connection.remoteAddress;
-
   if(req.method == 'POST')
   {
     dopost(req, res, function() {
@@ -141,36 +157,9 @@ const server = https.createServer(options, (req, res) => {
       let cmd= postdata.substring(0,i);
       let val= postdata.substring(i+1);
 
-      if("jserver-guest"==cmd) // validate log on as guest
+      if("jserver-user"==cmd) // validate logon key
       {
-         if(valid && port!=jhsport) // continue with valid quest
-         {
-          replyx(200,res,"valid"); // cookie stays the same
-          return;
-         }
-         var wait=(ontime+(maxage*1000))-Date.now(); // not allowed if last start was too recent
-         if(ontime!=0 && wait>0)
-         {
-          log('wait',port,ip,wait);
-          replyx(200,res,'try again in '+(Math.ceil(wait/(60*1000)))+' minutes',port);
-          return;
-         }
-         port= getguest();
-         if(port==0)
-         {
-          log('full');
-          replyx(200,res,'full',port);
-         }
-         else
-         {
-          log('guest',port,ip);
-          cp.exec('sudo '+'/jguest/j/addons/ide/jhs/guest/guest-sudo-sh jhs '+port+' '+limit);
-          replyc(200,res,"valid",port);
-         }
-      }
-      else if("jserver-user"==cmd) // validate logon key
-      {
-         if(key!=val){replyx(200,res,"invalid key",jhsport); return;}
+         if(5>val.length || key!=val){replyx(200,res,"invalid key",jhsport); return;}
          if(port==jhsport && usersnum==s){replyx(200,res,"valid",jhsport); return;}
          log('user',jhsport,ip);
          cp.exec('sudo '+'/jguest/j/addons/ide/jhs/guest/guest-sudo-sh user '+jhsport+' '+process.env.USER);
@@ -189,21 +178,42 @@ const server = https.createServer(options, (req, res) => {
   }
 
   // get
-  if(url=='/juser')        replyx(200,res,htmluser);
-  else if(url=='/jguest')  replyx(200,res,htmlguest);
+  if(url=='/juser') replyx(200,res,htmluser);
+  else if(url=='/jguest')
+  {
+   var wait= Math.ceil((maxage-((Date.now()-ontime)/1000))/60); // minutes to wait
+   if(valid) jhsreq("GET",jhshost,port,'/jijx',"",req,res);
+   else if(token==c && wait>0)
+   {
+     // waiting for replynoc cookie to expire
+     log('wait',port,ip,0,wait);
+     replyx(200,res,htmlbad.replace('<STATUS>','try again in '+wait+' minutes'));
+     return;
+   }
+   else
+   {
+     port= getguest();
+     if(port==0)
+     {
+       log('full');
+       replyx(200,res,'full');
+     }
+     else
+    {
+     log('guest',port,ip);
+     cp.exec('sudo '+'/jguest/j/addons/ide/jhs/guest/guest-sudo-sh guest '+port+' '+limit);
+     replyc(200,res,htmlredirect,port);
+    }
+   }
+  }
   else if(url=='/jlogoff') replyc(200,res,htmlbad,0);
   else if(url=='/jlogin')  replyx(200,res,htmlbad);
-  else if(url=="/favicon.ico") // favicon allowed even if not logged on
-    jhsreq("GET",jhshost,port,url,"",req,res);
-  else if(!valid)
-   replynoc(200,res,'login required',port);
-  else
-   jhsreq("GET",jhshost,port,url,"",req,res);
+  else if(url=="/favicon.ico") jhsreq("GET",jhshost,port,url,"",req,res);
+  else if(!valid) replynoc(200,res,'login required',port);
+  else jhsreq("GET",jhshost,port,url,"",req,res);
 });
 
-server.listen(nodeport, bind, () => {
-  log(`node proxy server running at https://${bind}:${nodeport}/`);
-});
+server.listen(nodeport, bind, () => {log('start',`${nodeport}`);});
 
 var get_cookies = function(request) {
   var cookies = {};
@@ -233,13 +243,22 @@ function dopost(req, res, callback) {
 
 function jhsresponse(res,data){return {'headers': res.headers,'body':data}}
 
-async function jhsreq(gp,host,port,url,body,req,res)
-{
+let toString = obj => Object.entries(obj).map(([k, v]) => `${k}: ${v}`).join(', ');
+
+async function jhsreq(gp,host,port,url,body,req,res){
  markenter(port);
  let promise= dorequest(gp,host,port,url,body,req);
  promise.then(good,bad);
  function good(data){replyhb(200,res,data);}
- function bad(data) {markinvalid(port);replynoc(403,res,'request failed - code 403',port);}
+ function bad(data){
+  log('baddata',port,0,0,0,data);
+  if(typeof(data)=='string' && data.includes('ECONNRE')){ // ECONNRESET ECONNREFUSED
+   if(jhsport!=port) log('econnre',port,0,gcount[port-guestbase]); // jhsport
+   clear(port);
+   replynoc(403,res,data,port);
+  }
+  replyx(403,res,data+''); // data+'' necessary
+ }
 }
 
 function dorequest(gp,host,port,url,body,req){
@@ -260,6 +279,7 @@ function dorequest(gp,host,port,url,body,req){
   });
 }
 
+// LCAT LTS LTYPE LPORT LIP LCOUNT LWAIT LX
 function log(type,val){
  var d= 'jhs '+Date.now()+' '+type.padEnd(7);
  for (var i = 1; i < arguments.length; i++) {

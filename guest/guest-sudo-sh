@@ -9,7 +9,7 @@
 # depends on /j soft link to j install folder
 
 case $1 in
- jhs)
+ guest)
 
   if [ ! -d /home/p$2 ]; then
     sudo useradd -m p$2
@@ -25,7 +25,7 @@ case $1 in
 
  user)
   sudo fuser --kill -n tcp $2
-  su -l -c "/jguest/j/bin/jconsole /jguest/j/addons/ide/jhs/guest/guest.ijs $2 &" $3
+  su -l -c "/jguest/j/bin/jconsole /jguest/j/addons/ide/jhs/guest/user.ijs $2 &" $3
   ;;
 
  break)

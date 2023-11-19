@@ -7,6 +7,7 @@ jhclose''
 jhma''
 jhjmlink''
 'tool'   jhmg'tool';1;16
+ (0=nc<'tool_guest')#'guest' jhmab'guest'
  'app'     jhmab'app'
  'demo'    jhmab'demo'
  'chart'   jhmab'plot-chart'
@@ -129,10 +130,13 @@ jhtml'<hr/>'
 ev_close_click=: 3 : 0
 a=. '<div id="prompt" class="log"><b><font style="color:red;"><br>'
 b=. '</font></b></div>'
-if. NOEXIT do.
- jhrajax a,'JHS server not closed. Page disabled.',b
-else.
+select. QRULES 
+case. 0 do. NB. jhrajax and exit
  jhrajax a,'JHS server closed. Page disabled.',b
+ exit''
+case. 1 do. NB. jhrajax
+ jhrajax a,'JHS server not closed. Page disabled.',b
+case. 2 do. NB. exit
  exit''
 end.
 )
@@ -436,6 +440,7 @@ function ev_overview_click(){jdoajax([]);}
 function ev_canvas_click(){jdoajax([]);}
 function ev_table_click(){jdoajax([]);}
 function ev_node_click(){jdoajax([]);}
+function ev_guest_click(){jdoajax([]);}
 function ev_jd3_click(){jdoj('');}
 function ev_chart_click(){jdoj('');}
 function ev_react_click(){jdoj('');}

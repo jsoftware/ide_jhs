@@ -7,6 +7,7 @@ echo y
 jhtml'<hr>'
 )
 
+ev_guest_click=:   3 : 'tool tool_guest'
 ev_node_click=:    3 : 'tool tool_node'
 ev_react_click=:   3 : 'tool tool_react'
 ev_table_click=:   3 : 'tool tool_table'

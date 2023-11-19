@@ -6,4 +6,5 @@ mkdir /jguest
 cp -r $1 /jguest/j
 ln -s /jguest/j/addons/ide/jhs/node/cert.pem  /jguest/jcert
 ln -s /jguest/j/addons/ide/jhs/node/key.pem   /jguest/jkey
+echo OK
 
