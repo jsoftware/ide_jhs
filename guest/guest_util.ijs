@@ -6,8 +6,9 @@ man=: 0 : 0
    setarg 'guests';10
    seeargs''
    getargs''
-   start getargs''[lan''
-   start getargs''[aws''
+
+   start'key' NB. does create_guest to refresh /jguest from base install
+   NB.browse: https://localhost.or.aws:65101/jguest
 
    ports'' NB. ports in use
 
@@ -17,6 +18,10 @@ man=: 0 : 0
 $ node inspect localhost:9229
 )
 
+'should be run from /jguest/j install' assert '/jguest/j'-:jpath'~install'
+
+require'~addons/data/jd/base/util_epoch_901.ijs' NB. sfe convert javascript ts to string
+
 NB. start of log utils
 heads=: ;:'ts type port ip count wait bad'
 
@@ -24,7 +29,7 @@ get=: 3 : 0
 t=. <;.2 rawlog''
 b=. (<'jhs ')=4{.each t
 echo ;(-.b)#t
-t=. deb each }.b#t
+t=. deb each b#t
 t=. <;._1 each ' ',each t
 c=. >./;#each t
 t=. ":each 8{."1 >c{.each t
@@ -113,25 +118,20 @@ aws=: 3 : 0
 default''
 setarg'guests';10
 setarg'limit' ;60*60
-setarg'maxage';70*60
-setarg'idle'  ; 5*60
+setarg'maxage'; 1*60
+setarg'idle'  ;20*60
 seeargs''
 )
 
-NB. startlan key
-startlan=: 3 : 0
-shell_jtask_'sudo git/addons/ide/jhs/guest/setup-sh j9.4'
-start (<y) 2}getargs''[lan''
-)
-
-NB. startaws key
-startaws=: 3 : 0
-shell_jtask_'sudo git/addons/ide/jhs/guest/setup-sh j9.4'
-start (<y) 2}getargs''[aws''
+create_jguest=: 3 : 0
+t=. jpath '~addons/ide/jhs/guest/setup-sh'
+shell_jtask_'sudo ',t,' j9.4'
 )
 
 start=: 3 : 0
-startNODE y
+create_jguest''
+a=. (<y) 2}getargs''
+startNODE a
 6!:3[1
 rawlog''
 )
@@ -153,7 +153,7 @@ NB. verify setup-sh has been run to create /jguest folder
 '/jquest/j/jcert' assert 1=ftype'/jguest/jcert'
 '/jguest/j/jkey'  assert 1=ftype'/jguest/jkey'
 
-PORTS=: nodeport,jhsport,jhsport+i.guests
+PORTS=: nodeport,jhsport,jhsport+1+i.guests
 shell_jtask_ :: [ 'sudo fuser --kill -n tcp ',":PORTS
 
 arg=. (":nodeport),' ',key,' ',(":jhsport),' "unused" "unused" ',(":guests),' ',(":limit),' ',(":maxage),' ',(":idle)

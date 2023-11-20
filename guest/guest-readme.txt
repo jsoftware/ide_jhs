@@ -1,27 +1,25 @@
 jhs guest server
 
-*** https and firewall must allow nodeport
-browser: https://ip//nodeport/jserver
-
+*** setup lan or aws
+$ sudo j9.4/addons/ide/jhs/guest/setup-sh j9.4
+$ /jguest/j/bin/jconsole
+   load'~addons/ide/jhs/jguest/guest_util.ijs'
+   man
+add
 *** aws guest
 normal aws bld and the setup-sh to create /jguest folders
+$ cd j9.4/addons/ide/jhs/aws
+$ ./aws-sh ssh
+
 setup-sh could be added to bld
 aws bld frown
 aws ssh
-$ sudo j9.4/addons/ide/jhs/guest/setup-sh j9.4
 aws already has "$USER ALL=(ALL:ALL) NOPASSWD: ALL" in sudoers.d file to avoid guest-sudo-sh password 
 
 $ /jguest/j/bin/jconsole "~addons/ide/jhs/guest/guest_util.ijs"
-   start getargs''[aws''
+   startaws 'key' NB.does create_jguest
 
-*** lan guest 
-depends on firewall allowing nodeport!
-
-jconsole
-   load'~addons/ide/jhs/guest/guest_util.ijs'
-   startlan''
-
-browse: https://localhost:65101/jguest
+*** lan guest - firewall must allow nodeport!
 
 *** pkexec
 $ pkexec visudo can recover from damaged sudo

@@ -257,7 +257,8 @@ async function jhsreq(gp,host,port,url,body,req,res){
    clear(port);
    replynoc(403,res,data,port);
   }
-  replyx(403,res,data+''); // data+'' necessary
+  else
+   replyx(403,res,data+''); // data+'' necessary
  }
 }
 

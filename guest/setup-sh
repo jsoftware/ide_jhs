@@ -2,9 +2,9 @@
 # $1 path to j install folder (e.g. ~/j9.4)
 # create /jguest folder with links to jinstall folder, jkey file , and jpem file
 
+rm -r /jguest
 mkdir /jguest
 cp -r $1 /jguest/j
 ln -s /jguest/j/addons/ide/jhs/node/cert.pem  /jguest/jcert
 ln -s /jguest/j/addons/ide/jhs/node/key.pem   /jguest/jkey
-echo OK
 
