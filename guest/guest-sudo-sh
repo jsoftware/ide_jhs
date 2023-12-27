@@ -1,6 +1,6 @@
 #!/bin/bash
-# jhs   port timeout
-# user  port user
+# jhs   port timeout prlimit
+# user  port user    restart
 # break port
 
 # can sudo without password
@@ -19,13 +19,17 @@ case $1 in
   sudo rm -r -d -f /home/p$2/*
 
   # aws server may have quota (man quota) and this could limit users disk usage
-  limits="--cpu=30 --nofile=1000 --fsize=1000000000"
-  su -l -c "timeout $3 prlimit $limits /jguest/j/bin/jconsole /jguest/j/addons/ide/jhs/guest/guest.ijs $2 &" p$2
+  # $4 "prlimit --cpu=30 --nofile=1000 --fsize=1000000000"
+  su -l -c "timeout $3 $4 /jguest/j/bin/jconsole /jguest/j/addons/ide/jhs/guest/guest.ijs $2 &" p$2
   ;;
 
  user)
-  sudo fuser --kill -n tcp $2
-  su -l -c "/jguest/j/bin/jconsole /jguest/j/addons/ide/jhs/guest/user.ijs $2 &" $3
+  # task to serve port is started if port not active or if $4 is restart
+  p=`fuser -n tcp $2 2>/dev/null`
+  if [[ $4 == "true" || ! $p ]]; then
+   sudo fuser --kill -n tcp $2   
+   su -l -c "/jguest/j/bin/jconsole /jguest/j/addons/ide/jhs/guest/user.ijs $2 &" $3
+  fi
   ;;
 
  break)

@@ -63,29 +63,17 @@ fin=: '~addons/ide/jhs/spx/overview_example.ijs'
 jpath fin  NB.full path - ~addons expands to J addons folder
 data=: fread fin NB. file read
 data       NB. display data value
-fout=: '~temp/overview.ijs'
+fout=: '~temp/ovtour.ijs'
 jpath fout NB. ~temp expands to J temp folder file
 data fwrite fout NB. data written to file
 
 0 : 0
-next step opens the script in a jijs edit page
- this is a pop-up (new tab/page)
-
-JHS works best with authorization for pop-ups
- from localhost on port 65001
-
-most browers show a warning at the top and 
- require your action to enable pop-ups
-
-when the jijs page appears, if possible, drag
- it so you can see both the jijx jijs pages
-
-focus jijx page and press ctrl+. to continue
-
-jijx menu>wiki>JHS>Help>pop-up has more info
+use jijx menu to open jijs tab
+for editing that file
+ jijx menu>ide>jfile
+  click jfile then temp
+  double-click ovtour.ijs
 )
-
-edit fout NB. open script file in jijs page
 
 fcrsum a  NB. error as fcrsum is not defined
 
@@ -165,26 +153,21 @@ adverb/conjunction
 NB.spxhr:
 0 : 0
 a typo or coding error can run a looong time
+signal a break to take back control
 
-signal a break (ctrl+c) to take back control
+jijx menu ide>jbreak signals a break
 
-ctrl+c in the jijx page does not signal break
-
-you need to do ctrl+c in the terminal/console
- task that started JHS
-
-find the terminal window (not a browser tab/page)
- that starts with the text:
-J HTTP Server - init OK
+if jbreak menu item does not exist
+ do ctrl+c in the window that started JHS
+ this is the window with the text:
+ J HTTP Server - init OK
 
 a simple long running sentence is: sleep 20 seconds
 
-it takes 2 breaks (ctrl+c) in the terminal window
- to break a sleep
+it takes 2 breaks to break a sleep
  
 the next advance will sleep with no output
- for 20 seconds unless you do ctrl+c twice
- in the terminal window
+ for 20 seconds unless you signal 2 breaks
 )
 6!:3[20 NB. sleep for 20 seconds or until 2nd break
 

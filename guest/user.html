@@ -17,12 +17,14 @@
 }
 </style>
 
-<body onload="load()"><div><h2>JHS user login</h2>
+<body onload="load()">
+<div><h2>JHS user login</h2>
 <hr/>  
 <div id='status'>STATUS</div>
 <hr/>
-<button type="button" id="login" onclick="login()">login as user</button>
-key: <input type="password" id="key" value="" size="12">
+<button type="button" id="login" onclick="login('')">login as user</button>
+key: <input type="password" id="key" value="" size="12"><br/><br/>
+<button type="button" id="loginx" onclick="login('-restart')">login as user with restart</button>
 </div>
 
 <script>
@@ -69,15 +71,10 @@ function ajax()
 
 function gojijx(){window.location.href= "jijx";}
 
-function login(){
+function login(t){
  key= idv('key');
- if(''==key) return; //! ignore false click from input.focus
- ajaxrun(encode("jserver-user?"+key));
-}
-
-function logon(){
- idvs('key','');
- ajaxrun(encode("jserver-guest?"));
+ if(''==key){byid("key").focus(); return;} //! ignore false click from input.focus
+ ajaxrun(encode("jserver-user"+t+"?"+key));
 }
 
 function byid(id){return document.getElementById(id);}

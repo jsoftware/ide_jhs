@@ -10,7 +10,7 @@ QRULES_jhs_=: 2 NB. exit without jhrajax
 welcome_jhs_=: 0 : 0
 <div>&nbsp;<font style="font-size:2em; color:red;" >JHS - Guest</font><br/>
 <font style="color:red;" >
-menu>tool>guest&nbsp;&nbsp;&nbsp;&nbsp;- rules<br/>
+menu>?>guest&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- rules<br/>
 menu>tour>overview - intro
 </font></div>
 )

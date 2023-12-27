@@ -64,6 +64,12 @@ jjs_jhs_'getwindow("',y,'").close();'
 )
 
 NB.*
+NB.* cbfix - fix ' \ \n from clipboard paste in jijx prompt
+cbfix=: 3 : 0
+cbdata_jhs_=. y rplc '\n';LF;'\\';'\';'\''';''''
+)
+
+NB.*
 NB.* focus - focus wid - focus 'jfif' - focus 'jijs?jwid=~temp/sp/spfile.ijs'
 focus=: 3 : 0
 jjs_jhs_'getwindow("',y,'").focus();'

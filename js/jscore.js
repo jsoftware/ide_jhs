@@ -189,16 +189,18 @@ function jtfromhhit(t)
  case "l":  return "<";
  case "g":  return ">";
  case "a":  return "&";
+ case "Z":  return ""; // ZeroWidthSpace for wrap
  }
 }
 
+// this is not used!
 function jtfromh(d)
 {
  d= d.replace(/\r|\n/g,"");          // IE requires
  d= d.replace(/<br><div>/g,"<div>"); // chrome - kludge (not i)
  d= d.replace(/<p>&nbsp;<\/p>|<div><br><\/div>|<br[^>]*>|<\/p>|<div>/gi,"\n");
  d= d.replace(/<\/?[^>]+(>|$)/g,""); // remove all remaining tags
- d= d.replace(/&nbsp;|&lt;|&gt;|&amp;/g,jtfromhhit);
+ d= d.replace(/&nbsp;|&lt;|&gt;|&amp;|&ZeroWidthSpace;/g,jtfromhhit);
  if('\n'!=d[d.length-1]){d=d+"\n";}
  return d;
 }
@@ -813,6 +815,8 @@ function jmenuclick(ev)
  var tar=(typeof e.target=='undefined')?e.srcElement:e.target;
  var id=tar.id;
  if(id=="adv"){jscdo("advance");return;}
+ if(id=="uarrow"){jscdo("uarrow");return;}
+ if(id=="darrow"){jscdo("darrow");return;}
  var idul= id+"_ul";
  jbyid(id).focus(); // required on mac
  if(jbyid(idul).style.display=="block")

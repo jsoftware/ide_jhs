@@ -6,6 +6,40 @@ HBS=: 0 : 0
 jhclose''
 jhma''
 jhjmlink''
+'tour'     jhmg'tour';1;9
+ 'overview'jhmab'overview'
+ 'charttour'jhmab'chart'
+ 'canvas'  jhmab'canvas'
+ 'plot'    jhmab'plot'
+ 'spx'     jhmab'spx'
+ 'labs'    jhmab'labs'
+'help'               jhmg'?';1;16
+ 'welcome'           jhmab'welcome'
+ (0=nc<'tool_guest')#'guest' jhmab'guest'
+ 'shortcuts'         jhmab'shortcuts' 
+ 'popups'            jhmab'pop-ups'
+ 'closing'           jhmab'close'
+ 'framework'         jhmab'framework'
+ 'helpwikijhs'       jhmab'JHS'
+ 'helpwikinuvoc'     jhmab'vocabulary'
+ 'helpwikiconstant'  jhmab'constant'
+ 'helpwikicontrol'   jhmab'control'
+ 'helpwikiforeign'   jhmab'foreign'
+ 'helpwikiancillary' jhmab'ancillary'
+ 'helpwikistdlib'    jhmab'standard library'
+ 'helpwikirelnotes'  jhmab'release notes'
+ 'helphelp'          jhmab'807 html legacy'
+ 'about'             jhmab'about'
+'adv'   jhmg '>';0;10
+'uarrow'jhmg '↑';0;10
+'darrow'jhmg '↓';0;10
+jhmz''
+jhresize''
+'log' jhec'<LOG>'
+'ijs' jhhidden'<IJS>'
+)
+
+0 : 0
 'tool'   jhmg'tool';1;16
  (0=nc<'tool_guest')#'guest' jhmab'guest'
  'app'     jhmab'app'
@@ -20,35 +54,6 @@ jhjmlink''
  'sp'      jhmab'sp'
  'table'   jhmab'table'
  'watch'   jhmab'watch'
-'tour'     jhmg'tour';1;9
- 'overview'jhmab'overview'
- 'charttour'jhmab'chart'
- 'canvas'  jhmab'canvas'
- 'plot'    jhmab'plot'
- 'spx'     jhmab'spx'
- 'labs'    jhmab'labs'
-'help'               jhmg'help';1;16
- 'welcome'           jhmab'welcome'
- 'shortcuts'         jhmab'shortcuts' 
- 'popups'            jhmab'pop-ups'
- 'closing'           jhmab'close'
- 'framework'         jhmab'framework'
- 'helpwikijhs'       jhmab'JHS'
- 'helpwikinuvoc'     jhmab'vocabulary'
- 'helpwikiconstant'  jhmab'constant'
- 'helpwikicontrol'   jhmab'control'
- 'helpwikiforeign'   jhmab'foreign'
- 'helpwikiancillary' jhmab'ancillary'
- 'helpwikistdlib'    jhmab'standard library'
- 'helpwikirelnotes'  jhmab'release notes'
- 'helphelp'          jhmab'807 html legacy'
- 'wiki'              jhmab'wiki look up'
- 'about'             jhmab'about'
-'adv'   jhmg '>';0;10
-jhmz''
-jhresize''
-'log' jhec'<LOG>'
-'ijs' jhhidden'<IJS>'
 )
 
 jev_get=: create
@@ -71,7 +76,7 @@ else.
  t=. (6*#y)$'&nbsp;'
  PROMPT_jhs_=: y
 end.
-t=. '<div id="prompt" class="log">',t,'</div>'
+t=. '<div id="prompt" class="log"  onpaste="mypaste(event)">',t,'</div>'
 d=. LOGN,t
 uplog''
 if. METHOD-:'post' do.
@@ -96,6 +101,7 @@ ev_advance_click=: 3 : 0
 select. ADVANCE
 case. 'spx' do. spx__''
 case. 'lab' do. lab 0
+case. 'wiki'do. wikistep_jsp_''
 case.       do. echo 'no open lab/spx to advance'
 end.
 )
@@ -104,31 +110,16 @@ jloadnoun_z_=: 0!:100
 
 ev_clearrefresh_click=: 3 : 'LOG_jhs_=: '''''
 
-wikilu=: 0 : 0
-look up things in the wiki
-   wiki''    NB. vocabulary
-   wiki'i.'  NB. i. y (click Dyad for x i. y)
-   wiki'if.' NB. control words
-   wiki'12x' NB. constants
-   wiki'a'   NB. ancilliary 
-)
-
-ev_wiki_click=: 3 : 0
-jhtml'<hr/>'
-echo wikilu
-jhtml'<hr/>'
-)
-
 ev_about_click=: 3 : 0
 jhtml'<hr/>'
 echo JVERSION
 echo' '
-echo'Copyright 1994-2022 Jsoftware Inc.'
+echo'Copyright 1994-2024 Jsoftware Inc.'
 jhtml'<hr/>'
 )
 
 ev_close_click=: 3 : 0
-a=. '<div id="prompt" class="log"><b><font style="color:red;"><br>'
+a=. '<div id="prompt" class="log"  onpaste="mypaste(event)"><b><font style="color:red;"><br>'
 b=. '</font></b></div>'
 select. QRULES 
 case. 0 do. NB. jhrajax and exit
@@ -164,6 +155,10 @@ ev_canvas_click=: 3 : 0
 'canvas tour'tour'canvas.ijs'
 )
 
+ev_tool_click=: 3 : 0
+toollist''
+)
+
 ev_spx_click=:  3 : 0
 'spx tour'tour'spx.ijs'
 )
@@ -195,6 +190,8 @@ if. 1=#gethv'node-jhs:' do.
  t=. t,'jbreak'  jhmab'break'
 end.
 
+t=. t,'tool'jhmab'tool'
+
 t=. t,'clearwindow'jhmab'clear window'
 t=. t,'clearrefresh'jhmab'clear refresh'
 t=. t,'clearLS'jhmab'clear LS'
@@ -215,9 +212,10 @@ form{margin-top:0;margin-bottom:0;}
 NB. *#log:focus{border:1px solid red;}
 NB. *#log:focus{outline: none;} /* no focus mark in chrome */
 
-JS=: 0 : 0
+JS=: 0 : 0 rplc '<QRULES>';":QRULES
+var qrules= <QRULES>;
 var allwins= []; // all windows created by jijx
-var phead= '<div id="prompt" class="log">';
+var phead= '<div id="prompt" class="log" onpaste="mypaste(event)">';
 var ptail= '</div>';
 var globalajax; // sentence for enter setTimeout ajax
 var TOT= 1;     // timeout time to let DOM settle before change
@@ -246,6 +244,20 @@ function onvpresize(){
    jbyid("prompt").scrollIntoView(false);
 }
 
+function mypaste(event){
+ var t= event.clipboardData.getData('text/plain');
+ t= t.replace(/\r/g,""); // remove CR
+ var i= t.indexOf('\n');
+ if(i!=-1 && i!=(t.length-1)) // multiple lines
+ {
+  t= t.replace(/\\/g,"\\\\");
+  t= t.replace(/\'/g,"''");
+  t= t.replace(/\n/g,"\\n");
+  newpline("   cb_jhs_=:cbfix_jhs_'"+t+"'");
+  event.preventDefault(); // prevent default undoing above change
+ }
+} 
+ 
 function isdirty(){return 0!=allwins.length;}
 
 function setfocus(){jbyid("log").focus();}
@@ -380,6 +392,7 @@ function ev_log_enter()
     rng.setEndAfter(jdwn[k-1],0)
   t= rng.toString();
   t= t.replace(/\u00A0/g," "); // &nbsp;
+  t= t.replace(/\u200B/g,"");  // &ZeroWidthSpace;
  }
  else
  {
@@ -429,8 +442,9 @@ function document_recall(v){newpline(v);}
 
 function ev_advance_click(){jdoajax([]);}
 
-function ev_print_click() {jdoajax([]);}
-function ev_app_click() {jdoajax([]);}
+function ev_uarrow_click(){uarrow();}
+function ev_darrow_click(){darrow();}
+
 function ev_demo_click(){jdoajax([]);}
 function ev_j1_click(){jdoajax([]);}
 function ev_j2_click(){jdoajax([]);}
@@ -438,17 +452,10 @@ function ev_j3_click(){jdoajax([]);}
 function ev_plot_click(){jdoajax([]);}
 function ev_overview_click(){jdoajax([]);}
 function ev_canvas_click(){jdoajax([]);}
-function ev_table_click(){jdoajax([]);}
-function ev_node_click(){jdoajax([]);}
 function ev_guest_click(){jdoajax([]);}
-function ev_jd3_click(){jdoj('');}
-function ev_chart_click(){jdoj('');}
-function ev_react_click(){jdoj('');}
 function ev_charttour_click(){jdoj('');}
 function ev_spx_click(){jdoajax([]);}
-function ev_watch_click(){jdoajax([]);}
-function ev_debug_click(){jdoajax([]);}
-function ev_debugjs_click(){jdoajax([]);}
+function ev_tool_click(){jdoajax([]);}
 function ev_sp_click(){jdoajax([]);}
 function ev_spx_click(){jdoajax([]);}
 function ev_labs_click(){jdoajax([]);}
@@ -536,6 +543,7 @@ function ev_colon_ctrl(){jdoajax([]);}
 function ev_doublequote_ctrl(){jdoajax([]);}
 
 function ev_close_click(){
+ if(qrules==2 && !confirm("Press OK to close.")){return;};
  allwins_clean();
  for(let i = 0; i < allwins.length; i++) {allwins[i].jscdo("close");}
  allwins_clean();

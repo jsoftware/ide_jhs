@@ -78,6 +78,7 @@ input[type=password]{padding: 0px; margin: 2px; border: 1px solid black;}
 .menu ul{position:absolute;top:100%;left:0%;display:none;list-style:none;border:0;padding:0;margin:0;}
 .menu li{display:block;white-space:nowrap;border:0;padding:0px;}
 
+
 /* tablet */
 @media screen and (max-device-width: 992px){
  *{font-size:24px;}
@@ -574,7 +575,7 @@ r=. r,LF,(x,'_footer')jhdiv''
 (x,'_box')jhdiv LF,r,LF
 )
 
-NB.* jhec*id jhec '' - contenteditable div
+NB.* jhec*id jhec html - contenteditable div
 jhec=: 4 : 0
 t=. '<div id="<ID>" contenteditable="true"',jeditatts
 t=. t,' style="white-space:nowrap;" '
@@ -584,6 +585,12 @@ t=. t,' onfocus="jecfocus();"'
 t=. t,' onblur="jecblur();"'
 t=. t,'>',y,'</div>'
 t hrplc 'ID';x
+)
+
+NB.* jhecwrap*id jhecwrap html - contenteditable div that wraps
+jhecwrap=: 4 : 0
+y=. y rplc '&nbsp;';'&nbsp;&ZeroWidthSpace;' NB. breaking space
+'<div  class="html" style="overflow-wrap: break-word; white-space: normal;">',y,'</div>'
 )
 
 NB.* jhhidden*id jhhidden value - <input type="hidden"....>
@@ -627,7 +634,7 @@ t=. t rplc 'class="jhab"';'class="jhmab"',jmon''
 NB.* jhmg*id jhmg text;decor;width - menu group - 0 for '' and 1 for dropdown
 jhmg=: 4 : 0
 'text dec w'=. y
-text=. text,>dec{'';'&#9660;'
+text=. text,>dec{'';'' NB. down wedge '&#9660;'
 t=. >(MSTATE=1){'</ul></span>';''
 t=. t,'<span style="z-index:<INDEX>">'
 t=. t,'<span><a href="#" id="<ID>" name="<ID>" class="jhmg"'

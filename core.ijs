@@ -370,7 +370,11 @@ USER=:   ''          NB. 'john' - login
 PASS=:   ''          NB. 'abra' - login
 TIPX=:   ''          NB. tab title prefix - distinguish sessions
 AUTO=:   1           NB. start browser (if necessary) and browse to http:/localhost:PORT/jijx
-QRULES=: 0           NB. Esc+q - see ev_close_click in jijx.ijs
+NB. Esc-q rules
+NB. 0 - server closed     - page disabled
+NB. 1 - server not closed - page disabled
+NB. 2 - confirm() close   - guest server
+QRULES=: 0           NB. Esc-q - see ev_close_click in jijx.ijs
 
 PC_FONTFIXED=:     '"courier new","courier","monospace"'
 PC_FONTVARIABLE=:  '"sans-serif"'

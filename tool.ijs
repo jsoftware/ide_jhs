@@ -1,31 +1,29 @@
+
+NB. y is noun tool_y_jijx_~ or an expression
+NB. allows wrap with &ZeroWidthSpace
+tool_jhs_=: 3 : 0
+n=. 'tool_',y,'_jijx_'
+if. 0=nc<n do. y=. n~ end.
+jhtml'<hr>',(''jhecwrap jhtmlfroma y),'<hr>'
+)
+
+lablist_jhs_=: lablist_jijx_
+labrun_jhs_=: labrun_jijx_
+
 coclass'jijx'
 coinsert'jhs'
 
-tool=: 3 : 0
-jhtml'<hr>'
-echo y
-jhtml'<hr>'
-)
+ev_welcome_click=:   3 : 'tool ''welcome'''
+ev_guest_click=:     3 : 'tool tool_guest'
+ev_shortcuts_click=: 3 : 'tool ''shortcuts'''
+ev_popups_click=:    3 : 'tool ''popups'''
+ev_closing_click=:   3 : 'tool ''closing'''
 
-ev_guest_click=:   3 : 'tool tool_guest'
-ev_node_click=:    3 : 'tool tool_node'
-ev_react_click=:   3 : 'tool tool_react'
-ev_table_click=:   3 : 'tool tool_table'
-ev_jd3_click=:     3 : 'tool tool_jd3'
-ev_chart_click=:   3 : 'tool tool_chart'
-ev_app_click=:     3 : 'tool tool_app'
-ev_print_click=:   3 : 'tool tool_print'
-ev_demo_click=:    3 : 'tool tool_demos'
-ev_watch_click=:   3 : 'tool tool_watch'
-ev_debug_click=:   3 : 'tool tool_debug'
-ev_debugjs_click=: 3 : 'tool tool_debugjs'
-ev_sp_click=:      3 : 'tool sphelp'
-ev_labs_click=:    3 : 'tool tool_labs 0'
+ev_labs_click=:      3 : 'tool tool_labs 0'
 
-ev_welcome_click=:   3 :'tool tool_welcome'
-ev_shortcuts_click=: 3 :'tool tool_shortcuts'
-ev_popups_click=:    3 :'tool tool_popups'
-ev_closing_click=:   3 :'tool tool_closing'
+NB. iphone se displays to col: 34
+
+tool_simple_project=: sphelp
 
 tool_debug=: 0 : 0
 debug facilities: suspend execution at stop or error
@@ -107,6 +105,15 @@ initial data was numeric, so non-numeric is red
 close with red button or Esc-q as this informs J server
 )
 
+tool_wiki_lookup=: 0 : 0
+look up things in the wiki
+   wiki''    NB. vocabulary
+   wiki'i.'  NB. i. y (click Dyad for x i. y)
+   wiki'if.' NB. control words
+   wiki'12x' NB. constants
+   wiki'a'   NB. ancilliary 
+)
+
 tool_app=: 0 : 0 
 how to build an app
 apps are built with J, JHS framework,
@@ -168,46 +175,54 @@ tool_watch=: 0 : 0
    'jwatch;0 0' jpage '?4 6$100' NB. watch an expression
 )
 
-tool_labs_txt=: 0 : 0
-labs - interactive tutorials - a good way to learn J
-labs are not always current and may run with errors
-labs are organized into categories
-run one of the following sentences:
+labs_txt=: 0 : 0
+labs - interactive tutorials
+labs are organized in categories
+run 1 of the following:
 )
 
 tool_welcome=: 0 : 0
-welcome to the browser interface to J
-chartjs adds powerful new plot facility
- menu tool>plot-chart jcjs'tutorial'
-building an app has changed over the years
- for the latest info, see menu tool>app
-jijs script - run current line or selection
-close pages with red box in upper right corner
+welcome - browser interface to J
+jijx menu smaller (mobile)
+jijx menu ↑↓ (touch line recall)
+chartjs adds new plot facility
+   jcjs'help'
+   jcjs'tutorial'
+building an app has evolved
+ menu ide>tool for the latest
+   tool_jhs_ 'app' NB. app info
+jijs - run line or selection
+close with red box in corner
 )
 
 tool_shortcuts=: 0 : 0
-Esc-q (Escape key then q) - close page
- jijx close closes all pages and exits server
+jijx menu:
+ > lab/spx advance
+ ↑↓ line recall inputs
+Esc-q (Esc key then q) - close
+ jijx closes all and exits server
 Esc-1 - focus menu - arrow keys
-ctrl+shift+↑/↓ - recall previous line/input
+ctrl+shift+↑/↓ - recall inputs
 ctrl shortcuts are supported for
- ,./<>? (comma,dot,slash,less,larger,query)
+ ,./<>?
 jijx ctrl shortcuts
  ctrl+. lab/spx advance
  ctrl+, load project (see sphelp)
  ctrl+' debug step
  ctrl+" debug stepin
-custom jijx shortcut handler for ctrl+?
+custom jijx handler for ctrl+?
  ev_query_ctrl_jijx_=: 3 : 'i.5'
-see menu>help>JHS for more info
+see menu>?>JHS for more info
 )
 
 tool_popups=: 0 : 0
-if browser is set to block pop-ups, you will
- get an alert when JHS tries to create one
-most browsers let you configure to allow them
- (if possible, just allow from localhost:65001)
-see menu>help>JHS for more info
+JHS works best if pop-ups allowed
+some browers require permission
+some browsers let you configure
+ (make as restrictive as possible)
+see menu>?>JHS for more info
+
+   edit'jnk.txt' NB. requires pop-up
 )
 
 tool_closing=: 0 : 0
@@ -216,7 +231,7 @@ close JHS page with Esc-q
 this lets JHS manage the close
  (save changes and free up resources)
 browser close button misses these steps
-see menu>help>JHS for more info
+see menu>?>JHS for more info
 )
 
 getlabs=: 3 : 0
@@ -261,9 +276,9 @@ getlabs''
 if. 0=#LABCATS do.
  t=. 'No labs installed.',LF,'Do jal (pacman) labs/labs install and try again.'
 else.
- t=. tool_labs_txt
+ t=. labs_txt
  d=. /:~~.LABCATS
- t=. t,;LF,~each(<'   lablist_jijx_ '),each'''',~each'''',each d
+ t=. t,;LF,~each(<'   lablist_jhs_ '),each'''',~each'''',each d
 end.
 t
 )
@@ -272,7 +287,7 @@ lablist=: 3 : 0
 getlabs''
 titles=. /:~(LABCATS = <dltb y)#LABTITLES
 echo'run one of the following sentences:'
-echo ;LF,~each (<'   labrun_jijx_ '),each'''',~each'''',each titles
+echo ;LF,~each (<'   labrun_jhs_ '),each'''',~each'''',each titles
 )
 
 labrun=: 3 : 0
@@ -289,4 +304,13 @@ ADVANCE_jlab_=: 'To advance, press ctrl+. or click menu > item.'
 smselout_jijs_=: smfocus_jijs_=: [ NB. allow introcourse to run
 echo'JHS lab advance - ctrl+. or menu >'
 lab_jlab_ f
+)
+
+tools=: (5}.each'tool'nl_jijx_ 0)-.'welcome';'guest';'shortcuts';'popups';'closing' NB. remove those in the ? menu
+
+NB. validate tools:
+NB. ;".each(<'_jijx_'),~each(<'tool_'),each tools_jijx_
+
+toollist=: 3 : 0
+echo'run 1 of the following:',LF,;LF,~each'''',~each (<'   tool_jhs_ '''),each tools
 )

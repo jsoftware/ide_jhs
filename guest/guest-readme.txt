@@ -1,25 +1,31 @@
 jhs guest server
 
-*** setup lan or aws
-$ sudo j9.4/addons/ide/jhs/guest/setup-sh j9.4
-$ /jguest/j/bin/jconsole
-   load'~addons/ide/jhs/jguest/guest_util.ijs'
-   man
-add
-*** aws guest
-normal aws bld and the setup-sh to create /jguest folders
-$ cd j9.4/addons/ide/jhs/aws
-$ ./aws-sh ssh
+$ ln -s j9.4/addons/ide/jhs/aws/aws-sh aws-sh
 
-setup-sh could be added to bld
-aws bld frown
-aws ssh
+*** setup lan guest
+firewall must allow nodeport!
+
+$ start jconsole
+   load'~addons/ide/jhs/guest/guest_util.ijs'
+   man
+   default''
+   start'key'
+
+code changes are moved by start'key' to /jguest by create_jguest''
+
+*** aws guest
 aws already has "$USER ALL=(ALL:ALL) NOPASSWD: ALL" in sudoers.d file to avoid guest-sudo-sh password 
 
-$ /jguest/j/bin/jconsole "~addons/ide/jhs/guest/guest_util.ijs"
-   startaws 'key' NB.does create_jguest
+build aws system if not already done
+$ ./aws-sh bld frown
 
-*** lan guest - firewall must allow nodeport!
+create aws guest stuff
+$ ./aws-sh putr $HOME/git/addons/ide/jhs j9.4/addons/ide    - ec2-user jhs to latest
+$ ./aws-sh ssh
+$ ./jc '~addons/ide/jhs/guest/guest_util.ijs'   - running ec2_user code
+   man
+   default''
+   start'key'   - copies ec2-user j9.4 to /jguest
 
 *** pkexec
 $ pkexec visudo can recover from damaged sudo
@@ -47,13 +53,12 @@ $ echo "$USER ALL=(ALL:ALL) NOPASSWD: /jguest/j/addons/ide/jhs/guest/guest-sudo-
 *** p65002 ... users created as required by guest-sudo-sh
 $ sudo userdel -r p65002
 
-*** build it
+*** build aws system
 create aws machine
 $ cd j9.4/addons/ide/jhs/aws
 $ ./aws-sh clr
 $ ./aws-sh bld frown
-$ ~/git/jplay/put.sh
-$ ./aws-sh run cloud-run-sh frown  # run node with server mods
 
+$ ./aws-sh run cloud-run-sh frown  # run node with server mods
 # consider change cloud-bld-sh to not do run if parameter is elided
 
