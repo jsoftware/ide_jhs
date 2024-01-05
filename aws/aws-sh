@@ -12,7 +12,7 @@ how="commands:
  putr local-folder-or-file remote-folder-or-file (rsync)
 ! rsync local is relative to pwd
  run  command-to-run-on-remote
- bld  logon-key
+ bld  key j9.x
  pem  path-to-cert-key-pem-files
 "
 
@@ -48,7 +48,7 @@ scp -i $pem $2  ec2-user@$ip:$3
 ;;
 
 putr)
-rsync -avz -e "ssh -i $pem" $2  ec2-user@$ip:$3
+rsync --exclude .git -avz -e "ssh -i $pem" $2  ec2-user@$ip:$3
 ;;
 
 getr)
@@ -61,10 +61,10 @@ ssh -i $pem ec2-user@$ip $2
 ;;
 
 bld)
-[ "$#" -ne 2 ] && echo "missing logon key parameter" && exit 1
+[ "$#" -ne 3 ] && echo "missing key and/or j9.x" && exit 1
 ./aws-sh put cloud-bld-sh
 ./aws-sh put cloud-run-sh
-./aws-sh run ./cloud-bld-sh # build j and nodejs
+./aws-sh run "./cloud-bld-sh $3" # build j and nodejs
 ./aws-sh run "./cloud-run-sh $2" # start JHS and nodejs
 echo "starting JHS and nodejs..."
 echo "browse to: https://$ip:65101/jijx"

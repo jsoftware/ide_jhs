@@ -10,21 +10,20 @@ $ start jconsole
    start'key' NB. does create_jguest
 
 *** setup aws guest
-
 build aws system if not already done - see below
 
 create aws guest stuff
 $ cd j9.x/addons/ide/jhs/aws
-$ ./aws-sh putr $HOME/git/addons/ide/jhs j9.x/addons/ide # only if local jhs has changes
+
+$ # following required if local git jhs changes are required on aws
+$ ./aws-sh putr --exclude .git $HOME/git/addons/ide/jhs j9.5/addons/ide
+
 $ ./aws-sh ssh
 $ec2-user ./jc 
    load'~addons/ide/jhs/guest/guest_util.ijs'
    man
    default''
    start'key' NB. does create_jguest
-
-*** pkexec
-$ pkexec visudo can recover from damaged sudo
 
 *** node debug
 $ node inspect localhost:9229
@@ -44,6 +43,8 @@ ec2-user ALL=(ALL) NOPASSWD:ALL
 possibly automate - following works but chmod 440 fails
 $ echo "$USER ALL=(ALL:ALL) NOPASSWD: /jguest/j/addons/ide/jhs/guest/guest-sudo-sh" | sudo tee /etc/sudoers.d/jguest
 
+$ pkexec visudo can recover from damaged sudo
+
 *** p65002 ... users created as required by guest-sudo-sh
 $ sudo userdel -r p65002
 
@@ -53,7 +54,7 @@ aws already has "$USER ALL=(ALL:ALL) NOPASSWD: ALL" in sudoers.d to avoid guest-
 create aws machine
 $ cd j9.x/addons/ide/jhs/aws
 $ ./aws-sh clr
-$ ./aws-sh bld frown
+$ ./aws-sh bld frown j9.5
 
 $ ./aws-sh run cloud-run-sh frown  # run node with server mods
 # consider change cloud-bld-sh to not do run if parameter is elided

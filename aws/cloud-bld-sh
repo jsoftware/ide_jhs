@@ -1,20 +1,20 @@
 #!/bin/bash
+# $1 is jversion - j9.4 or j9.5 ...
 # avoid .suffix so git/pacman preserve eol lf on windows
 
 # install j
-J=j9.5
-rm $J_linux64.tar.gz
-wget -nv www.jsoftware.com/download/$J/install/$J_linux64.tar.gz
-tar -zxf $J_linux64.tar.gz
+rm $1_linux64.tar.gz
+wget -nv www.jsoftware.com/download/$1/install/$1_linux64.tar.gz
+tar -zxf $1_linux64.tar.gz
 
 # update j
 rm jc
-ln -s $J/bin/jconsole jc
+ln -s $1/bin/jconsole jc
 ./jc -js "load'pacman'" "'update'jpkg''" "'install'jpkg'all'" "exit''"
 
 # put default self-signed certificates in .ssh
-sudo cp $J/addons/ide/jhs/node/key.pem  .ssh
-sudo cp $J/addons/ide/jhs/node/cert.pem .ssh
+sudo cp $1/addons/ide/jhs/node/key.pem  .ssh
+sudo cp $1/addons/ide/jhs/node/cert.pem .ssh
 sudo chmod 644 .ssh/key.pem
 sudo chmod 644 .ssh/cert.pem
 
