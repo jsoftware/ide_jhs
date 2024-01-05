@@ -271,9 +271,16 @@ async function jhsreq(gp,host,port,url,body,req,res){
  function bad(data){
   if(typeof(data)=='string'){
    if(data.includes('ECONNREFUSED')){
+   // refused - redirect.html does sleep in browser - avoid sync in node
    log('refused',port,0,data);
-   //replyx(200,res,htmlredirect);
-   replynoc(res,'bad refused',port);
+   if(req.method=='GET')
+   {
+    // kludge to quit after too many redirects
+    if(port!=jhsport && gcount[port-guestbase]>30){replynoc(res,'bad refused',port);return;}
+    replyx(200,res,htmlredirect);
+   }
+   else 
+    replynoc(res,'bad refused',port);
   }
    else if(data.includes('ECONNRESET'))
     replynoc(res,'bad reset',port);

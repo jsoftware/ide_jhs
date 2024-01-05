@@ -1,7 +1,5 @@
 jhs guest server
 
-$ ln -s j9.4/addons/ide/jhs/aws/aws-sh aws-sh
-
 *** setup lan guest
 firewall must allow nodeport!
 
@@ -9,32 +7,28 @@ $ start jconsole
    load'~addons/ide/jhs/guest/guest_util.ijs'
    man
    default''
-   start'key'
+   start'key' NB. does create_jguest
 
-code changes are moved by start'key' to /jguest by create_jguest''
+*** setup aws guest
 
-*** aws guest
-aws already has "$USER ALL=(ALL:ALL) NOPASSWD: ALL" in sudoers.d file to avoid guest-sudo-sh password 
-
-build aws system if not already done
-$ ./aws-sh bld frown
+build aws system if not already done - see below
 
 create aws guest stuff
-$ ./aws-sh putr $HOME/git/addons/ide/jhs j9.4/addons/ide    - ec2-user jhs to latest
+$ cd j9.x/addons/ide/jhs/aws
+$ ./aws-sh putr $HOME/git/addons/ide/jhs j9.x/addons/ide # only if local jhs has changes
 $ ./aws-sh ssh
-$ ./jc '~addons/ide/jhs/guest/guest_util.ijs'   - running ec2_user code
+$ec2-user ./jc 
+   load'~addons/ide/jhs/guest/guest_util.ijs'
    man
    default''
-   start'key'   - copies ec2-user j9.4 to /jguest
+   start'key' NB. does create_jguest
 
 *** pkexec
 $ pkexec visudo can recover from damaged sudo
-$ pkexec rm /etc/sudoers.d jguest
 
 *** node debug
 $ node inspect localhost:9229
 desktop version 10.19.0 seems to be buggy with display of names
-breakpoint exec('guests')
 debug> scripts
        sb('guest',xx)
        exec('jhsport')
@@ -54,11 +48,12 @@ $ echo "$USER ALL=(ALL:ALL) NOPASSWD: /jguest/j/addons/ide/jhs/guest/guest-sudo-
 $ sudo userdel -r p65002
 
 *** build aws system
+aws already has "$USER ALL=(ALL:ALL) NOPASSWD: ALL" in sudoers.d to avoid guest-sudo-sh password 
+
 create aws machine
-$ cd j9.4/addons/ide/jhs/aws
+$ cd j9.x/addons/ide/jhs/aws
 $ ./aws-sh clr
 $ ./aws-sh bld frown
 
 $ ./aws-sh run cloud-run-sh frown  # run node with server mods
 # consider change cloud-bld-sh to not do run if parameter is elided
-

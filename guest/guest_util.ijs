@@ -171,9 +171,15 @@ setarg'idle'  ;20*60
 seeargs''
 )
 
+NB. create /jguest folder as copy of current running J install
+NB.  with links to cert and key file
 create_jguest=: 3 : 0
-t=. jpath '~addons/ide/jhs/guest/setup-sh'
-shell_jtask_'sudo ',t,' j9.4'
+shell_jtask_'sudo rm -f -r /jguest'
+shell_jtask_'sudo mkdir /jguest'
+shell_jtask_'sudo cp -r ',(jpath'~install'),' /jguest/j'
+shell_jtask_'sudo ln -s /jguest/j/addons/ide/jhs/node/cert.pem  /jguest/jcert'
+shell_jtask_'sudo ln -s /jguest/j/addons/ide/jhs/node/key.pem   /jguest/jkey'
+i.0 0
 )
 
 NB. start node guest server
