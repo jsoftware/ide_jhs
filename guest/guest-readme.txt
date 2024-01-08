@@ -1,5 +1,7 @@
 jhs guest server
 
+use -sh instead of .sh so pacman will LF eol on windows
+
 *** setup lan guest
 firewall must allow nodeport!
 
