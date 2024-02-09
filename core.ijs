@@ -714,3 +714,5 @@ shutdownx=: 3 : 0
  jfe 0
  2!:55^:(''-.@-:y)y
 ) 
+
+wd_z_=: 3 : '''wd not supported in JHS''assert 0'

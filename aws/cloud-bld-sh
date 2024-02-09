@@ -8,16 +8,28 @@ wget -nv www.jsoftware.com/download/$1/install/$1_linux64.tar.gz
 tar -zxf $1_linux64.tar.gz
 
 # update j
-rm jc
-ln -s $1/bin/jconsole jc
+ln -s -f $1/bin/jconsole jc
 ./jc -js "load'pacman'" "'update'jpkg''" "'install'jpkg'all'" "exit''"
+ln -s -f $1/addons/ide/jhs/guest/guest_util.ijs guest_util.ijs
 
 # put default self-signed certificates in .ssh
 sudo cp $1/addons/ide/jhs/node/key.pem  .ssh
 sudo cp $1/addons/ide/jhs/node/cert.pem .ssh
-sudo chmod 644 .ssh/key.pem
-sudo chmod 644 .ssh/cert.pem
+sudo chmod 600 .ssh/key.pem
+sudo chown ec2-user:ec2-user .ssh/key.pem
+sudo chmod 600 .ssh/cert.pem
+sudo chown ec2-user:ec2-user .ssh/cert.pem
 
 # install nodejs
 sudo yum -y install nodejs
 echo `which node` > nodebin
+
+# python3 already installed but we also need pip3
+sudo yum -y install python3-pip
+
+# install certbot - letsencrypt
+sudo dnf install -y augeas-libs
+sudo python3 -m venv /opt/certbot/
+sudo /opt/certbot/bin/pip install --upgrade pip
+sudo /opt/certbot/bin/pip install certbot certbot-apache
+sudo ln -s -f /opt/certbot/bin/certbot /usr/bin/certbot

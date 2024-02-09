@@ -3,11 +3,11 @@
  Expect: (chunk) handled in node and complete result passed to client
  see: ~addons/ide/jhs/node.ijs
 
-cookie created by replyc with maxage limit on valid start
+cookie created by replyc with waitx limit on valid start
  cookie expires at limit - persists over browser restart
  econn... bad(data) gsnums port entry so cookie will be invalid in the future
 
-cookie created by replynoc with maxage used to enforce wait before new start
+cookie created by replynoc with waitx used to enforce waitx before new start
 
 guest session ends when:
  any event marks guest invalid based on limit or time
@@ -26,9 +26,9 @@ const nodeport=a[0];const key=a[1];const jhsport=a[2];
 //! a[4] unused - was pem
 const guests= parseInt(a[5]); // number of guests allowed
 const limit=  parseInt(a[6]); // seconds a session lasts before clearguests clear
-const maxage= parseInt(a[7]); // seconds a cookie persists after noc to prevent new session too soon
+const waitx= parseInt(a[7]);  // seconds a cookie persists after noc to prevent new session too soon
 const idle=   parseInt(a[8]); // seconds idle (time between enters) before clearguests clear
-const prlimit=a[9];          // prlimit --cpu=30 --nofile=1000 --fsize=1000000000
+const prlimit=a[9];           // prlimit --cpu=30 --nofile=1000 --fsize=1000000000
 
 const https  = require('https');
 const http   = require('http');
@@ -60,11 +60,12 @@ var userip=0;   // user task ip
 var exitmsg= '(Esc-q or idle/session/cpu/resource limit or ?)';
 
 process.on('exit', (code) => {
-  console.log(`About to exit with code: ${code}`);
+  console.log(`J: exit code: ${code}`);
 });
 
 // try to get info on mystery node exits - why does example use fs instead of log
 process.on('uncaughtException', (err, origin) => {
+  console.log('J: uncaught exception');
   fs.writeSync(
     process.stderr.fd,
     `Caught exception: ${err}\n` +
@@ -130,12 +131,12 @@ function replyc(code,res,p,port,ip)
  res.end(p);
 }
 
-// 403 reply will set location to /jlogin - guest cookie set to enforce wait
+// 403 reply will set location to /jlogin - guest cookie set to enforce waitx
 function replynoc(res,p,port){
  log('403',port,0,p);
  clear(port);
  var cval= token+'+'+'x'+'+'+port+'+'+Date.now(); // note 'x' for snum
- var max= (port>=guestbase)? ';Max-Age='+maxage : '';
+ var max= (port>=guestbase)? ';Max-Age='+waitx : '';
  var c= cval+max+";Secure;Httponly";
  res.writeHead(403, "OK", {'Set-Cookie':cookiename+"="+c,'Content-Type': 'text/html'});
  res.end(p);
@@ -149,8 +150,8 @@ function replyhb(code,res,p)
 }
 
 const options = {
-  key:  fs.readFileSync('/jguest/jkey'),
-  cert: fs.readFileSync('/jguest/jcert'),
+  key:  fs.readFileSync('.ssh/jserver/key.pem'),
+  cert: fs.readFileSync('.ssh/jserver/cert.pem'),
   'trust proxy': true
 };
 
@@ -197,10 +198,15 @@ const server = https.createServer(options, (req, res) => {
   }
 
   // get
-  if(url=='/juser') replyx(200,res,htmluser);
+  if(url=='/jcrash'&&port==jhsport)
+  {
+    replyc(200,res,htmlbad,0);
+    process.exit(1);
+  }
+  else if(url=='/juser') replyx(200,res,htmluser);
   else if(url=='/jguest')
   {
-   var wait= Math.ceil((maxage-((Date.now()-ontime)/1000))); // seconds to wait
+   var wait= Math.ceil((waitx-((Date.now()-ontime)/1000))); // seconds to wait
    if(valid && port!=jhsport) jhsreq("GET",jhshost,port,'/jijx',"",req,res);
    else if(token==c && wait>0 && port!=jhsport)
    {

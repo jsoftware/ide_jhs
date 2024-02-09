@@ -4,6 +4,12 @@ coinsert'jhs'
 
 HBS=: 0 : 0
 jhclose''
+
+'uarrow' jhb ''
+'darrow' jhb ''
+'return' jhb ''
+'advance'jhb ''
+
 jhma''
 jhjmlink''
 'tour'     jhmg'tour';1;9
@@ -207,7 +213,29 @@ form{margin-top:0;margin-bottom:0;}
 *.log  {color:<PC_LOG_COLOR>;}
 *.sys  {color:<PC_SYS_COLOR>;}
 *.file {color:<PC_FILE_COLOR>;}
+
+.jhb#uarrow{background-color:rgba(255,255,255,0);position:fixed;top:4em;right:0;margin:0px;
+padding-left:8px;padding-right:8px;
+border-width: 2px;border-color: blue;
+}
+.jhb#darrow{background-color:rgba(255,255,255,0);position:fixed;top:7em;right:0;margin:0px;
+padding-left:8px;padding-right:8px;
+border-width: 2px;border-color: red;
+}
+.jhb#return{background-color:rgba(255,255,255,0);position:fixed;top:10em;right:0;margin:0px;
+padding-left:8px;padding-right:8px;
+border-width: 2px;border-color: black;
+}
+
+.jhb#advance{background-color:rgba(255,255,255,0);position:fixed;top:13em;right:0;margin:0px;
+padding-left:8px;padding-right:8px;
+border-width: 2px;border-color: green;
+}
+
 )
+
+NB. .jhb#esc{background-color:blue;position:relative;top: 60px;right:0;margin:0px;padding-left:8px;padding-right:8px;} /* quit esc-q button */
+NB. .jhb#adv{background-color:green;position:relative;top: 120px;right:0;margin:0px;padding-left:8px;padding-right:8px;} /* quit esc-q button */
 
 NB. *#log:focus{border:1px solid red;}
 NB. *#log:focus{outline: none;} /* no focus mark in chrome */
@@ -221,6 +249,7 @@ var globalajax; // sentence for enter setTimeout ajax
 var TOT= 1;     // timeout time to let DOM settle before change
 //var TOT= 100; // might need more time on slow devices???
 var wjdebug= null; // jdebug window object
+var touch;
 
 function ev_body_focus(){setTimeout(ev_2_shortcut,TOT);}
 
@@ -232,6 +261,17 @@ function ev_body_load()
  jseval(false,jbyid("log").innerHTML); // redraw canvas elements
  newpline("   ");
  jresize();
+
+ touch= ('ontouchstart' in window)||(navigator.maxTouchPoints>0)||(navigator.msMaxTouchPoints>0);
+ if(!touch){
+  jbyid('uarrow').style.display="none";
+  jbyid('darrow').style.display="none";
+  jbyid('return').style.display="none";
+  jbyid('advance').style.display="none";
+ }
+
+ //! var el = document.getElementById('log')
+ //!swipedetect(el, function(swipedir){if (swipedir =='left')alert('You just swiped left!')})
 }
 
 // iX devices only
@@ -542,6 +582,8 @@ function ev_quote_ctrl(){jdoajax([]);}
 function ev_colon_ctrl(){jdoajax([]);}
 function ev_doublequote_ctrl(){jdoajax([]);}
 
+function ev_return_click(){ev_log_enter();}
+
 function ev_close_click(){
  if(qrules==2 && !confirm("Press OK to close.")){return;};
  allwins_clean();
@@ -578,5 +620,63 @@ function getwindow(wid){
  }
  return null; 
 }
+
+// jijx swipe detect
+function swipedetect(el, callback){
+  
+    var touchsurface = el,
+    swipedir,
+    startX,
+    startY,
+    distX,
+    distY,
+    threshold = 150, //required min distance traveled to be considered swipe
+    restraint = 100, // maximum distance allowed at the same time in perpendicular direction
+    allowedTime = 300, // maximum time allowed to travel that distance
+    elapsedTime,
+    startTime,
+    handleswipe = callback || function(swipedir){}
+  
+    touchsurface.addEventListener('touchstart', function(e){
+        var touchobj = e.changedTouches[0]
+        swipedir = 'none'
+        dist = 0
+        startX = touchobj.pageX
+        startY = touchobj.pageY
+        startTime = new Date().getTime() // record time when finger first makes contact with surface
+        e.preventDefault()
+    }, false)
+  
+    touchsurface.addEventListener('touchmove', function(e){
+        e.preventDefault() // prevent scrolling when inside DIV
+    }, false)
+  
+    touchsurface.addEventListener('touchend', function(e){
+        var touchobj = e.changedTouches[0]
+        distX = touchobj.pageX - startX // get horizontal dist traveled by finger while in contact with surface
+        distY = touchobj.pageY - startY // get vertical dist traveled by finger while in contact with surface
+        elapsedTime = new Date().getTime() - startTime // get time elapsed
+        if (elapsedTime <= allowedTime){ // first condition for awipe met
+            if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint){ // 2nd condition for horizontal swipe met
+                swipedir = (distX < 0)? 'left' : 'right' // if dist traveled is negative, it indicates left swipe
+            }
+            else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint){ // 2nd condition for vertical swipe met
+                swipedir = (distY < 0)? 'up' : 'down' // if dist traveled is negative, it indicates up swipe
+            }
+        }
+        handleswipe(swipedir)
+        e.preventDefault()
+    }, false)
+}
+  
+//USAGE:
+/*
+var el = document.getElementById('someel')
+swipedetect(el, function(swipedir){
+    swipedir contains either "none", "left", "right", "top", or "down"
+    if (swipedir =='left')
+        alert('You just swiped left!')
+})
+*/
 
 )

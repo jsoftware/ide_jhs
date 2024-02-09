@@ -11,8 +11,17 @@ press ctrl+. or menu > to continue the tour
 
 NB.spxhr:
 0 : 0
+JHS is a browser based interface to J.
+
+A full J installation includes:
+  Jqt - a complete IDE built in QT
+  jconsole - terminal repl interface
+)
+
+NB.spxhr:
+0 : 0
 experienced users can skim for recent changes:
- jijx menu>wiki>JHS>Release Notes
+ jijx menu>?>Release Notes
 )
 
 NB.spxhr:
@@ -131,7 +140,7 @@ fcrmax a  NB. max values for each col and row
 fcrsum a
 
 0 : 0
-jijx menu wiki>NuVoc
+jijx menu ?>vocabulary
  primary quick reference for J primitives
 
 for info on >. primitive:
@@ -154,7 +163,15 @@ NB.spxhr:
 0 : 0
 a typo or coding error can run a looong time
 signal a break to take back control
+)
 
+NB.spxhr:
+sleep=: 6!:3 NB. define verb sleep to delay for y seconds
+NB. next advance will delay for 3 seconds
+sleep 3 NB. delay 3 seconds
+
+NB.spxhr:
+0 : 0
 jijx menu ide>jbreak signals a break
 
 if jbreak menu item does not exist
@@ -166,16 +183,15 @@ a simple long running sentence is: sleep 20 seconds
 
 it takes 2 breaks to break a sleep
  
-the next advance will sleep with no output
- for 20 seconds unless you signal 2 breaks
+run sentence:
+   sleep 20 NB. use break to end the delay
 )
-6!:3[20 NB. sleep for 20 seconds or until 2nd break
 
 NB.spxhr:spx adf
 0 : 0
 there are several J books
 
-jijx menu wiki>JHS
+jijx menu ?>JHS
  press J in upper left to get to main page
  scan left column and click Beginners Books
 )
@@ -189,17 +205,10 @@ explore jijx menu and run other tours
 jijx menu>tour>plot
  
 jijx menu>tour>labs
- the first 5 listed by running:
-   lablist_jijx_ 'core'
- are interactive introductions to programming
- 
-run:  
-   labrun_jijx_ 'Locales'
- to learn about locales - an important concept
- in advanced programming as they provide
- object-oriented and namespace faciliies
-
 run:
-   labrun_jijx_ 'Files'
- to learn about working with files   
+   lablist_jijx_ 'core'   NB. to list core labs
+
+then run:
+   labrun_jijx_ 'Files'   NB. to learn about files
+   labrun_jijx_ 'Locales' NB. learn about locales
 )

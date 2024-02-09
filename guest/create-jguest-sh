@@ -1,0 +1,36 @@
+#!/bin/bash
+# $1 is $USER for chmod
+# $2 is path to current J install
+
+# /jguest is copy of current J install
+rm -f -r /jguest
+mkdir /jguest
+cp -r $2 /jguest/j
+
+if [ -d /etc/letsencrypt/live/ ]
+then
+ d=`sudo find /etc/letsencrypt/live/ -name cert.pem`
+else
+ d=""
+fi  
+
+if [ -z "$d" ]
+then
+ echo 'unsigned certificate'
+ cert=/jguest/j/addons/ide/jhs/node/cert.pem
+ key=/jguest/j/addons/ide/jhs/node/key.pem
+else
+ echo 'letsencrypt certificate'
+ cert=${d#s} 
+ key=${cert::-8}privkey.pem
+fi
+
+mkdir -p .ssh/jserver
+chmod 700 .ssh/jserver
+chown $1:$1 .ssh/jserver
+cp $cert .ssh/jserver/cert.pem
+cp $key  .ssh/jserver/key.pem
+chmod 600 .ssh/jserver/cert.pem
+chmod 600 .ssh/jserver/key.pem
+chown $1:$1 .ssh/jserver/cert.pem
+chown $1:$1 .ssh/jserver/key.pem

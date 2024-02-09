@@ -9,6 +9,7 @@ er=. 'arg must be of form: nG for n GiB swap file'
 er assert 2=#y
 er assert 'G'={:y
 er assert ({.y)e.'123456789'
+
 'swap already exists'assert ''-:shell'swapon --show'
 shell'sudo fallocate -l ',y,' /swapfile'
 shell'sudo chmod 600 /swapfile'

@@ -327,6 +327,8 @@ function jevfocus()
 }
 
 // event handler onclick etc - id is mid[*sid]
+// enter event return or return+shift - iOS touch #+= has shift
+// enter+shift no longer inserts newline in contenteditable
 function jev(event){
  jmenuhide(event);
  jevev= window.event||event;
@@ -339,8 +341,10 @@ function jev(event){
  jform.jmid.value = (-1==i)?id:id.substring(0,i);
  jform.jsid.value = (-1==i)?"":id.substring(++i,id.length);
  if(type=='keydown'&&27==jevev.keyCode)return false; // IE ignore esc
- if(type=='keydown'&&13==jevev.keyCode&&!jevev.ctrlKey&&!jevev.shiftKey)
+ //!if(type=='keydown'&&13==jevev.keyCode&&!jevev.ctrlKey&&!jevev.shiftKey)
+ if(type=='keydown'&&13==jevev.keyCode&&!jevev.ctrlKey) // iOS touch #+=
   {jform.jtype.value="enter";return jevdo();} 
+
  return jevdo();
 }
 

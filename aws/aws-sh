@@ -2,24 +2,38 @@
 # avoid .sh suffix so pacman preserves eol LF on windows
 
 how="commands: 
- ?           - how to use this script
- clr         - remove old entry from known_hosts for new instance
- set  a.b.c.d - write ip address to file - persistence - elastic ip!
- ssh
- get  remote-file local-file  (scp)
- put  local-file  remote-file (scp)
- getr remote-folder-or-file local-folder-or-file (rsync)
- putr local-folder-or-file remote-folder-or-file (rsync)
+?            - how to use this script
+clr          - remove old entry from known_hosts for new instance
+ 
+set  a.b.c.d - ip address           -> .ssh/jhs_aws_ip.txt
+setg         - jhs_aws_ip.txt       -> jhs_aws_ip_guest.txt
+setd         - jhs_aws_ip_guest.txt -> jhs_aws_ip.txt 
+ 
+ssh
+ 
+get  remote-file local-file  (scp)
+put  local-file  remote-file (scp)
+
 ! rsync local is relative to pwd
- run  command-to-run-on-remote
- bld  key j9.x
- pem  path-to-cert-key-pem-files
+getr remote-folder-or-file local-folder-or-file (rsync)
+putr local-folder-or-file remote-folder-or-file (rsync)
+
+run  command-to-run-on-remote
+
+bld   key j9.x
+serve logon-key
+
+lets-backup   - create letsencrypt tar and copy to local .ssh/jserver
+lets-restore  - copy backup to server and untar to /etc/
 "
+
+dipf=~/.ssh/jhs_aws_ip.txt
+gipf=~/.ssh/jhs_aws_ip_guest.txt
 
 pem=~/.ssh/jhs1-kp.pem
 
 IFS=''
-ip=`cat ~/.ssh/jhs_aws_ip.txt`
+ip=`cat $dipf`
 
 case $1 in
 
@@ -32,7 +46,17 @@ ip=$2
 re='^(0*(1?[0-9]{1,2}|2([0-4][0-9]|5[0-5]))\.){3}'
 re+='0*(1?[0-9]{1,2}|2([‌​0-4][0-9]|5[0-5]))$'
 if [[ ! $ip =~ $re ]]; then echo "invalid ip" ; exit 2 ; fi
-echo $2 > ~/.ssh/jhs_aws_ip.txt 
+echo $2 > $dipf
+;;
+
+setg)
+cp $dipf $gipf
+echo `cat $dipf`
+;;
+
+setd)
+cp $gipf $dipf
+echo `cat $dipf`
 ;;
 
 ssh)
@@ -61,14 +85,30 @@ ssh -i $pem ec2-user@$ip $2
 ;;
 
 bld)
-[ "$#" -ne 3 ] && echo "missing key and/or j9.x" && exit 1
+[ "$#" -ne 2 ] && echo "one parameter: j9.x" && exit 1
 ./aws-sh put cloud-bld-sh
 ./aws-sh put cloud-run-sh
-./aws-sh run "./cloud-bld-sh $3" # build j and nodejs
+./aws-sh run "./cloud-bld-sh $2" # build j and nodejs
+;;
+
+server)
+[ "$#" -ne 2 ] && echo "one parameter: logon-key" && exit 1
 ./aws-sh run "./cloud-run-sh $2" # start JHS and nodejs
 echo "starting JHS and nodejs..."
 echo "browse to: https://$ip:65101/jijx"
 echo "logon-key: $2"
+;;
+
+lets-restore)
+[ ! -f ~/.ssh/jserver/letsencrypt.tar.gz ] && echo "backup .ssh/jserver/letsencypt.tar.gz does not exist" && exit 1
+./aws-sh put ~/.ssh/jserver/letsencrypt.tar.gz foo
+./aws-sh run "sudo mv foo .ssh/jserver/letsencrypt.tar.gz"
+./aws-sh run "sudo tar zxvf ~/.ssh/jserver/letsencrypt.tar.gz -C /"
+;;
+
+lets-backup)
+./aws-sh run 'sudo tar zcvf .ssh/jserver/letsencrypt.tar.gz /etc/letsencrypt'
+./aws-sh get .ssh/jserver/letsencrypt.tar.gz ~/.ssh/jserver/
 ;;
 
 # $2 is path to folder with key.pem and cert.pem files

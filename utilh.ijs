@@ -587,6 +587,21 @@ t=. t,'>',y,'</div>'
 t hrplc 'ID';x
 )
 
+NB.! 
+jhecwrap=: 4 : 0
+t=. '<div id="<ID>" contenteditable="true"',jeditatts
+NB.! t=. t,' style="white-space:nowrap;" '
+
+t=. t,' style="overflow-wrap: break-word; white-space: normal;" '
+
+t=. t,' onkeydown="return jev(event)"'
+t=. t,' onkeypress="return jev(event)"'
+t=. t,' onfocus="jecfocus();"'
+t=. t,' onblur="jecblur();"'
+t=. t,'>',y,'</div>'
+t hrplc 'ID';x
+)
+
 NB.* jhecwrap*id jhecwrap html - contenteditable div that wraps
 jhecwrap=: 4 : 0
 y=. y rplc '&nbsp;';'&nbsp;&ZeroWidthSpace;' NB. breaking space
