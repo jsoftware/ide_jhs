@@ -78,6 +78,20 @@ input[type=password]{padding: 0px; margin: 2px; border: 1px solid black;}
 .menu ul{position:absolute;top:100%;left:0%;display:none;list-style:none;border:0;padding:0;margin:0;}
 .menu li{display:block;white-space:nowrap;border:0;padding:0px;}
 
+/* hamburger menu */
+.menugroup{position:fixed;top:2em;right:0;visibility:hidden;border:2px solid black;
+  padding:6px;background-color:white;}
+.menugroup a:hover{cursor:pointer;background-color:<PC_MENU_HOVER>}
+.menuitem {color:black;margin: 2px; padding: 5px; background-color: white;width:20em;height:2em;
+  display:block;text-align:left;}
+.menuitem {text-decoration:none;}
+.menuspanleft   {font-family:<PC_FONTFIXED>;pointer-events: none;}
+.menuspanright  {font-family:<PC_FONTFIXED>;float:right;pointer-events: none;}
+.menuburger{color:black;background-color:white;position:fixed;top:0;right:0;margin:0px;
+ padding-left:8px;padding-right:8px;width:4em;height:2em;border-width:0;}
+.menuburger:hover{background-color:<PC_MENU_HOVER>;}
+.menuclear{width:100%;height:100%;background-color:transparent;position:fixed;top:0;left:0;
+ visibility:hidden;}
 
 /* tablet */
 @media screen and (max-device-width: 992px){
@@ -95,6 +109,12 @@ input[type=password]{padding: 0px; margin: 2px; border: 1px solid black;}
  .jhab{display:inline-block;min-height:2.5em;min-width:2.5em;}
  .jhb{min-height:2.5em;min-width:2.5em;}
  input::file-selector-button{font-size:48px;color:red;} /*min-height:180px;min-width:180px;*/
+
+ /* hamburger menu */
+ .menuburger{padding-top:1.5em;padding-bottom:2.5em;}
+ .menuitem  {padding-top:1.5em;padding-bottom:2.5em;}
+ .menugroup {top:5em;}
+
 }
 
 )
@@ -114,6 +134,12 @@ seebox=: 3 : 0
 1 seebox y
 :
 ;((x+>./>#each y){.each "1 y),.<LF
+)
+
+
+NB. Lambert/Raul forum
+literate=: 3 : 0
+; (LF;~dtb)"1]1 1}._1 _1}.":<y
 )
 
 seehtml=: 3 : 0

@@ -321,7 +321,7 @@ documented functions:
 
 rundemo=: 3 : 0
 t=. 'jdemo',":y
-require'~addons/ide/jhs/demo/jdemo',(":y),'.ijs'
+load'~addons/ide/jhs/demo/jdemo',(":y),'.ijs'
 select. y
 case. 14 do. 'jdemo14;1 1 800 600'cojhs 'temp' [ temp__=: ?5 12$200
 case. 15 do. 'jdemo15;1 1 500 500'cojhs '' 

@@ -1,25 +1,21 @@
 NB. utils for JHS guest server
 
 load'~addons/ide/jhs/aws/aws-utils.ijs' NB. define create_swap_jaws_
+create_swap=: create_swap_jaws_
 
 man=: 0 : 0
    default'' NB. set default args
    seeargs''
    setarg 'guests';10
-   seeargs''
 
    start'frown' NB. does create_guest to refresh /jguest from base install
 NB.browse: https://localhost.or.aws-server:65101/jguest
 
    ports''     NB. ports in use
-
    rawlog''    NB. show rawlog
-   getlog''    NB. snapshot rawlog to LOG
-   seelog''    NB. get filtered formated log from
-   filters     NB. heads count refused wait 
-   seelog 1 0 0 0 NB. heads, all records, do not remove refused or wait
-
-$ node inspect localhost:9229
+   getlog''    NB. LOG=: from rawlog
+   getlog ...  NB. LOG=: ... 
+   seelog n    NB. see last n LOG rows
 
 users can't read read files of other users
 )
@@ -40,8 +36,13 @@ JHSP=:  65001
 
 NB. start of log utils
 
+3 : 0''
+if. _1=nc<'LOG' do. LOG=: '' end.
+)
+
 logfolder=:  jpath'~temp/guest/'
 nodeout=:    logfolder,'/guest.log'
+dumps=: '/var/lib/systemd/coredump/'
 
 NB. rename old guest.log as guest_n.log before starting new one
 logroll=: 3 : 0
@@ -55,24 +56,29 @@ end.
 
 rawlog=: 3 : 0
 t=. fread nodeout
-t,(LF~:{:t)#LF
 )
 
-NB. LOG set from current log or rolled log
+NB. LOG set from current log or arg
 getlog=: 3 : 0
-if. ''-:y do.
- t=. rawlog'' NB. current log
-else. 
- 'need to read a rolled log'
-end.
+t=. ;(''-:y){y;rawlog''
+t=. t,(LF~:{:t)#LF
 t=. <;.2 t
 b=. (<'jhs ')=4{.each t
-echo ;(-.b)#t
+nonjhs=: ;(-.b)#t
 t=. deb each b#t
 t=. <;._1 each ' ',each t
 c=. >./;#each t
 t=. ":each 9{."1 >c{.each t
 t=. }."1 t
+
+NB. truncate url
+i=. <a:;getndx'url'
+q=. i{t
+c=. 15 <. each #each q
+q=. c{.each q
+t=. q i}t
+
+NB. truncate xtra
 i=. <a:;getndx'xtra'
 q=. i{t
 c=. 23 <. each #each q
@@ -82,39 +88,30 @@ i=. <a:;getndx'ts'
 q=. i{t
 t=. (gts each 0".each q) i}t
 LOG=: t
-i.0 0
 )
 
-filters=: 1 20 1 1 1 NB. heads number refused wait 403
+heads=: ;:'ts type port snum ip count url xtra'
 
-heads=: ;:'ts type port snum ip count wait xtra'
-
-seelog=: 3 : 0
-'head count refused wait t403'=: ;(y-:''){y;filters
+NB. headers and last y LOG rows
+replog=: 3 : 0
+y=. ;(''-:y){y;20
 getlog''
-t=. LOG
-if. refused do. t=. ((1{"1 t)~:<'refused')#t end.
-if. wait    do. t=. ((1{"1 t)~:<'wait'   )#t end.
-if. t403    do. t=. ((1{"1 t)~:<'403'    )#t end.
-if. count>0 do. t=. (0>.count-~#t)}.t end.
-if. head    do. t=. heads,t end.
+heads,(-y<.#LOG){.LOG
 )
 
-rep=: 3 : 0
-seebox_jhs_ ":each seesummary''
-)
-
-NB. get input counts for record type y
+NB. get count of rows for type y
 getcount=: 3 : 0
 c=. ;0".each(getndx 'count'){"1 ('type ',y)sel LOG
 )
 
-seesummary=: 3 : 0
-d=. seelog 0 0 0 0 0
+rep=: 3 : 0
+getlog''
 r=. 0 2$''
+r=. r,|.2{.{.LOG
 r=. r,'records';#LOG
+r=. r,'nonjhs';+/LF=nonjhs
+r=. r,'dumps';#1 dir dumps
 r=. r,'#~.ips';<.#~.getcol'ip'
-r=. r,'linux users';#dir'/home'
 r=. r,'max port';>./}.;0".each getcol'port'
 t=.   (getndx'type'){"1 LOG
 c=. +/"1 =t
@@ -128,19 +125,28 @@ if. #c do.
  r=. r,'inputs max';{.c
  r=. r,'inputs mean';(<.2%~#c){c
 end.
+r
+)
 
-t=. shell_jtask_ 'sudo du -s /home'
-r=. r,'space';(t i.TAB){.t 
+repsnum=: 3 : 0
+getlog''
+(y=;_1".each(getndx'snum'){"1 LOG)#LOG
 )
 
 repspace=: 3 : 0
 t=. shell_jtask_ 'sudo du -s /home/p*'
 a=. <;._2 t rplc LF;TAB
-seebox_jhs_ a=. (2,~-:#a)$a
+(2,~-:#a)$a
 )
 
 repmem=: 3 : 0
 shell_jtask_'free'
+)
+
+repcount=: 3 : 0
+snum=. getcol'snum'
+t=. snum i: ~.snum-.(,'+');,'0'
+t{LOG
 )
 
 getndx=: 3 : 'heads i.<y'
@@ -183,7 +189,7 @@ A5_guests   =: 50
 A6_limit    =: 2*60*60
 A7_wait     =: 0 NB. seconds guest must wait before starting new session
 A8_idle     =: 20*60
-A9_prlimit =: '"prlimit --cpu=30 --nofile=1024 --fsize=1000000000 --as=4000000000"' NB. 4G lets pandas tut runj
+A9_prlimit =: '"prlimit --cpu=60 --nofile=1024 --fsize=1000000000 --as=4000000000"' NB. 4G lets pandas tut runj
 i.0 0
 )
 
@@ -274,7 +280,6 @@ t=. '"<BIN>" "<FLAGS>" "<SERVER>" <ARG> > "<OUT>" 2>&1'
 a=. t rplc '<BIN>';bin;'<FLAGS>';flags;'<SERVER>';server;'<ARG>';arg;'<OUT>';nodeout
 a=. 'nohup ',a,' &' NB. critical!
 echo a
-lastlog=: ''
 logroll'' NB. start new guest.log - rename old one if necessary
 shell_jtask_ a
 )

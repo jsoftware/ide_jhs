@@ -7,9 +7,9 @@ rm $1_linux64.tar.gz
 wget -nv www.jsoftware.com/download/$1/install/$1_linux64.tar.gz
 tar -zxf $1_linux64.tar.gz
 
-# update j
+# update j - mkdir Desktop so install icons don't fail
 ln -s -f $1/bin/jconsole jc
-./jc -js "load'pacman'" "'update'jpkg''" "'install'jpkg'all'" "exit''"
+./jc -js "mkdir_j_'Desktop'" "load'pacman'" "'install'jpkg'*'" "exit''"
 ln -s -f $1/addons/ide/jhs/guest/guest_util.ijs guest_util.ijs
 
 # put default self-signed certificates in .ssh
@@ -19,6 +19,11 @@ sudo chmod 600 .ssh/key.pem
 sudo chown ec2-user:ec2-user .ssh/key.pem
 sudo chmod 600 .ssh/cert.pem
 sudo chown ec2-user:ec2-user .ssh/cert.pem
+
+# create .ssh/jserver for letsencrypt
+sudo mkdir -p .ssh/jserver
+sudo chmod 700 .ssh/jserver
+sudo chown $1:$1 .ssh/jserver
 
 # install nodejs
 sudo yum -y install nodejs

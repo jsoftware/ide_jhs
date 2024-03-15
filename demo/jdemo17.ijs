@@ -1,105 +1,119 @@
 coclass'jdemo17'
 coinsert'jhs'
-NB. play with csscore overrides ffor size (padding) for iphone
+NB. play with hamburger menu
 
-NB. 'jdemo17'jpage''
-NB. JEVIDS=: jhjevids'pswd gn*sp gn*uc gn*di gn*sim gn*fan'
-
-title=: 'jdemo16'
-
-NB. html form definition for different events
-HBS=:  0 : 0
-NB. '<div>how now</div><br/>'
-           jhclose''
-
-NB. 'fuabr'jhb 'asdf'
-
-NB.'<div class="menu">'
-NB.'<span style="z-index:100"><span><a href="#" id="fool" name="fool" class="jhmg" onclick="return jmenuclick(event);" onblur="return jmenublur(event);" onfocus="return jmenufocus(event);" onkeyup="return jmenukeyup(event);" onkeydown="return jmenukeydown(event);" onkeypress="return jmenukeypress(event);">fool&#9660;&nbsp;</a></span><ul id="tool_ul">'
-NB. '</ul></span></div><br/>'
-
-NB. jhhr
-NB. jhbr
-
-
-jhma''
-'mule'  jhmg'mule';1;16
-'app'   jhmab'app'
-'demo'  jhmab'demo'
-'tour'  jhmg'tour';1;9
-'over'  jhmab'overview'
-'chart' jhmab'chart'
-jhmz''
-
-jhhr
-
-
-'header'jhhn 3;'pswd app - no javascript' NB. header size 3
-'pswd'  jhspan 'this is the password'
-        jhhr                           NB. html horizonatal rule
-'len'   jhspan'length: ',":10
-'gn*up' jhb'▲'                         NB. button to increase length
-'gn*dn' jhb'▼'
-'epy'   jhspan'entropy: '
-        jhbr                           NB. html line break
-'gn*sp' jhcheckbox'%^& etc';0
-'gn*uc' jhcheckbox'uppercase';0
-'gn*di' jhcheckbox'digits';0
-        jhbr
-'gn'    jhb'generate'
-'copy'  jhb'copy to clipboard'
-        jhhr
-'gn*sim'jhradio'simple css';1;'cssset' NB. csset radio button group
-'gn*fan'jhradio'fancy css' ;0;'cssset'
-        jhbr
-        desc                         NB. desriptive text
-        jhdemo''                     NB. link to open source script
+jhmenu_jhs_=: 3 : 0
+('menuburger'jhb'☰';'menuburger'),'menuclear'jhb'';'menuclear'
 )
 
-menu=: 0 : 0
-           jhma''
-'tool'     jhmg'tool';1;16
- 'app'     jhmab'app'
- 'demo'    jhmab'demo'
-'tour'     jhmg'tour';1;9
- 'over'   jhmab'overview'
- 'chart' jhmab'chart'
-jhmz''
+jhmenugroup_jhs_=: 4 : 0
+'value back'=. y
+more=. '<span class="menuspanleft" >',(jhfroma'<          '),'</span>'
+t=. '<a href="#" class="menuitem" onclick="return menushow(''<BACK>'')" ><VALUE></a>'
+t=. t hrplc 'BACK VALUE';back;more,jhfroma value
+t,~'<div id="<ID>" class="menugroup">'rplc '<ID>';x
 )
 
-NB. count <xxx and </xxx
-hcnt__=: 4 : 0
-(+/('<',x) E. y),+/('</',x) E. y
+jhmenugroupz_jhs_=: 3 : '''</div>'''
+
+NB. id jhmenuitem 'test';[more;esc] - more is '' or '>' ; esc is '' or single alphanumeric
+jhmenuitem_jhs_=: 4 : 0
+'text more esc'=: 3{.(boxopen y),'';''
+'more parameter must be '''' or ''>'''assert (<more) e. '';'>'
+more=. '<span class="menuspanleft" >',(;(more-:'>'){'&nbsp&nbsp;';'&gt&nbsp;'),'</span>'
+esc=.  '<span class="menuspanright">',(;(#esc){'';'esc+',esc),'</span>'
+t=. '<a id="<ID>" href="#" class="menuitem" onclick="return jev(event)" ><VALUE></a>'
+t hrplc 'ID VALUE';x;more,(jhfroma text),esc
+)
+
+NB. id jhmenuitemto 'test';esc;tp - esc is '' or single alphanumeric - to is menu group id
+jhmenuitemto_jhs_=: 3 : 0
+'text esc to'=: 3{.(boxopen y),'';''
+more=. '<span class="menuspanleft" >&gt&nbsp;</span>'
+esc=.  '<span class="menuspanright">',(;(#esc){'';'esc+',esc),'</span>'
+t=. '<a href="#" class="menuitem" onclick="return menushow(''<TO>'')" ><VALUE></a>'
+t hrplc 'VALUE TO';(more,(jhfroma text),esc);to
+)
+
+
+NB. sentences that define html elements
+
+HBS=: 0 : 0
+jhmenu''
+
+'menu0' jhmenugroup  'top';''
+        jhmenuitemto 'apps';'w';'apps'
+'tools' jhmenuitem   'tools'
+        jhmenuitemto 'view';'';'view'
+        jhmenuitemto 'tour';'';'tour'
+        jhmenuitemto 'help';'?';'help'
+'quit'  jhmenuitem   'quit'
+jhmenugroupz''
+
+'apps'  jhmenugroup'apps';'menu0'
+'file'  jhmenuitem'file'
+jhmenugroupz''
+
+'view'  jhmenugroup'view';'menu0'
+'wclear'jhmenuitem'clear window'
+'rclear'jhmenuitem'clear refresh'
+jhmenugroupz''
+
+'foo'jhb'adsf'
+jhbr
+'goo'jhtextarea(,LF,.~100 10$'asdf adsf qrew qew rdasf a');40;80
 )
 
 CSS=: 0 : 0
-.jhb  {margin: 2px; padding: 0px; background-color: <PC_BUTTON>;border: 2px solid black;}
-.jhb  {margin: 2px; padding: 0px; background-color: <PC_BUTTON>;border: 2px solid black;padding:4px;padding-top:20px;padding-bottom:20px;}
-
-
-/*.menu li{display:block;white-space:nowrap;padding:2px;color:#000;background:#eee;font-family:<PC_FONTFIXED>;}*/
-/*.menu li{padding-top:20px;padding-bottom:20px;}*/
-
-  .jhmab{display:block;height:40px;}
-
-/*
-  .jhmg {display:inline-block;height:40px;}
-  .jhmg a:hover {cursor:pointer;color:#000;background:<PC_MENU_HOVER>;width:100%;}
-*/
-
-/*.menu ul{position:absolute;top:100%;left:0%;display:none;list-style:none;border:1px black solid;margin:0;padding: 0;}*/
-
-/*.menu a{font-family:<PC_FONTFIXED>;padding:0px;}*/
-  .menu a{padding-top:0px;padding-bottom:0px}*/
-
-/*.menu a:hover{cursor:pointer;color:#000;background:<PC_MENU_HOVER>;width:100%;}
-
-/*.menu span{float:left;   position:relative;}*/
-  .menu span{float:left;   position:relative;margin:0;background-color:#eee;padding-top:20px;padding-bottom:20px;}
-  .menu span{float:none;   position:relative;  margin:0;background-color:#eee;padding-top:20px;padding-bottom:20px;}
-
-
 )
 
+NB. J code - initialize and handle events
+create=: 3 : 0 NB. called by page or browser to initialize locale
+t=. y jpagedefault 'this is default data'
+'must be text'assert 2=3!:0 t
+jsdata=: 'ta';t
+)
 
-JS=: ''
+jev_get=: jpageget NB. called by browser to load page
+
+
+NB. javascript code
+JS=: 0 : 0
+
+mmshowing='';
+
+function mmhide(e){jbyid(e).style.visibility= 'hidden';}
+function mmshow(e){jbyid(e).style.visibility= 'visible';}
+
+function ev_menuburger_click(){
+ if(''==mmshowing)
+ {
+  mmshowing= 'menu0';
+  mmshow(mmshowing);
+  jbyid('menuclear').style.visibility= 'visible';
+ }
+ else
+ {
+  mmhide(mmshowing);
+  mmshowing= '';
+  jbyid('menuclear').style.visibility= 'hidden';
+ }
+}
+
+function showmenu(m){
+ jbyid(mmshowing).style.visibility= 'hidden';
+ jbyid(m).style.visibility= 'visible';
+ mmshowing= m;
+}
+
+function ev_to_apps_click(){showmenu('apps');}
+
+function ev_menuclear_click(){ev_menuburger_click();}
+
+function ev_w_shortcut(){alert('esc+w');}
+ 
+function menushow(id){
+ if(id=='') ev_menuburger_click(); else showmenu(id);
+}
+
+)

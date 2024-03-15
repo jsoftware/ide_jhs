@@ -37,7 +37,7 @@ const crypto = require("crypto");
 const cp     = require('child_process');
 
 const guestbase= 1+parseInt(jhsport);
-const NOC= '0+0+0+0';  // token+serial+port+time
+const NOC= '0+0+0';  // token+serial+port
 const bind= '0.0.0.0'; // anybody
 const jhshost= "localhost";
 const cookiename= "jhs_cookie";
@@ -96,7 +96,7 @@ function getguest(){
 
 function markenter(port)  {if(jhsport!=port){ var i= port-guestbase; genter[i]= Date.now(); ++gcount[i];}}
 
-// cookie: token+snum+port+now
+// cookie: token+snum+port
 function createcookie(port,ip){
  if(port==0) return NOC;
  var now= Date.now();
@@ -115,7 +115,7 @@ function createcookie(port,ip){
   log('guest',port);
  }
  var n= (port==jhsport)?0:snum;
- return token+'+'+n+'+'+port+'+'+now;
+ return token+'+'+n+'+'+port; //+'+'+now;
 }
 
 // client reponse with text
@@ -133,7 +133,7 @@ function replyc(code,res,p,port,ip)
 
 // 403 reply will set location to /jlogin - guest cookie set to enforce waitx
 function replynoc(res,p,port){
- log('403',port,0,p);
+ log('403',port,'+',p);
  clear(port);
  var cval= token+'+'+'x'+'+'+port+'+'+Date.now(); // note 'x' for snum
  var max= (port>=guestbase)? ';Max-Age='+waitx : '';
@@ -158,18 +158,24 @@ const options = {
 const server = https.createServer(options, (req, res) => {
   // htmluser=  fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/user.html'),'utf8');
   // htmlbad=   fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/bad.html'),'utf8');
-  clearguests();
   var cval= get_cookies(req).jhs_cookie;
+  clearguests();
   if(typeof(cval)=='undefined') cval= NOC; 
   var p= cval.split('+');
   if(token!=p[0]){cval=NOC; p=cval.split('+');} // cval reset if from another node instance
   var c= p[0];
   var s= p[1];
   var port= p[2];
-  var ontime= parseInt(p[3]); // time session started
   var valid= port!=0 && c==token && s==(  (port!=jhsport)?gsnums[port-guestbase]:usersnum );
   var url= decodeURIComponent(req.url);
   var  ip= req.connection.remoteAddress;
+
+  if(valid)
+   log('valid',port,req.method+url);
+  else
+   log('invalid','+',req.method+url); 
+
+
   if(req.method == 'POST')
   {
     dopost(req, res, function() {
@@ -181,7 +187,8 @@ const server = https.createServer(options, (req, res) => {
 
       if("jserver-user"==cmd || restart) // validate key
       {
-         if(key!=val){replyx(200,res,"invalid key",jhsport); return;}
+       //! add code here to throw error for testing
+       if(key!=val){replyx(200,res,"invalid key",jhsport); return;}
          cp.exec('sudo '+'/jguest/j/addons/ide/jhs/guest/guest-sudo-sh user '+jhsport+' '+process.env.USER+' '+restart);
          replyc(200,res,"valid",jhsport,ip);
       }
@@ -206,15 +213,8 @@ const server = https.createServer(options, (req, res) => {
   else if(url=='/juser') replyx(200,res,htmluser);
   else if(url=='/jguest')
   {
-   var wait= Math.ceil((waitx-((Date.now()-ontime)/1000))); // seconds to wait
-   if(valid && port!=jhsport) jhsreq("GET",jhshost,port,'/jijx',"",req,res);
-   else if(token==c && wait>0 && port!=jhsport)
-   {
-     // waiting for old cookie to expire
-     log('wait',port,wait);
-     replyx(200,res,htmlbad.replace('<STATUS>','try again in '+wait+' seconds'));
-     return;
-   }
+   if(valid && port!=jhsport)
+    jhsreq("GET",jhshost,port,'/jijx',"",req,res);
    else
    {
      port= getguest();
@@ -275,24 +275,28 @@ async function jhsreq(gp,host,port,url,body,req,res){
  promise.then(good,bad);
  function good(data){replyhb(200,res,data);}
  function bad(data){
-  if(typeof(data)=='string'){
-   if(data.includes('ECONNREFUSED')){
-   // refused - redirect.html does sleep in browser - avoid sync in node
-   log('refused',port,0,data);
-   if(req.method=='GET')
+  log('badres',port,req.method+decodeURIComponent(req.url),data); 
+  if(typeof(data)=='string')
+  {
+   if(data.includes('ECONNREFUSED'))
    {
-    // kludge to quit after too many redirects
-    if(port!=jhsport && gcount[port-guestbase]>30){replynoc(res,'bad refused',port);return;}
-    replyx(200,res,htmlredirect);
+    // refused - redirect.html does sleep in browser - avoid sync in node
+    //log('refused',port,req.method+decodeURIComponent(req.url),data);
+    if(req.method=='GET')
+    {
+     // kludge to quit after too many redirects
+     if(port!=jhsport && gcount[port-guestbase]>30){replynoc(res,'bad refused',port);return;}
+     replyx(200,res,htmlredirect);
+    }
+    else 
+     replynoc(res,'bad refused',port);
    }
-   else 
-    replynoc(res,'bad refused',port);
-  }
    else if(data.includes('ECONNRESET'))
     replynoc(res,'bad reset',port);
   }
-  else{
-   log('bad',port,0,data);
+  else
+  {
+   // log('bad',port,0,data);
    //replyx(200,res,data+'');
    replynoc(res,'bad',port);
   }
@@ -321,13 +325,14 @@ function dorequest(gp,host,port,url,body,req){
 function log(type,port,val){
  var d= 'jhs '+Date.now()+' '+type+' ';
  if(port==jhsport)
-  d+= port+' '+usersnum+' '+userip+' . ';
+  d+= port+' '+usersnum+' '+userip+' + ';
  else if(port>=guestbase && port<(guestbase+guests)){
   let i= port-guestbase;
   d+= port+' '+gsnums[i]+' '+gip[i]+' '+gcount[i];
  }
  else
-  d+= port+' . . . ';
+  d+= port+' + + + ';
+
  for (var i = 2; i < arguments.length; i++) {
   d= d+' '+arguments[i];
  }

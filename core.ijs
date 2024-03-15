@@ -159,7 +159,7 @@ while. 1 do.
   NB.  smoutput '*** getdata error: ',t
   NB. end.
   NB. recv errors expected and are not displayed
-  logapp 'getdata error: ',t
+  logapp 'getdata error: ',13!:12''
  end.
 end.
 )

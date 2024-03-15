@@ -10,13 +10,9 @@
 
 case $1 in
  guest)
-
-  if [ ! -d /home/p$2 ]; then
-    sudo useradd -m p$2
-  fi
-
-  sudo pkill -U p$2
-  sudo rm -r -d -f /home/p$2/*
+  sudo pkill   -U p$2
+  sudo userdel -r p$2
+  sudo useradd -m p$2
 
   # aws server may have quota (man quota) and this could limit users disk usage
   # $4 "prlimit --cpu=30 --nofile=1000 --fsize=1000000000"

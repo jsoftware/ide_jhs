@@ -11,24 +11,21 @@ $ start jconsole
 *** setup aws guest server
 https://code.jsoftware.com/wiki/System/Installation/Cloud
 
-
 $ . bin/aws.sh  # cd j9.x/addons/ide/jhs/aws
-
+$ ./aws-sh clr  # required if a new instance to clear known hosts
 $ ./aws-sh set a.b.c.d # done once - copied from aws console
-
-$ ./aws-sh clr
-$ ./aws-sh bld j9.5
+$ ./aws-sh bld j9.5 # continue connecting? - yes if this is new instance
 
 $ # following required if local git changes are required on server
 $ ./aws-sh putr $HOME/git/addons/ide/jhs j9.5/addons/ide
-$ ./aws-sh putr $HOME/git/addons/data/jd j9.5/addons/data
+
+$ # following required if new instance needs letsencrypt
+$ ./aws-sh lets-restore # restore local backup tar to remote /etc/letsencrypt
 
 $ ./aws-sh ssh
 $ec2-user ./jc 
    load'guest_util.ijs'
-
-   create_swap_jaws_'2G' NB. create swap file if not already done
-
+   create_swap'2G' NB. create swap file if not already done
    man
    start'key' NB. does create_jguest
 
@@ -67,9 +64,17 @@ $ pkexec visudo can recover from damaged sudo
 $ sudo userdel -r p65002
 
 *** instance configs
-t2.micro  1GiB ram
-t2.small  1GiG ram           - 2 times the cost
-t2.medium 4GiB ram -         - 4 times the cost
+         cpus ram G                usd per/month
+t2.micro 	1     1   6	   $0.011 	        8.34
+t2.small 	1 	   2 	12 	$0.023 	       16.56
+t2.medium 	2 	   4 	24 	$0.046 	       33.40
+t2.large 	2 	   8 	36 	$0.0938 	       66.82
+t2.xlarge 	4 	  16 	54 	$0.186 	      133.63
+t3.xlarge 	4 	  16 	40% 	$0.167         120.24
+m5zn.xlarge 4    16        $0.330         237.00
+
+t2 are all the same processor (not very fast)
+ .xxx are cpus and ram
 
 currently have 8G EBS with 2G swap
 should increate this signifcanly (32Gib) and increase swap and --as= as well
@@ -78,7 +83,27 @@ should increate this signifcanly (32Gib) and increase swap and --as= as well
 JKT:   10 timespacex '%. 1000 1000 ?@$0'
 requires: prlimit --as=500000000
 
-mint       0.116
-t2.micro   0.515
-ipad 701   0.260
-iphone 701 0.872 
+0.116 mint-avx2
+0.277 mint-no-avx
+0.212 t2.micro-avx2
+0.515 t2.micro-no-avx
+0.260 ipad 701
+0.872 iphone 701
+
+0.149 m5zn-avx2
+0.296 m5zn-no-avx2
+0.355 m5-no-avx2
+
+*** guest server big
+m5zn.xlarge 4vcpu 16G ram
+64G disk
+32G swap
+
+jhs2-template launch template
+ amazon linux
+ t2.xlarge
+ jhs1-kp
+ jhs1-sg
+ 64G storage gp3
+ create swap 32G
+

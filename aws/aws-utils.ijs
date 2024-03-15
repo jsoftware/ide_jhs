@@ -6,10 +6,7 @@ NB. swap 1G required for jdrt'pandas'
 NB. https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-22-04
 create_swap=: 3 : 0
 er=. 'arg must be of form: nG for n GiB swap file'
-er assert 2=#y
 er assert 'G'={:y
-er assert ({.y)e.'123456789'
-
 'swap already exists'assert ''-:shell'swapon --show'
 shell'sudo fallocate -l ',y,' /swapfile'
 shell'sudo chmod 600 /swapfile'
