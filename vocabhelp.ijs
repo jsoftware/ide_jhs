@@ -7,11 +7,18 @@ top=. {.;:y
 first=. {.;top
 last=. {:;top
 b=. 'https://code.jsoftware.com/wiki/Vocabulary'
-if.     ''-:;top                        do. t=. b
-elseif. top e. DICTNV_jhs_              do. t=. b,'/',>DICTNVX {~ DICTNV i.top
+a=. ;top
+if.     top e. DICTNV_jhs_              do. t=. b,'/',>DICTNVX {~ DICTNV i.top
 elseif. (first e. Alpha_j_) *. '.'=last do. t=. b,'/ControlStructures'
+elseif. '!:'-:a                         do. t=. 'https://code.jsoftware.com/wiki/Vocabulary/Foreigns'
 elseif. (first='_')+.first e. Num_j_    do. t=. b,'/Constants'
-elseif. 1                               do. t=. 'https://code.jsoftware.com/wiki/NuVoc','#bottomrefs'
+elseif. 'JHS'-:a                        do. t=. 'https://code.jsoftware.com/wiki/Guides/JHS'
+elseif. a-:,'a'                         do. t=. 'https://code.jsoftware.com/wiki/NuVoc','#bottomrefs'
+elseif. a-:'807'                        do. t=. 'https://www.jsoftware.com/help/index.htm'
+elseif. a-:'std'                        do. t=. 'https://code.jsoftware.com/wiki/Standard_Library/Overview'
+elseif. a-:'rel'                        do. t=. 'https://code.jsoftware.com/wiki/System/ReleaseNotes'
+elseif. a-:'main'                       do. t=. 'https://code.jsoftware.com/wiki/Main_Page'
+elseif. 1                               do. t=. b
 end.
 jjs_jhs_  'urlopen("',t,'");'
 i.0 0

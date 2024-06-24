@@ -3,11 +3,9 @@
  Expect: (chunk) handled in node and complete result passed to client
  see: ~addons/ide/jhs/node.ijs
 
-cookie created by replyc with waitx limit on valid start
+cookie created by replyc
  cookie expires at limit - persists over browser restart
  econn... bad(data) gsnums port entry so cookie will be invalid in the future
-
-cookie created by replynoc with waitx used to enforce waitx before new start
 
 guest session ends when:
  any event marks guest invalid based on limit or time
@@ -25,10 +23,11 @@ const nodeport=a[0];const key=a[1];const jhsport=a[2];
 //! a[3] unused - was breakfile
 //! a[4] unused - was pem
 const guests= parseInt(a[5]); // number of guests allowed
-const limit=  parseInt(a[6]); // seconds a session lasts before clearguests clear
-const waitx= parseInt(a[7]);  // seconds a cookie persists after noc to prevent new session too soon
-const idle=   parseInt(a[8]); // seconds idle (time between enters) before clearguests clear
-const prlimit=a[9];           // prlimit --cpu=30 --nofile=1000 --fsize=1000000000
+const limit=  parseInt(a[6]); // seconds a session lasts before poll kill
+const dulim=  parseInt(a[7]); // limit for du -s -b /home/p?
+const idle=   parseInt(a[8]); // seconds idle (time between enters) before poll kill
+//! a[9] unused - pgroup limits
+const polltime= 60000; // time between poll runs
 
 const https  = require('https');
 const http   = require('http');
@@ -57,7 +56,7 @@ var snum= 0;
 var usersnum=0; // user task serial number - stays at 0 as there is only 1 user (even if task may be restarted)
 var userip=0;   // user task ip
 
-var exitmsg= '(Esc-q or idle/session/cpu/resource limit or ?)';
+var exitmsg= '(Esc-q or idle/session/cpu/storage/... limit or ?)';
 
 process.on('exit', (code) => {
   console.log(`J: exit code: ${code}`);
@@ -73,19 +72,43 @@ process.on('uncaughtException', (err, origin) => {
   );
 });
 
-// mark OLD ports (limit) and IDLE ports (idle)  as free
+// run periodically to kill tasks using too much storage 
+function poll(){
+  // log('poll',0);
+  clearguests();
+  let p= cp.execSync('sudo '+'/jguest/j/addons/ide/jhs/guest/guest-sudo-sh du 0').toString().split('\n');
+  for(let i=0; i<p.length-1; i++){ // size tab folder - last one is empty becasue of trailing \n
+   q= p[i].split('\t');
+   if(parseInt(q[0])>dulim) kill('kill-du',q[1].slice(7),q[0]);
+  }   
+  setTimeout(poll, polltime);
+}
+
+// mark OLD ports (limit and idle) as free
 function clearguests(){
  for (let i = 0; i < gstart.length; i++) {
-  if(gstart[i]!=0 && Date.now()>(gstart[i]+(1000*limit))){log('limit',i+guestbase,0,gcount[i]);clear(i+guestbase);}
-  if(gstart[i]!=0 && Date.now()>(genter[i]+(1000*idle))) {log('idle' ,i+guestbase,0,gcount[i]);clear(i+guestbase);}
+  p= i+guestbase; 
+  if(gstart[i]!=0 && Date.now()>(gstart[i]+(1000*limit))) kill('kill-limit',p,0);
+  if(gstart[i]!=0 && Date.now()>(genter[i]+(1000*idle ))) kill('kill-idle',p,0);
  }
 }
 
-// mark port as available
-function clear(port){
- if(jhsport!=port){i= port-guestbase;gstart[i]=0; gsnums[i]=0; genter[i]=0; gcount[i]=0;} // invalidate guest
-}
+// kill task and user for port
+function kill(type,port,xtra){
+  if(jhsport==port || 0==port)return;
+  log(type,port,'+',xtra);
+  cp.execSync('sudo '+'/jguest/j/addons/ide/jhs/guest/guest-sudo-sh kill '+port);
+  clear(port);
+ }
 
+
+// clear port info
+function clear(port){
+ if(jhsport==port || 0==port)return;
+ log('clear',port);
+ i= port-guestbase;gstart[i]=0; gsnums[i]=0; genter[i]=0; gcount[i]=0; 
+}
+ 
 // return free guest port or 0
 function getguest(){
  for (let i = 0; i < gsnums.length; i++) {
@@ -134,10 +157,10 @@ function replyc(code,res,p,port,ip)
 // 403 reply will set location to /jlogin - guest cookie set to enforce waitx
 function replynoc(res,p,port){
  log('403',port,'+',p);
- clear(port);
+ kill('kill-403',port,0);
  var cval= token+'+'+'x'+'+'+port+'+'+Date.now(); // note 'x' for snum
- var max= (port>=guestbase)? ';Max-Age='+waitx : '';
- var c= cval+max+";Secure;Httponly";
+ //var max= (port>=guestbase)? ';Max-Age='+waitx : '';
+ var c= cval+";Secure;Httponly";
  res.writeHead(403, "OK", {'Set-Cookie':cookiename+"="+c,'Content-Type': 'text/html'});
  res.end(p);
 }
@@ -159,7 +182,6 @@ const server = https.createServer(options, (req, res) => {
   // htmluser=  fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/user.html'),'utf8');
   // htmlbad=   fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/bad.html'),'utf8');
   var cval= get_cookies(req).jhs_cookie;
-  clearguests();
   if(typeof(cval)=='undefined') cval= NOC; 
   var p= cval.split('+');
   if(token!=p[0]){cval=NOC; p=cval.split('+');} // cval reset if from another node instance
@@ -195,11 +217,26 @@ const server = https.createServer(options, (req, res) => {
       else if(!valid) replynoc(res,'login-post',port);
       else if("jbreak"==cmd)
       {
+       log('break',port); 
        cp.exec('sudo '+'/jguest/j/addons/ide/jhs/guest/guest-sudo-sh break '+port);
        replyx(200,res,'break signalled');
       }
       else
-      jhsreq("POST",jhshost,port,url,req.post,req,res); // pass to JHS
+      {
+       //jdo=   jgp\'testtest\'&jtype=enter&jmid=log&jsid=&jdata=&jwid=jijx 
+       if(postdata.includes("jgp")) // avoid regex test for most sentences
+       {
+        let t= postdata.split('&')[0];
+        if(/jdo= *jgp *'[a-zA-Z0-9]+' *$/.test(t)){
+         let p= t.split("'")[1];
+         if(7<p.length){ 
+          log('restore',port,p); 
+          cp.execSync('sudo '+'/jguest/j/addons/ide/jhs/guest/guest-sudo-sh restore '+port+' '+p);
+         }
+        }
+       }
+       jhsreq("POST",jhshost,port,url,req.post,req,res); // pass to JHS
+      }
     });
      return;
   }
@@ -225,7 +262,7 @@ const server = https.createServer(options, (req, res) => {
      }
      else
     {
-     cp.exec('sudo '+'/jguest/j/addons/ide/jhs/guest/guest-sudo-sh guest '+port+' '+limit+' "'+prlimit+'"');
+     cp.exec('sudo '+'/jguest/j/addons/ide/jhs/guest/guest-sudo-sh guest '+port);
      replyc(200,res,htmlredirect,port,ip);
     }
    }
@@ -237,7 +274,7 @@ const server = https.createServer(options, (req, res) => {
   else jhsreq("GET",jhshost,port,url,"",req,res);
 });
 
-server.listen(nodeport, bind, () => {log('start',`${nodeport}`);});
+server.listen(nodeport, bind, () => {log('start',`${nodeport}`);poll();})
 
 var get_cookies = function(request) {
   var cookies = {};
@@ -331,7 +368,7 @@ function log(type,port,val){
   d+= port+' '+gsnums[i]+' '+gip[i]+' '+gcount[i];
  }
  else
-  d+= port+' + + + ';
+  d+= port+' + + + + ';
 
  for (var i = 2; i < arguments.length; i++) {
   d= d+' '+arguments[i];

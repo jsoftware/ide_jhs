@@ -133,11 +133,11 @@ t=. y{.SPFILES
 sptable(shorts_jsp_ t),.t
 )
 
-spxinit=: 3 : 0
+xxxspxinit=: 3 : 0
 assert. fexist spf y['must exist'
 if. IFJHS do.
  ADVANCE_jijx_=: 'spx'
- a=. 'ctrl+. or menu > advances'
+ a=. 'ctrl+. advances'
 elseif. IFQT do.
  if. _1=4!:0<'qtsave' do.
   qtsave=: 5!:1<'labs_run_jqtide_'
@@ -147,13 +147,29 @@ elseif. IFQT do.
 elseif. 1 do.
   a=. 'spx'''' NB. advances (create a shortcut key!)'
 end.
-echo a,' (see noun spxhelp)'
+echo a,' - see spxhelp'
 SPXFILE_z_=: spf y
 SEM=: get SPXFILE
 SEMN=: 1
 status''
 i.0 0
 )
+
+spxinit=: 3 : 0
+'only runs in JHS'assert IFJHS
+'file must exist' assert fexist spf y
+ADVANCE_jijx_=: 'spx'
+SPXFILE_z_=: spf y
+SEM=: get SPXFILE
+SEMN=: 1
+a=. SPXFILE,LF,'advance through lab:',LF
+b=. 'keyboard: ctrl+. (ctrl+dot)<br>touchscreen: right <span style="color:green;">green</span> button'
+echo a
+echo jhtml'<div><font style="color:red;font-weight:bold">',b,'</font></div>'
+NB. status''
+i.0 0
+)
+
 
 spxqt=: 3 : 0
 if. 0-:y do.
@@ -212,6 +228,7 @@ if. SEMN>#SEM do. 'end of script' return. end.
 ot=. 0 NB. lines
 ndx=. <:SEMN
 d=. >ndx{SEM
+if. 0=#d do. SEMN=:>:SEMN goto_top. end. NB. empty line ignored
 if. 0=#d-.' ' do. SEMN=:>:SEMN[echo ;IFJHS{'';LF goto_top. end.
 
 if. 'NB.spxhr:'-:9{.deb d do.
@@ -219,6 +236,13 @@ if. 'NB.spxhr:'-:9{.deb d do.
  if. IFJHS do. jhtml_jhs_'<hr/>' else. echo 80$'_'end.
  goto_top.
 end.
+
+if. 'NB.spxrun:'-:10{.deb d do.
+ SEMN=:>:SEMN
+ ".10}.d
+ i.0 0
+ return.
+end. 
 
 if. 'NB.spxaction:'-:13{.deb d do.
  SEMN=:>:SEMN
@@ -279,12 +303,8 @@ end.
   a=. <;.2 d
   b=. ;:}:;{.a
   if. b-:;:'0 : 0' do.
-   NB. foldtext for 0 : 0 that has long lines
-   if. +/80<;#each a do.
-    echo 80 foldtext ;}.}:a
-   else. 
-    echo ;}.}:a
-   end. 
+   jhtml_jhs_'<hr/>'
+   echo ;}.}:a
   else.
    if. IFJHS do.
     jhtml_jhs_'<font color="blue">',(jhfroma_jhs_ ;a),'</font>'
@@ -317,7 +337,8 @@ i=. t i. <,':'
 )
 
 isnb=: 3 : 0
-'NB.'-:3{.dltb y
+t=. dltb y
+('NB.'-:3{.t)*.~.'NB.spx'-:6{.t
 )
 
 get=: 3 : 0
@@ -365,10 +386,8 @@ bind -s ^R "spx''\n"
 editrc fwrite '~home/.editrc'
 )
 
-
 NB.! run wiki page as spx style tutorial - proof of concept
-
-wikirun__=: wikiinit_jsp_
+NB. wikiinit_jsp_'CalorieCounting'
 
 coclass'jsp'
 
@@ -490,4 +509,19 @@ while. #t do.
  t=. }.i}.t
 end.
 r=. r rplc '&nbsp;';' ';'&lt;';'<';'&gt;';'>';'&amp;';'&';'&#160;';' ' NB. non-breaking space
+)
+
+NB. x is total ms for animation
+animate=: 4 : 0
+a=. >.x%#y NB. delay time
+n=. ":100
+p=. >:0 i.~y=' '
+t=. 'setTimeout(newinput,X,"D");'rplc 'X';n;'D';p{.y
+for_i. i.(#y)-p do.
+ t=. t,'setTimeout(newinput,X,"D");'rplc 'X';n;'D';(p+i){.y
+ n=. ":a+".n
+end.
+t=. t,'setTimeout(colorinput,',n,',"red");'
+n=. ":500+a+".n
+t=. t,'setTimeout(runinput,',n,',"',y,'");'
 )

@@ -1,26 +1,48 @@
 #!/bin/bash
-# jhs   port timeout prlimit
-# user  port user    restart
-# break port
-
-# can sudo without password
-# jhs p$2 user created if required
+# guest   port
+# user    port unused restart
+# break   port
+# restore port name
+# clear   port 
+# du      0
 
 # depends on /j soft link to j install folder
 
+# can sudo without password
+
+purge () {
+  if [ -d /home/$user ]; then
+   sudo pkill   -U $user
+
+  # if jpersist is defined - backup ~temp
+  if [ -f /home/$user/jpersist.txt ]; then
+   sudo tar -czf jpersist/`cat /home/$user/jpersist.txt`.tgz -C /home/$user j9.5-user/temp
+  fi
+
+   sudo userdel -r $user > /dev/null 2>&1
+  fi 
+}
+
+user=p$2                                 # user for port
+if [ "$2" = "65001" ]; then user=$USER; fi  # unless port is 65001
+
+# /home/$user created if required
+
 case $1 in
  guest)
-  sudo pkill   -U p$2
-  sudo userdel -r p$2
-  sudo useradd -m p$2
-
-  # aws server may have quota (man quota) and this could limit users disk usage
-  # $4 "prlimit --cpu=30 --nofile=1000 --fsize=1000000000"
-  su -l -c "timeout $3 $4 /jguest/j/bin/jconsole /jguest/j/addons/ide/jhs/guest/guest.ijs $2 &" p$2
+  purge
+  sudo useradd -m -g pgroup $user
+  sudo chmod 700 /home/$user # ensure 700 in case /etc/login.defs HOME_MODE not set to 700
+  su -l -c "/jguest/j/bin/jconsole /jguest/j/addons/ide/jhs/guest/guest.ijs $2 &" $user
   ;;
+
+ kill)
+  purge
+  ;;  
 
  user)
   # task to serve port is started if port not active or if $4 is restart
+  # $3 unused - was $USER
   p=`fuser -n tcp $2 2>/dev/null`
   if [[ $4 == "true" || ! $p ]]; then
    sudo fuser --kill -n tcp $2   
@@ -29,12 +51,22 @@ case $1 in
   ;;
 
  break)
-  echo $1 > 'opx.txt'
-  echo $2 > 'portx.txt'
-
-  su -l -c "/jguest/j/bin/jconsole -js break\'node\' exit\'\' " p$2
+  su -l -c "/jguest/j/bin/jconsole -js break\'node\' exit\'\' " $user
   ;;
 
+ restore)
+  sudo echo -n $3 > /home/$user/jpersist.txt
+  sudo rm -f /home/$user/jpersist.tgz
+  if [ -f jpersist/$3.tgz ]; then
+   sudo cp jpersist/$3.tgz /home/$user/jpersist.tgz
+   sudo chown $user:pgroup /home/$user/jpersist.tgz
+  fi 
+  ;;  
+
+ du)
+  # echo "..." necessary to preserve \t and \n
+  echo "`sudo du -s -b /home/p* 2> /dev/null`" # execSync result
+ ;;
 esac
   
 

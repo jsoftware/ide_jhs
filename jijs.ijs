@@ -13,6 +13,61 @@ HBS=: 0 : 0 rplc 'CMV';'4.2'
 '<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/util/dialog.CMV.css">'
 '<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/j/jtheme.CMV.css">'
 '<script src="~addons/ide/jhs/js/codemirror/j/j.CMV.js"></script>'
+
+'saveasdlg'    jhdivadlg''
+ 'saveasdo'    jhb'save as'
+ 'saveasx'     jhtext'';40
+  'saveasclose'jhb'X'
+'<hr></div>'
+
+'rep'         jhdiv'<REP>'
+
+'filename'    jhhidden'<FILENAME>'
+'filenamed'   jhdiv'<FILENAME>'
+
+jhresize''
+
+'ijs'         jhtextarea'<DATA>';20;10
+'textarea'    jhhidden''
+
+NB. menu must come after codemirror
+jhmenu''
+'menu0'  jhmenugroup ''
+'save' jhmenuitem 'save';'^s'
+'saveas' jhmenuitem 'save as ...'
+'runw'   jhmenuitem 'load';'^r'
+'runwd'  jhmenuitem 'loadd'
+
+'lineadv' jhmenuitem 'lineadv';'^.'
+'line'    jhmenuitem 'line';'^*'
+'sel'     jhmenuitem 'selection';'^/'
+'chelp'   jhmenuitem 'context sensitive';'h'
+
+          jhmenulink 'edit';'edit'
+ 'ro'      jhmenuitem 'readonly';'t'
+ 'numbers' jhmenuitem 'numbers'
+
+'close'     jhmenuitem 'close';'q'
+jhmenugroupz''
+
+'edit' jhmenugroup''
+NB. cut/copy/paste do not have cm.commands - only ctrl+xcv
+NB. cut/copy/paste for touch - not supported in codemirror
+'undo'    jhmenuitem 'undo';'^z'
+'redo'    jhmenuitem 'redo';'^y'
+
+'find'     jhmenuitem 'find';'^f'
+'next'     jhmenuitem 'next';'^g'
+'previous' jhmenuitem 'previous';'^G'
+'replace'  jhmenuitem 'replace';'^F'
+'repall'   jhmenuitem 'replaceall';'^R'
+jhmenugroupz''
+
+
+)
+
+0 : 0
+
 jhclose''
 jhma''
 'action'   jhmg'action';1;11
@@ -37,31 +92,15 @@ jhma''
  'ro'       jhmab'readonly    t^'
  'numbers'  jhmab'numbers'
 jhmz''
-
-'saveasdlg'    jhdivadlg''
- 'saveasdo'    jhb'save as'
- 'saveasx'     jhtext'';40
-  'saveasclose'jhb'X'
-'<hr></div>'
-
-'rep'         jhdiv'<REP>'
-
-'filename'    jhhidden'<FILENAME>'
-'filenamed'   jhdiv'<FILENAME>'
-
-jhresize''
-
-'ijs'         jhtextarea'<DATA>';20;10
-
-'textarea'    jhhidden''
 )
 
 NB. y file
 create=: 3 : 0
+y=. jshortname y
 rep=.''
 try.
  d=. (1!:1<jpath y) rplc '&';'&amp;';'<';'&lt;'
- addrecent_jsp_ jshortname y
+ addrecent_jsp_ y
 catch.
  d=. ''
  rep=. 'file read failed ',(ftype y){::'(does not exist)';'';'(it is a folder)'
@@ -90,6 +129,17 @@ line=. ,/:~2 2$line NB. sorted selection
 f=. getv'filename'
 ta=. getv'textarea'
 bta=. <;._2 ta,LF,LF NB. ensure trailing LF and extra one for emtpy last line
+
+if. 'chelp'-:getv'jmid' do.
+ 'a b'=. 2{.line
+ t=. dltb;{.;:b}.;a{bta
+ t=. ;(t-:''){t;'voc'
+ s=. 'jhswiki''',t,''''
+ jhrajax JASEP,s,JASEP,":0 NB.!
+ return.
+end.
+
+
 if. dirty-:'dirty' do.
  mkdir_j_ (f i:'/'){.f
  r=. (toHOST ta)fwrite f
@@ -120,7 +170,8 @@ end.
 jhrajax JASEP,s,JASEP,":caret
 )
 
-ev_close_click=: ev_sel_click=: ev_line_click=: ev_lineadv_click=: ev_runw_click=: ev_runwd_click=: ev_save_click
+ev_close_click=: ev_sel_click=: ev_line_click=: ev_lineadv_click=: ev_runw_click=: ev_save_click
+ev_runwd_click=: ev_chelp_click=: ev_save_click
 
 ev_saveasdo_click=:ev_saveasx_enter
 
@@ -172,10 +223,11 @@ NB. see activeline-background in util/jheme.4.2.css
 CSS=: 0 : 0
 #rep{color:red}
 #filenamed{color:blue;}
-*{font-family:<PC_FONTFIXED>;}
+*{font-family:<PC_FONTFIXED>;font-weight:550;}
 #jresizeb{overflow:visible;border:solid;border-width:1px;clear:left;}
 div{padding-left:0;}
 /*.menu {margin-left:40px;}*/
+.CodeMirror { z-index: 0 } /* allow burger menu on top */
 )
 
 JS=: 0 : 0
@@ -258,6 +310,7 @@ function ev_runwd_click()   {click();}
 function ev_line_click()    {click();}
 function ev_lineadv_click() {click();}
 function ev_sel_click()     {click();}
+function ev_chelp_click()   {click();}
 
 function ev_undo_click(){cm.undo();}
 function ev_redo_click(){cm.redo();}
@@ -319,10 +372,12 @@ function ev_slash_ctrl(){jscdo("sel");}
 
 function ev_z_shortcut(){cm.undo();}
 function ev_y_shortcut(){cm.redo();}
-
+function ev_p_shortcut(){jscdo("chelp");}
 function ev_t_shortcut(){jscdo("ro");}
 function ev_r_shortcut(){jscdo("runw");}
 function ev_s_shortcut(){jscdo("save");}
+function ev_h_shortcut(){jscdo("chelp");}
+
 function ev_2_shortcut(){ce.focus();}
 
 // override jscore.js defs

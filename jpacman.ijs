@@ -4,6 +4,7 @@ coinsert'jhs'
 require'pacman'
 
 HBS=: 0 : 0
+jhclose''
 'J Package Manager <a href="http://code.jsoftware.com/wiki/addons">code.jsoftware.com/wiki/addons</a>'
 '<hr>'
 'upable' jhb'Upgradeable'

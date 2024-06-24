@@ -25,6 +25,7 @@ else
  key=${cert::-8}privkey.pem
 fi
 
+mkdir -p jpersist 
 mkdir -p .ssh/jserver
 chmod 700 .ssh/jserver
 chown $1:$1 .ssh/jserver

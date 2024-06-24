@@ -3,63 +3,60 @@ coclass'jijx'
 coinsert'jhs'
 
 HBS=: 0 : 0
-jhclose''
+jhmenu''
 
-'uarrow' jhb ''
-'darrow' jhb ''
-'return' jhb ''
-'advance'jhb ''
+'menu0'  jhmenugroup ''
+'jfile'  jhmenuitem  'file';'f'
+'jijs'   jhmenuitem  'jijs';'n'
+'jpacman'jhmenuitem 'jpacman'
+'jdebug' jhmenuitem 'jdebug'
+'jbreak' jhmenuitem 'break';'c'
+         jhmenulink 'entry';'entry'
+         jhmenulink 'view';'view'
+         jhmenulink 'help';'help'
+         jhhr
+ NB.        jhmenuitem '' NB. </hr>
+'close'  jhmenuitem 'quit';'q'
+jhmenugroupz''
 
-jhma''
-jhjmlink''
-'tour'     jhmg'tour';1;9
- 'overview'jhmab'overview'
- 'charttour'jhmab'chart'
- 'canvas'  jhmab'canvas'
- 'plot'    jhmab'plot'
- 'spx'     jhmab'spx'
- 'labs'    jhmab'labs'
-'help'               jhmg'?';1;16
- 'welcome'           jhmab'welcome'
- (0=nc<'tool_guest')#'guest' jhmab'guest'
- 'shortcuts'         jhmab'shortcuts' 
- 'popups'            jhmab'pop-ups'
- 'closing'           jhmab'close'
- 'framework'         jhmab'framework'
- 'helpwikijhs'       jhmab'JHS'
- 'helpwikinuvoc'     jhmab'vocabulary'
- 'helpwikiconstant'  jhmab'constant'
- 'helpwikicontrol'   jhmab'control'
- 'helpwikiforeign'   jhmab'foreign'
- 'helpwikiancillary' jhmab'ancillary'
- 'helpwikistdlib'    jhmab'standard library'
- 'helpwikirelnotes'  jhmab'release notes'
- 'helphelp'          jhmab'807 html legacy'
- 'about'             jhmab'about'
-'adv'   jhmg '>';0;10
-'uarrow'jhmg '↑';0;10
-'darrow'jhmg '↓';0;10
-jhmz''
-jhresize''
+'entry'    jhmenugroup''
+'recall'   jhmenuitem'recall'
+'tool'         jhmenuitem'tool'
+'demo'         jhmenuitem'demo'
+'tour'         jhmenuitem'tour (JHS tutorial)'
+'lab'          jhmenuitem'lab (tutorial)'
+'app'          jhmenuitem'app (build gui app)'
+'wiki'         jhmenuitem'wiki';'p'
+jhmenugroupz''
+
+'view'         jhmenugroup''
+'cleartemps'   jhmenuitem 'remove red boxes';'s'
+'wrap'         jhmenuitem 'wrap/unwrap'
+'clearwindow'  jhmenuitem 'clear window'
+'clearrefresh' jhmenuitem 'clear refresh'
+'clearLS'      jhmenuitem 'clear LS'
+jhmenugroupz''
+
+'help' jhmenugroup''
+'welcome'            jhmenuitem 'welcome'
+'guest_rules'        jhmenuitem 'guest rules'
+'guest_files'        jhmenuitem 'guest files'
+ 'mobile'            jhmenuitem 'mobile'
+ 'wiki'              jhmenuitem 'wiki';'p'
+ 'shortcuts'         jhmenuitem 'shortcuts' 
+ 'popups'            jhmenuitem 'pop-ups'
+ 'closing'           jhmenuitem 'close'
+ 'framework'         jhmenuitem 'framework'
+ 'about'             jhmenuitem 'about' 
+jhmenugroupz''
+
+NB. touch screen button on right side
+'uarrow' jhb '';'jhtouch'
+'darrow' jhb '';'jhtouch'
+'advance'jhb '';'jhtouch'
+
 'log' jhec'<LOG>'
 'ijs' jhhidden'<IJS>'
-)
-
-0 : 0
-'tool'   jhmg'tool';1;16
- (0=nc<'tool_guest')#'guest' jhmab'guest'
- 'app'     jhmab'app'
- 'demo'    jhmab'demo'
- 'chart'   jhmab'plot-chart'
- 'jd3'     jhmab'plot-d3'
- 'debug'   jhmab'debug'
- 'debugjs' jhmab'debug javascript'
- 'react'   jhmab'react'
- 'node'    jhmab'https'
- 'print'   jhmab'print'
- 'sp'      jhmab'sp'
- 'table'   jhmab'table'
- 'watch'   jhmab'watch'
 )
 
 jev_get=: create
@@ -100,7 +97,7 @@ end.
 NB. refresh response - not jajax
 create=: 3 : 0
 uplog''
-'jijx' jhr 'LOG';LOG
+'jterm' jhr 'LOG';LOG
 )
 
 ev_advance_click=: 3 : 0
@@ -124,6 +121,10 @@ echo'Copyright 1994-2024 Jsoftware Inc.'
 jhtml'<hr/>'
 )
 
+NB. localhost    - QRULES 0 - close tabs, disable page, exit
+NB. server user  - QRULES 1 - close tabs, disable page, no exit
+NB. server guest - QRULES 2 - confirm - OK close tabs, start new guest session page, exit
+
 ev_close_click=: 3 : 0
 a=. '<div id="prompt" class="log"  onpaste="mypaste(event)"><b><font style="color:red;"><br>'
 b=. '</font></b></div>'
@@ -138,39 +139,6 @@ case. 2 do. NB. exit
 end.
 )
 
-tour=: 4 : 0
-jhtml'<hr>'
-echo x
-spx '~addons/ide/jhs/spx/',y
-jhtml'<hr/>'
-)
-
-ev_plot_click=:  3 : 0
-'plot tour'tour'plot.ijs'
-)
-
-ev_overview_click=: 3 : 0
-'overview tour'tour'overview.ijs'
-)
-
-ev_charttour_click=: 3 : 0
-'chart tour'tour'chart.ijs'
-)
-
-ev_canvas_click=: 3 : 0
-'canvas tour'tour'canvas.ijs'
-)
-
-ev_tool_click=: 3 : 0
-toollist''
-)
-
-ev_spx_click=:  3 : 0
-'spx tour'tour'spx.ijs'
-)
-
-NB. default ctrl+,./ handlers
-ADVANCE=: 'none'
 ev_comma_ctrl =: 3 : 'sp__'''''
 ev_dot_ctrl=: ev_advance_click
 ev_slash_ctrl  =: 3 : 'i.0 0'
@@ -184,29 +152,8 @@ ev_doublequote_ctrl =: 3 : 'dbinto dbxup'''''
 
 load'~addons/ide/jhs/loadx.ijs'
 
-jhjmlink=: 3 : 0
-t=.   'jmlink' jhmg 'ide';1;13
-t=. t,'jfile'  jhmab'jfile    f^'
-t=. t,JIJSAPP  jhmab'jijs     J^'
-t=. t,'jpacman'jhmab'jpacman'
-t=. t,'jdebug' jhmab'jdebug'
-
-if. 1=#gethv'node-jhs:' do.
- NB. t=. t,'jlogoff' jhmab'logoff'
- t=. t,'jbreak'  jhmab'break'
-end.
-
-t=. t,'tool'jhmab'tool'
-
-t=. t,'clearwindow'jhmab'clear window'
-t=. t,'clearrefresh'jhmab'clear refresh'
-t=. t,'clearLS'jhmab'clear LS'
-t=. t,'close'jhmab'quit q^'
-t
-)
-
-CSS=: 0 : 0
-*{font-family:<PC_FONTFIXED>;}
+CSS=: 0 : 0 
+*{font-family:<PC_FONTFIXED>;font-weight:550;}
 form{margin-top:0;margin-bottom:0;}
 *.fm   {color:<PC_FM_COLOR>;}
 *.er   {color:<PC_ER_COLOR>;}
@@ -214,22 +161,36 @@ form{margin-top:0;margin-bottom:0;}
 *.sys  {color:<PC_SYS_COLOR>;}
 *.file {color:<PC_FILE_COLOR>;}
 
-.jhb#uarrow{background-color:rgba(255,255,255,0);position:fixed;top:4em;right:0;margin:0px;
-padding-left:8px;padding-right:8px;
-border-width: 2px;border-color: blue;
-}
-.jhb#darrow{background-color:rgba(255,255,255,0);position:fixed;top:7em;right:0;margin:0px;
-padding-left:8px;padding-right:8px;
-border-width: 2px;border-color: red;
-}
-.jhb#return{background-color:rgba(255,255,255,0);position:fixed;top:10em;right:0;margin:0px;
-padding-left:8px;padding-right:8px;
-border-width: 2px;border-color: black;
+.jhb#overview{background-color:<PC_JICON>;font-weight:bold;font-size:2rem;padding:0.2rem;}
+#prompt{background-color:blanchedalmond;border:2px solid black;padding:8px 0 8px 0;}
+
+/* right side buttons */
+.jhtouch{background-color:rgba(255,255,255,0);position:fixed;right:0;margin:0px;border-radius:0;
+ width:4rem;height:3rem;border-width:0 0.5rem 0 0;}
+
+.jhtouch#advance{border-color:darkseagreen;}
+.jhtouch#uarrow {border-color:blue;}
+.jhtouch#darrow {border-color:red;}
+
+/* all except mobile - assume no kb movement */
+.jhtouch#advance{bottom:13rem;}
+.jhtouch#uarrow {bottom:10rem;}
+.jhtouch#darrow {bottom:7rem;}
+
+
+/* tablet */
+@media screen and (max-device-width: 992px){
+.jhtouch#advance{bottom:26rem;}
+.jhtouch#uarrow {bottom:23rem;}
+.jhtouch#darrow {bottom:20rem;}
 }
 
-.jhb#advance{background-color:rgba(255,255,255,0);position:fixed;top:13em;right:0;margin:0px;
-padding-left:8px;padding-right:8px;
-border-width: 2px;border-color: green;
+/* phone */
+@media screen and (max-device-width: 640px){
+#prompt{padding:36px 0 36px 0;}
+.jhtouch#advance{bottom:14rem;}
+.jhtouch#uarrow {bottom:11rem;}
+.jhtouch#darrow {bottom: 8rem;}
 }
 
 )
@@ -247,34 +208,30 @@ var phead= '<div id="prompt" class="log" onpaste="mypaste(event)">';
 var ptail= '</div>';
 var globalajax; // sentence for enter setTimeout ajax
 var TOT= 1;     // timeout time to let DOM settle before change
-//var TOT= 100; // might need more time on slow devices???
 var wjdebug= null; // jdebug window object
-var touch;
 
 function ev_body_focus(){setTimeout(ev_2_shortcut,TOT);}
 
 function ev_body_load()
 {
- if(window.visualViewport) window.visualViewport.onresize = onvpresize;
+ // if(window.visualViewport) window.visualViewport.onresize = onvpresize;
  jijxwindow= window;
  window.name= "jijx";
  jseval(false,jbyid("log").innerHTML); // redraw canvas elements
  newpline("   ");
  jresize();
 
- touch= ('ontouchstart' in window)||(navigator.maxTouchPoints>0)||(navigator.msMaxTouchPoints>0);
  if(!touch){
   jbyid('uarrow').style.display="none";
   jbyid('darrow').style.display="none";
-  jbyid('return').style.display="none";
   jbyid('advance').style.display="none";
  }
 
  //! var el = document.getElementById('log')
- //!swipedetect(el, function(swipedir){if (swipedir =='left')alert('You just swiped left!')})
+ //! swipedetect(el, function(swipedir){if (swipedir =='left')alert('You just swiped left!')})
 }
 
-// iX devices only
+/* iX devices only - no longer used!
 function onvpresize(){
    VKB= (VKB==0)?window.innerHeight-window.visualViewport.height : 0;
    jresize();
@@ -283,6 +240,7 @@ function onvpresize(){
    if(null==jbyid("prompt"))return;
    jbyid("prompt").scrollIntoView(false);
 }
+*/
 
 function mypaste(event){
  var t= event.clipboardData.getData('text/plain');
@@ -302,7 +260,7 @@ function isdirty(){return 0!=allwins.length;}
 
 function setfocus(){jbyid("log").focus();}
 
-// iX - replaced by onvpresize - eventually kill off setting handlers for ecfocus/ecblur
+//! iX - replaced by onvpresize - eventually kill off setting handlers for ecfocus/ecblur
 function jecfocus(){}
 function jecblur(){;}
 
@@ -327,16 +285,41 @@ function updatelog(t)
  n.innerHTML= jjsremove(t);
  removeid("prompt");
  jbyid("log").appendChild(n);
- setTimeout(scrollz,TOT); // allow doc to update
+ setTimeout(scrollz,TOT); // bigger value does not help iphone scrollintoview
 }
 
 function scrollz()
 {
  setfocus(); // required by ff
+
+
+ if(iphone())
+ {
+  // iphone small scrollintoview does not work
+  // it does work if we scroll all the way up and then down
+  // but that looks terrible
+  //jbyid("log").scrollTo(100000,0);
+  //scdn();
+  
+  //updatelog("<div id='fubar'>how now</div>");
+  //var n= document.createElement("div");
+  //n.setAttribute("id", "fubar");
+  //n.innerHTML= "how now";
+  //jbyid("log").appendChild(n);
+
+  //jbyid("fubar").scrollIntoView({behavior:"instant",block:"end"});
+  scdn();
+ }
+ else
+  scdn();
+
  if(null==jbyid("prompt"))return;
  jsetcaret("prompt",1);
- jbyid("prompt").scrollIntoView(false);
 }
+
+function scup(){jbyid("log").scrollIntoView(true);}
+//function scdn(){jbyid("log").scrollIntoView(false);}
+function scdn(){jbyid("log").scrollIntoView({behavior:"instant",block:"end"});}
 
 function scrollchunk(){jbyid("chunk").scrollIntoView(false);}
 
@@ -383,23 +366,38 @@ function ev_log_enter_ajax_chunk()
  } 
 }
 
-function ev_2_shortcut(){scrollz();}
+function newpline(t){updatelog(phead+jhfroma(t)+ptail);}
 
-function newpline(t)
-{
- t= t.replace(/&/g,"&amp;");
- t= t.replace(/</g,"&lt;");
- t= t.replace(/>/g,"&gt;");
- t= t.replace(/ /g,"&nbsp;");
- t= t.replace(/-/g,"&#45;");
- t= t.replace(/\"/g,"&quot;");
- updatelog(phead+t+ptail);
+function newinput(t){e= jbyid("prompt");if(e==null) return; e.innerHTML= jhfroma(t); jsetcaret("prompt",1);}
+
+function runinput(t){
+ e= jbyid("prompt");
+ if(e==null) return;
+ globalajax= t;
+ setTimeout(TOajax,TOT);
 }
+
+function colorinput(t){
+ e= jbyid("prompt");
+ if(e==null) return;
+ e.style.color=t;
+}
+
+/*
+function newpline(t){
+ if(jbyid("prompt")==null)
+  updatelog(phead+jhfroma(t)+ptail);
+ else 
+  jbyid("prompt").innerHTML= phead+jhfroma(t)+ptail;
+}
+*/
 
 // function keyp(){jbyid("kbsp").style.display= "block";scrollz();return true;} // space for screen kb
 
-function ev_up_click(){uarrow();}
-function ev_dn_click(){darrow();}
+function ev_advance_click(){jdoajax([]);}
+function ev_return_click(){ev_log_enter();}
+function ev_uarrow_click(){uarrow();}
+function ev_darrow_click(){darrow();}
 
 // log enter - contenteditable
 // run or recall line with caret
@@ -472,41 +470,55 @@ function ev_log_enter()
   adrecall("document",t,"-1");
   globalajax= t;
   setTimeout(TOajax,TOT);
+ 
+  // removeElementsByClass('transient');
+
  }
 }
 
 // firefox can't do ajax call withint event handler (default action runs)
 function TOajax(){jdoajax([],"",globalajax,true);}
 
-function document_recall(v){newpline(v);}
+/* function document_recall(v){newpline(v);} */
 
-function ev_advance_click(){jdoajax([]);}
-
-function ev_uarrow_click(){uarrow();}
-function ev_darrow_click(){darrow();}
+function document_recall(v){jbyid("prompt").innerHTML= jhfroma(v); jsetcaret("prompt",1);}
 
 function ev_demo_click(){jdoajax([]);}
+function ev_lab_click(){jdoajax([]);}
+function ev_tour_click(){jdoajax([]);}
 function ev_j1_click(){jdoajax([]);}
 function ev_j2_click(){jdoajax([]);}
 function ev_j3_click(){jdoajax([]);}
 function ev_plot_click(){jdoajax([]);}
 function ev_overview_click(){jdoajax([]);}
 function ev_canvas_click(){jdoajax([]);}
-function ev_guest_click(){jdoajax([]);}
+function ev_guest_rules_click(){jdoajax([]);}
+function ev_guest_files_click(){jdoajax([]);}
 function ev_charttour_click(){jdoj('');}
 function ev_spx_click(){jdoajax([]);}
 function ev_tool_click(){jdoajax([]);}
+function ev_app_click(){jdoajax([]);}
 function ev_sp_click(){jdoajax([]);}
 function ev_spx_click(){jdoajax([]);}
 function ev_labs_click(){jdoajax([]);}
 function ev_about_click(){jdoajax([]);}
 function ev_wiki_click(){jdoajax([]);}
+function ev_recall_click(){recent(10);jdoajax([]);}
 
 function ev_welcome_click(){jdoajax([]);}
+function ev_mobile_click(){jdoajax([]);}
 function ev_shortcuts_click(){jdoajax([]);}
 function ev_popups_click(){jdoajax([]);}
 function ev_closing_click(){jdoajax([]);}
 
+function ev_wrap_click(){
+ t= jbyid('log');
+ b= 'normal'==getComputedStyle(t)['overflowWrap'];
+ t.style.overflowWrap= b?'break-word':'normal';
+ t.style.whiteSpace=   b?'normal'    :'nowrap';
+};
+
+function ev_cleartemps_click(){removeElementsByClass('transient');}
 function ev_clearwindow_click(){jbyid("log").innerHTML= "";newpline("   ");}
 function ev_clearrefresh_click(){jdoajax([]);}
 function ev_clearLS_click(){localStorage.clear();};
@@ -522,12 +534,14 @@ var jijsnum=0;
 function ev_jijs_click(){linkclick("jijs?"+jijsnum);jijsnum+=1;} 
 function ev_framework_click(){linkclick("jdoc");}
 
+function ev_c_shortcut(){jscdo('jbreak');}
 function ev_f_shortcut(){ev_jfile_click();}
-function ev_k_shortcut(){ev_jfiles_click();}
-function ev_F_shortcut(){ev_jfif_click();}
-function ev_J_shortcut(){ev_jijs_click();}
+function ev_p_shortcut(){jscdo('wiki');}
+function ev_n_shortcut(){ev_jijs_click();}
 
-function ev_9_shortcut(){jlogwindow= pageopen('jijs?jwid=~temp/jlog.ijs','jijs?'+encodeURIComponent('jwid=~temp/jlog.ijs'));}
+function ev_s_shortcut(){ev_cleartemps_click();}
+
+function ev_2_shortcut(){scrollz();}
 
 function ev_8_shortcut(){
  jlog('\nesc-8 '+allwins.length);
@@ -536,6 +550,8 @@ function ev_8_shortcut(){
   jlog(el.closed?'closed':t)
 });
 }
+
+function ev_9_shortcut(){jlogwindow= pageopen('jijs?jwid=~temp/jlog.ijs','jijs?'+encodeURIComponent('jwid=~temp/jlog.ijs'));}
 
 function ev_jdebug_click(){wjdebug= pageopen('jdebug','jdebug');return false;;}
 
@@ -561,6 +577,7 @@ function ev_jlogoff_click()
  window.location= "jlogoff";
 }
 
+
 function ev_helphelp_click(){urlopen("https://www.jsoftware.com/help/index.htm")};
 function ev_helpwikinuvoc_click(){urlopen("https://code.jsoftware.com/wiki/NuVoc")};
 function ev_helpwikiancillary_click(){urlopen("https://code.jsoftware.com/wiki/NuVoc#bottomrefs")};
@@ -570,6 +587,7 @@ function ev_helpwikicontrol_click(){urlopen("https://code.jsoftware.com/wiki/Voc
 function ev_helpwikiforeign_click(){urlopen("https://code.jsoftware.com/wiki/Vocabulary/Foreigns")};
 function ev_helpwikijhs_click(){urlopen("https://code.jsoftware.com/wiki/Guides/JHS")};
 function ev_helpwikistdlib_click(){urlopen("https://code.jsoftware.com/wiki/Standard_Library/Overview")};
+
 
 function ev_comma_ctrl(){jdoajax([]);}
 function ev_dot_ctrl(){jdoajax([]);}
@@ -582,10 +600,8 @@ function ev_quote_ctrl(){jdoajax([]);}
 function ev_colon_ctrl(){jdoajax([]);}
 function ev_doublequote_ctrl(){jdoajax([]);}
 
-function ev_return_click(){ev_log_enter();}
-
 function ev_close_click(){
- if(qrules==2 && !confirm("Press OK to close.")){return;};
+ // if(qrules==2 && !confirm("Press OK to close.")){return;};
  allwins_clean();
  for(let i = 0; i < allwins.length; i++) {allwins[i].jscdo("close");}
  allwins_clean();
@@ -619,6 +635,21 @@ function getwindow(wid){
   if(wid==w.name) return w;
  }
  return null; 
+}
+
+// put n recent enters in log
+function recent(n){
+ d= getls("document");
+ d= d.split('\n');
+ r= '';
+ c= Math.min(n,d.length)-1;
+ for(let i=c; i>=0; i--){
+  r= r+jhfroma(d[i])+"<br>";
+ }
+
+ //'<div class="transient">',(jhtmlfroma  y),'</div>'
+ updatelog('<div class="transient">'+r+'</div>');
+ newpline("");
 }
 
 // jijx swipe detect

@@ -1,6 +1,14 @@
 release notes
 
-this version:
+this version
+ ☰ menu
+ server guest
+ overview tour
+ jijx->jterm
+ wrap/nowrap
+ mobile right buttons
+
+1.0.383
  react cleanup
  runreact/app/demo moved from z to jhs
  jpage/cojhs boilerplate moved from z to jhs

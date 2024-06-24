@@ -4,7 +4,7 @@ use -sh instead of .sh so pacman will have LF eol on windows
 
 *** setup lan guest server - firewall must allow nodeport!
 $ start jconsole
-   load'~addons/ide/jhs/guest/guest_util.ijs'
+   load'guest_util.ijs' NB. ln -s -f git/addons/ide/jhs/guest/guest_util.ijs guest_util.ijs
    man
    start'key' NB. does create_jguest
 
@@ -18,6 +18,11 @@ $ ./aws-sh bld j9.5 # continue connecting? - yes if this is new instance
 
 $ # following required if local git changes are required on server
 $ ./aws-sh putr $HOME/git/addons/ide/jhs j9.5/addons/ide
+ these changes are in base install - start required to get them to server
+  or be very careful with following:
+  ./aws-sh ssh
+  sudo cp -r -f j9.5 /jguest/j
+  start'...' required to use new binaries
 
 $ # following required if new instance needs letsencrypt
 $ ./aws-sh lets-restore # restore local backup tar to remote /etc/letsencrypt
@@ -30,7 +35,7 @@ $ec2-user ./jc
    start'key' NB. does create_jguest
 
 *** https cert
-$ ./aws-sh lets-backup  - copy remote /etc/letsenrypt to local .ssh/server tar
+$ ./aws-sh lets-backup  - copy remote /etc/letsenrypt to local .ssh/jserver/letsencrypt/tar.gz
 $ ./aws-sh lets-restore - restore local backup tar to remote /etc/letsencrypt
 
 certbot creates a cert (/etc/letsencrypt/) for a name (server.jsoftware.com)
@@ -42,6 +47,15 @@ add http 80 to aws sg for certbot - remove it after
 $ec3-USER sudo certbot certonly --standalone # create /etc/letsencrypt
    eiverson@jsoftware.com
    server.jsoftware.com
+
+renew certificate as required (every 3 months) - following is done in create-jguest-sh
+$ec2-USER sudo certbot renew
+$eric... ./aws-sh lets-backup  - copy remote /etc/letsenrypt to local .ssh/jserver/letsencrypt/tar.gz
+
+install renewed certificate - this is done in create-jguest-sh by guest_util.ijs start'...'
+$ec2-USER cd /etc/letsencrypt
+$ec2-USER sudo cp live/server.jsoftware.com/cert.pem    ~/.ssh/jserver/cert.pem
+$ec2-USER sudo cp live/server.jsoftware.com/privkey.pem ~/.ssh/jserver/key.pem
 
 *** node debug
 $ node inspect localhost:9229
@@ -79,6 +93,11 @@ t2 are all the same processor (not very fast)
 currently have 8G EBS with 2G swap
 should increate this signifcanly (32Gib) and increase swap and --as= as well
 
+*** coredumps
+node crash will create a coredump in: /var/lib/systemd/coredump
+$ kill -QUIT node_task_pid # will create coredump
+$ coredumpctl debug # gdb on last coredump
+
 *** performance
 JKT:   10 timespacex '%. 1000 1000 ?@$0'
 requires: prlimit --as=500000000
@@ -107,3 +126,34 @@ jhs2-template launch template
  64G storage gp3
  create swap 32G
 
+*** umask
+aws has
+$ grep HOME_MODE /etc/login.defs
+# home directories if HOME_MODE is not set.
+# HOME_MODE is used by useradd(8) and newusers(8) to set the mode for new
+# If HOME_MODE is not set, the value of UMASK is used to create the mode.
+HOME_MODE	0700
+
+aws useradd creates p... users with umask that prevents access from other users
+
+eric machine does not have MODE_HOME and home folders get 755 (default umask 022)
+
+aws p users cannot see each others files
+eric p users can see others files - except that guest-sudo-sh does chmod 700 after userdel
+
+*** pgroup
+p users are in group pgroup
+pgroup enforces user limits (ulimit)
+set_limits_conf in guest_util.ijs
+
+*** persist
+NAME of backup is in ~/jpersist.txt
+
+backup of ~temp is stored in /home/base/jpersist/NAME.tgz
+
+   jgp'NAME' NB. copies backup to p... to jpersist.tgz and does tar extract in temp
+
+   kill of p... user saves tar create of p... ~temp and stores as backup
+
+the iphone text width:
+testtesttest: backup when session

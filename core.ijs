@@ -369,6 +369,7 @@ PORT=:   65001       NB. private port range 49152 to 65535
 USER=:   ''          NB. 'john' - login
 PASS=:   ''          NB. 'abra' - login
 TIPX=:   ''          NB. tab title prefix - distinguish sessions
+GUEST=:  0           NB. not a guest 
 AUTO=:   1           NB. start browser (if necessary) and browse to http:/localhost:PORT/jijx
 NB. Esc-q rules
 NB. 0 - server closed     - page disabled
@@ -376,6 +377,9 @@ NB. 1 - server not closed - page disabled
 NB. 2 - confirm() close   - guest server
 QRULES=: 0           NB. Esc-q - see ev_close_click in jijx.ijs
 
+NB. following are options and css name values
+
+PC_JICON=:         '#33D2F6'
 PC_FONTFIXED=:     '"courier new","courier","monospace"'
 PC_FONTVARIABLE=:  '"sans-serif"'
 PC_FONTSIZES=:     '"640 48px 820 36px"' NB. w0 css0 w1 css1 ...
@@ -393,6 +397,9 @@ PC_FILE_COLOR=:    'green'  NB. 1!:! file output
 
 PC_CHECK1_BACKGROUND=: 'darkgrey'
 PC_CHECK0_BACKGROUND=: 'white'
+
+NB. following are css chunks
+PS_FONTFIXED=: 'font-family:"courier new","courier","monospace";font-weight:550' NB. PC_FONTFIXED
 
 pagexywh=:  5   5 900 450  NB. . default new window position
 
@@ -489,10 +496,7 @@ if. _1=nc<'OKURL' do. OKURL=: '' end. NB. URL allowed without login
 
 NB. leading &nbsp; for Chrome delete all
 welcome=: 0 : 0
-<div>&nbsp;<font style="font-size:2em; color:red;" >J Http Server</font>
-<br/><font style="color:red;" >
-menu>tour>overview : good place to start
-</font></div>
+<span><font style="font-size:2rem; color:blue; padding:0 8px 0 16px;" >J</font>
 )
 
 NB. SO_REUSEADDR allows server to kill/exit and restart immediately
@@ -509,7 +513,7 @@ LOCALHOST=: '127.0.0.1'
 logappfile=: <jpath'~user/.applog.txt' NB. username
 SETCOOKIE=: 0
 NVDEBUG=: 0 NB. 1 shows NV on each input
-LOG=: jmarka,welcome,jmarkz
+LOG=: jmarka,('overview'jhb'J - click me'),jmarkz
 LOGN=: ''
 PDFOUTPUT=: 'output pdf "',(jpath'~temp\pdf\plot.pdf'),'" 480 360;'
 DATAS=: ''

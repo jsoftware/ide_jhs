@@ -156,6 +156,17 @@ smoutput jmarka_jhs_,y,jmarkz_jhs_
 i.0 0
 )
 
+NB.* jhlatex - jhlatex'\frac{1+sin(x)}{x^3}'
+jhlatex=: 3 : 0
+jhtml_jhs_'<img src="http://latex.codecogs.com/svg.latex?',y,'" border="0"/>'
+)
+
+NB.* jselect - jselect 'i.5',LF,'a=:2' - sentences into log for selection
+jselect=: 3 : 0
+if. 1=L.y do. y=. ;y,each LF end.
+jhtml_jhs_'<div class="transient">',(jhtmlfroma  y),'</div>'
+)
+
 NB.* jjs - jjs 'alert("foo");' - eval javascript sentences in ajax response
 NB. y starting with ; is run in refresh and in ajax
 NB. blank first char is added if there is no ; - indicates run in ajax and refresh
@@ -423,6 +434,9 @@ NB. end cojhs boilerplate
 
 coclass'z'
 
+
+reload=: 3 : 'load RELOAD[echo RELOAD'
+
 cojhs=: cojhs_jhs_
 jpage=: jpage_jhs_
 
@@ -567,3 +581,4 @@ i.0 0
 
 jhsuqs=: uqs_jhs_  NB. viewmat
 jhtml=: jhtml_jhs_ NB. viewmat
+jhlatex=: jhlatex_jhs_

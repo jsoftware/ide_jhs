@@ -146,13 +146,21 @@ x gpplot 10?10
 jhspng  'plot' gpd4 term_png,small NB. display in session
    
 NB.spxsection:gc
-jhtml_jhs_'<div contenteditable="false"><a href="http://code.google.com/apis/chart/"  target="_blank">Google Charts</a></div>'
+0 : 0
+Google killed the service used by this facility in 2019
+
+this could be reworked to use the new Google Charts service
+https://en.wikipedia.org/wiki/Google_Charts
+
+this section is left as a place holder
+
+http://code.google.com/apis/chart/
 load'~addons/ide/jhs/jgcp.ijs'
 jgc'help'  NB. plot info
 jgcx''     NB. examples
 NB. study the code that generates the charts
 NB. note how reset clears state and additional commands add to state
+)
 
 NB.spxsection:webgl
 rundemo_jhs_ 12
-

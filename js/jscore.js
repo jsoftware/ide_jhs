@@ -12,7 +12,9 @@ var i= LS.indexOf("#");
 if(-1!=i) LS= LS.substring(0,i); // strip off # fragment
 LS+= ".";
 var logit= "";
-var closing=0; // set 1 when page/locale is closing to prevent events 
+var closing=0; // set 1 when page/locale is closing to prevent events
+
+var touch= ('ontouchstart' in window)||(navigator.maxTouchPoints>0)||(navigator.msMaxTouchPoints>0);
 
 const jmarka=     '<!-- j html output a -->';
 const jmarkz=     '<!-- j html output z -->';
@@ -41,6 +43,12 @@ function iOS() {
 }
 */
 
+function iphone() {
+  //return ['iPhone Simulator','iPhone'].includes(navigator.userAgent); // ||
+  return (/iPhone/.test(navigator.userAgent));
+  // (navigator.userAgent.includes("Mac") && "ontouchend" in document);
+ }
+ 
 //* jbyid(id)
 function jbyid(id){return document.getElementById(id);}
 
@@ -180,6 +188,16 @@ function jreplace(id,collapse,val)
    return 1;
   }catch(e){return 0;}
 }
+function jhfroma(t)
+{
+  t= t.replace(/&/g,"&amp;");
+  t= t.replace(/</g,"&lt;");
+  t= t.replace(/>/g,"&gt;");
+  t= t.replace(/ /g,"&nbsp;");
+  t= t.replace(/-/g,"&#45;");
+  t= t.replace(/\"/g,"&quot;");
+  return t;
+}
 
 function jtfromhhit(t)
 {
@@ -193,7 +211,7 @@ function jtfromhhit(t)
  }
 }
 
-// this is not used!
+// convert html < etc to text
 function jtfromh(d)
 {
  d= d.replace(/\r|\n/g,"");          // IE requires
@@ -662,7 +680,12 @@ function keypress(ev)
 {
  var e=window.event||ev;
  var c=e.charCode||e.keyCode;
+
+ //! touch esc
  // if(jisiX&&e.key=='è'){jsc=!jsc;return false;}  // esc shortcut - letter e + slide up
+ if(e.key=='è'){jsc=!jsc;return false;}  // esc shortcut - letter e + slide up
+
+
  var s= String.fromCharCode(c);
  if(!jsc)return true;
  jsc=0;
@@ -1149,3 +1172,49 @@ function cjs_setprop(obj, path, value) {
   obj[arr[0]] = value;
 }
 // chartjs end
+
+// remove sentence select lists after they are used
+function removeElementsByClass(className){
+  const elements = document.getElementsByClassName(className);
+  while(elements.length > 0){
+      elements[0].parentNode.removeChild(elements[0]);
+  }
+}
+
+// hamburger menu
+mmshowing='';
+
+function mmhide(){
+  jbyid('menuclear').style.visibility= 'hidden';
+  if(mmshowing!="")jbyid(mmshowing).style.visibility= 'hidden';
+  mmshowing= "";
+}
+
+function mmshow(e){
+ jbyid('menuclear').style.visibility= 'visible';
+ jbyid(e).style.visibility= 'visible';
+ mmshowing= e;
+}
+
+function ev_menuburger_click(){
+ if(''==mmshowing)
+ {
+  mmshowing= 'menu0';
+  mmshow(mmshowing);
+ }
+ else
+ {
+  mmhide();
+  mmshowing= '';
+ }
+}
+
+function ev_menuclear_click(){mmhide();}
+
+// menuitem onclick 
+function menushow(id){
+  mmhide();
+  if(id!="") mmshow(id);
+  return false; // essential!
+ }
+ 

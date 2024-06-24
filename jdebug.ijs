@@ -66,6 +66,7 @@ JMP=: 0 NB. flag to clear all stops for jmp
 nosus=: 'no suspension'
 
 HBS=: 0 : 0
+jhclose''
 'stops'    jhdiv'<STOPS>';'jcode'
 jhhr
 'stack'    jhdiv '<STACK>';'jcode'

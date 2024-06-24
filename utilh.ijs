@@ -41,8 +41,8 @@ NB. only affect initial display - .text[value="foo"] does not work as contents c
 CSSCORE=: 0 : 0
 *,*::before,*::after {box-sizing: border-box;}
 html,body,form {height:100%;margin:0;}
-body{min-height: 100vh;display: flex;flex-flow: column;}
-form{min-height: 100vh;display: flex;flex-flow: column;}
+body{min-height: 100vh;100svh;display: flex;flex-flow: column;}
+form{min-height: 100vh;100svh;display: flex;flex-flow: column;}
 #jflexcol{display: flex; flex-flow: column; flex: 1; height:100%;}
 #jflexrow{display: flex; flex-flow: row   ; flex: 1; width: 100%;}
 *{font-family:<PC_FONTVARIABLE>;}
@@ -66,10 +66,12 @@ div{padding-left:2px;}
 .jhchklabel{padding:0px;margin:1px 10px 1px 0px;background-color:white; border:0px solid black;}
 .jhchk{margin: 0px; transform: scale(0.6); border: 5px solid blue;background-color: <PC_BUTTON>; border-radius: 25%;}
 .jhrad{margin: 0px; transform: scale(0.6); border: 5px solid blue;background-color: <PC_BUTTON>; border-radius:100%;}
-.jhb  {color:black;margin: 2px; padding: 0px; background-color: <PC_BUTTON>;border: 2px solid black;}
-.jhb#close{background-color:red;position:fixed;top:0;right:0;margin:0px;padding-left:8px;padding-right:8px;} /* quit esc-q button */
+.jhb  {color:black;margin: 2px; padding: 0px; background-color: <PC_BUTTON>;
+ border: 2px solid black;border-radius:6px;}
 input[type=text]{padding: 0px; margin: 2px; border: 1px solid black;}
 input[type=password]{padding: 0px; margin: 2px; border: 1px solid black;}
+
+.transient{border:1px red solid;}
 
 .menu span{float:left;position:relative;}
 .menu a{display:inline-block;font-family:<PC_FONTFIXED>;color:black;text-decoration:none;background-color:#eee;border:0px solid black;padding:0px;width:100%;margin:0;}
@@ -78,20 +80,22 @@ input[type=password]{padding: 0px; margin: 2px; border: 1px solid black;}
 .menu ul{position:absolute;top:100%;left:0%;display:none;list-style:none;border:0;padding:0;margin:0;}
 .menu li{display:block;white-space:nowrap;border:0;padding:0px;}
 
-/* hamburger menu */
-.menugroup{position:fixed;top:2em;right:0;visibility:hidden;border:2px solid black;
-  padding:6px;background-color:white;}
+/* burger menu */
+.menugroup{position:fixed;top:0;right:0;visibility:hidden;border:2px solid black;
+  background-color:white;max-height:100vh;overflow-y: auto;overflow-x:hidden;z-index:3;} /* z-index top touch buttons */
 .menugroup a:hover{cursor:pointer;background-color:<PC_MENU_HOVER>}
-.menuitem {color:black;margin: 2px; padding: 5px; background-color: white;width:20em;height:2em;
+.menuitem {color:black;margin: 2px; padding: 5px; background-color: white;width:16rem;height:2rem;
   display:block;text-align:left;}
 .menuitem {text-decoration:none;}
 .menuspanleft   {font-family:<PC_FONTFIXED>;pointer-events: none;}
 .menuspanright  {font-family:<PC_FONTFIXED>;float:right;pointer-events: none;}
-.menuburger{color:black;background-color:white;position:fixed;top:0;right:0;margin:0px;
- padding-left:8px;padding-right:8px;width:4em;height:2em;border-width:0;}
+.menuburger{color:black;background-color:white;position:fixed;top:0;right:0;margin:0px;padding:0px;
+ font-size:2rem;width:2.5rem;height:2.5rem;border:0;}
 .menuburger:hover{background-color:<PC_MENU_HOVER>;}
-.menuclear{width:100%;height:100%;background-color:transparent;position:fixed;top:0;left:0;
- visibility:hidden;}
+.menuclear{width:100%;height:100%;background-color:transparent;position:fixed;top:0;left:0;visibility:hidden;}
+
+/* see ev_wrap_click() */
+#log{overflow-wrap:normal;white-space:nowrap;} /* jijx log wrap */
 
 /* tablet */
 @media screen and (max-device-width: 992px){
@@ -100,6 +104,8 @@ input[type=password]{padding: 0px; margin: 2px; border: 1px solid black;}
  .jhab{display:inline-block;min-height:2em;min-width:2em;}
  .jhb{min-height:2em;min-width:2em;}
  input::file-selector-button{font-size:24px;color:green;}
+
+ #log{overflow-wrap:break-word;white-space:normal;} /* jijx log wrap */
 }
 
 /* phone */
@@ -110,12 +116,13 @@ input[type=password]{padding: 0px; margin: 2px; border: 1px solid black;}
  .jhb{min-height:2.5em;min-width:2.5em;}
  input::file-selector-button{font-size:48px;color:red;} /*min-height:180px;min-width:180px;*/
 
- /* hamburger menu */
- .menuburger{padding-top:1.5em;padding-bottom:2.5em;}
- .menuitem  {padding-top:1.5em;padding-bottom:2.5em;}
- .menugroup {top:5em;}
+ #log{overflow-wrap:break-word;white-space:normal;} /* jijx log wrap */
 
+ /* hamburger menu */
+ .menuburger {height:2rem;}
+ .menuitem   {height:2rem;}
 }
+
 
 )
 
@@ -125,8 +132,8 @@ HEXTRA=: ''
 NB. core plus page styles with config replaces
 NB. apply outer style tags after removing inner ones
 css=: 3 : 0
-t=. 'PC_FONTFIXED PC_FONTVARIABLE PC_FM_COLOR PC_ER_COLOR PC_LOG_COLOR PC_SYS_COLOR PC_FILE_COLOR PC_BUTTON PC_MENU_HOVER PC_MENU_FOCUS'
-t=. (CSSCORE,y) hrplc t;PC_FONTFIXED;PC_FONTVARIABLE;PC_FM_COLOR;PC_ER_COLOR;PC_LOG_COLOR;PC_SYS_COLOR;PC_FILE_COLOR;PC_BUTTON;PC_MENU_HOVER;PC_MENU_FOCUS
+t=. 'PC_JICON PC_FONTFIXED PC_FONTVARIABLE PC_FM_COLOR PC_ER_COLOR PC_LOG_COLOR PC_SYS_COLOR PC_FILE_COLOR PC_BUTTON PC_MENU_HOVER PC_MENU_FOCUS'
+t=. (CSSCORE,y) hrplc t;PC_JICON;PC_FONTFIXED;PC_FONTVARIABLE;PC_FM_COLOR;PC_ER_COLOR;PC_LOG_COLOR;PC_SYS_COLOR;PC_FILE_COLOR;PC_BUTTON;PC_MENU_HOVER;PC_MENU_FOCUS
 '<style type="text/css">',LF,t,'</style>',LF
 )
 
@@ -505,7 +512,7 @@ jhdemo=: 3 : 0
 c=. ;coname''
 c=. '.ijs',~;(_~:_".c){c;{.copath coname''
 p=. '~addons/ide/jhs/demo/',c
-'<hr>',jhref_jhs_ 'jijs';p;c
+'<hr>',jhref 'jijs';p;c
 )
 
 NB. jgrid - special jht for grid
@@ -534,13 +541,16 @@ t hrplc 'ID VALUE CLASS';x;value;class
 )
 
 NB.* jhchart*id jhchart '' - chartjs
-jhchart_jhs_=: 4 : 0
+jhchart=: 4 : 0
 '<div id="<id>_parent" class="jhchart_parent"><canvas id="<id>"></canvas></div>'hrplc 'id';x
 )
 
-NB.* jhclose*jhclose'' - cojhs close button and spacer
+NB.* jhclose*jhclose'' - menu with quit
 jhclose=: 3 : 0
-'close'jhb'&nbsp;X&nbsp;'
+t=. jhmenu''
+t=. t,'menu0'  jhmenugroup ''
+t=. t,'close'  jhmenuitem 'close';'q'
+t=. t,jhmenugroupz''
 )
 
 NB.* jhchk*id jhchk text [;checked] (initial state 0 or 1)
@@ -604,7 +614,7 @@ r=. r,LF,(x,'_footer')jhdiv''
 NB.* jhec*id jhec html - contenteditable div
 jhec=: 4 : 0
 t=. '<div id="<ID>" contenteditable="true"',jeditatts
-t=. t,' style="white-space:nowrap;" '
+NB. t=. t,' style="white-space:nowrap;" ' - CSS
 t=. t,' onkeydown="return jev(event)"'
 t=. t,' onkeypress="return jev(event)"'
 t=. t,' onfocus="jecfocus();"'
@@ -614,7 +624,7 @@ t hrplc 'ID';x
 )
 
 NB.! 
-jhecwrap=: 4 : 0
+jhecx=: 4 : 0
 t=. '<div id="<ID>" contenteditable="true"',jeditatts
 NB.! t=. t,' style="white-space:nowrap;" '
 
@@ -873,7 +883,7 @@ function ev_jfiles_click(){window.location.assign("jfiles");}
 function ev_jfif_click()  {window.location.assign("jfif");}
 )
 
-NB.* jnv*jnv_jhs_ 1 - toggle display of event name/value pairs
+NB.* jnv*jnv 1 - toggle display of event name/value pairs
 jnv=: 3 : 'NVDEBUG=:y' NB. toggle event name/value display
 
 NB. used in demo15 and demo16 - jhjevids*jevids 'id1 abc foo'
@@ -1007,4 +1017,54 @@ sdclose_jsocket_ ::0: SKSERVER
 SKSERVER_jhs_=: _1
 )
 
-jsencode_jhs_=: 3 : 'enc_pjson_ (2,~-:$y)$y'
+jsencode=: 3 : 'enc_pjson_ (2,~-:$y)$y'
+
+NB. hamburger menu
+jhmenu=: 3 : 0
+menuids=:   <'menu0' 
+menutexts=: <'☰'
+menubacks=: <''
+('menuburger'jhb'☰';'menuburger'),'menuclear'jhb'';'menuclear'
+)
+
+jhmenugroup=: 4 : 0
+menuid=: x
+i=. menuids i. <x
+if. i=#menuids do.  i=. 0 end. NB. user not informed of failuer
+value=. ;i{menutexts
+backid=. ;i{menubacks
+more=. '<span class="menuspanleft" >',(jhfroma'<      '),'</span>'
+t=. '<a href="#" class="menuitem" onclick="return menushow(''<BACK>'')" ><VALUE></a>'
+t=. t hrplc 'BACK VALUE';backid;more,jhfroma value
+t,~'<div id="<ID>" class="menugroup">'rplc '<ID>';x
+)
+
+jhmenugroupz=: 3 : '''</div>'''
+
+
+NB. id jhmenuitem 'test'[;esc] - esc is '' or single alphanumeric
+jhmenuitem=: 4 : 0
+'text esc'=. 2{.(boxopen y),<''
+
+select. {.esc
+case. ' ' do. t=. ''
+case. '^' do. t=. 'ctrl+',1{esc
+case.     do. t=. 'esc-',esc
+end.
+
+esc=.  '<span class="menuspanright">',t,'</span>'
+t=. '<a id="<ID>" href="#" class="menuitem" onclick="ev_menuburger_click();return jev(event)" ><VALUE></a>'
+t hrplc 'ID VALUE';x;(jhfroma text),esc
+)
+
+NB. jhmenulink text;id
+jhmenulink=: 3 : 0
+'to text'=. y
+menuids=: menuids,<to
+menutexts=: menutexts,<text
+menubacks=: menubacks,<menuid
+more=. '<span class="menuspanleft" >&gt&nbsp;</span>'
+t=. '<a href="#" class="menuitem" onclick="return menushow(''<TO>'')" ><VALUE></a>'
+t hrplc 'VALUE TO';(more,jhfroma text);to
+)
+
