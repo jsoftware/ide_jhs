@@ -1,0 +1,16 @@
+notes on app version 2
+
+jhchk2 ...
+
+javascript event
+ jev(event)
+  jevdo()
+   JEV= "ev_"+jform.jmid.value+"_"+jform.jtype.value;
+    mid is id or id from id*xxx
+    if JEV undefined
+
+// jevdo()
+// ev_jid_type(id)
+//  ev_mid_type(id)
+//   ev_class.type(id)
+//! JEVIDS needs testing

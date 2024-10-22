@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.384'
+VERSION=: '1.0.385'
 
 FILES=: 0 : 0
 app/
@@ -20,6 +20,8 @@ page/
 react/
 spx/
 extra/
+test/
+widget/
 core.ijs
 chart.ijs
 d3.ijs
@@ -34,7 +36,6 @@ jbeacon.ijs
 jbinfo.ijs
 jfif.ijs
 jfile.ijs
-jfiles.ijs
 jcopy.ijs
 jfilesrc.ijs
 jgcp.ijs

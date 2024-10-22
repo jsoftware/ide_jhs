@@ -207,6 +207,14 @@ const server = https.createServer(options, (req, res) => {
       let val= postdata.substring(i+1);
       let restart= "jserver-user-restart"==cmd;
 
+      if(url=="/jsurvey")
+      {
+        // save survey postdata to file
+        const d= new Date();
+        fs.appendFileSync('jsurvey/data',d.toISOString()+' '+ip+' '+postdata+'\0');
+        replyx(200,res,'survey recorded');
+      }
+
       if("jserver-user"==cmd || restart) // validate key
       {
        //! add code here to throw error for testing
@@ -242,6 +250,11 @@ const server = https.createServer(options, (req, res) => {
   }
 
   // get
+  if(url=='/jsurvey')
+  {
+    t= fs.readFileSync('jsurvey/survey.html','utf8');
+    replyx(200,res,t);
+  }
   if(url=='/jcrash'&&port==jhsport)
   {
     replyc(200,res,htmlbad,0);

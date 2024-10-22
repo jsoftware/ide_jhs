@@ -165,7 +165,6 @@ else.
 end.
 )
 
-NB.!
 starttask=: 3 : 0
 t=. '-js "load''~addons/ide/jhs/core.ijs''" "PORT_jhs_=:65002" "USER_jhs_=:''ericx''" "PASS_jhs_=:''ericx''" "AUTO_jhs_=:0" "init_jhs_''''"'
 t=. '-js "load''~addons/ide/jhs/core.ijs''" "PORT_jhs_=:65003" "USER_jhs_=:''''" "PASS_jhs_=:''''" "AUTO_jhs_=:0" "init_jhs_''''"'

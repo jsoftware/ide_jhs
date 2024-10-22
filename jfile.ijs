@@ -4,7 +4,12 @@ coinsert'jhs'
 
 HBS=: 0 : 0
 
-jhfcommon''
+jhmenu''
+'menu0'  jhmenugroup ''
+         jhmpage''
+'close'  jhmenuitem 'close';'q'
+         jhmenugroupz''
+jhmpagez''
 
 'edit'     jhb 'edit'
 'load'     jhb 'load'
@@ -15,7 +20,7 @@ jhfcommon''
 'cut'      jhb 'cut'
 'paste'    jhb 'paste'
 
-'renamedlg'  jhdivadlg''
+'renamedlg'  jhdiva''
  jhbr
  'renamedo'  jhb'rename as'
  'renpx'    jhtext'';20
@@ -24,14 +29,14 @@ jhfcommon''
  'renameclose'jhb'X'
 '<hr></div>'
 
-'deletedlg'    jhdivadlg''
+'deletedlg'    jhdiva''
  jhbr
  'deletedo'    jhb'delete'
  'deletename'  jhspan''
  'deleteclose' jhb'X'
 '<hr></div>'
 
-'newdlg' jhdivadlg''
+'newdlg' jhdiva''
  jhbr
  'newfile'   jhb'newfile'
  'newname'   jhtext'';20
@@ -40,8 +45,10 @@ jhfcommon''
 '<hr></div>'
 
 'report'    jhdiv'<R>'
-shorts''
+
 jhhr
+'recent'   jhrad 'Recent';0;'paths'
+shorts''
 'path'      jhhidden'<F>'
 'pathd'    jhdiv'<F>'
 jhresize''
@@ -69,7 +76,7 @@ create=: 3 : 0
 'r f'=. y
 if. r-:'' do. r=. '&nbsp;' end. NB. so div does not collapse
 'f d'=. getfandp f
-d=. (<d),<(('/'=;{:each d){'';'&#x25B6;'),each d
+d=. (<d),<(('/'=;{:each d){'';'▶'),each d
 'jfile' jhr 'R F FILES';r;(jshortname f);(buttons 'files';d,<'<br>')
 )
 
@@ -87,22 +94,30 @@ for_i. i.#sids do.
 end.
 )
 
+radios=: 3 : 0
+'mid sids values sep'=. y
+p=. ''
+for_i. i.#sids do.
+ t=. ,'/'
+ id=. mid,'*',>i{sids
+ b=. LASTPATH-:t,~jpath'~',;i{values
+ b=. b+.(LASTPATH-:t)*.t-:;i{values
+ p=. p,sep,~id jhrad mid;(;i{values);b
+end.
+)
+
 shorts=: 3 : 0
-buttons 'paths';(2#<((roots''),~{."1 UserFolders_j_,SystemFolders_j_)-.;:'Demos User bin config system break snap tools'),<' '
+radios 'paths';(2#<((roots''),~{."1 UserFolders_j_,SystemFolders_j_)-.;:'Demos User bin config system break snap tools'),<''
 )
 
 ev_paths_click=: 3 : 0
 f=. getv'jsid'
-if. -.f-:,'/' do. f=. '~',f,'/' end. 
-LASTPATH=: f=. jpath f
-create '';f
-)
-
-xxx_ev_recall_click=: 3 : 0 NB. recall previous folders
-sid=. getv'jsid'
-f=. jpath sid
-LASTPATH=: f
-create '';f
+if. -.f-:,'/' do.
+ LASTPATH=: jpath '~',f,'/'
+else.
+ LASTPATH=: ,'/'
+end.
+create '';LASTPATH
 )
 
 NB. folder clicked (file click handled in js)
@@ -345,20 +360,36 @@ else.
 end.
 )
 
-CSS=: 0 : 0
-#jfile{color:blue}
-#report{color:red}
-#pathd{color:blue;}
-*{font-family:<PC_FONTFIXED>;}
+fx=: 3 : 0
+s=. ;shorts_jsp_ y
+t=. jshortname y
+NB.!f=. ;(1>.10-#s)#<'&nbsp;'
+f=. ;(1>.10-#s)#<' '
+(('file*',jurlencode t)jhab s,f,t),jhbr
 )
 
-JS=: jsfcommon,0 : 0
+ev_recent_click=: 3 : 0
+if. 0=#SPFILES_jsp_ do.
+ t=. '</div>',~'<div>The recent files list is empty.'
+else.
+ t=. '</div>',~'<div>',;fx each SPFILES_jsp_
+end.
+jhrajax t 
+)
+
+CSS=: 0 : 0
+*{font-family:<PC_FONTFIXED>;}
+#report{color:red;}
+#pathd{color:blue;}
+#renamedlg{display:none;}
+#deletedlg{display:none;}
+#newdlg{display:none;}
+)
+
+JS=: 0 : 0
 var anchor=null;
 
-function ev_body_load(){
- jresize();
- setanchor(true);
-}
+function ev_body_load(){jresize();setanchor(true);}
 
 function setpath(t){jform.path.value= t;jbyid("pathd").innerHTML= t;}
 function ev_paths_click(){jsubmit();}
@@ -370,7 +401,7 @@ function ev_paths_dblclick(){;}
 function ev_x_shortcut(){jscdo("cut");}
 function ev_c_shortcut(){jscdo("copy");}
 function ev_v_shortcut(){jscdo("paste");}
-function ev_2_shortcut(){jbyid("sel").childNodes[0].focus();}
+//function ev_2_shortcut(){jbyid("sel").childNodes[0].focus();}
 
 function setanchor(scroll){
  t= path.value;
@@ -383,6 +414,7 @@ function setanchor(scroll){
  if(scroll) anchor.scrollIntoView({behavior: 'auto', block: 'nearest'});
 }
 
+//! kill off files/fif/copy
 function ev_files_click() // file select
 {
  clr();
@@ -399,12 +431,9 @@ function ev_files_click() // file select
 
 function ev_files_dblclick()
 {
- if('/'!=jform.jsid.value.charAt(jform.jsid.value.length-1))
- {
-  t= 'jijs?jwid='+encodeURIComponent(jform.path.value);
-  pageopen(t,t);
- }
-} 
+ if('/'!=jform.path.value[jform.path.value.length-1])
+  ev_file_dblclick();
+}
 
 function clr(){
  jbyid('report').innerHTML = "&nbsp;";
@@ -448,6 +477,10 @@ function ev_del_click()
 
 function ev_deleteclose_click(){clr();}
 
+function ev_recent_click(){jdoajax();}
+
+function ev_recent_click_ajax(t){jbyid('sel').innerHTML= t;}
+
 // handler must be defined - no longer defaults to jsubmit if not defined
 function ev_edit_click(){ev_files_dblclick();}
 function ev_load_click(){jsubmit();}
@@ -464,4 +497,21 @@ function ev_newname_enter(){jscdo('newfile');}
 function ev_deletedo_click(){jsubmit();}
 //function ev_adrecall_click(){adrecall("document",jbyid('path').value,"0");}
 
+function ev_file_click(){
+ setpath(decodeURIComponent(jsid.value));
+ //! setanchor(false);
+}
+
+function ev_file_dblclick(){
+  if(null!=window.frameElement){
+    var a= 'jifr-jijs?jwid='+jform.path.value;
+    var b= 'jijs?jwid='+encodeURIComponent(jform.path.value);
+    jijxwindow.newpage(a,'jifr',b);
+  }else{
+    var t= 'jijs?jwid='+jform.path.value;
+    pageopen(t,t);
+  }  
+}
+
+function ev_close_click(){winclose();}
 )

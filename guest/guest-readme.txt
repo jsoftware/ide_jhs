@@ -17,6 +17,10 @@ $ ./aws-sh set a.b.c.d # done once - copied from aws console
 $ ./aws-sh bld j9.5 # continue connecting? - yes if this is new instance
 
 $ # following required if local git changes are required on server
+!!! old files are not deleted
+!!! old files that are not replaced will still be there
+!!! should clear out before putr - issues???
+!!! perhaps ssh and rm -r j9.5/addons/ide/jhs
 $ ./aws-sh putr $HOME/git/addons/ide/jhs j9.5/addons/ide
  these changes are in base install - start required to get them to server
   or be very careful with following:
@@ -34,7 +38,7 @@ $ec2-user ./jc
    man
    start'key' NB. does create_jguest
 
-*** https cert
+*** letsencrypt https cert
 $ ./aws-sh lets-backup  - copy remote /etc/letsenrypt to local .ssh/jserver/letsencrypt/tar.gz
 $ ./aws-sh lets-restore - restore local backup tar to remote /etc/letsencrypt
 
@@ -48,14 +52,11 @@ $ec3-USER sudo certbot certonly --standalone # create /etc/letsencrypt
    eiverson@jsoftware.com
    server.jsoftware.com
 
-renew certificate as required (every 3 months) - following is done in create-jguest-sh
+renew certificate as required (every 3 months)
+$ ./aws-sh lets-backup  - copy remote /etc/letsenrypt to local .ssh/jserver/letsencrypt/tar.gz
 $ec2-USER sudo certbot renew
 $eric... ./aws-sh lets-backup  - copy remote /etc/letsenrypt to local .ssh/jserver/letsencrypt/tar.gz
-
-install renewed certificate - this is done in create-jguest-sh by guest_util.ijs start'...'
-$ec2-USER cd /etc/letsencrypt
-$ec2-USER sudo cp live/server.jsoftware.com/cert.pem    ~/.ssh/jserver/cert.pem
-$ec2-USER sudo cp live/server.jsoftware.com/privkey.pem ~/.ssh/jserver/key.pem
+latest certificate is installed by:  start'...' (create-jguest-sh)
 
 *** node debug
 $ node inspect localhost:9229
@@ -157,3 +158,11 @@ backup of ~temp is stored in /home/base/jpersist/NAME.tgz
 
 the iphone text width:
 testtesttest: backup when session
+
+*** survey
+start guest user
+   load'~addons/ide/jhs/guest/survey.ijs'
+   create_new_survey_jsurvey_''
+   dir'jsurvey'
+   NB. submit some https://server.jsoftware.com:65101/jsurvey
+   fread 'jsurvey/data'

@@ -1,8 +1,8 @@
-NB. switch back to jterm page to continue lab
+NB. esc-1 to switch back to term
 
 NB. example script used in overview tour
 
-NB. define verb crsum to add row and col sums to matrix
+NB. define crsum to add row and col sums to matrix
 NB. crsum ?2 3$10
 crsum=: {{
 t=. y,+/y

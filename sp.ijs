@@ -133,28 +133,6 @@ t=. y{.SPFILES
 sptable(shorts_jsp_ t),.t
 )
 
-xxxspxinit=: 3 : 0
-assert. fexist spf y['must exist'
-if. IFJHS do.
- ADVANCE_jijx_=: 'spx'
- a=. 'ctrl+. advances'
-elseif. IFQT do.
- if. _1=4!:0<'qtsave' do.
-  qtsave=: 5!:1<'labs_run_jqtide_'
- end.
- labs_run_jqtide_=: 3 : 'spxqt_jsp_ y'
- a=. 'ctrl+j advances'
-elseif. 1 do.
-  a=. 'spx'''' NB. advances (create a shortcut key!)'
-end.
-echo a,' - see spxhelp'
-SPXFILE_z_=: spf y
-SEM=: get SPXFILE
-SEMN=: 1
-status''
-i.0 0
-)
-
 spxinit=: 3 : 0
 'only runs in JHS'assert IFJHS
 'file must exist' assert fexist spf y

@@ -51,10 +51,6 @@ JHSP=:  65001
 
 NB. start of log utils
 
-3 : 0''
-if. _1=nc<'LOG' do. LOG=: '' end.
-)
-
 logfolder=:  jpath'~temp/guest/'
 nodeout=:    logfolder,'guest.log' NB. current log file
 
@@ -89,6 +85,7 @@ b=. (<'jhs ')=4{.each t
 NB. LOG=: and LOC=: for subsequent reports
 repget=: 3 : 0
 if. _1=nc<'LOG'do.
+ LOC=: 0 6$''
  OLDLOG=: OLDLOC=: ''
 else.
  OLDLOG=: LOG
@@ -205,13 +202,17 @@ NB. ;LF,~each~.t-.<,'                                    +'
 ~.t-.<,'+'
 )
 
-NB. ip address locations
+NB. ip address locations from ips
 getloc=: 3 : 0
-t=.repips''
+t=. (repips'')-.{."1 LOC NB. don't get ones we already have
 r=. 0 5$''
 for_n. t do.
  a=. shell'curl --no-progress-meter https://ipapi.co/',(;n),'/json/'
  a=. deb each <;._2 a,LF
+ if. 1=#a do.
+  echo 'too many ip loc requests - more to go: ',":(#repips'')-(#LOC)+#r
+  break.
+ end. NB. assume too many requests
  i=. (7{.each a)i.(<'"city":')
  a=. 5{.i}.a
  a=. (>:;a i.each ':')}.each a
@@ -221,10 +222,11 @@ for_n. t do.
  a=. <@>"1 a
  r=. r,deb each n,a
 end.
-LOC=: (/:4{"1 r){r
+LOC=: LOC,(/:4{"1 r){r
+i.0 0
 )
 
-NB.! LOG=: amd IPLOC=: set as globals once
+NB. LOG=: amd IPLOC=: set as globals once
 repmax=: 3 : 0
 t=. replast''
 d=. LOC

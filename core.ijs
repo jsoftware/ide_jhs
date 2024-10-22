@@ -8,7 +8,7 @@ coclass'jhs'
 JIJSAPP=: 'jijs' NB. 'jijsm' for simple jijs editor
 PROMPT=: '   '
 JZWSPU8=: 226 128 139{a. NB. empty prompt kludge - &#8203; \200B
-JSPATH=: '~addons/ide/jhs/js/'
+JSPATH=: '~addons/ide/jhs/js/jsoftware/' NB. path to jsoftware js/css files
 
 NB. prevent child inherit - critical with fork
 cloexec=: 3 : 0
@@ -27,7 +27,10 @@ if. 1=NVDEBUG do. smoutput seebox NV end. NB. HNV,NV
 if. -. ((<URL)e.boxopen OKURL)+.(cookie-:gethv'Cookie:')+.PEER-:LOCALHOST
                        do. r=. 'jev_get_jlogin_ 0'
 elseif. 1=RAW          do. r=. 'jev_post_raw_',URL,'_'''''
-elseif. 'post'-:METHOD do. r=. getv'jdo'
+elseif. 'post'-:METHOD do.
+ r=. getv'jdo'
+ t=. 0 i.~ r=' '
+ if. ')'={.t}.r do. r=. (t#' '),'jev_jcmd''',(}.t}.r),'''' end. NB.!
 elseif. '.'e.URL       do. r=. 'jev_get_jfilesrc_ URL_jhs_'
 elseif. 1              do. r=. 'jev_get_',URL,'_'''''
 end.
@@ -97,7 +100,10 @@ jev=: 3 : 0
 try.
  ".t=. 'ev_',(getv'jmid'),'_',(getv'jtype'),' 0'
 catchd.
- smoutput LF,'*** event handler error',LF,t,LF,(13!:12''),seebox NV
+ e=. LF,'error: J event handler',LF,'locale: ',;coname''
+ e=. e,LF,t,LF,13!:12''
+ echo e
+ jhrcmds'alert *',e
 end.
 )
 
@@ -363,7 +369,7 @@ to run a new JHS session on the next free port, run the following:
    nextport_jhs_''
 )
 
-NB. html config parameters
+NB. html/css/js config parameters
 configdefault=: 3 : 0
 PORT=:   65001       NB. private port range 49152 to 65535
 USER=:   ''          NB. 'john' - login
@@ -376,6 +382,11 @@ NB. 0 - server closed     - page disabled
 NB. 1 - server not closed - page disabled
 NB. 2 - confirm() close   - guest server
 QRULES=: 0           NB. Esc-q - see ev_close_click in jijx.ijs
+
+NB. following are major jhs options
+
+
+PR_DEFAULTOPEN=: 'tab' NB. 'tab' or 'jterm' or 10 10 500 500
 
 NB. following are options and css name values
 
@@ -398,10 +409,8 @@ PC_FILE_COLOR=:    'green'  NB. 1!:! file output
 PC_CHECK1_BACKGROUND=: 'darkgrey'
 PC_CHECK0_BACKGROUND=: 'white'
 
-NB. following are css chunks
-PS_FONTFIXED=: 'font-family:"courier new","courier","monospace";font-weight:550' NB. PC_FONTFIXED
-
-pagexywh=:  5   5 900 450  NB. . default new window position
+NB. following are css chunks - PS_... PC_... values replaced in getcss''
+PS_FONTCODE=:      'font-family:',PC_FONTFIXED,';font-weight:550;white-space:pre;'
 
 )
 
@@ -504,7 +513,8 @@ init=: 3 : 0
 echo'JHS - J HTTP Server'
 'already initialized' assert _1=nc<'SKLISTEN'
 IFJHS_z_=: 1
-canvasnum_jhs_=: 1
+canvasnum=: 1
+chartnum=: 1
 jhscfg''
 PATH=: jpath'~addons/ide/jhs/'
 NB. IP=: getexternalip''
@@ -564,8 +574,10 @@ load__'~addons/ide/jhs/chart.ijs'
 load__'~addons/ide/jhs/vocabhelp.ijs'
 load__'~addons/ide/jhs/jdoc.ijs'
 load__'~addons/ide/jhs/extra/man.ijs'
+load__'~addons/ide/jhs/widget/jhot.ijs'
 
 NB. load addons, but do not fail init if not found
+load__ :: ['~addons/math/misc/trig.ijs' NB. used in overview.ijs chart
 load__ :: ['~addons/convert/json/json.ijs'
 load__ :: ['~addons/convert/pjson/pjson.ijs' NB. preferred - kill off json.ijs 
 
@@ -720,3 +732,5 @@ shutdownx=: 3 : 0
 ) 
 
 wd_z_=: 3 : '''wd not supported in JHS''assert 0'
+
+jxsleep_z_=: 6!:3

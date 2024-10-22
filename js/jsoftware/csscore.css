@@ -1,0 +1,80 @@
+/* PC_... not <PC_...> */
+*,*::before,*::after {box-sizing: border-box;}
+*{font-family:PC_FONTVARIABLE;}
+
+html,body,form {height:100%;margin:0;}
+body{min-height: 100vh;display: flex;flex-flow: column;}
+form{min-height: 100vh;display: flex;flex-flow: column;}
+div{padding-left:2px;}
+
+#jflexcol{display: flex; flex-flow: column; flex: 1; height:100%;}
+#jflexrow{display: flex; flex-flow: row   ; flex: 1; width: 100%;}
+#jresizeb{overflow:scroll;border:solid;border-width:1px;clear:left;}
+
+/*.jifr{width:100%;height:100%;resize:vertical;overflow:auto;}*/
+/* id prefix selector required so it codemirror does not override*/
+iframe[id^="jifr"]{width:100%;height:100%;resize:vertical;overflow:auto;}
+
+#status-busy{
+ position: absolute; top: 0px; left: 70%; border: thick red solid;
+ margin: 20px; padding: 10px;display: none; background: white;text-align:center;
+}
+
+.jhtitle{margin-left:0px;font-size:2em;}
+
+.transient{border:1px red solid;}
+
+/* burger menu */
+.jmenugroup{position:fixed;top:0;right:0;visibility:hidden;border:2px solid black;
+  background-color:white;max-height:100vh;overflow-y: auto;overflow-x:hidden;z-index:3;} /* z-index top touch buttons */
+.jmenugroup a:hover{cursor:pointer;background-color:PC_MENU_HOVER;}
+.jmenuitem {color:black;margin: 2px; padding: 5px; background-color: white;width:16rem;height:2rem;
+  display:block;text-align:left;}
+.jmenuitem {text-decoration:none;}
+.jmenuspanleft   {font-family:PC_FONTFIXED;pointer-events: none;}
+.jmenuspanright  {font-family:PC_FONTFIXED;float:right;pointer-events: none;}
+.jmenuburger{color:black;background-color:white;position:fixed;top:0;right:0;margin:0px;padding:0px;
+ font-size:2rem;width:2.5rem;height:2.5rem;border:0;}
+.jmenuburger:hover{background-color:PC_MENU_HOVER;}
+.jmenuclear{width:100%;height:100%;background-color:transparent;position:fixed;top:0;left:0;visibility:hidden;}
+
+/* see ev_wrap_click() */
+#log{overflow-wrap:normal;white-space:nowrap;} /* jijx log wrap */
+
+/* button elements */
+button{color:black;margin: 2px; padding: 2px; background-color:white;border:0;}
+button:hover{cursor:pointer;}
+
+.jhb{background-color:PC_BUTTON;border: 1px solid black;border-radius:6px;}
+
+/* .jhchk{} .jhrad{} .jhab{} */
+.jhchk:hover,.jhrad:hover,.jhab:hover{background-color:PC_BUTTON;}
+
+/* end of button styles */
+
+.jhsel{background-color:buttonface;font-family:PC_FONTFIXED;}
+
+input[type=text],input[type=password]{ margin: 2px;padding:2px;border: 1px solid black;}
+
+/* tablet */
+@media screen and (max-device-width: 992px){
+ *{font-size:24px;}
+ .jhab{display:inline-block;min-height:2em;min-width:2em;}
+ .jhb{min-height:2em;min-width:2em;}
+ input::file-selector-button{font-size:24px;color:green;}
+ #log{overflow-wrap:break-word;white-space:normal;} /* jijx log wrap */
+}
+
+/* phone */
+@media screen and (max-device-width: 640px){
+ *{font-size:48px}
+ .jhab{display:inline-block;min-height:2.5em;min-width:2.5em;}
+ .jhb{min-height:2.5em;min-width:2.5em;}
+ input::file-selector-button{font-size:48px;color:red;} /*min-height:180px;min-width:180px;*/
+ #log{overflow-wrap:break-word;white-space:normal;} /* jijx log wrap */
+
+ /* phone hamburger menu */
+ .jmenuburger {height:2rem;}
+ .jmenuitem   {height:2rem;}
+}
+

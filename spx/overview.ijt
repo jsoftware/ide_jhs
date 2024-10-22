@@ -1,0 +1,244 @@
+0 :0
+6 minutes with this lab covers J programming mechanics with the JHS interface
+
+J coding is covered by other labs and resources referenced at the end
+
+lab advance gives J next line from lab file
+ keyboard: ctrl+.
+ touchscreen: right green button
+
+do a lab advance now
+)
+
+i. 5 NB. first 5 ints
++/ i. 5 NB.sum over first 5 ints
+*: i. 5 NB. square first 5 ints
+'reset' chart *: i. 100
+a=. 0.1 * i. 100
+s=. sin a
+c=. cos a
+sc=. s ,: c NB. sin and cosine values
+sc
+chart sc
+jcjs'legend';'sin';'cos';'+/'
+chart sc,+/sc NB. chart data with state
+
+0 : 0
+next advance simulates your typing and pressing enter
+)
+
+NB.spxrun:jjs_jhs_ 2000 animate_jsp_ '   |. ''.| htiw atad esrever'''
+
+0 : 0
+time to try your first input
+3 blank input prompt and result on left
+click input area (box below)
+and type a line (e.g. sin 1) and press enter
+)
+
+0 : 0
+this pattern:
+ read input
+  evaluate 
+   print
+    loop
+is a repl (read-eval-print-loop)
+
+this page (window) is a J repl
+)
+
+0 : 0
+lab is interactive!
+instead of doing a lab advance
+click the input box below
+and run your own input
+)
+
+0 : 0
+click ☰  (page upper right corner)
+click outside menu to dismiss it
+)
+
+0 : 0
+if you are a J server guest you can learn more:
+ ☰ then help then guest rules
+ ☰.help.guest rules
+ ☰.help.guest files
+)
+
+0 : 0
+☰.help.mobile - mobile (touchscreen) info
+)
+
+10?10 NB. line for testing recall
+
+0 : 0
+want to run a line again?
+
+click the line above with 10?10
+press return to recall to input area
+press return again to run it
+)
+
+0 : 0
+recall previous inputs with:
+ keyboard: ctrl+shift+🠅
+ keyboard: ctrl+shift+🠧
+or
+ touchscreen: right blue button
+ touchscreen: right red button
+  
+try it now to recall the 10?10 line
+and press enter to run it again
+)
+
+0 : 0
+J scripts (file names ending in .ijs) contain J code
+)
+
+fin=: '~addons/ide/jhs/spx/overview_example.ijs'
+jpath fin  NB. ~addons expands to J addons folder
+data=: fread fin NB. file read
+data
+fout=: '~temp/ovtour.ijs' NB. J temp folder
+data fwrite fout NB. data written to file
+load fout  NB. load script to define crsum
+mat=: ?3 4$10
+mat
+crsum mat NB. crsum adds row and col sums
+
+0 : 0
+the display of crsum is its defn
+older j versions display 3 : 0 up to )
+ instead of with {{ ... }}
+)
+crsum
+
+0 : 0
+name=: ... NB. global assignment
+name=. ... NB. local assigment - only for current definition
+
+the crsum sentence:
+t=. y,+/y
+assigns the local name t 
+)
+
+t=: 123
+crsum mat
+t NB. global t is not changed by crsum local use
+
+erase'crsum'
+crsum mat NB. error as crsum not defined
+load fout NB. load script again to define crsum
+crsum mat
+crsum 'asdf' NB. text causes an error
+'reset' chart crsum mat
+
+names'' NB. list of defined names
+fout    NB. display
+
+0 : 0
+browsers appropriate most keyboard shortcuts
+JHS uses esc key for some shortcuts
+esc is not held down like ctrl/shift/alt/cmd
+press and release esc and then press shortcut
+
+for shortcut: esc-1
+press/release escape key
+then press/release 1 key 
+)
+
+0 : 0
+next step opens file ovtour.ijs for editing
+
+jterm can run as 'single page application'
+an edit page can share the same browser window!
+
+esc-1 switch to jterm
+esc-2 switch to the next page
+
+use ☰ on touch screen without esc key
+
+after next step shows edit page
+ use esc-1/2 to switch between jterm and edit
+)
+
+'jterm' edit fout
+
+0 : 0
+ovtour.ijs also defines verb hypot
+)
+
+hypot 3 4
+hypot
+
+0 : 0
+you can also show latex or html
+)
+jhlatex_jhs_ '\sqrt{y_0^2 + y_1^2}'
+jhtml'<div><font style="color:red;font-size:2rem;">%: +/ *: y</font></div>'
+
+0 : 0
+try the following:
+
+esc-2 switch to edit
+☰.readonly - allow changes
+add new line line at end:
+d=: %: 5
+☰.load - save and load the script
+
+esc-1 to switch to jterm page
+)
+d
+
+NB. next step sleeps for 3 seconds
+jxsleep 3 NB. sleep for 3 seconds
+
+0 : 0
+what if you asked for a long sleep by mistake or your code had an infinite loop?
+
+you need to signal break to get back control
+)
+
+0 : 0
+click ☰
+note: break item has shortcut esc-c
+
+esc-c or ☰.break signals break
+no effect if nothing is running
+
+if J is running locally: signal break with
+ ctrl+c in window that started your server
+
+it takes 2 breaks to break a sleep
+ but only one to break a loop
+ 
+run following sentence in input area:
+   jxsleep 10 NB. 2 breaks to end the delay
+)
+
+0 : 0
+JHS is a browser interface to J
+
+A J installation also includes:
+  Jqt - an IDE built in Qt
+  jconsole - terminal repl interface
+)
+
+0 : 0
+quit  J session with esc-z in jterm page
+close J pages with esc-q or ☰.close
+)
+
+0 : 0
+this is the end of the overview
+esc-p for links to J web resources
+explore tours (JHS labs) and labs
+
+☰.entry.tour
+recall and run plot tour
+
+☰.entry.lab
+recall and run line for core
+then recall and run 'A J Introduction'
+)

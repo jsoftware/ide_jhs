@@ -1,12 +1,10 @@
 NB. html templates and utilities
 coclass'jhs'
 
-jsdata=: '"unitialized"'   NB. page vs cojhs
-
+jsdata=: '"uninitialized"'   NB. jsdata not set by app - must be legal javascript
 
 INC=: CSS=: JS=: HBS=: ''  NB. overidden in app locale
 NOCACHE=: 0                NB. use cached js files
-NOPOPUP=: 0                NB. use popups
 
 INC_jquery=: 0 : 0
 ~addons/ide/jhs/js/jquery/smoothness/jquery-ui.custom.css
@@ -33,108 +31,23 @@ INC_handsontable_basic=: INC_handsontable NB. no jsoftware stuff yet
 
 INC_chartjs=: 0 : 0
 ~addons/ide/jhs/js/chartjs/chart.js
-)
-
-NB. framework styles for all pages
-NB. later defintions have effect
-NB. only affect initial display - .text[value="foo"] does not work as contents change
-CSSCORE=: 0 : 0
-*,*::before,*::after {box-sizing: border-box;}
-html,body,form {height:100%;margin:0;}
-body{min-height: 100vh;100svh;display: flex;flex-flow: column;}
-form{min-height: 100vh;100svh;display: flex;flex-flow: column;}
-#jflexcol{display: flex; flex-flow: column; flex: 1; height:100%;}
-#jflexrow{display: flex; flex-flow: row   ; flex: 1; width: 100%;}
-*{font-family:<PC_FONTVARIABLE>;}
-*.jcode{font-family:<PC_FONTFIXED>;white-space:pre;}
-
-*.jhab:hover{cursor:pointer;color:black;background:#ddd;}
-*.jhab{text-decoration:none;}
-
-*.jhsel{background-color:buttonface;font-family:<PC_FONTFIXED>;}
-div{padding-left:2px;}
-
-#jresizeb{overflow:scroll;border:solid;border-width:1px;clear:left;}
-
-#status-busy{
- position: absolute; top: 0px; left: 70%; border: thick red solid; margin: 20px; padding: 10px;
- display: none; background: white;
- text-align:center;
-}
-
-.jhtitle{margin-left:0px;font-size:2em;}
-.jhchklabel{padding:0px;margin:1px 10px 1px 0px;background-color:white; border:0px solid black;}
-.jhchk{margin: 0px; transform: scale(0.6); border: 5px solid blue;background-color: <PC_BUTTON>; border-radius: 25%;}
-.jhrad{margin: 0px; transform: scale(0.6); border: 5px solid blue;background-color: <PC_BUTTON>; border-radius:100%;}
-.jhb  {color:black;margin: 2px; padding: 0px; background-color: <PC_BUTTON>;
- border: 2px solid black;border-radius:6px;}
-input[type=text]{padding: 0px; margin: 2px; border: 1px solid black;}
-input[type=password]{padding: 0px; margin: 2px; border: 1px solid black;}
-
-.transient{border:1px red solid;}
-
-.menu span{float:left;position:relative;}
-.menu a{display:inline-block;font-family:<PC_FONTFIXED>;color:black;text-decoration:none;background-color:#eee;border:0px solid black;padding:0px;width:100%;margin:0;}
-.menu a:focus{background-color:<PC_MENU_FOCUS>}
-.menu a:hover{cursor:pointer;background-color:<PC_MENU_HOVER>}
-.menu ul{position:absolute;top:100%;left:0%;display:none;list-style:none;border:0;padding:0;margin:0;}
-.menu li{display:block;white-space:nowrap;border:0;padding:0px;}
-
-/* burger menu */
-.menugroup{position:fixed;top:0;right:0;visibility:hidden;border:2px solid black;
-  background-color:white;max-height:100vh;overflow-y: auto;overflow-x:hidden;z-index:3;} /* z-index top touch buttons */
-.menugroup a:hover{cursor:pointer;background-color:<PC_MENU_HOVER>}
-.menuitem {color:black;margin: 2px; padding: 5px; background-color: white;width:16rem;height:2rem;
-  display:block;text-align:left;}
-.menuitem {text-decoration:none;}
-.menuspanleft   {font-family:<PC_FONTFIXED>;pointer-events: none;}
-.menuspanright  {font-family:<PC_FONTFIXED>;float:right;pointer-events: none;}
-.menuburger{color:black;background-color:white;position:fixed;top:0;right:0;margin:0px;padding:0px;
- font-size:2rem;width:2.5rem;height:2.5rem;border:0;}
-.menuburger:hover{background-color:<PC_MENU_HOVER>;}
-.menuclear{width:100%;height:100%;background-color:transparent;position:fixed;top:0;left:0;visibility:hidden;}
-
-/* see ev_wrap_click() */
-#log{overflow-wrap:normal;white-space:nowrap;} /* jijx log wrap */
-
-/* tablet */
-@media screen and (max-device-width: 992px){
- *{font-size:24px;}
- .menu a{min-height:2em;min-width:2em;padding-top:0.5em;}
- .jhab{display:inline-block;min-height:2em;min-width:2em;}
- .jhb{min-height:2em;min-width:2em;}
- input::file-selector-button{font-size:24px;color:green;}
-
- #log{overflow-wrap:break-word;white-space:normal;} /* jijx log wrap */
-}
-
-/* phone */
-@media screen and (max-device-width: 640px){
- *{font-size:48px}
- .menu a{min-height:2.5em;min-width:2.5em;}
- .jhab{display:inline-block;min-height:2.5em;min-width:2.5em;}
- .jhb{min-height:2.5em;min-width:2.5em;}
- input::file-selector-button{font-size:48px;color:red;} /*min-height:180px;min-width:180px;*/
-
- #log{overflow-wrap:break-word;white-space:normal;} /* jijx log wrap */
-
- /* hamburger menu */
- .menuburger {height:2rem;}
- .menuitem   {height:2rem;}
-}
-
-
+~addons/ide/jhs/js/chartjs/defaults.js
 )
 
 NB. extra html - e.g. <script .... src=...> - included after CSS and before JSCORE,JS
 HEXTRA=: '' 
 
 NB. core plus page styles with config replaces
-NB. apply outer style tags after removing inner ones
+NB. css from y has legacy <PC_FONTFIXED> and may have PC_FONTFIXED
+NB. csscore.css has only PC_FONTFIXED
 css=: 3 : 0
+core=. fread JSPATH,'csscore.css'
 t=. 'PC_JICON PC_FONTFIXED PC_FONTVARIABLE PC_FM_COLOR PC_ER_COLOR PC_LOG_COLOR PC_SYS_COLOR PC_FILE_COLOR PC_BUTTON PC_MENU_HOVER PC_MENU_FOCUS'
-t=. (CSSCORE,y) hrplc t;PC_JICON;PC_FONTFIXED;PC_FONTVARIABLE;PC_FM_COLOR;PC_ER_COLOR;PC_LOG_COLOR;PC_SYS_COLOR;PC_FILE_COLOR;PC_BUTTON;PC_MENU_HOVER;PC_MENU_FOCUS
-'<style type="text/css">',LF,t,'</style>',LF
+d=. PC_JICON;PC_FONTFIXED;PC_FONTVARIABLE;PC_FM_COLOR;PC_ER_COLOR;PC_LOG_COLOR;PC_SYS_COLOR;PC_FILE_COLOR;PC_BUTTON;PC_MENU_HOVER;PC_MENU_FOCUS
+page=. y hrplc t;d                NB. <PC_...>
+page=. page rplc (;:t),.":each d  NB. PC_...>
+core=. core rplc (;:t),.":each d  NB. PC_...
+'<style type="text/css">',LF,core,page,'</style>',LF
 )
 
 seebox=: 3 : 0
@@ -162,6 +75,7 @@ formtmpl=: 0 : 0 -. LF
 <input type="hidden" id="jtype" name="jtype"   value="">
 <input type="hidden" id="jmid" name="jmid"    value="">
 <input type="hidden" id="jsid" name="jsid"    value="">
+<input type="hidden" id="jclass" name="jclass"    value="">
 <input type="submit" value="" onclick="return false;" style="display:none;width:0px;height:0px;border:none">
 )
 
@@ -214,15 +128,14 @@ y rplc '<';'&lt;';'>';'&gt;';'&';'&amp;';'"';'&quot;';CRLF;'<br>';LF;'<br>';CR;'
 
 NB. app did not send response - send one now
 jbad=: 3 : 0
-echo HNV
-echo NV
-smoutput'*** response not sent for ',URL
 if. METHOD-:'get' do.
  htmlresponse html409 NB. conflict - not working properly - reload
- smoutput'*** html409 Conflict'
+ echo 'html409 response for ',URL
 else.
- htmlresponse html409 NB. conflict - not working properly - reload
- smoutput'*** html409 Conflict'
+ echo NV
+ e=. LF,'J event handler ev_',(getv'jmid'),'_',(getv'jtype'),' ran but did not provide ajax response'
+ echo e
+ jhrajax ({.a.),jsencode jcmds 'alert *',e NB. ajax jhrcmds
 end.  
 )
 
@@ -391,7 +304,9 @@ get/post request failed<br>
 response code 409<br>
 application did not produce result<br>
 try browsing to url again<br>
-additional info in jijx
+additional info in jijx<br/><br/>
+<button onclick="if('undefined'==typeof window.parent.spaclose) return window.close(); return window.parent.spaclose(window);" >close and return to jterm</button>
+
 )
 
 gsrchead=: toCRLF 0 : 0
@@ -467,33 +382,11 @@ jhbsex=: 3 : 0
 try.
  t=. LF,}.' ',,".y NB. need lit list
 catch.
- smoutput t=.'HBS error:',(>coname''),' ',y
- t=.'<div>',t,'</div>'
+ echo t=.'HBS error: locale: ',(>coname''),' line: ',y,LF,13!:12''
+ t=.'<div>',(jhfroma t),'</div>'
 end.
 t
 ) 
-
-jmon=: 3 : 0
-t=.   ' onblur="return jmenublur(event);"'
-t=. t,' onfocus="return jmenufocus(event);"'
-t=. t,' onkeyup="return jmenukeyup(event);"'
-t=. t,' onkeydown="return jmenukeydown(event);"'
-    t,' onkeypress="return jmenukeypress(event);"'
-)
-
-jhmx=: 3 : 0
-if. '^'={:y do.
- s=. ' ','Esc-',_2{y
- t=. _2}.y
-elseif. '*'={:y do.
- s=. ' ','Ctrl+',_2{y
- t=. _2}.y
-elseif. 1 do.
- s=. '  '
- t=. y
-end.
-(dltb t);s
-)
 
 NB.? autocapitalize="none"
 jeditatts=: ' autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" '
@@ -507,13 +400,19 @@ JASEP=: 1{a. NB. delimit substrings in ajax response
 jgetfile=: 3 : '(>:y i: PS)}.y=.jshortname y'
 jgetpath=: 3 : '(>:y i: PS){.y=.jshortname y'
 
-NB. standard demo html boilerplate
+NB.* html link to defining script
 jhdemo=: 3 : 0
 c=. ;coname''
 c=. '.ijs',~;(_~:_".c){c;{.copath coname''
-p=. '~addons/ide/jhs/demo/',c
-'<hr>',jhref 'jijs';p;c
+t=. 4!:3''
+s=. (>:;t i:each '/')}.each t
+p=. ;(s i: <c){t NB. get last script
+p=. p
+'<hr>',jhref 'jijs';p;c,' - defining script'
 )
+
+NB.* html link to defining script
+jhijs=: jhdemo
 
 NB. jgrid - special jht for grid
 jhtx=: 3 : 0
@@ -526,18 +425,52 @@ NB.*
 
 NB.*
 NB.* HBS verbs with id
-NB.* jhab*id jhab text - anchor button
+
+NB.* jhab*id jhab text - anchor like button with dblclick
 jhab=: 4 : 0
-t=. '<a id="<ID>" href="#" name="<ID>" class="jhab" onclick="return jev(event)"'
-t=. t,' ondblclick="return jev(event)"><VALUE></a>'
-t hrplc 'ID VALUE';x;y
+(x jhb (boxopen y),<'jhab') jhaddatts ' ondblclick="return jev(event)"'
 )
 
-NB.* jhb*id jhb text [;class] - button
+NB. add defaults
+addd=: 4 : 0
+t=. boxopen x
+t,(<:#t)}.boxopen y
+)
+
+NB. validate id - id can have blank and anything else
+vid=: 3 : 0
+id=. dltb y
+NB. ('bad id: ',id)assert -.' 'e.id
+id
+)
+
+voptions=: 3 :0
+('invalid options: ',y)assert 0=#y-.' ~='
+y
+)
+
+NB. get default - '' replaced by default
+gdef=: 3 : 0
+;(''-:;{.y){y
+)
+
+NB.* jhb*id jhb value [;class [;options ]] - button
+NB.* id jhb 'value'
+NB.* id jhb 'value';'';'='
+NB.* id jhb 'value';'myb'
+NB.* class '' is 'jhb'
+NB.* option '~' does not run j handler from default js handler
+NB.* option '=' value is already html and avoids jhfroma
 jhb=: 4 : 0
-'value class'=. ;(0=L. y){(<y),<y;'jhb'
-t=. '<input type="submit" id="<ID>" name="<ID>" value="<VALUE>" class="<CLASS>" onclick="return jev(event)">'
-t hrplc 'ID VALUE CLASS';x;value;class
+id=. vid x
+'value class options'=. y addd 'jhb';''
+class=. gdef class;'jhb'
+options=. voptions options
+if. -.'='e.options do. value=. jhfroma value end.
+t=. '<button id="<ID>" name="<ID>" class="<CLASS>" onclick="return jev(event)">'
+t=. t hrplc 'ID VALUE CLASS';id;value;class
+t=. t,value,'</button>'
+t jhaddatts ('~'e.options)#'data-jhsnojdefault="1"'
 )
 
 NB.* jhchart*id jhchart '' - chartjs
@@ -553,51 +486,19 @@ t=. t,'close'  jhmenuitem 'close';'q'
 t=. t,jhmenugroupz''
 )
 
-NB.* jhchk*id jhchk text [;checked] (initial state 0 or 1)
-jhchk=: 4 : 0
-'value checked'=.  2{.(boxopen y),<0
-checked=. ;checked{PC_CHECK0_BACKGROUND;PC_CHECK1_BACKGROUND
-t=. '<span><input type="submit" id="<ID>" name="<ID>" value="" class="jhchk" style="background-color:<CHECKED>;" onclick="return jev(event)">'
-t=. t,'<ID>' jhb '<VALUE>';'jhchklabel'
-t=. t,'</span>'
-t hrplc 'ID VALUE CHECKED';x;value;checked
-)
-
-NB.* jhcheckbox*id jhcheckbox text;checked - deprecated - use jhchk
-jhcheckbox=: 4 : 0
-'value checked'=. y
-checked=. >checked{'';'checked="checked"'
-t=.   '<input type="checkbox" id="<ID>" value="<ID>" class="jhcheckbox" <CHECKED>'
-t=. t,' name="<ID>" onclick="return jev(event)"/><label for="<ID>"><VALUE></label>'
-t hrplc 'ID VALUE CHECKED';x;value;checked
-)
-
-NB.* jhdiv*id jhdiv text [;class]- <div id...>text</div>
+NB.* jhdiv*id jhdiv text- <div ...>text</div>
 jhdiv=: 4 : 0
-if. 0=L.y do.
- '<div id="',x,'">',y,'</div>'
-else.
- '<div id="',x,'" class="',(1{::y),'" >',(0{::y),'</div>'
-end.
+'<div id="',x,'" class="jhdiv" >',y,'</div>'
 )
-
-NB.* jhdivhidden*id jhdivhidden text - <div id...>text</div>
-jhdivhidden=: 4 : 0
-'<div id="',x,'" style="visibility:hidden">',y,'</div>'
-)
-
 
 NB.* jhdiva*[id] jhdiva text - <div id...>text
 jhdiva=: 3 : 0
 ''jhdiva y
 :
-'<div id="',x,'">',y
+'<div id="',x,'" class="jhdiv" >',y
 )
 
-NB.* jhdivadlg*id jhdivadlg text - <div id... display:none...>text
-jhdivadlg=: 4 : 0
-'<div id="',x,'" style="display:none;">',y
-)
+NB. #saveasdlg{display:none;} - dialog
 
 NB.* jhd3_basic*id jhd3_basic''
 jhd3_basic=: 4 : 0
@@ -615,21 +516,6 @@ NB.* jhec*id jhec html - contenteditable div
 jhec=: 4 : 0
 t=. '<div id="<ID>" contenteditable="true"',jeditatts
 NB. t=. t,' style="white-space:nowrap;" ' - CSS
-t=. t,' onkeydown="return jev(event)"'
-t=. t,' onkeypress="return jev(event)"'
-t=. t,' onfocus="jecfocus();"'
-t=. t,' onblur="jecblur();"'
-t=. t,'>',y,'</div>'
-t hrplc 'ID';x
-)
-
-NB.! 
-jhecx=: 4 : 0
-t=. '<div id="<ID>" contenteditable="true"',jeditatts
-NB.! t=. t,' style="white-space:nowrap;" '
-
-t=. t,' style="overflow-wrap: break-word; white-space: normal;" '
-
 t=. t,' onkeydown="return jev(event)"'
 t=. t,' onkeypress="return jev(event)"'
 t=. t,' onfocus="jecfocus();"'
@@ -673,87 +559,68 @@ t=. '<hr id="<ID>" name="<ID>" class="jhline" />'
 t hrplc 'ID';x
 )
 
-NB.* jhmab*id jhmab text - menu anchor button (shortcut ^s)
-jhmab=: 4 : 0
-'t s'=.jhmx y
-t=. (JMWIDTH{.t),s
-t=. x jhab t rplc ' ';'&nbsp;'
-t=. t rplc 'class="jhab"';'class="jhmab"',jmon''
-'<li>',t,'</li>'
-)
-
-NB.* jhmg*id jhmg text;decor;width - menu group - 0 for '' and 1 for dropdown
-jhmg=: 4 : 0
-'text dec w'=. y
-text=. text,>dec{'';'' NB. down wedge '&#9660;'
-t=. >(MSTATE=1){'</ul></span>';''
-t=. t,'<span style="z-index:<INDEX>">'
-t=. t,'<span><a href="#" id="<ID>" name="<ID>" class="jhmg"'
-t=. t,' onclick="return jmenuclick(event);"'
-t=. t,jmon''
-t=. t,'><VALUE>&nbsp;</a></span>'
-t=. t,'<ul id="<ID>_ul">'
-t=. t hrplc 'ID VALUE INDEX';x;text;":MINDEX
-MSTATE=: 2
-MINDEX=: <:MINDEX
-JMWIDTH=: w
-t
-)
-
-jhmgb=: 4 : 0
-t=. x jhab y
-t=. t rplc 'class="jhab"';'class="jhmab"',jmon''
-MSTATE=: 2
-MINDEX=: <:MINDEX
-JMWIDTH=: w
-t
-)
-
-
-
-NB.* jhml*id jhml text - menu anchor link - (shortcut ^s)
-NB. extra y element sets target - but not so useful as it isn't made current
-jhml=: 4 : 0
-if. 1=L.y do.
- 'y target'=. y
-else.
- target=. ;('jijs'-:y){y;TARGET
-end.
-'t s'=.jhmx y
-value=. t
-text=. ((0>.JMWIDTH-#value)#' '),s
-value=. value rplc ' ';'&nbsp;'
-text=. text rplc ' ';'&nbsp;'
-t=.   '<li><a href="<REF>" target="',target,'" class="jhml" onclick="return jmenuhide();"'
-t=. t,jmon''
-t=. t,'><VALUE></a><TEXT></li>'
-t hrplc 'REF VALUE TEXT';x;value;text
-)
-
-NB.* jhpassword*id jhpassword text;size - text is placeholder
 jhpassword=: 4 : 0
-t=.   '<input type="password" id="<ID>" name="<ID>"  placeholder="<TEXT>" class="jhpassword"',jeditatts,'value="" size="<SIZE>"'
-t=. t,' onkeydown="return jev(event)">'
-t hrplc 'ID TEXT SIZE';x;y
+id=. vid x
+'value size class options'=. y addd 10;'jhtext';''
+size=. gdef size;10
+class=. gdef class;'jhpassword'
+value=. jhfroma value
+t=. '<input type="password" id="<ID>" name="<ID>" class="<CLASS>" ',jeditatts,'placeholder="<VALUE>" '
+t=. t,'size="<SIZE>" onkeydown="return jev(event)" >'
+t=. t hrplc 'ID CLASS VALUE SIZE';id;class;value;size
+t jhaddatts ('~'e.options)#'data-jhsnojdefault="1"'
 )
 
-NB.* jhrad*id jhrad text;checked;set
+NB.* jhaddatts*html jhaddatts attributes
+jhaddatts=: 4 : 0
+i=. x i. '>'
+(i{.x),' ',y,i}.x
+)
+
+NB.* jhrematts*html jhrematts 'data-...'
+jhrematts=: 4 : 0
+'currently must be a single name  with no blanks or quotes'assert -.+/' "'e.y
+a=. ' ',y,'="'
+i=. 1 i.~a E. x
+(i{.x),(i+#a)}.x
+)
+
+NB.* jhchk*id jhchk text [;check [;marks [;class [;options]]]]
+NB.* id jhchk 'text'
+NB.* id jhchk 'text';1
+NB.* id jhchk 'text';0;'yn'
+NB.* id jhchk 'text';0;'';'';'~'
+NB.* not input tag type so is not included with submit
+NB. marks '' default '□▣'
+NB. class '' default is 'jhchk'
+NB. see jhb for more info
+jhchk=: 4 : 0
+'value check marks class options'=. y addd 0;'□▣';'jhchk';''
+class=. gdef class;'jhchk'
+marks=. gdef marks;'□▣'
+value=. (8 u: check{7 u: marks),' ',value
+t=. x jhb value;class;options
+t jhaddatts 'data-jhscheck="<CHECK>" data-jhsmarks="<MARKS>"'hrplc 'CHECK MARKS';check;marks
+)
+
+NB.* jhrad*id jhrad text [;check [;set [;marks [;class [;options]]]]]
+NB.* prefered order:text;check;set
+NB.*  but old style is converted: set;text;check
+NB.* set used to change button state in same set
+NB.* not input tag type so is not included with submit
+NB. see jhchck for more info
 jhrad=: 4 : 0
-'value checked set'=.  y
-checked=. ;checked{PC_CHECK0_BACKGROUND;PC_CHECK1_BACKGROUND
-t=. '<span><input type="submit" id="<ID>" name="<SET>" value="" class="jhrad" style="background-color:<CHECKED>;" onclick="return jev(event)">'
-t=. t,'<ID>' jhb '<VALUE>';'jhchklabel'
-t=. t,'</span>'
-t hrplc 'ID VALUE CHECKED SET';x;value;checked;set
-)
-
-NB.* jhradio*id jhradio value;checked;set - deprecated - use jhrad
-jhradio=: 4 : 0
-'value checked set'=. y
-checked=. >checked{'';'checked="checked"'
-t=.   '<input type="radio" id="<ID>" value="<ID>" class="jhradio" name="<SET>" <CHECKED>'
-t=. t,' onclick="return jev(event)"/><label for="<ID>"><VALUE></label>'
-t hrplc 'ID VALUE SET CHECKED';x;value;set;checked
+t=. y addd 0;'rad0';'◯⬤';'jhrad';''
+NB. adjust set;text;check to be text;check;set
+if. 2~:3!:0>2{t do. t=. (1 2 0{t),3}.t end.
+'value check set marks class options'=. t
+class=. gdef class;'jhrad'
+marks=. gdef marks;'◯⬤'
+set=.   gdef set;'rad0'
+mark=. 8 u: check{7 u: marks
+value=. (8 u: check{7 u: marks),' ',value
+t=. x jhb value;class;options
+t=. t jhaddatts 'data-jhsset="<SET>" data-jhscheck="<CHECK>" data-jhsmarks="<MARKS>"'hrplc 'SET CHECK MARKS';set;check;marks
 )
 
 NB.deprecated * jhref*jhref page;target;text
@@ -768,21 +635,29 @@ t=. '<a href="<REF>" target="',TARGET,'" class="jhref" ><VALUE></a>'
 t hrplc 'REF VALUE';x;y
 )
 
-NB.* jhselect*id jhselect texts;size;selected - selection control
+NB.* jhselect*id jhselect texts [;size [;sel [;class [;options ]]]]
 jhselect=: 4 : 0
-'values size sel'=. y
-t=. '<select id="<ID>" name="<ID>" class="jhselect" size="<SIZE>" onchange="return jev(event)" >'
-t=. t hrplc 'ID SIZE SEL';x;size;sel
+id=. vid x
+'first arg must be list of boxed texts'assert 2=L.{.y
+'values size sel class options'=. y addd '';0;'jhselect';''
+size=.  gdef size;0
+sel=.   gdef sel;0
+class=. gdef class;'jhselect'
+t=. '<select id="<ID>" name="<ID>" class="<CLASS>" size="<SIZE>" onchange="return jev(event)" >'
+t=. t hrplc 'ID CLASS SIZE';id;class;size
 opt=. '<option value="<VALUE>" label="<VALUE>" <SELECTED>><VALUE></option>'
 for_i. i.#values do.
- t=. t,opt hrplc'VALUE SELECTED';(i{values),(i=sel){'';'selected="selected"'
+ t=. t,LF,opt hrplc'VALUE SELECTED';(i{values),(i=sel){'';'selected="selected"'
 end.
 t=. t,'</select>'
+t jhaddatts ('~'e.options)#'data-jhsnojdefault="1"'
 )
+
+
 
 NB.* jhspan*id jhspan text - <span id...>text</span>
 jhspan=: 4 : 0
-'<span id="',x,'">',y,'</span>'
+'<span id="',x,'" class="jhspan">',y,'</span>'
 )
 
 NB.* jhtable*id jhtable '' - jhtable with id
@@ -790,19 +665,25 @@ jhtable=: 4 : 0
 ('<table',HBSX,'>')hrplc 'ID CLASS ';x;'jhtable'
 )
 
-NB.* jhtext*id jhtext text;size
+NB.* jhtext*id jhtext text [;cols [;class [;options ]]]
 jhtext=: 4 : 0
-t=.   '<input type="text" id="<ID>" name="<ID>" class="jhtext"',jeditatts,'value="<VALUE>" size="<SIZE>"'
-t=. t,' onkeydown="return jev(event)"'
-t=. t,'>'
-t hrplc 'ID VALUE SIZE';x;y
+id=. vid x
+'value size class options'=. y addd 10;'jhtext';''
+size=. gdef size;10
+class=. gdef class;'jhtext'
+value=. jhfroma value
+t=. '<input type="text" id="<ID>" name="<ID>" class="<CLASS>" ',jeditatts,'value="<VALUE>" '
+t=. t,'size="<SIZE>" onkeydown="return jev(event)" >'
+t=. t hrplc 'ID CLASS VALUE SIZE';id;class;value;size
+t jhaddatts ('~'e.options)#'data-jhsnojdefault="1"'
 )
 
-NB.* jhtextarea*id jhtextarea text;rows;ccols
+NB.* jhtextarea*id jhtextarea text [;rows-3;ccols-10]
+NB.* no onkeydown handler
 jhtextarea=: 4 : 0
 t=.   '<textarea id="<ID>" name="<ID>" class="jhtextarea" wrap="off" rows="<ROWS>" cols="<COLS>" '
-t=. t,'onkeydown="return jev(event)"',jeditatts,'><DATA></textarea>'
-t hrplc 'ID DATA ROWS COLS';x;y
+t=. t,jeditatts,'><DATA></textarea>'
+t hrplc 'ID DATA ROWS COLS';x;3{.(boxopen y),3;10
 )
 
 NB.* jhtitle*id jhtitle text
@@ -822,18 +703,6 @@ t hrplc 'ID REF TARGET TEXT';x;page;target;text
 
 NB.* 
 NB.* HBS verbs without id
-
-NB.* jhma*jhma'' - menu start
-jhma=: 3 : 0
-MSTATE=:1[MINDEX=:100
-'<div class="menu">'
-)
-
-NB.* jhmz*jhmz'' - menu end
-jhmz=: 3 : 0
-MSTATE=:0
-'</ul></span></div><br style="clear:both"/>'
-)
 
 NB.* jhresize*jhresize'' - separate fixed div from resizable div
 jhresize=: 3 : '''</div><div id="jresizeb">'''
@@ -865,32 +734,8 @@ s=.<;._2 HBS
 seebox s,.LF-.~each jhbsex each s
 )
 
-NB. file/files/fif - common buttons
-jhfcommon=: 3 : 0
-t=. jhclose''
-t=. t,'jfile'   jhb'jfile'
-t=. t,'jfiles'  jhb'jfiles'
-t=. t,'jfif'    jhb'jfif'
-t=. t,'jcopy'   jhb'jcopy'
-    t,jhbr
-)
-
-NB. jsfcommon correspondingjs event handlers
-jsfcommon=: 0 : 0 
-function ev_jcopy_click() {window.location.assign("jcopy");}
-function ev_jfile_click() {window.location.assign("jfile");}
-function ev_jfiles_click(){window.location.assign("jfiles");}
-function ev_jfif_click()  {window.location.assign("jfif");}
-)
-
 NB.* jnv*jnv 1 - toggle display of event name/value pairs
 jnv=: 3 : 'NVDEBUG=:y' NB. toggle event name/value display
-
-NB. used in demo15 and demo16 - jhjevids*jevids 'id1 abc foo'
-jhjevids=: 3 : 0
-a=. }:;',',~each'"',each,'"',~each<;._1 ' ',deb y
-LF,~'var JEVIDS= [','];',~a
-)
 
 NB.* 
 NB.* html response verbs
@@ -907,7 +752,7 @@ if. SETCOOKIE do.
  SETCOOKIE_jhs_=: 0
  tmpl=. tmpl rplc (CRLF,CRLF);CRLF,'Set-Cookie: ',cookie,CRLF,CRLF
 end.
-htmlresponse tmpl hrplc 'TITLE CSS HEXTRA JS BODY';(TIPX,x);(css CSS);HEXTRA;(js JS);(jhbs HBS)hrplc y
+htmlresponse tmpl hrplc 'TITLE CSS HEXTRA JS BODY';(TIPX,x);(css CSS);HEXTRA;(getjs'');(jhbs HBS)hrplc y
 )
 
 NB.* jhrx*title jhrx (getcss'...'),(getjs'...'),getbody'...'
@@ -936,7 +781,7 @@ getcss=: 3 : 0
 'getcss arg not empty'assert ''-:y
 t=. getincs'.css'
 t=. ;(<'<link rel="stylesheet" href="'),each t,each<'" />',LF
-t,css CSS
+t,css CSS hrplc 'PS_FONTCODE';PS_FONTCODE NB. PS_FONTCODE contains PC_... 
 )
 
 fixjsi=: 3 : 0
@@ -950,18 +795,12 @@ end.
 jsa=: LF,'<script type="text/javascript">',LF
 jsz=: LF,'</script>',LF
 
-fixPCs=: 3 : 0
-t=. ;:'PC_CHECK0_BACKGROUND PC_CHECK1_BACKGROUND'
-;LF,each((<'var '),each t,each<'= "'),each (".each t),each <'";'
-)
 
 getjs=: 3 : 0
 t=. getincs'.js'
 t=. ;LF,~each fixjsi each t 
 t=. t,jsa,'function jevload(){alert("load javascript failed:\nsee jijx menu tool>debug javascript")};',jsz
-a=. jsdata
-if. -.a-:'"unitialized"' do. a=. jsencode jsdata end.
-t,jsa,(fread JSPATH,'jscore.js'),(JS hrplc y),'var jsdata= ',a,';',(fixPCs''),jsz
+t,jsa,(fread JSPATH,'jscore.js'),(JS hrplc y),'var jsdata= ',jsdata,';',jsz
 )
 
 NB. core plus y - used for special pages
@@ -978,17 +817,31 @@ jhrajax=: 3 : 0
 htmlresponse y,~hajax rplc '<LENGTH>';":#y
 )
 
+NB.* jcmds*jcmds cmds - 0 or more boxed list of browser commands
+jcmds=: 3 : 0
+t=. boxopen y
+'jcmds arg is not 0 or more boxed strings'assert 2=;3!:0 each t
+'jhrcmds';<t
+)
+
 NB.* jhrcmds*jhrcmds ajax cmds - 0 or more boxed cmds
+NB.* sets jsdata for full browser page result
+NB.*  or jsajaxdata for ajax result
 NB.* *set id *value     - html elements (e.g. jhtext) with value
 NB.* *set id *innerHTML - html elements with HTML (e.g. jhspan)
 NB.* *css *css          - set new extra CSS
+NB.* jsdata uninitialized - get vs ajax
 jhrcmds=: 3 : 0
-jhrajax (-''-:y)}.(2 1{a.),}:;JASEP,~each boxopen y
+if. jsdata-:'"uninitialized"' do.
+ jsdata=: jsencode jcmds y NB. get cmds
+else.
+ jhrajax ({.a.),jsajaxdata=: jsencode jcmds y NB. ajax cmds
+end.
 )
 
-NB.* jhrjson*jhrjson list of boxed name/value pairs
+NB.* jhrjson*jhrjson - 0 or more boxed name/value pairs
 jhrjson=: 3 : 0
-jhrajax (3 1{a.),jsencode y
+jhrajax ({.a.),jsencode y
 )
 
 chunk=: 3 : 0
@@ -1019,12 +872,25 @@ SKSERVER_jhs_=: _1
 
 jsencode=: 3 : 'enc_pjson_ (2,~-:$y)$y'
 
+NB. standard menu for pages
+jhmpage=: 3 : 0
+jhmenulink  'jmpages';'jterm pages esc-4'
+)
+
+NB. standard menu page menu
+jhmpagez=: 3 : 0
+t=.   'jmpages' jhmenugroup ''
+t=. t,'jmterm'  jhmenuitem 'jterm';'1'
+t=. t,'jmnext'  jhmenuitem  'previous';'2'
+    t,jhmenugroupz''
+)
+
 NB. hamburger menu
 jhmenu=: 3 : 0
 menuids=:   <'menu0' 
 menutexts=: <'☰'
 menubacks=: <''
-('menuburger'jhb'☰';'menuburger'),'menuclear'jhb'';'menuclear'
+('menuburger'jhb'☰';'jmenuburger'),('menuclear'jhb'';'jmenuclear') NB. ,jhmenulink  'jmpages';'pages'
 )
 
 jhmenugroup=: 4 : 0
@@ -1033,10 +899,10 @@ i=. menuids i. <x
 if. i=#menuids do.  i=. 0 end. NB. user not informed of failuer
 value=. ;i{menutexts
 backid=. ;i{menubacks
-more=. '<span class="menuspanleft" >',(jhfroma'<      '),'</span>'
-t=. '<a href="#" class="menuitem" onclick="return menushow(''<BACK>'')" ><VALUE></a>'
+more=. '<span class="jmenuspanleft" >',(jhfroma'<      '),'</span>'
+t=. '<a href="#" class="jmenuitem" onclick="return menushow(''<BACK>'')" ><VALUE></a>'
 t=. t hrplc 'BACK VALUE';backid;more,jhfroma value
-t,~'<div id="<ID>" class="menugroup">'rplc '<ID>';x
+t,~'<div id="<ID>" class="jmenugroup">'rplc '<ID>';x
 )
 
 jhmenugroupz=: 3 : '''</div>'''
@@ -1052,8 +918,8 @@ case. '^' do. t=. 'ctrl+',1{esc
 case.     do. t=. 'esc-',esc
 end.
 
-esc=.  '<span class="menuspanright">',t,'</span>'
-t=. '<a id="<ID>" href="#" class="menuitem" onclick="ev_menuburger_click();return jev(event)" ><VALUE></a>'
+esc=.  '<span class="jmenuspanright">',t,'</span>'
+t=. '<a id="<ID>" href="#" class="jmenuitem" onclick="mmhide();return jev(event)" ><VALUE></a>'
 t hrplc 'ID VALUE';x;(jhfroma text),esc
 )
 
@@ -1063,8 +929,7 @@ jhmenulink=: 3 : 0
 menuids=: menuids,<to
 menutexts=: menutexts,<text
 menubacks=: menubacks,<menuid
-more=. '<span class="menuspanleft" >&gt&nbsp;</span>'
-t=. '<a href="#" class="menuitem" onclick="return menushow(''<TO>'')" ><VALUE></a>'
+more=. '<span class="jmenuspanleft" >&gt&nbsp;</span>'
+t=. '<a href="#" class="jmenuitem" onclick="return menushow(''<TO>'')" ><VALUE></a>'
 t hrplc 'VALUE TO';(more,jhfroma text);to
 )
-

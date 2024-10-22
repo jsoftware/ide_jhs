@@ -14,20 +14,11 @@ coinsert'jhs'
 
 NB. jijx stuff not directly tied to contenteditable repl
 
-NB. tack on link to JHS wiki
-xtool=: 3 : 0
-n=. 'tool_',y,'_jijx_'
-if. 0=nc<n do. y=. n~ end.
-y=. y,LF,'click link for extra info - background, historical and perhaps not relevant to this release',LF
-a=. 'https://code.jsoftware.com/wiki/Guides/JHS'
-t=. '<div contenteditable="false"><a href="',a,'" target="_blank" >',a,'</a></div>'
-jhtml'<hr>',(''jhecwrap (jhtmlfroma y),t),'<hr>'
-)
-
-ev_welcome_click=:   3 : 'xtool ''welcome'''
-ev_shortcuts_click=: 3 : 'xtool ''shortcuts'''
-ev_popups_click=:    3 : 'xtool ''popups'''
-ev_closing_click=:   3 : 'xtool ''closing'''
+ev_react_click=:     3 : 'tool ''react'''
+ev_welcome_click=:   3 : 'tool ''welcome'''
+ev_shortcuts_click=: 3 : 'tool ''shortcuts'''
+ev_popups_click=:    3 : 'tool ''popups'''
+ev_closing_click=:   3 : 'tool ''closing'''
 
 ev_mobile_click=:      3 : 'tool ''mobile'''
 ev_guest_rules_click=: 3 : 'tool tool_guest_rules'
@@ -41,19 +32,19 @@ jhtml'<hr/>'
 )
 
 ev_plot_click=:  3 : 0
-'plot tour'tour'plot.ijs'
+'plot tour'tour'plot.ijt'
 )
 
 ev_overview_click=: 3 : 0
-'overview lab'tour'overview.ijs'
+'overview lab'tour'overview.ijt'
 )
 
 ev_charttour_click=: 3 : 0
-'chart tour'tour'chart.ijs'
+'chart tour'tour'chart.ijt'
 )
 
 ev_canvas_click=: 3 : 0
-'canvas tour'tour'canvas.ijs'
+'canvas tour'tour'canvas.ijt'
 )
 
 jhs=: 3 : 0
@@ -69,18 +60,35 @@ tool_jhs_ y
 )
 
 jhsdemo=: 3 : 0
-if. ''-:y do. jselect demo_txt,;(<'   jhsdemo'''),each(<;._2 demo_names),each<'''',LF return. end.
-rundemo >:(<;._2 demo_names)i. <y
+n=. geth1'~addons/ide/jhs/demo/*.ijs'
+n=. (demo_order i. {:"1 n){n
+a=. {."1 n
+if. ''-:y do. jselect demo_txt,;(<'   jhsdemo'''),each a,each<'''',LF return. end.
+rundemo (a i. <y){demo_order
 )
+
+jhsapp=: 3 : 0
+n=. geth1'~addons/ide/jhs/app/*.ijs'
+n=. (app_order i. {:"1 n){n
+a=. {."1 n
+if. ''-:y do. jselect app_txt,;(<'   jhsapp'''),each a,each<'''',LF return. end.
+runapp (a i. <y){app_order
+)
+
+jhspage=: 3 : 0
+n=. 1 dir'~addons/ide/jhs/page/*.ijs'
+c=. _4}.each (#jpath'~addons/ide/jhs/page/')}.each n
+if. ''-:y do. jselect page_txt,;(<'   jhspage'''),each c,each<'''',LF return. end.
+i=. c i. <y
+'invalid page'assert i~:#n
+(;i{c)jpage''
+)
+
+page_txt=: 'simple apps showing JHS gui programming - run 1 of the following:',LF
 
 jhswiki=: 3 : 0
 if. ''-:y do. jselect wiki_txt,;(<'   jhswiki'),each(<;._2 wiki_names),each LF return. end.
 jhsvocab y
-)
-
-jhsapp=: 3 : 0
-if. ''-:y do. jselect tool_app return. end.
-runapp y
 )
 
 tool_tour=: 0 : 0
@@ -95,7 +103,7 @@ jhstour=: 3 : 0
 if. ''-:y do. jselect (<'   jhstour '''),each '''',~each<;._2 tool_tour return. end.
 jhtml'<hr>'
 echo x
-spx '~addons/ide/jhs/spx/',y,'.ijs'
+spx '~addons/ide/jhs/spx/',y,'.ijt'
 jhtml'<hr/>'
 )
 
@@ -115,30 +123,26 @@ jselect t,(<'   jhsrun '),each'''',~each'''',each titles
 jhstool_z_=:   jhstool_jijx_
 jhsdemo_z_=:   jhsdemo_jijx_
 jhsapp_z_=:    jhsapp_jijx_
+jhspage_z_=:   jhspage_jijx_
 jhslab_z_=:    jhslab_jijx_
 jhswiki_z_=:   jhswiki_jijx_
 jhstour_z_=:   jhstour_jijx_
 
-ev_recall_click=: 3 : 'jhsline 0{.0'
 ev_tool_click=:   3 : 'jhstool 0{.0'
-ev_demo_click=:   3 : 'jhsdemo 0{.0'
 ev_app_click=:    3 : 'jhsapp  0{.0'
+ev_page_click=:   3 : 'jhspage 0{.0'
+ev_demo_click=:   3 : 'jhsdemo 0{.0'
 ev_lab_click=:    3 : 'jhslab  0{.0'
 ev_tour_click=:   3 : 'jhstour 0{.0'
-ev_wiki_click=:   3 : 'jhswiki 0{.0'
+ev_wiki_click=:   ev_helplinks_click
+
+ev_helplinks_click=: 3 : 'jhtml links wwwlinks'
 
 jhsrun_z_=:    labrun_jijx_
 
 ev_spx_click=:  3 : 0
-'spx tour'tour'spx.ijs'
+'spx tour'tour'spx.ijt'
 )
-
-jhsline=: 3 : 0
-NB. jjs_jhs_'recent(10);'
-i.0 0
-)
-
-jhs_z_=: jhsline_jijx_
 
 NB. default ctrl+,./ handlers
 ADVANCE=: 'none'
@@ -228,7 +232,7 @@ initial data was numeric, so non-numeric is red
    'jtable;20 20'jpage's' [ s=: 2 2$'aa';'b';'c';'dd'
 )
 
-tool_app=: 0 : 0 
+app_txt=: 0 : 0 
 how to build an app
 apps are built with J, JHS framework,
  HTML, CSS, DOM, and javascript
@@ -244,18 +248,7 @@ run and study each script/app in order
     - opens app in a tab or at xywh
 move script and app so you can study them
 run 1 of the following:
-<RUNAPP>
 )
-
-t=. <;.2 gettitles'' NB. app titles
-t=. 3}.each t 
-i=. t i. each '-'
-t=. (i{.each t),each(<'NB.'),each }.each i}.each t
-t=. (<'   jhsapp '),each t
-t=. }:;t 
-
-
-tool_app=: tool_app rplc'<RUNAPP>';t
 
 tool_print=: 0 : 0
 simple printing
@@ -290,32 +283,54 @@ demo_txt=: 0 : 0
 simple apps showing JHS gui programming
 run demos to see some of the possibilities
 study the source to see how it is done
-study menu tool>app first as the source
-will make more sense after that
 run 1 of the following:
 )
 
-NB. sentence list should be built from demo folder files
-demo_names=: 0 : 0
-Roll submit
-Roll ajax
-Flip ajax
-Controls/JS/CSS
-Plot
-Grid editor
-Table layout
-Dynamic resize
-frames
-Ajax chunks
-Ajax interval timer
-WebGL 3d graphics
-D3 line and bar plots
-D3 iframes - spreadsheet/graph
-Flip - no javascript
-pswd gen - no javascript
-burger menu
+geth1=: 3 : 0
+f=. 1 dir y
+p=. >:(jpath y) i:'/'
+r=. 0 2$''
+for_n. f do.
+ d=. fread n
+ i=. 1 i.~ 'jhh1'E.d
+ if. i=#d do.
+  t=. 'no header'
+ else.
+  t=. 4}.i}.d
+  t=. }.}:deb(t i.LF){.t
+ end.
+ r=. r,(<t),<p}.;n
+end.
+r
 )
 
+NB. presentation order may differ from file name order
+demo_order=:<;._2[ 0 : 0
+jdemo01.ijs
+jdemo02.ijs
+jdemo03.ijs
+jdemo04.ijs
+jdemo05.ijs
+jdemo06.ijs
+jdemo07.ijs
+jdemo08.ijs
+jdemo10.ijs
+jdemo11.ijs
+jdemo12.ijs
+jdemo13.ijs
+)
+
+NB. presentation order may differ from file name order
+app_order=: <;._2[0 : 0
+app01.ijs
+app02.ijs
+app03.ijs
+app04.ijs
+app05.ijs
+app06.ijs
+app07.ijs
+app08.ijs
+)
 
 tool_watch=: 0 : 0
    'jwatch;0 0' jpage '?4 6$100' NB. watch an expression
@@ -330,7 +345,16 @@ run 1 of the following:
 tool_welcome=: 0 : 0
 welcome - browser interface to J
 
-new in this release:
+new in this beta release:
+jterm esc-z close pages and exit server
+foumdation laid for single page app
+'jterm' edit '...file...' - open edit page in jterm
+jterm esc-1 to jijx page
+jterm esc=2 to next page
+overview tour further improved
+jijx  ☰ reorganized
+
+new in prevoius release:
 click me button
 ☰ menu
 overview tour improved
@@ -460,7 +484,9 @@ echo'JHS lab advance - ctrl+. or menu >'
 lab_jlab_ f
 )
 
-tools=: (5}.each'tool'nl_jijx_ 0)-.'welcome';'guest';'shortcuts';'popups';'closing' NB. remove those in the ? menu
+NB. remove those in the help menu and other places
+toolsx=: 'react';'tour';'welcome';'guest_rules';'guest_files';'mobile';'shortcuts';'popups';'closing';'watch'
+tools=: (5}.each'tool_'nl_jijx_ 0)-.toolsx
 
 NB. validate tools:
 NB. ;".each(<'_jijx_'),~each(<'tool_'),each tools_jijx_

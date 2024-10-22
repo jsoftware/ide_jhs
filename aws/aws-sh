@@ -108,7 +108,7 @@ lets-restore)
 
 lets-backup)
 ./aws-sh run 'sudo tar zcvf .ssh/jserver/letsencrypt.tar.gz /etc/letsencrypt'
-./aws-sh get .ssh/jserver/letsencrypt.tar.gz ~/.ssh/jserver/
+./aws-sh get .ssh/jserver/letsencrypt.tar.gz ~/.ssh/jserver/letsencrypt.tar.gz.$(date +"%Y-%m-%dT%T")
 ;;
 
 # $2 is path to folder with key.pem and cert.pem files

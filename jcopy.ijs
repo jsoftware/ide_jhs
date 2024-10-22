@@ -4,9 +4,18 @@ require'~addons/convert/misc/base64.ijs'
 
 NB.copy files between server and client machines
 
+mkdir_j_ '~/uploads'
+'test'fwrite'~/uploads/test.txt'
+
 NB. sentences that define html elements
 HBS=: 0 : 0
-jhfcommon''
+jhmenu''
+'menu0'  jhmenugroup ''
+         jhmpage''
+'close'  jhmenuitem 'close';'q'
+         jhmenugroupz''
+jhmpagez''
+
 'puttitle'    jhtitle 'copy client file xxx to server ~/uploads/xxx'
 '<input id="fileupload" type="file" name="fileupload" />'
 'putf'     jhhidden''
@@ -29,7 +38,6 @@ create ''
 )
 
 ev_put_click=: 3 : 0
-mkdir_j_ '~/uploads'
 d=: frombase64 getv'jdata'
 f=. getv'putf'
 d fwrite '~/uploads/',f
@@ -50,12 +58,11 @@ ev_refresh_click=: 3 : 0
 )
 
 CSS=: 0 : 0
-#jcopy{color:blue}
-*{font-family:<PC_FONTFIXED>;}
+*{font-family:PC_FONTFIXED;}
 )
 
 NB. javascript code - initialize page and handle events
-JS=: jsfcommon, 0 : 0
+JS=: 0 : 0
 
 function ev_put_click(){
 var f=fileupload.files[0];
@@ -127,5 +134,7 @@ function base64ToArrayBuffer(base64) {
 function ev_refresh_click(){jdoajax(['getsel']);}
 
 function ev_refresh_click_ajax_json(t){jbyid('selspan').innerHTML= t.list;}
+
+function ev_close_click(){winclose();}
 
 )
