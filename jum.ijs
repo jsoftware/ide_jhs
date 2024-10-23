@@ -3,7 +3,7 @@ coclass'jum'
 coinsert'jhs'
 
 3 : 0''
-if. IF64 do.
+if. IF64 do. NB.
  JHS=: jpath'~user/jhs/'
 else.
  JHS=: jpath'~home/j805-user/jhs/'
