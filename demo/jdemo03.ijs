@@ -2,6 +2,7 @@ coclass'jdemo03'
 coinsert'jhs'
 
 HBS=:  0 : 0
+       jhclose'' NB. standard menu with close
        jhh1'Flip - ajax args and results'
 'flip' jhb'flipem'    
 't1'   jhtext'some text';10

@@ -10,7 +10,7 @@ jhclose''
 
 ev_create=: 3 : 0
 t=. y jpagedefault '5?5'
-jhrcmds ('set sentence *',t);'set display *',calc t
+jhcmds ('set sentence *',t);'set display *',calc t
 )
 
 calc=: 3 : 0

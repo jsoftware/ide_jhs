@@ -305,7 +305,7 @@ response code 409<br>
 application did not produce result<br>
 try browsing to url again<br>
 additional info in jijx<br/><br/>
-<button onclick="if('undefined'==typeof window.parent.spaclose) return window.close(); return window.parent.spaclose(window);" >close and return to jterm</button>
+<button onclick="if('undefined'==typeof window.parent.spaclose) return window.close(); return window.parent.spaclose(window);" >close and return to term</button>
 
 )
 
@@ -400,19 +400,25 @@ JASEP=: 1{a. NB. delimit substrings in ajax response
 jgetfile=: 3 : '(>:y i: PS)}.y=.jshortname y'
 jgetpath=: 3 : '(>:y i: PS){.y=.jshortname y'
 
-NB.* html link to defining script
-jhdemo=: 3 : 0
+NB.* button and ev handler for edit of defining script
+jhijs=: 3 : 0
 c=. ;coname''
 c=. '.ijs',~;(_~:_".c){c;{.copath coname''
 t=. 4!:3''
 s=. (>:;t i:each '/')}.each t
 p=. ;(s i: <c){t NB. get last script
-p=. p
-'<hr>',jhref 'jijs';p;c,' - defining script'
+JSCRIPT=: p
+ev_jscript_click=: jhijshandler
+'jscript'jhb'edit source script'
+)
+
+jhijshandler=: 3 : 0
+t=. pageopenargs'jijs?jwid=',JSCRIPT
+jhrcmds'pageopen *',}:;t,each','
 )
 
 NB.* html link to defining script
-jhijs=: jhdemo
+jhdemo=: 3 : 'jhbr,jhijs y'
 
 NB. jgrid - special jht for grid
 jhtx=: 3 : 0
@@ -478,12 +484,14 @@ jhchart=: 4 : 0
 '<div id="<id>_parent" class="jhchart_parent"><canvas id="<id>"></canvas></div>'hrplc 'id';x
 )
 
-NB.* jhclose*jhclose'' - menu with quit
+NB.* jhclose*jhclose'' - menu with > term pages and close
 jhclose=: 3 : 0
 t=. jhmenu''
 t=. t,'menu0'  jhmenugroup ''
+t=. t,         jhmpage''
 t=. t,'close'  jhmenuitem 'close';'q'
-t=. t,jhmenugroupz''
+t=. t,         jhmenugroupz''
+t=. t,         jhmpagez''
 )
 
 NB.* jhdiv*id jhdiv text- <div ...>text</div>
@@ -825,18 +833,19 @@ t=. boxopen y
 )
 
 NB.* jhrcmds*jhrcmds ajax cmds - 0 or more boxed cmds
-NB.* sets jsdata for full browser page result
-NB.*  or jsajaxdata for ajax result
+NB.* run in event handler to return cmds to javascript ajax routine
 NB.* *set id *value     - html elements (e.g. jhtext) with value
 NB.* *set id *innerHTML - html elements with HTML (e.g. jhspan)
 NB.* *css *css          - set new extra CSS
-NB.* jsdata uninitialized - get vs ajax
 jhrcmds=: 3 : 0
-if. jsdata-:'"uninitialized"' do.
- jsdata=: jsencode jcmds y NB. get cmds
-else.
- jhrajax ({.a.),jsajaxdata=: jsencode jcmds y NB. ajax cmds
-end.
+jhrajax ({.a.),jsajaxdata=: jsencode jcmds y NB. ajax cmds
+)
+
+NB.* jhcmds*jhcmds - 0 or or more cmds to be run by ev_body_load
+NB.* run in ev_create/create/jev_get to pass cmds to javascript in var jsdata
+NB.* see jhrcmds 
+jhcmds=: 3 : 0
+jsdata=: jsencode jcmds y
 )
 
 NB.* jhrjson*jhrjson - 0 or more boxed name/value pairs
@@ -874,13 +883,13 @@ jsencode=: 3 : 'enc_pjson_ (2,~-:$y)$y'
 
 NB. standard menu for pages
 jhmpage=: 3 : 0
-jhmenulink  'jmpages';'jterm pages esc-4'
+'jmpage' jhmenulink  'jmpages';'term pages' NB. ;'4' ev_4_ shortcut
 )
 
 NB. standard menu page menu
 jhmpagez=: 3 : 0
 t=.   'jmpages' jhmenugroup ''
-t=. t,'jmterm'  jhmenuitem 'jterm';'1'
+t=. t,'jmterm'  jhmenuitem 'term';'1'
 t=. t,'jmnext'  jhmenuitem  'previous';'2'
     t,jhmenugroupz''
 )
@@ -923,13 +932,24 @@ t=. '<a id="<ID>" href="#" class="jmenuitem" onclick="mmhide();return jev(event)
 t hrplc 'ID VALUE';x;(jhfroma text),esc
 )
 
-NB. jhmenulink text;id
+NB. jhmenulink text;id[;esc]
 jhmenulink=: 3 : 0
-'to text'=. y
+'' jhmenulink y
+:
+if. #x do. x=. 'id="',x,'"' end.
+'to text esc'=. 3{.y,<''
+
+select. {.esc
+case. ' ' do. t=. ''
+case. '^' do. t=. 'ctrl+',1{esc
+case.     do. t=. 'esc-',esc
+end.
+esc=.  '<span class="jmenuspanright">',t,'</span>'
+
 menuids=: menuids,<to
 menutexts=: menutexts,<text
 menubacks=: menubacks,<menuid
 more=. '<span class="jmenuspanleft" >&gt&nbsp;</span>'
-t=. '<a href="#" class="jmenuitem" onclick="return menushow(''<TO>'')" ><VALUE></a>'
-t hrplc 'VALUE TO';(more,jhfroma text);to
+t=. '<a href="#" class="jmenuitem" <ID> onclick="return menushow(''<TO>'')" ><VALUE></a>'
+t hrplc 'ID VALUE TO';x;(more,(jhfroma text),esc);to
 )

@@ -2,6 +2,7 @@ coclass'jdemo06'
 coinsert'jhs'
 
 HBS=: 0 : 0
+jhclose'' NB. standard menu with close
 jhh1'Grid Demo'
 jhhr
 jgridnumedit'g0';'';'';'gdata0__'

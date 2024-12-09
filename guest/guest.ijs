@@ -50,14 +50,12 @@ end.
 if. 1~:ftype'jpersist.tgz' do.
   echo'no files to restore'
 else.
- r=. shell'tar -xzvf jpersist.tgz'
+ r=. <;.2 shell'tar -xzvf jpersist.tgz'
  ferase'jpersist.tgz'
- r=. <;.2 r 
- s=. -/;#each jpath each'~temp';'~home'
- echo ;/:~(<'~temp/'),each s}.each r
+ echo ;('/'~:;_2{each r)#r
 end. 
-echo LF,'~temp copied to ',name,' when session ends'
-echo name,' required to restore in new session!'
+echo LF,'~user copied to saved-name when session ends'
+echo 'saved-name required to restore ~user in new session!'
 )
 
 jgp__=: jgp_jhs_

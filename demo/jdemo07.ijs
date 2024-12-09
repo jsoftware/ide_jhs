@@ -2,6 +2,7 @@ coclass'jdemo07'
 coinsert'jhs'
 
 HBS=: 0 : 0
+jhclose'' NB. standard menu with close
 jhh1'Table layout'
 jhtablea
 jhtr 'longer label:';('t00'jhtext'';10);'a:'   ;'t01'jhtext'';5

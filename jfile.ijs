@@ -1,6 +1,7 @@
 NB. J HTTP Server - jfile app
 coclass'jfile'
 coinsert'jhs'
+require'~addons/convert/misc/base64.ijs'
 
 HBS=: 0 : 0
 
@@ -19,6 +20,7 @@ jhmpagez''
 'copy'     jhb 'copy'
 'cut'      jhb 'cut'
 'paste'    jhb 'paste'
+'download' jhb 'copy to downloads'
 
 'renamedlg'  jhdiva''
  jhbr
@@ -291,6 +293,23 @@ if. copy=1 do. try. 1!:55 <srcfile catch. end. end.
 create ('Paste: created file ',f);F
 )
 
+ev_download_click=: 3 : 0
+f=. getv'path'
+if. '/'={:f do.
+ NB. tar it
+ f=. }:jpath f
+ n=. f}.~>:f i:'/'
+ f=. (-#n)}.f
+ shell q__=: 'tar -C "',f,'" -czf  ',n,'.tgz ',n
+ n=. n,'.tgz'
+ d=. fread n
+else.
+ d=. fread f
+ n=. f}.~>:f i:'/'
+end.
+jhrjson qq__=: 'report';(jhfroma n,' copied to server Downloads');'data';(tobase64 d);'name';n
+)
+
 NB. copyfiles src;snk
 NB. src ends with \fspec which can have wildcards
 copyfiles=: 3 : 0
@@ -509,9 +528,16 @@ function ev_file_dblclick(){
     jijxwindow.newpage(a,'jifr',b);
   }else{
     var t= 'jijs?jwid='+jform.path.value;
-    pageopen(t,t);
+    jijxwindow.pageopen(t,t);
   }  
 }
 
 function ev_close_click(){winclose();}
+
+function ev_download_click(){clr();jdoajax(['path']);}
+function ev_download_click_ajax_json(t){
+ if(t.data!=undefined){saveAs(base64ToArrayBuffer(t.data),t.name);}
+ jbyid('report').innerHTML= t.report;
+}
+
 )

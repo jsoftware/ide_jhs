@@ -34,7 +34,7 @@ try.
  fixjs__hot'' NB. apply options and data to JS
  qz__=: JS__hot
  NB.! show__hot 'tab' NB.!!!
- jhrcmds 'set head *table: ',header
+ jhcmds 'set head *table: ',header
 catchd.
  ('create failed:',LF,13!:12'') assert 0
 end.

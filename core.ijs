@@ -383,11 +383,6 @@ NB. 1 - server not closed - page disabled
 NB. 2 - confirm() close   - guest server
 QRULES=: 0           NB. Esc-q - see ev_close_click in jijx.ijs
 
-NB. following are major jhs options
-
-
-PR_DEFAULTOPEN=: 'tab' NB. 'tab' or 'jterm' or 10 10 500 500
-
 NB. following are options and css name values
 
 PC_JICON=:         '#33D2F6'
@@ -591,7 +586,6 @@ stub=: 3 : 0
 NB. app stubs to load app file
 jev_get_jijx_=:    3 : (stub'jijx')
 jev_get_jfile_=:   3 : (stub'jfile')
-jev_get_jfiles_=:  3 : (stub'jfiles')
 jev_get_jcopy_=:   3 : (stub'jcopy')
 jev_get_jijs_=:    3 : (stub'jijs')
 jev_get_jfif_=:    3 : (stub'jfif')
@@ -599,7 +593,7 @@ jev_get_jpacman_=: 3 : (stub'jpacman')
 jev_get_jlogin_=:  3 : (stub'jlogin')
 jev_get_jfilesrc_=:3 : (stub'jfilesrc')
 jev_get_jdebug_=:  3 : (stub'jdebug')
-
+jev_get_jlocale_=: 3 : (stub'jlocale')
 
 NB. simple wget with sockets - used to get google charts png
 

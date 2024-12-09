@@ -57,6 +57,12 @@ ev_refresh_click=: 3 : 0
  jhrjson 'list';'getsel'jhselect ((#jpath'~/uploads/')}.each 1 dir'~/uploads/');1;0
 )
 
+ev_downtar_click=: 3 : 0
+echo'downtar'
+shell'tar -czf taruser.tgz j9.5-user'
+jhrjson d__=: 'rep';('OK: taruser.tgz');'data';tobase64 fread 'taruser.tgz'
+)
+
 CSS=: 0 : 0
 *{font-family:PC_FONTFIXED;}
 )
@@ -97,39 +103,6 @@ function arrayBufferToBase64( buffer ) {
 function ev_put_click_ajax_json(t){
  jbyid('putrep').innerHTML = t.put;}
 
-function saveAs(content,fileName) {
-  const a = document.createElement("a");
-  const file = createBlob(content);
-  const url = window.URL.createObjectURL(file);
-  a.href = url;
-  a.download = fileName;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function createBlob(data) {
-  return new Blob([data], { type: "application/octet-stream" });
-}
-
-function ev_get_click(){
- jbyid('getrep').innerHTML='&nbsp;';
- jdoajax(['getsel']);
-}
-
-function ev_get_click_ajax_json(t){
- jbyid('getrep').innerHTML=t.rep;
- if(t.data!=undefined){saveAs(base64ToArrayBuffer(t.data),jbyid('getsel').value);} 
-}
-
-function base64ToArrayBuffer(base64) {
-    var binary_string = window.atob(base64)
-    var len = binary_string.length;
-    var bytes = new Uint8Array(len);
-    for (var i = 0; i < len; i++) {
-      bytes[i] = binary_string.charCodeAt(i);
-    }
-    return bytes.buffer;
-}
 
 function ev_refresh_click(){jdoajax(['getsel']);}
 

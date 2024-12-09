@@ -2,6 +2,7 @@ coclass'jdemo02'
 coinsert'jhs'
 
 HBS=: 0 : 0
+         jhclose'' NB. standard menu with close
          jhh1'Roll with ajax'
 'roll'   jhb'rollem'
 'result' jhspan''

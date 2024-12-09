@@ -243,7 +243,7 @@ function ev_find_click()
 
 function ev_file_click(){
  t= 'jijs?jwid='+jsid.value;
- pageopen(t,t);
+ jijxwindow.pageopen(t,t);
 }
 
 function ev_file_click(){
@@ -253,7 +253,7 @@ function ev_file_click(){
     jijxwindow.newpage(a,'jifr',b);
   }else{
     var t= 'jijs?jwid='+jsid.value;
-    pageopen(t,t);
+    jijxwindow.pageopen(t,t);
   } 
 }
 

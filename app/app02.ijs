@@ -13,6 +13,8 @@ manapp=: 'jpage y must be '''' or similar to ''text1'';''text2'''
 HBS=: 0 : 0
         jhclose ''
 'title' jhh1    'html'
+        jhijs''                        NB. button to edit source script
+        jhhr
 'b1'    jhb     'b1 flip t1'
 'b2'    jhb     'b2 flip both'
 'b3'    jhb     'error'
@@ -25,7 +27,6 @@ jhbr
 'e*r1'  jhrad   'rad1';0;'rg0' NB. rg0 is radio group 0
 'e*r2'  jhrad   'rad2';1;'rg0'
 'd1'    jhdiv   ''   NB. html division (or section) for html elements
-        jhijs   ''   NB. link to open defining script
 )
 
 report=: {{ 'mid sid type'=.getvs 'jmid jsid jtype'
@@ -38,7 +39,7 @@ return=: {{ jhrcmds  (report'');boxopen y }}
 ev_create=: 3 : 0 
 y=. y jpagedefault 't1 default';'t2 default'
 manapp assert (1=L. y)*.(2=#y)*.2=;3!:0 each y
-jhrcmds ('set e*t1 *',0{::y);'set e*t2 *',1{::y NB. browser commands when page loads
+jhcmds ('set e*t1 *',0{::y);'set e*t2 *',1{::y NB. browser commands when page loads
 )
 
 ev_b1_click=:  {{ return 'set e*t1 *',|.getv'e*t1' }}

@@ -1,5 +1,8 @@
 NB. utils
 
+cojhs_z_=: cojhs_jhs_
+jpage_z_=: jpage_jhs_
+
 coclass'jhs'
 
 0 : 0
@@ -14,7 +17,11 @@ jpage - 'class;show;title' jpage data - calls open
 
 cojhs - same as jpage
 
-jpage/cojhs create numbered locale for the page 
+jpage create numbered locale for the page 
+
+'term' open does jjs newpage to get iframe page in SPA
+'tab'  open jjs pageopen to get new or exisiting page
+''     open isSPA chooses term or tab
 
 default jev_get calls jpageget if ev_create is defined (indicates jpage)
  jpageget creates numbered locale for the page
@@ -67,7 +74,7 @@ i.0 0
 )
 
 NB.* jpage - locale=. 'class;show;title' jpage data
-NB.*   show: '' PR_DEFAULTOPEN or '_' no show or 'tab' or 'jterm' or x y [w h] window location
+NB.*   show: '' JS var defaultopen or '_' no show or 'tab' or 'term' or x y [w h] window location
 NB.*   title: tab title -  empty class default
 NB.*   if class has ev_create -> create object on class (numbered locale)
 NB.*     'jwatch;10 10;abc' jpage '?4 6$100'
@@ -81,7 +88,7 @@ NB.*
 NB.*  jpage show calls open which calls JS pageopen
 jpage=: 4 : 0
 d=. dltb each<;._2 x,';'
-'c s t'=. 3{.d
+'c s t'=. 3{.d,'';''
 if. -.(<c)e. conl 0 do.
  f=. (<'~addons/ide/jhs/'),each ('app/';'page/';'demo/'),each<c,'.ijs'
  b=. fexist f
@@ -128,8 +135,9 @@ if. a:-:n do. NB.!!!!!
  end. 
 
  NB. browser needs to do what jpage would do
+ NB. browser url?sentence="i.5" can pass args to init
  n=. conew ;coname''
- createpage__n  ((;coname''),'-',;n);_;<''
+ createpage__n  ((;coname''),'-',;n);'_';<''
  NB. title__n=: (;coname''),'-',;n
  NB. create__n'' NB. with default args
 end.
@@ -140,17 +148,12 @@ title jhrx (getcss''),(getjs''),gethbs''
 NB.* 
 
 NB. return valid open show
-NB. '_' or 'tab' or 'jterm' or xywh
+NB. '_' or 'tab' or 'term' or xywh
 fixshow=: 3 : 0
 s=. deb y
-select. s
-case. ,'_'   do. 
-case.'tab'   do.
-case.'jterm' do.
-case.        do.
- s=. _".s
- 'invalid show'assert -.(_ e. s)+.(-.0 2 4 e.~#s)+.0><./s
-end. 
+if. (<s) e. ('term';'tab';'';,'_') do. s return. end.
+s=. _".s
+'invalid show'assert -.(_ e. s)+.(-.0 2 4 e.~#s)+.0><./s
 s
 )
 
@@ -282,59 +285,71 @@ d=. enc_json <"1 d
 if. d-:'[]' do. d=. '[[]]' end.
 )
 
-NB.* open - [''/xywh/'tab'/'jterm'] open url
+0 : 0
+different kinds of open
+
+J cmd
+ 'jfif;'       jpage'' - defaultopen
+ 'jfif;tab'    jpage''
+ 'jfif;term'  jpage''
+
+ 'app07;'      jpage'' - defaultopen
+ 'app07;tab'   jpage''
+ 'app07;term' jpage''
+
+menu command
+ jfif - defaultopen
+
+url
+ jfjf - defaultopen
+
+)
+
+NB.* open - [''/xywh/'tab'/'term'] open url
 NB.*  x
-NB.*   elided is ''
-NB.*   '' uses PR_DEFAULTOPEN value
+NB.*   elided is same as ''
+NB.*   '' uses JS var defaultopen
 NB.*   xy[wh] - new window location - wh default 500 500
 NB.*   'tab' open/reopen in tab
-NB.*   'jterm' open/reopen in jterm iframe spa page
+NB.*   'term' open/reopen in term iframe spa page
 NB.*
 NB.* y 
 NB.*  url - class - e.g., jfile/jfif/jdemo01/app01
 NB.*   jijs class can have arg - jijs?jwid=foo.ijs
 NB.*  jurlencode url is used as window name (allows reopen)
 NB.*
-NB.*               open 'jfif' NB. default from pagexywh
-NB.* ''            open 'jfif' NB. default from pagexywh
-NB.* 10 10 500 500 open 'jfif' NB. window at location 10 10
-NB.* 'tab'         open 'jfif'
-NB.* 'jterm'       open 'jfif'
+NB.*                 open 'jfif' NB. js: var defaultopen - term/tab
+NB.* ''              open 'jfif' NB. same as x elided
+NB.* 10 10 [500 500] open 'jfif' NB. window at location 10 10
+NB.* 'tab'           open 'jfif'
+NB.* 'term'         open 'jfif'
 NB.*
-NB.* tab/window pages are activated if already open
-NB.* jterm pages are activatd if already open
-NB.* tab/window pages do not look for active jterm pages
-NB.* jterm pages do not look for active tab/window pages
+NB.* tab pages are activated if already open
+NB.* term pages are activatd if already open
+NB.* tab pages do not look for active term pages
+NB.* term pages do not look for active tab pages
 NB.*
-NB.* jpage creates class object (numbered locale) and calls open with jterm
+NB.* jpage creates class object (numbered locale) and calls open with term
 open=: 3 : 0
 ''open y
 :
-if. 0~:L.y do. 'unexpected boxed arg' assert 1[echo y end.
-s=. deb;(''-:x){x;PR_DEFAULTOPEN
-decho s
-if.'jterm'-:s do.
- NB. new or existing spa page
- a=. y
- b=. a
- i=. 1 i.~'?jwid='E.a
- if. i<#a do.
-  i=. i+6
-  b=. (i{.a),jurlencode i}.a NB. jurlencode just the parameter
- end.
- a=. 'jifr-',a
- jjs_jhs_'newpage("',a,'","jifr","',b,'");'
- return.
-end. 
+'a b s'=. x pageopenargs y
+jjs 'pageopen(''',a,''',''',b,''',''',s,''');'
+)
 
-NB. new or existing tab/window
+pageopenargs=: 3 : 0
+''pageopenargs y
+:
+if. 0~:L.y do. 'unexpected boxed arg' assert 1[echo y end.
+s=. deb x
+
+NB. new or existing term or tab 
 a=. b=. y
 if. 2~:3!:0 s do.
- q__=: s
  'bad xywh' assert (4=3!:0 s+0)*.(1=$$s)*.+./2 4 e.#s
  s=. 'left=<X>,top=<Y>,width=<W>,height=<H>'hrplc 'X Y W H';":each 4{.x,500 500
 else.
- s=. ''
+ NB.! validate s! s=. ''
 end.
 
 i=. 1 i.~'?jwid='E.a
@@ -345,9 +360,7 @@ if. i<#a do.
 end. 
 JWID=: b
 b=. jurlencode b
-NB.!'a__ b__'=:a;b NB.!
-NB.! jjs 'newpage("',a,'","jifr","',b,'");'
-jjs 'pageopen(''',a,''',''',b,''',''',s,''');'
+a;b;s
 )
 
 NB.* pages - pages'' - report locale wid,tab,class,locale
@@ -552,14 +565,11 @@ coclass'z'
 
 reload=: 3 : 'load RELOAD[echo RELOAD'
 
-cojhs=: cojhs_jhs_
-jpage=: jpage_jhs_
-
 NB.!   jjs_jhs_'newpage("jifr-jfile","jifr","jfile")'
 NB.!   jjs_jhs_'newpage("jifr-jpacman","jifr","jpacman")'
 
-NB.* edit - [tab/jterm/xywh] edit'~temp/abc.ijs
-NB.* monadic is '' which is PR_DEFAULTOPEN
+NB.* edit - [tab/term/xywh] edit'~temp/abc.ijs
+NB.* monadic is '' which is js var defaultopen
 edit=: 3 : 0
  '' edit y
 :

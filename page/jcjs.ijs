@@ -23,7 +23,7 @@ if. ''-:y do.
  jcjs'data';>:5?20
  jcjs'labels';5
 end. 
-jhrcmds 'chartjs charta *',cjsdata
+jhcmds 'chartjs charta *',cjsdata
 )
 
 NB. style html elements (color,size,border,..)

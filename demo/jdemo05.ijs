@@ -35,19 +35,21 @@ end.
 y;v
 )
 
-ev_create=: 3 : 0
-t=. y jpagedefault '5?5'
-'t v'=. validate t
+create=: 3 : 0
+'t v'=. validate y
 jcjs'reset'
 jcjs'labels';#v
 jcjs'data';v
 jcjs'legend';'mydata'
 jcjs'add';'options.animation.duration 2000'
-d=. ('set sentence *',t);('chartjs cjsa *',get'line')
-jhrcmds d
+('set sentence *',t);('chartjs cjsa *',get'line')
 )
 
-ev_run_click=: {{ ev_create getv'sentence' }}
+ev_create=: 3 : 0
+jhcmds create y jpagedefault '5?5'
+)
+
+ev_run_click=: {{ jhrcmds create getv'sentence' }}
 ev_sentence_enter=: ev_run_click
 
 INC=: INC_chartjs NB. include chart js code

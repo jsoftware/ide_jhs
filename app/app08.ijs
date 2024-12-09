@@ -11,8 +11,10 @@ NB. gn*up (mid*sid) has gn main id and up secondary id
 NB. J event handler is ev_mid_type
 NB. easy to have a single handler for different events
 HBS=:  0 : 0
-        jhclose''
+        jhclose''                      NB. menu with close 
 'head'  jhh1   'password'
+        jhijs''                        NB. button to edit source script
+        jhhr
 'pswd'  jhspan '&nbsp;'                NB. pswd text - non-breaking space
         jhhr                           NB. html horizonatal rule
 'len'   jhspan'length: ',":length
@@ -30,8 +32,7 @@ HBS=:  0 : 0
 'gn*sim'jhrad'simple css';1;'cssset' NB. csset radio button group
 'gn*fan'jhrad'fancy css' ;0;'cssset'
         jhbr
-        desc                         NB. desriptive text
-        jhdemo''                     NB. link to open source script
+        desc
 )
 
 length=: 10 NB. chars in password
@@ -59,7 +60,7 @@ jhrcmds  len;psw;epy;css NB. len;psw;css
 
 ev_create=: 3 : 0 NB. called by page or browser to initialize locale
 man assert ''-:y
-jhrcmds ''
+jhcmds ''
 )
 
 ev_copy_click=: 3 : 0

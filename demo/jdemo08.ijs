@@ -9,8 +9,9 @@ NB. giving body and each div a different background color
 NB. can be useful in figuring this stuff out
 
 HBS=: 0 : 0
+jhclose'' NB. standard menu with close
 'a' jhdiva ''
-    jhh1  'Dynamic Resize'
+'Dynamic Resize' NB. jhh1'Dynamic Resize'
     jhdivz
 'm' jhdiv jhfroma toJ fread jpath'~addons/ide/jhs/demo/jdemo08.ijs'
 'z' jhdiv jhdemo''

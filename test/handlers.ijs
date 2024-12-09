@@ -59,10 +59,18 @@ section'jhtable'
  jhtr 'short:'        ; 'tab20'jhtext''
  jhtr ''              ; ''                ; 'dd:'    ; 't31'jhb'button'           
 jhtablez
+
+
+'xxx'jhb'xxx'
+)
+
+ev_xxx_click=: 3 : 0
+t=. pageopenargs'jijs?jwid=~temp/a.txt'
+jhrcmds'pageopen *',}:;t,each','
 )
 
 ev_create=: 3 : 0
-jhrcmds''
+jhcmds''
 )
 
 NB. jev_get=: jpageget         NB. called by browser to load page

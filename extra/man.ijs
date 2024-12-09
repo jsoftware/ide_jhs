@@ -6,6 +6,7 @@ NB.! perhaps base9 (<500k) should be included in base library
 
 NB. y is name - abc abc_jd_ abc__c or locale - _jhs_
 NB. display comments before definition in defining script
+NB. last defn is used!
 NB. if defining script is in ~system it looks for source script in base9
 NB. would be nice to support f* to return all matches
 man=: 3 : 0

@@ -1,4 +1,5 @@
 NB. esc-1 to switch back to term
+NB.  or ☰.term pages.term
 
 NB. example script used in overview tour
 

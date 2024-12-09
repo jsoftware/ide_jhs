@@ -2,7 +2,8 @@ jhs guest server
 
 use -sh instead of .sh so pacman will have LF eol on windows
 
-*** setup lan guest server - firewall must allow nodeport!
+*** setup lan guest server - sudo ufw enable - firewall config - firewall must allow nodeport!
+*** static lan ip - advanced network configuration - ipv4 - manual/192.168.0.18/255.555.255.0/192.168.0.1
 $ start jconsole
    load'guest_util.ijs' NB. ln -s -f git/addons/ide/jhs/guest/guest_util.ijs guest_util.ijs
    man

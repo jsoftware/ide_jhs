@@ -345,16 +345,27 @@ run 1 of the following:
 tool_welcome=: 0 : 0
 welcome - browser interface to J
 
-new in this beta release:
-jterm esc-z close pages and exit server
-foumdation laid for single page app
-'jterm' edit '...file...' - open edit page in jterm
-jterm esc-1 to jijx page
-jterm esc=2 to next page
-overview tour further improved
-jijx  ☰ reorganized
+new in release 1.0.386:
+much easier to write apps with NO javascript!
+   'app08'jpage''
+jhrcmds verb avoids many requirements for javascript
+JHS apps are now similar to Jqt wd apps
+ J event handler called with required data
+  and jhrcmds changes the browser page as required
 
-new in prevoius release:
+SPA (single page app) support:
+ default page open is a frame in the term window
+  rather than a browser tab (pop-up)
+ ☰>term pages lists SPA pages
+ ☰>options to toggle term/tab default open
+
+☰>dev tools>locale explorer - cobrowser
+
+jijx  ☰ reorganized
+jterm esc-z close pages and exit server
+overview tour improved
+
+new in release 1.0.385:
 click me button
 ☰ menu
 overview tour improved

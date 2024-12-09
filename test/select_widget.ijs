@@ -31,7 +31,7 @@ jhbr
 NB. jpage (or url) calls to init page for browser
 ev_create=: 3 : 0 
 manapp assert ''-:y
-jhrcmds ''
+jhcmds ''
 )
 
 cnt=: 0

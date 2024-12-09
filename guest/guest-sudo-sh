@@ -16,7 +16,7 @@ purge () {
 
   # if jpersist is defined - backup ~temp
   if [ -f /home/$user/jpersist.txt ]; then
-   sudo tar -czf jpersist/`cat /home/$user/jpersist.txt`.tgz -C /home/$user j9.5-user/temp
+   sudo tar -czf jpersist/`cat /home/$user/jpersist.txt`.tgz -C /home/$user j9.5-user
   fi
 
    sudo userdel -r $user > /dev/null 2>&1

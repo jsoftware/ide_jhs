@@ -2,6 +2,7 @@ coclass'jdemo04'
 coinsert'jhs'
 
 HBS=: 0 : 0
+jhclose'' NB. standard menu with close
 jhh1'Controls with javascript and CSS'
 'javascript:'
 'which' jhspan'this is the which text'

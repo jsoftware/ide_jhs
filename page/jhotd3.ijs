@@ -52,7 +52,7 @@ try.
 catch.
  ('create failed:',LF,13!:12'') assert 0
 end. 
-jhrcmds''
+jhcmds''
 )
 
 destroy=: 3 : 0

@@ -1,4 +1,4 @@
-var defaultopen= 'tab' // 'tab' or 'jterm' ??? xywh
+var SPA= true;
 var allpages= []; // windows for all spa pages (jijx and all frame windows)
 var allwins= [];   // all windows created by jijx (some may have been closed)
 var phead= '<div id="prompt" class="log" onpaste="mypaste(event)">';
@@ -283,6 +283,7 @@ function ev_wrap_click(){
  b= 'normal'==getComputedStyle(t)['overflowWrap'];
  t.style.overflowWrap= b?'break-word':'normal';
  t.style.whiteSpace=   b?'normal'    :'nowrap';
+ jbyid('wrap').innerHTML= b?'NOWRAP ➜ wrap':'WRAP ➜ nowrap';
 };
 
 function removeelement(id){var e= jbyid(id); if(e==null) return; e.remove();}
@@ -293,22 +294,21 @@ function ev_clearrefresh_click(){jdoajax([]);}
 function ev_clearLS_click(){localStorage.clear();};
 
 function linkclick(a){pageopen(a,a);return false;} // open new tab or old - cache
-function linkpage(a){newpage("jifr-"+a,"jifr",a);return false;} // open in new iframe
 
-function linkdefault(a){if(defaultopen=='tab') linkclick(a); else linkpage(a);return false;}
-
-function ev_jfile_click()  {linkdefault("jfile");}
-function ev_jpacman_click(){linkdefault("jpacman");}
-function ev_jfif_click()   {linkdefault("jfif");}
-function ev_jcopy_click()  {linkdefault("jcopy");}
+function ev_jlocale_click(){linkclick("jlocale");}
+function ev_jfile_click()  {linkclick("jfile");}
+function ev_jpacman_click(){linkclick("jpacman");}
+function ev_jfif_click()   {linkclick("jfif");}
+function ev_jcopy_click()  {linkclick("jcopy");}
 
 var jijsnum=0;
-function ev_jijs_click(){linkdefault("jijs?"+jijsnum);jijsnum+=1;} 
-function ev_framework_click(){linkdefault("jdoc");}
+function ev_jijs_click(){linkclick("jijs?"+jijsnum);jijsnum+=1;} 
+function ev_framework_click(){linkclick("jdoc");}
 
 function ev_c_shortcut(){jscdo('jbreak');}
 function ev_e_shortcut(){ev_jfile_click();}
 function ev_f_shortcut(){ev_jfif_click();}
+function ev_l_shortcut(){ev_jlocale_click();}
 
 function ev_p_shortcut(){jscdo('helplinks');}
 function ev_n_shortcut(){ev_jijs_click();}
@@ -503,12 +503,26 @@ swipedetect(el, function(swipedir){
 })
 */
 
+ // used by plot etc to show files
+ // uqs used to get new file values
+ // sets new location in existing window or opens new window
+ function pageshow(url,wid,specs){
+  wid= decodeURIComponent(wid);
+  w= jijxwindow.getwindow(wid);
+  if(null!=w) w.location= url; else pageopen(url,wid,specs);
+ }
+ 
 // spa functions
+
+function ev_jmtoggle_click(){
+  SPA= !SPA;
+  jbyid('jmtoggle').innerHTML= SPA?'TERM ➜ tab':'TAB ➜ term';
+}
 
 // new frame for new url - or show existing frame with same url
 function newpage(myid,myclass,url){
   var i;
-  for (i= 1; i<allpages.length; i++) { // find page with same url - skip jterm 
+  for (i= 1; i<allpages.length; i++) { // find page with same url - skip term 
     if(myid==allpages[i].frameElement.id){ // open existing frame
       hideallpages();
       showpage(allpages[i]);
@@ -523,8 +537,14 @@ function newpage(myid,myclass,url){
   hideallpages(); // brute force to hide current
   jbyid(myid).contentWindow.location= url;
   allpages.push(ifr.contentWindow);
-}
+  jtermwcurrent= ifr.contentWindow;
 
+  ifr.focus();
+  // ifr.contentWindow.document.title not available until load is done
+  // url could be cleaned up for title so it is the same as eventual frame title
+  document.title= 'term '+url.split('?')[0]; //! TIPX
+}
+1
 // ->term
 function termpage(){
     jbyid("log").style.display= "block";
@@ -532,11 +552,13 @@ function termpage(){
     jbyid("log").focus();
 } 
 
-var tabprevious= null;
+var jtermwprevious= null;
+var jtermwcurrent= null;
 
 function hidepage(w){
-  tabprevious= w;
-  if(null==w.frameElement){
+  var w= (null==jtermwcurrent)?allpages[0]:jtermwcurrent;
+  jtermwprevious= w;
+  if(!isFrame(w)){
     jbyid("log").style.display= "none";
     jbyid("menuburger").style.display="none";
   }else{
@@ -551,29 +573,35 @@ function hideallpages(){
 }
 
 function showpage(w){
-  if(null==w.frameElement){
+  jtermwcurrent= w;
+  if(!isFrame(w)){
     jbyid("log").style.display= "block";
     jbyid("menuburger").style.display="";
     jbyid("log").focus();
+    document.title= 'term';
   }else{
     ifr= w.frameElement;
     ifr.style.display="block";
     w.jbyid("menuburger").style.display="";
     ifr.focus();
+    w.parent.document.title= 'term '+w.document.title; //! TIPX
   }
 }
 
 function termtab(w){
-  hidepage(w);
+  if(jtermwcurrent==allpages[0]) return; 
+  jtermwprevious= jtermwcurrent;
+  hidepage(jtermwcurrent);
   showpage(allpages[0]);
 }
   
 // page alternate - w is window for current page
 // switch between last 2 pages
 function pagealt(w){
-  var x= tabprevious; //! might not be valid
+  var x= jtermwprevious; //! might not be valid
   x= (x==null)?allpages[0]:x;
-  hidepage(w);
+  jtermwprevious= jtermwcurrent;
+  hidepage(jtermwcurrent);
   showpage(x);
 } 
 
@@ -588,7 +616,7 @@ function pagenames(){
 
 // current-window,new-index
 function pageswitch(w,n){
-  hidepage(w);
+  hidepage(jtermwcurrent);
   showpage(allpages[n]);
 }
  
@@ -599,7 +627,7 @@ function spaclose(w){
         var id= w.frameElement.id;
         jbyid(id).parentNode.removeChild(jbyid(id)); // remove page
         allpages.splice(i, 1);
-        tabprevious= allpages[0];
+        jtermwprevious= allpages[0];
         showpage(allpages[0]);
       }
       else w.close();

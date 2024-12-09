@@ -5,7 +5,8 @@
 # /jguest is copy of current J install
 rm -f -r /jguest
 mkdir /jguest
-cp -r $2 /jguest/j
+# L option follows jhs symbolic link
+cp -Lr $2 /jguest/j
 
 if [ -d /etc/letsencrypt/live/ ]
 then

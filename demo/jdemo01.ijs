@@ -4,11 +4,12 @@ coinsert'jhs'
 NB. sentences to create html body
 NB. jhbshtml_jdemo1_'' shows HBS html
 HBS=: 0 : 0
-jhh1'Roll with submit'
+         jhclose'' NB. standard menu with close
+         jhh1'Roll with submit'
 'roll'   jhb'rollem'
 '<RESULT>'
-desc
-jhdemo''
+         desc
+         jhdemo''
 )
 
 NB. create html page from HBS CSS JS

@@ -1,7 +1,7 @@
 var jijxwindow;    // jijx (could be closed) or null - that led (jijx->jfile->jijs) to this window
 var jlogwindow;    // set by jjhs - ~temp/jlog.ijs logging window
 var dirty=false;
-var JASEP= '\1';   // delimit substrings in ajax response
+var JASEP= '\x01';   // delimit substrings in ajax response
 var jform;         // page form
 var jevev;         // event handler event object
 var jevtarget=null;   // event handler target object
@@ -287,6 +287,7 @@ function jresize()
  jbyid("jresizeb").style.height= a+"px";
 }
 
+// onload event handler - calls ev_body_load
 function jevload()
 {
  jijxset(); // connect jijx to new pages
@@ -294,7 +295,11 @@ function jevload()
  jevsentence= "jev_"+jform.jlocale.value+"_ 0";
  dirty= !isNaN(parseInt(jbyid('jlocale').value)); // cojhs always dirty 
  var e= jbyid('menuburger'); 
- if(null!=e) e.focus(); // menu is default focus
+ if(null!=e){
+  if(!isTF()){
+    e= jbyid('jmpage');if(null!=e) e.style.display= 'none'; // kill unwanted > term menu
+  }
+ }
  jscdo("body","","load");
  return false;
 }
@@ -313,6 +318,7 @@ function jevfocus()
 // enter+shift no longer inserts newline in contenteditable
 function jev(event){
  // jmenuhide(event);
+ mmhide();
  jevev= window.event||event;
  // event.target gets child of element with handler
  // event.currentTarget gets bubble up to an element with handler
@@ -585,6 +591,12 @@ function jhrcmds(ts){
          case 'copy':
            navigator.clipboard.writeText(val);
            break;
+
+         case 'pageopen':
+          var args= val.split(',');
+          pageopen(args[0],args[1],args[2]);
+          break;
+           
      
          default: 
            throw cmd[0]+" is invalid command";
@@ -605,37 +617,6 @@ function jlog(t)
  if(jlogwindow==null) return;
  a= jlogwindow.cm.doc.getValue()+'\n'+t;
  jlogwindow.cm.doc.setValue(a);
-}
-
-// used by edit'...' jfif jfile jfiles ...
-// open existing window or open it fresh
-// new window added to jijxwindow.allwins
-// returned window must not be used until the url has loaded
-function pageopen(url,wid,specs){
- wid= decodeURIComponent(wid);
- if(ifjijxwindow()) w= jijxwindow.getwindow(wid); else w=null;
- if(null!=w){w.setTimeout(function(){w.focus();},25);return;}
- w=window.open(url,wid,specs); // pageopen
- if(null==w){alert(PUBLOCKED);return w;}
- if(ifjijxwindow()) jijxwindow.allwins.push(w);
- return w;
-}
-
-// similar to pageopen, but not same origin - e.g. wiki pages
-function urlopen(url,specs){
- wid= decodeURIComponent(url);
- w=window.open(wid,wid,specs); // urlopen
- if(null==w) alert(PUBLOCKED);
- return w;
-}
-
-// used by plot etc to show files
-// uqs used to get new file values
-// sets new location in existing window or opens new window
-function pageshow(url,wid,specs){
- wid= decodeURIComponent(wid);
- w= jijxwindow.getwindow(wid);
- if(null!=w) w.location= url; else pageopen(url,wid,specs);
 }
 
 function ifjijxwindow(){return (jijxwindow===undefined || jijxwindow==null || jijxwindow.closed) ? false:true;}
@@ -907,16 +888,25 @@ function ev_close_click(){
 
  if('undefined'==typeof window.parent.spaclose)
  {
-  document.open(); document.write('You guit this JHS page and can now close the browser window.'); // in case close fails
+  document.open(); document.write('You quit this JHS page and can now close the browser window.'); // in case close fails
   window.close();
  }
  else{
    window.parent.spaclose(window);
  }
 
- //dirty= false;
- //document.open(); document.write('You guit this JHS page and can now close the browser window.'); // in case close fails
- //window.close(); // close fails if window not opened by javascript
+}
+
+// isFrame - true if w is embeded in a frame
+function isFrame(w){return null!=w.frameElement;}
+
+// isTF - true if running in term or term SPA frame
+function isTF(){return 'undefined'!=typeof(SPA) || isFrame(window);}
+
+// isSPA - true if term window and SPA default is true
+function isSPA(){
+ if(!ifjijxwindow()) return false;
+ return jijxwindow.SPA;  
 }
 
 function ev_close_click_ajax(){}
@@ -988,9 +978,10 @@ function removeElementsByClass(className){
 }
 
 // hamburger menu
-mmshowing='';
+var mmshowing='';
 
 function mmhide(){
+//  alert('mmhide'+mmshowing); //!
   jbyid('menuclear').style.visibility= 'hidden';
   if(mmshowing!="")jbyid(mmshowing).style.visibility= 'hidden';
   mmshowing= "";
@@ -1012,6 +1003,8 @@ function ev_menuburger_click(){
   mmhide();
 }
 
+function ev_menuburger_click(){mmshow('menu0');}
+
 function topage(n){jijxwindow.pageswitch(window,n);}
 
 function ev_menuclear_click(){mmhide();}
@@ -1031,7 +1024,7 @@ function menushow(menuid){
     }
     var n= jijxwindow.pagenames();
     var t= '';
-    for(var i= 1 ; i<n.length ; i++ ){ // jterm already there
+    for(var i= 1 ; i<n.length ; i++ ){ // term already there
       var a= '<a class="jmenuitem" onclick="mmhide();topage(';
       a+= i+')" >'+n[i]+'<span class="jmenuspanright"></span></a>'
       t+= a;
@@ -1154,13 +1147,43 @@ function jscdo(mid,sid,type) // click handler for mid [sid] type
  jevdo();
 }
 
+// used by jpage edit'...' jfif jfile jfiles ...
+// open existing window or open it fresh
+// new window added to jijxwindow.allwins
+// returned window must not be used until the url has loaded
+// specs - term or tab or 10 10 or '' for isSPA
+// can be used with jijxwindow null
+function pageopen(url,wid,specs){
+  wid= decodeURIComponent(wid);
+
+  if(specs=='term' || isSPA() && (null==specs || specs==""))
+    return jijxwindow.newpage('jifr-'+url,'jifr',wid); //! jijxwindow.
+
+  if(specs=='tab') specs= '';
+
+  if(ifjijxwindow()) w= jijxwindow.getwindow(wid); else w=null;
+  if(null!=w){w.setTimeout(function(){w.focus();},25);return;}
+  w=window.open(url,wid,specs); // pageopen
+  if(null==w){alert(PUBLOCKED);return w;}
+  if(ifjijxwindow()) jijxwindow.allwins.push(w);
+  return w;
+ }
+ 
+ // similar to pageopen, but not same origin - e.g. wiki pages
+ function urlopen(url,specs){
+  wid= decodeURIComponent(url);
+  w=window.open(wid,wid,specs); // urlopen
+  if(null==w) alert(PUBLOCKED);
+  return w;
+ }
+
 // single page app stuff
 
 /*
 esc-number are the same for all pages
-esc-1 - jterm
+esc-1 - term
 esc-2 - flip between 2 pages
-esc-4 - jterm pages menu
+esc-4 - term pages menu
 
 esc-alpha are page specific shorcuts
 */
@@ -1168,10 +1191,36 @@ esc-alpha are page specific shorcuts
 function ev_jmterm_click(){ev_1_shortcut();}
 function ev_jmnext_click(){ev_2_shortcut();}
 
-function ev_1_shortcut(){jijxwindow.termtab(window);}
-function ev_2_shortcut(){jijxwindow.pagealt(window);}
-function ev_4_shortcut(){menushow('jmpages');}
+function ev_1_shortcut(){mmhide();if(isTF())jijxwindow.termtab(window);}
+function ev_2_shortcut(){mmhide();if(isTF())jijxwindow.pagealt(window);}
+// function ev_4_shortcut(){if(isTF())menushow('jmpages');}
 
 function winclose(){jijxwindow.spaclose(window);}
+
+// save server file to client downloads
+function saveAs(content,fileName) {
+  const a = document.createElement("a");
+  const file = createBlob(content);
+  const url = window.URL.createObjectURL(file);
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function createBlob(data) {
+  return new Blob([data], { type: "application/octet-stream" });
+}
+
+function base64ToArrayBuffer(base64) {
+    var binary_string = window.atob(base64)
+    var len = binary_string.length;
+    var bytes = new Uint8Array(len);
+    for (var i = 0; i < len; i++) {
+      bytes[i] = binary_string.charCodeAt(i);
+    }
+    return bytes.buffer;
+}
+
 
 

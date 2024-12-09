@@ -5,6 +5,8 @@ HBS=: 0 : 0
 NB. base div implicity opened
       jhclose''
 'title' jhh1 'css flex - ta above tb'
+        jhijs''                        NB. button to edit source script
+        jhhr
 'hbs'   jhb'show HBS'
 'css'   jhb'show CSS'
 
@@ -38,7 +40,7 @@ manapp=: 'jpage y must be '''''
 ev_create=: {{
  manapp assert ''-:y
  t=. y jpagedefault ,LF,.~20 20$'some text '
- jhrcmds ('set ta *',t);'set tb *',100}.|.t
+ jhcmds ('set ta *',t);'set tb *',100}.|.t
 }}
 
 ev_hbs_click=: {{ jhrcmds 'set ta *',HBS }}

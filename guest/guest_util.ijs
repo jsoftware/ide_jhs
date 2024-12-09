@@ -303,8 +303,12 @@ getsavedastartargs=: 3 : 0
 ".fread'nodestartargs'
 )
 
-create_jguest=: 3 : 0
+create_jguest_9.5=: 3 : 0
 echo shell'sudo j9.5/addons/ide/jhs/guest/create-jguest-sh $USER ',jpath'~install'
+)
+
+create_jguest=: 3 : 0
+echo shell'sudo j9.6/addons/ide/jhs/guest/create-jguest-sh $USER ',jpath'~install'
 )
 
 set_limits_conf=: 3 : 0

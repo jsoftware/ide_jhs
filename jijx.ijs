@@ -7,23 +7,34 @@ jhmenu''
 
 'menu0'  jhmenugroup ''
          jhmpage''
-'jinputs'jhmenuitem  'inputs';'d'
-'jfile'  jhmenuitem  'file explorer';'e'
-'jfif'   jhmenuitem  'find in files';'f'
-'jijs'   jhmenuitem  'jijs';'n'
-'jcopy'  jhmenuitem  'jcopy'
-'jbreak' jhmenuitem 'break';'c'
-'jpacman'jhmenuitem 'jpacman'
-'jdebug' jhmenuitem 'jdebug'
-         jhmenulink 'build';'build browser apps'
-         jhmenulink 'labs';'labs and tools'
+         jhmenulink 'devs';'dev tools'
+         jhmenulink 'options';'options'         
          jhmenulink 'view';'view'
+'jinputs'jhmenuitem  'inputs';'d'
+'jbreak' jhmenuitem 'break';'c'
+         jhmenulink 'build';'build apps'
+         jhmenulink 'labs';'labs and tools'
          jhmenulink 'help';'help'
 'closepages' jhmenuitem 'close term pages'
          jhmenulink 'quit';'quit'
 jhmenugroupz''
 
 jhmpagez''
+
+'devs'     jhmenugroup''
+'jfile'    jhmenuitem 'file explorer';'e'
+'jfif'     jhmenuitem 'find in files';'f'
+'jijs'     jhmenuitem 'edit new temp file';'n'
+'jlocale'  jhmenuitem 'locale explorer';'l'
+'jcopy'    jhmenuitem 'copy files server/client'
+'jpacman'  jhmenuitem 'package manager'
+'jdebug'   jhmenuitem 'debug'
+jhmenugroupz''
+
+'options' jhmenugroup''
+'wrap'    jhmenuitem 'NOWRAP ➜ wrap'
+'jmtoggle'jhmenuitem 'TERM ➜ tab'
+jhmenugroupz''
 
 'build'  jhmenugroup''
 'app'    jhmenuitem'app (build gui app)'
@@ -40,7 +51,6 @@ jhmenugroupz''
 
 'view'         jhmenugroup''
 'cleartemps'   jhmenuitem 'remove red boxes';'s'
-'wrap'         jhmenuitem 'wrap/unwrap'
 'clearwindow'  jhmenuitem 'clear window'
 'clearrefresh' jhmenuitem 'clear refresh'
 'clearLS'      jhmenuitem 'clear LS'
@@ -112,7 +122,7 @@ end.
 NB. refresh response - not jajax
 create=: 3 : 0
 uplog''
-'jterm' jhr 'LOG';LOG
+'term' jhr 'LOG';LOG
 )
 
 ev_advance_click=: 3 : 0
@@ -147,40 +157,6 @@ case. 1 do. NB.server user   - close pages, no exit, window.location=juser
 case. 2 do. NB. server guest - close pages, exit server, window.location=jguest
  exit'' NB. no jhrajax triggers jguest page
 end.
-)
-
-vsub=: 4 : 0
-d=. 1 dir '~addons/ide/jhs/',y
-t=. fread each d
-(#d)=+/;+/each(<LF,x,'=:')E.each t
-)
-
-NB. validate the system
-validate=: 3 : 0
-'ev_create not found'assert   'ev_create'vsub'app'
-'create found'       assert -.'create'vsub'app'
-
-'ev_create not found'assert   'ev_create'vsub'page'
-'create found'       assert -.'create'vsub'page'
-
-'ev_create found'assert -.'ev_create'vsub'demo'
-NB. 'create not found'       assert   'create'vsub'demo'
-
-a=. geth1'~addons/ide/jhs/demo/jdemo*.ijs'
-if. 0~:+/'no header'E.;{."1 a do.
- echo 'demo folder has files without jhh1'
-end.
-if. -.demo_order-:/:~{:"1 a do.
- echo 'demo folder mistatch with order_demo'
-end.
-a=. geth1'~addons/ide/jhs/app/app*.ijs'
-if. 0~:+/'no header'E.;{."1 a do.
- echo 'app folder has files without jhh1'
-end.
-if. -.app_order-:/:~{:"1 a do.
- echo 'app folder mistatch with order_app'
-end.
-i.0 0
 )
 
 ev_comma_ctrl =: 3 : 'sp__'''''

@@ -11,7 +11,7 @@ do a lab advance now
 )
 
 i. 5 NB. first 5 ints
-+/ i. 5 NB.sum over first 5 ints
++/ i. 5 NB. sum over first 5 ints
 *: i. 5 NB. square first 5 ints
 'reset' chart *: i. 100
 a=. 0.1 * i. 100
@@ -151,19 +151,19 @@ then press/release 1 key
 0 : 0
 next step opens file ovtour.ijs for editing
 
-jterm can run as 'single page application'
+term can run as 'single page application'
 an edit page can share the same browser window!
 
-esc-1 switch to jterm
+esc-1 switch to term
 esc-2 switch to the next page
 
 use ☰ on touch screen without esc key
 
 after next step shows edit page
- use esc-1/2 to switch between jterm and edit
+ use esc-1/2 to switch between term and edit
 )
 
-'jterm' edit fout
+edit fout
 
 0 : 0
 ovtour.ijs also defines verb hypot
@@ -187,7 +187,7 @@ add new line line at end:
 d=: %: 5
 ☰.load - save and load the script
 
-esc-1 to switch to jterm page
+esc-1 to switch to term page
 )
 d
 
@@ -226,7 +226,7 @@ A J installation also includes:
 )
 
 0 : 0
-quit  J session with esc-z in jterm page
+quit  J session with esc-z in term page
 close J pages with esc-q or ☰.close
 )
 

@@ -5,17 +5,19 @@ NB. sentences to create html elements
 NB. jhbshtml_jdemoxx_'' shows HBS html
 HBS=: 0 : 0
 jhclose''
-'title'  jhh1 'chartjs'
-'top'jhdiv'same data - 4 chart types'
+'title' jhh1 'chartjs'
+        jhijs''                        NB. button to edit source script
+        jhhr
+'top'   jhdiv'same data - 4 chart types'
 jhbr
-'run'jhb'run'
+'run'   jhb'run'
 'sentence'jhtext''
 jhbr
-'cjsa'jhchart''
-'cjsb'jhchart''
+'cjsa'  jhchart''
+'cjsb'  jhchart''
 jhbr
-'cjsc'jhchart''
-'cjsd'jhchart''
+'cjsc'  jhchart''
+'cjsd'  jhchart''
 )
 
 NB. style the html elements
@@ -45,19 +47,21 @@ end.
 y;v
 )
 
-ev_create=: 3 : 0
-t=. y jpagedefault '5?5'
-'t v'=. validate t
+create=: 3 : 0
+'t v'=. validate y
 jcjs'reset'
 jcjs'labels';#v
 jcjs'data';v
 jcjs'legend';'mydata'
 jcjs'add';'options.animation.duration 2000'
 d=. ('set sentence *',t);('chartjs cjsa *',get'line');('chartjs cjsb *',get'bar');('chartjs cjsc *',get'pie');'chartjs cjsd *',get'doughnut'
-jhrcmds d
 )
 
-ev_run_click=: {{ ev_create getv'sentence' }}
+ev_create=: 3 : 0
+jhcmds create y jpagedefault '5?5'
+)
+
+ev_run_click=: {{ jhrcmds create getv'sentence' }}
 ev_sentence_enter=: ev_run_click
 
 INC=: INC_chartjs NB. include chart js code
