@@ -102,7 +102,6 @@ spx
 jhstour=: 3 : 0
 if. ''-:y do. jselect (<'   jhstour '''),each '''',~each<;._2 tool_tour return. end.
 jhtml'<hr>'
-echo x
 spx '~addons/ide/jhs/spx/',y,'.ijt'
 jhtml'<hr/>'
 )
