@@ -113,14 +113,14 @@ t=. }."1 t
 NB. truncate url
 i=. <a:;getndx'url'
 q=. i{t
-c=. 15 <. each #each q
+c=. 40 <. each #each q
 q=. c{.each q
 t=. q i}t
 
 NB. truncate xtra
 i=. <a:;getndx'xtra'
 q=. i{t
-c=. 23 <. each #each q
+c=. 40 <. each #each q
 q=. c{.each q
 t=. q i}t
 i=. <a:;getndx'ts'
@@ -303,7 +303,7 @@ getsavedastartargs=: 3 : 0
 ".fread'nodestartargs'
 )
 
-create_jguest_9.5=: 3 : 0
+create_jguest_9_5=: 3 : 0
 echo shell'sudo j9.5/addons/ide/jhs/guest/create-jguest-sh $USER ',jpath'~install'
 )
 

@@ -240,12 +240,13 @@ learning curve is long, but not steep
 what you learn is applicable not just to J,
  but to every aspect of web programming
 JHS IDE is built with the same facilities
+☰.options.TAB uses tabs - better if you have the screen
 run and study each script/app in order
    runapp_jhs_ N [;xywh]
     - copies appN.ijs to ~temp/app
-    - runs and opens script in a tab
-    - opens app in a tab or at xywh
-move script and app so you can study them
+    - opens app
+in app page, click button 'edit source script' 
+if tabs, move app and script tabs for easy viewing
 run 1 of the following:
 )
 

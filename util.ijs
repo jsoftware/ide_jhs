@@ -490,7 +490,8 @@ f=. '~temp/app/',t
 1!:5 :: [ <jpath'~temp/app'
 (fread '~addons/ide/jhs/app/',t)fwrite f
 load f
-edit f
+NB.! term/tab pages - conflict with multiple javascript pages accessing jijx
+NB.! 'term'edit f
 (_4}.t) jpage''
 )
 

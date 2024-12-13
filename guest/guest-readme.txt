@@ -3,7 +3,9 @@ jhs guest server
 use -sh instead of .sh so pacman will have LF eol on windows
 
 *** setup lan guest server - sudo ufw enable - firewall config - firewall must allow nodeport!
-*** static lan ip - advanced network configuration - ipv4 - manual/192.168.0.18/255.555.255.0/192.168.0.1
+*** static lan ip - advanced network configuration
+***  manual/10.0.0.161/255.255.255.0/10.0.0.1
+***  ifconfig and route -n
 $ start jconsole
    load'guest_util.ijs' NB. ln -s -f git/addons/ide/jhs/guest/guest_util.ijs guest_util.ijs
    man
@@ -63,6 +65,7 @@ latest certificate is installed by:  start'...' (create-jguest-sh)
 $ node inspect localhost:9229
 desktop version 10.19.0 seems to be buggy with display of names
 debug> scripts
+       help
        sb('guest',xx)
        exec('jhsport')
        watch('postdata')

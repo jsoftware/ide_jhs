@@ -20,13 +20,13 @@ confusion when same browser uses both jquest and juser - switches rather than er
 var t= process.argv[1];
 var a= process.argv.slice(2);
 const nodeport=a[0];const key=a[1];const jhsport=a[2];
-//! a[3] unused - was breakfile
-//! a[4] unused - was pem
+// a[3] unused - was breakfile
+// a[4] unused - was pem
 const guests= parseInt(a[5]); // number of guests allowed
 const limit=  parseInt(a[6]); // seconds a session lasts before poll kill
 const dulim=  parseInt(a[7]); // limit for du -s -b /home/p?
 const idle=   parseInt(a[8]); // seconds idle (time between enters) before poll kill
-//! a[9] unused - pgroup limits
+// a[9] unused - pgroup limits
 const polltime= 60000; // time between poll runs
 
 const https  = require('https');
@@ -178,6 +178,15 @@ const options = {
   'trust proxy': true
 };
 
+// get app port from string - replyx if invalid - return port or 0 if invalid
+function getappport(s,res){
+  port= parseInt(s.slice(2));
+  if(isNaN(port) || (port<jhsport) || (port>(guestbase+guests))){
+    replyx(200,res,htmlbad.replace('<STATUS>','bad guestapp port'));return 0;
+  }
+  return port;
+}
+
 const server = https.createServer(options, (req, res) => {
   // htmluser=  fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/user.html'),'utf8');
   // htmlbad=   fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/bad.html'),'utf8');
@@ -191,14 +200,39 @@ const server = https.createServer(options, (req, res) => {
   var valid= port!=0 && c==token && s==(  (port!=jhsport)?gsnums[port-guestbase]:usersnum );
   var url= decodeURIComponent(req.url);
   var  ip= req.connection.remoteAddress;
+  var method= req.method;
+  var ref= req.headers.referer;
+
+  // guest apps - no cookie required
+  // https://ip:65101/p6500x - connect to port 6500x and url guestapp
+  var gamark= '/-' // prefix for guest app requests
+    var u= (-1==url.indexOf('?'))?url:url.substring(0,url.indexOf('?'));
+    var t= ('undefined'==typeof ref)?'':ref.slice(ref.lastIndexOf('/'));
+    if('GET'==method){
+      if(gamark== u.slice(0,2)){ // GET guestapp
+        port= getappport(u,res);
+        if(0==port) return;
+        url= "/guestapp";
+        valid=1;
+      }
+      else if(gamark==t.slice(0,2) && u.includes('.')){ // GET guestapp file
+        port= getappport(t,res);
+        if(0==port) return;
+        valid= 1;
+      }
+    }
+    else if(gamark==t.slice(0,2)){ // POST guestapp
+      port= getappport(t,res);
+      if(0==port) return;
+      valid= 1;
+  }
 
   if(valid)
-   log('valid',port,req.method+url);
+   log('valid',port,method+url);
   else
-   log('invalid','+',req.method+url); 
-
-
-  if(req.method == 'POST')
+   log('invalid','+',method+url); 
+  
+  if(method == 'POST')
   {
     dopost(req, res, function() {
       let postdata= decodeURIComponent(req.post);
@@ -280,6 +314,7 @@ const server = https.createServer(options, (req, res) => {
     }
    }
   }
+
   else if(url=='/jlogoff') replyc(200,res,htmlbad,0);
   else if(url=='/jlogin')  replyx(200,res,htmlbad.replace('<STATUS>',exitmsg));
   else if(url=="/favicon.ico") jhsreq("GET",jhshost,port,url,"",req,res);
@@ -325,14 +360,14 @@ async function jhsreq(gp,host,port,url,body,req,res){
  promise.then(good,bad);
  function good(data){replyhb(200,res,data);}
  function bad(data){
-  log('badres',port,req.method+decodeURIComponent(req.url),data); 
+  log('badres',port,method+decodeURIComponent(req.url),data); 
   if(typeof(data)=='string')
   {
    if(data.includes('ECONNREFUSED'))
    {
     // refused - redirect.html does sleep in browser - avoid sync in node
-    //log('refused',port,req.method+decodeURIComponent(req.url),data);
-    if(req.method=='GET')
+    //log('refused',port,method+decodeURIComponent(req.url),data);
+    if(method=='GET')
     {
      // kludge to quit after too many redirects
      if(port!=jhsport && gcount[port-guestbase]>30){replynoc(res,'bad refused',port);return;}

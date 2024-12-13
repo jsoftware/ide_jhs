@@ -23,7 +23,7 @@ try.
 if. _1~:SKSERVER do. try. ".'urlresponse_',URL,'_ y' catch. end. end. NB. jijx
 if. _1~:SKSERVER do. jbad'' end.
 getdata'' NB. get and parse http request
-if. 1=NVDEBUG do. smoutput seebox NV end. NB. HNV,NV
+if. 1=NVDEBUG do. smoutput seebox HNV end. NB. HNV,NV
 if. -. ((<URL)e.boxopen OKURL)+.(cookie-:gethv'Cookie:')+.PEER-:LOCALHOST
                        do. r=. 'jev_get_jlogin_ 0'
 elseif. 1=RAW          do. r=. 'jev_post_raw_',URL,'_'''''
