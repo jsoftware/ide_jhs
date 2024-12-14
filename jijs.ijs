@@ -13,6 +13,7 @@ HBS=: 0 : 0 rplc 'CMV';'4.2'
 '<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/util/dialog.CMV.css">'
 '<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/j/jtheme.CMV.css">'
 '<script src="~addons/ide/jhs/js/codemirror/j/j.CMV.js"></script>'
+'<script async type="module" src="~addons/ide/jhs/js/jsoftware/jijs2.js"></script>'
 
 'saveasdlg'    jhdiva''
  'saveasdo'    jhb'save as'
@@ -27,8 +28,10 @@ HBS=: 0 : 0 rplc 'CMV';'4.2'
 
 jhresize''
 
+'ijs2'   jhdiv''
 'ijs'         jhtextarea'<DATA>';20;10
 'textarea'    jhhidden''
+
 
 NB. menu must come after codemirror
 jhmenu''
