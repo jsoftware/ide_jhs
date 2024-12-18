@@ -55,11 +55,19 @@ function ro(only)
 }
 
 function click(){
+ /* cm5 version 
  ta.value= cm.getValue().replace(/\t/g,' ');
  s= cm.doc.listSelections();
  t= (dirty?"dirty":"clean")+JASEP;
  t= t+s[0].anchor.line+' '+s[0].anchor.ch+' '+s[0].head.line+' '+s[0].head.ch+JASEP;
- jdoajax(["filename","textarea","saveasx"],t);
+ */
+
+ //! cm6 version - textarea ta has been set from myEditor
+ t= (dirty?"dirty":"clean")+JASEP;
+ t= 'dirty'+JASEP; //! force dirty until dirty flag maintained in cm6
+ t= t+0+' '+0+' '+0+' '+0+JASEP; //! need proper caret/selection values
+
+ jdoajax(["filename","textarea","saveasx",],t);
 }
 
 function ev_save_click()    {click();}

@@ -106,6 +106,7 @@ spa save/load/loaded need immediate error report in spa
 
 NB. save only if dirty
 ev_save_click=: 3 : 0
+decho NV
 'dirty line'=. <;._2 getv'jdata'
 line=. 0".line
 ln=. 2{line NB. line with caret

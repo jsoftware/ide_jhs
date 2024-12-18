@@ -145,6 +145,11 @@ function saveText() {
   // TODO
   console.log(myEditor.state.doc.toString()); // Print content of editor to console.
   alert("Save mockup!"); // Alert.
+
+  //!
+  ta.value= myEditor.state.doc.toString(); // cm6 text to cm5 textarea
+  jscdo('save'); // call ev_save_click in jijs.ijs with cm6 version
+
   return true;
 }
 
@@ -183,7 +188,7 @@ function createEditor(text) {
 }
 
 // TODO
-let myEditor = createEditor(`
+var myEditor = createEditor(`
 {{)n
 Welcome to J programming language editor!
 Sample code:

@@ -144,7 +144,7 @@ aws useradd creates p... users with umask that prevents access from other users
 eric machine does not have MODE_HOME and home folders get 755 (default umask 022)
 
 aws p users cannot see each others files
-eric p users can see others files - except that guest-sudo-sh does chmod 700 after userdel
+ericb p users can see others files - except that guest-sudo-sh does chmod 700 after userdel
 
 *** pgroup
 p users are in group pgroup
