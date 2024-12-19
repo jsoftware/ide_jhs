@@ -191,7 +191,7 @@ if. 2=#y do.
  SEMN=: {.y
  b=. ({:y)<.#SEM
  while. SEMN<:b do.
-  spx a
+  spx SEMN
   a=. SEMN
  end.
  i.0 0
