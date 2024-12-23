@@ -13,7 +13,7 @@ HBS=: 0 : 0 rplc 'CMV';'4.2'
 '<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/util/dialog.CMV.css">'
 '<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/j/jtheme.CMV.css">'
 '<script src="~addons/ide/jhs/js/codemirror/j/j.CMV.js"></script>'
-'<script async type="module" src="~addons/ide/jhs/js/jsoftware/jijs2.js"></script>'
+'<script async type="module" src="~addons/ide/jhs/js/jsoftware/editor.js"></script>'
 
 'saveasdlg'    jhdiva''
  'saveasdo'    jhb'save as'
@@ -28,7 +28,7 @@ HBS=: 0 : 0 rplc 'CMV';'4.2'
 
 jhresize''
 
-'ijs2'   jhdiv''
+'cm6_editor'   jhdiv''
 'ijs'         jhtextarea'<DATA>';20;10
 'textarea'    jhhidden''
 
@@ -213,8 +213,8 @@ CSS=: 0 : 0
 #saveasdlg{display:none;}
 *{font-family:<PC_FONTFIXED>;font-weight:550;}
 #jresizeb{overflow:visible;border:solid;border-width:1px;clear:left;}
+#ijs { display:none; }
 div{padding-left:0;}
-.CodeMirror { z-index: 0 } /* allow burger menu on top */
 )
 
 JS=: fread JSPATH,'jijs.js'
