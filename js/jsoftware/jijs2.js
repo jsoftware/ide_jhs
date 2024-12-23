@@ -188,6 +188,7 @@ function createEditor(text) {
 }
 
 // TODO
+/*
 var myEditor = createEditor(`
 {{)n
 Welcome to J programming language editor!
@@ -196,3 +197,6 @@ Sample code:
 
 a. ((+/ >.@% #)@i. { [) 'APL'
 `);
+*/
+
+var myEditor = createEditor(document.getElementById('ijs').value);

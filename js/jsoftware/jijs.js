@@ -21,6 +21,7 @@ function ev_body_load()
  );
  cm.on("change",setdirty);
  ro(0!=ce.innerHTML.length);
+
  dresize();
 }
 
