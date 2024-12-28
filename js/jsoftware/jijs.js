@@ -1,4 +1,4 @@
-var ta, rep, readonly, saveasx, cm;
+var ta, rep, saveasx;
 
 function ev_body_load() {
   ce = jbyid("ijs");
@@ -6,73 +6,18 @@ function ev_body_load() {
   rep = jbyid("rep");
   ta = jbyid("textarea");
   saveasx = jbyid("saveasx");
-  ce.focus();
-  // obsolete
-  /*cm = CodeMirror.fromTextArea(ce,
-    {
-      lineNumbers: true,
-      mode: "j",
-      tabSize: 1,
-      gutter: false,
-      styleActiveLine: { nonEmpty: true },
-      extraKeys: {
-        "Ctrl-S": function (instance) { setTimeout(TOsave, 1); },
-        "Ctrl-R": function (instance) { setTimeout(TOrunw, 1); }
-      }
-    }
-  );
-  cm.on("change", setdirty);
-  ro(0 != ce.innerHTML.length);
-  */
-  dresize();
 }
 
-// obsolete
-//function TOsave() { jscdo("save"); } // firefox needs ajax outside of event
-//function TOrunw() { jscdo("runw"); }
-
-window.onresize = dresize;
-/*
-function dresize() {
-  // IE resize multiple frames sometimes gets id as null
-  if (jbyid("jresizea") == null || jbyid("jresizeb") == null) return;
-  var a = jgpwindowh(); // window height
-  a -= jgpbodymh();     // body margin h (top+bottom)
-  a -= jgpdivh("jresizea"); // header height
-  a -= 5               // fudge extra
-  a = a < 0 ? 0 : a;        // negative causes problems
-  cm.setSize(window.innerWidth, a);
-}
-*/
 function dresize() { /* Empty. */ }
+window.onresize = dresize;
 
 function setdirty() { jbyid("filenamed").style.color = "red"; dirty = true; }
 function setclean() { jbyid("filenamed").style.color = "blue"; dirty = false; }
-
 function setnamed() { jbyid("filenamed").innerHTML = jbyid("filename").value; }
 
-// obsolete
-/*
-function ro(only) {
-  readonly = only;
-  cm.setOption('readOnly', readonly ? true : false)
-  cm.getWrapperElement().style.background = readonly ? "lightgray" : "#fff";
-  ce.focus();
-}
-*/
 function click() {
-  // obsolete
-  /* cm5 version 
-  ta.value= cm.getValue().replace(/\t/g,' ');
-  s= cm.doc.listSelections();
-  t= (dirty?"dirty":"clean")+JASEP;
-  t= t+s[0].anchor.line+' '+s[0].anchor.ch+' '+s[0].head.line+' '+s[0].head.ch+JASEP;
-  */
-
   t = (dirty ? "dirty" : "clean") + JASEP;
-  // TODO 
-  t = t + 0 + ' ' + 0 + ' ' + 0 + ' ' + 0 + JASEP; //! need proper caret/selection values
-
+  t = t + 0 + ' ' + 0 + ' ' + 0 + ' ' + 0 + JASEP; // TODO need proper caret/selection values
   jdoajax(["filename", "textarea", "saveasx",], t);
 }
 
@@ -105,6 +50,7 @@ function ev_saveasclose_click() { jhide("saveasdlg"); dresize(); }
 
 function ev_ro_click() { window.cm6_changeReadOnly(); }
 function ev_numbers_click() { window.cm6_changeLineNumbers(); }
+function ev_theme_click() { window.cm6_changeTheme(); }
 
 // ajax response - ts[0] error ; ts[1] sentence ; advance_line ts[2]
 function ajax(ts) {
@@ -124,9 +70,9 @@ function ajax(ts) {
       document.title = t[t.length - 1];
       break;
     case 'lineadv':
-      i = parseInt(ts[2]);
+      // i = parseInt(ts[2]);
+      // if (i < cm.doc.lineCount()) cm.doc.setCursor(i, cm.doc.getLine(i).length);
       alert("Kernel panic! Guru Meditation!");
-      if (i < cm.doc.lineCount()) cm.doc.setCursor(i, cm.doc.getLine(i).length);
     default:
       jijxrun(ts[1]); // run sentence in jijx
   }
@@ -140,8 +86,8 @@ function ev_comma_ctrl() { jscdo("line"); }
 function ev_dot_ctrl() { jscdo("lineadv"); }
 function ev_slash_ctrl() { jscdo("sel"); }
 
-function ev_z_shortcut() { cm.undo(); }
-function ev_y_shortcut() { cm.redo(); }
+function ev_z_shortcut() { } // Handled by cm6.
+function ev_y_shortcut() { }
 function ev_p_shortcut() { jscdo("chelp"); }
 function ev_t_shortcut() { jscdo("ro"); }
 function ev_r_shortcut() { jscdo("runw"); }

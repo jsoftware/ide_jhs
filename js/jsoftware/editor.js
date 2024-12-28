@@ -13,6 +13,8 @@ let cm6;
 let lineNumbersState = true;
 let lineNumbersCompartment = new Compartment;
 let readOnlyCompartment = new Compartment;
+let themeState = 'light';
+let themeCompartment = new Compartment;
 
 const parser = LRParser.deserialize({
   version: 14,
@@ -84,8 +86,11 @@ const lightSelenizedTheme = EditorView.theme({
   "&": {
     color: lfg1,
     backgroundColor: lbg1,
-    zIndex: "0"
+    zIndex: "0",
+    height: "100%"
   },
+
+  ".cm-scroller": { overflow: "auto" },
 
   ".cm-content": {
     caretColor: lfg0
@@ -135,6 +140,69 @@ const lightSelenizedTheme = EditorView.theme({
   }
 }, { dark: false });
 
+const dbg0 = "#103c48",
+  dbg1 = "#184956",
+  dbg2 = "#2d5b69",
+  ddim0 = "#72898f",
+  dfg0 = "#adbcbc",
+  dfg1 = "#cad8d9"
+
+const darkSelenizedTheme = EditorView.theme({
+  "&": {
+    color: dfg1,
+    backgroundColor: dbg1,
+    zIndex: "0",
+    height: "100%"
+  },
+
+  ".cm-scroller": { overflow: "auto" },
+
+  ".cm-content": { caretColor: dfg0 },
+
+  ".cm-cursor, .cm-dropCursor": { borderLeftColor: dfg0 },
+  "&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection": { backgroundColor: dbg0 },
+
+  ".cm-panels": { backgroundColor: dbg2, color: dfg0 },
+
+  ".cm-searchMatch": {
+    backgroundColor: "#72a1ff59",
+    outline: "1px solid #457dff",
+    borderRadius: "1px"
+  },
+  ".cm-searchMatch.cm-searchMatch-selected": {
+    backgroundColor: "#6199ff2f"
+  },
+
+  ".cm-activeLine": { backgroundColor: dbg0 },
+  ".cm-selectionMatch": {
+    backgroundColor: dbg0,
+    outline: "1px solid #ebc13d",
+    borderRadius: "1px"
+  },
+
+  "&.cm-focused .cm-matchingBracket": {
+    backgroundColor: dbg1,
+    outline: "1px solid #84c74790",
+    borderRadius: "1px"
+  },
+
+  "&.cm-focused .cm-nonmatchingBracket": {
+    backgroundColor: "#fa575020",
+    outline: "1px solid #ff665c90",
+    borderRadius: "1px"
+  },
+
+  ".cm-gutters": {
+    backgroundColor: dbg2,
+    color: ddim0,
+    border: "none"
+  },
+
+  ".cm-activeLineGutter": {
+    backgroundColor: dbg1
+  }
+}, { dark: true });
+
 const lightSelenizedHighlight = HighlightStyle.define([
   { tag: tags.number, color: "#ca4898" },
   { tag: tags.string, color: "#ca4898" },
@@ -144,6 +212,21 @@ const lightSelenizedHighlight = HighlightStyle.define([
   { tag: tags.modifier, color: "#489100" }, // Conjuntion.
   { tag: tags.controlKeyword, color: "#bc5819" }, // Control.
 ]);
+
+const darkSelenizedHighlight = HighlightStyle.define([
+  { tag: tags.number, color: "#f275be" },
+  { tag: tags.string, color: "#f275be" },
+  { tag: tags.lineComment, color: "#72898f", fontStyle: "italic" },
+  { tag: tags.operatorKeyword, color: "#af88eb" }, // Verb.
+  { tag: tags.updateOperator, color: "#41c7b9" }, // Adverb.
+  { tag: tags.modifier, color: "#75b938" }, // Conjuntion.
+  { tag: tags.controlKeyword, color: "#ed8649" }, // Control.
+]);
+
+const themes = {
+  light: [lightSelenizedTheme, syntaxHighlighting(lightSelenizedHighlight, { fallback: true })],
+  dark: [darkSelenizedTheme, syntaxHighlighting(darkSelenizedHighlight, { fallback: true })]
+};
 
 function noIndent(_context, _pos) {
   return null;
@@ -177,14 +260,24 @@ function changeLineNumbers() {
 
 function changeReadOnly() {
   if (cm6.state.readOnly) {
+    jbyid("filenamed").innerHTML = jbyid("filename").value;
     cm6.dispatch({
       effects: readOnlyCompartment.reconfigure(EditorState.readOnly.of(false))
     });
   } else {
+    jbyid("filenamed").innerHTML = jbyid("filename").value + " (READ ONLY)";
     cm6.dispatch({
       effects: readOnlyCompartment.reconfigure(EditorState.readOnly.of(true))
     });
   }
+}
+
+function changeTheme() {
+  themeState = themeState === 'light' ? 'dark' : 'light';
+
+  cm6.dispatch({
+    effects: themeCompartment.reconfigure(themes[themeState])
+  });
 }
 
 function createEditor(text, parent) {
@@ -193,6 +286,7 @@ function createEditor(text, parent) {
     extensions: [
       lineNumbersCompartment.of(lineNumbers()),
       readOnlyCompartment.of(EditorState.readOnly.of(text.length !== 0)),
+      themeCompartment.of(themes[themeState]),
       highlightActiveLineGutter(),
       history(),
       drawSelection(),
@@ -233,7 +327,11 @@ function createEditor(text, parent) {
 // So instead of export I assign the needed functions to global window. 
 // This is a way to mix module code (this file) with non-module code (JHS).
 
-window.cm6_creat = (text, parent) => { cm6 = createEditor(text, parent); }
+window.cm6_creat = (text, parent) => {
+  cm6 = createEditor(text, parent);
+  jbyid("filenamed").innerHTML = jbyid("filename").value + (cm6.state.readOnly ? " (READ ONLY)" : "");
+}
+
 window.cm6_undo = () => { undo(cm6); }
 window.cm6_redo = () => { redo(cm6); }
 window.cm6_findAll = () => { selectMatches(cm6); }
@@ -243,3 +341,11 @@ window.cm6_replaceNext = () => { replaceNext(cm6); }
 window.cm6_replaceAll = () => { replaceAll(cm6); }
 window.cm6_changeLineNumbers = changeLineNumbers;
 window.cm6_changeReadOnly = changeReadOnly;
+window.cm6_changeTheme = changeTheme;
+
+// Set focus.
+
+const editorFocusTimer = setInterval(() => {
+  cm6.focus();
+  if (cm6.hasFocus) clearInterval(editorFocusTimer);
+}, 500);

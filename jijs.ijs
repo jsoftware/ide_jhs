@@ -50,7 +50,7 @@ NB. 'sel'     jhmenuitem 'selection';'^/'
           jhmenulink 'edit';'edit'
  'ro'      jhmenuitem 'readonly';'t'
  'numbers' jhmenuitem 'numbers'
-
+ 'theme' jhmenuitem 'theme'
 'close'     jhmenuitem 'close';'q'
 jhmenugroupz''
 
@@ -215,6 +215,7 @@ CSS=: 0 : 0
 #jresizeb{overflow:visible;border:solid;border-width:1px;clear:left;}
 #ijs { display:none; }
 div{padding-left:0;}
+#cm6_editor { height: 100vh; }
 )
 
 JS=: fread JSPATH,'jijs.js'
