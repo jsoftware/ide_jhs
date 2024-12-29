@@ -163,7 +163,7 @@ after next step shows edit page
  use esc-1/2 to switch between term and edit
 )
 
-edit fout
+'term' edit fout NB. edit in term window
 
 0 : 0
 ovtour.ijs also defines verb hypot
