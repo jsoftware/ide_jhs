@@ -3,16 +3,7 @@ NB. J HTTP Server - ijs app - textarea version
 coclass'jijs'
 coinsert'jhs'
 
-HBS=: 0 : 0 rplc 'CMV';'4.2'
-'<script src="~addons/ide/jhs/js/codemirror/codemirror.min.CMV.js"></script>'
-'<script src="~addons/ide/jhs/js/codemirror/util/search.CMV.js"></script>'
-'<script src="~addons/ide/jhs/js/codemirror/util/searchcursor.CMV.js"></script>'
-'<script src="~addons/ide/jhs/js/codemirror/util/dialog.CMV.js"></script>'
-'<script src="~addons/ide/jhs/js/codemirror/util/active-line.CMV.js"></script>'
-'<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/codemirror.CMV.css">'
-'<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/util/dialog.CMV.css">'
-'<link rel="stylesheet" href="~addons/ide/jhs/js/codemirror/j/jtheme.CMV.css">'
-'<script src="~addons/ide/jhs/js/codemirror/j/j.CMV.js"></script>'
+HBS=: 0 : 0
 '<script async type="module" src="~addons/ide/jhs/js/jsoftware/editor.js"></script>'
 
 'saveasdlg'    jhdiva''

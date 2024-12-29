@@ -19,6 +19,7 @@ function ev_body_load()
  newpline("   ");
  
  if(!touch){
+  ev_jmtoggle_click();
   jbyid('uarrow').style.display="none";
   jbyid('darrow').style.display="none";
   jbyid('advance').style.display="none";
