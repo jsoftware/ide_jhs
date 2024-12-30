@@ -352,7 +352,7 @@ function dopost(req, res, callback) {
 
 function jhsresponse(res,data){return {'headers': res.headers,'body':data};}
 
-let toString = obj => Object.entries(obj).map(([k, v]) => `${k}: ${v}`).join(', ');
+// let toString = obj => Object.entries(obj).map(([k, v]) => `${k}: ${v}`).join(', ');
 
 async function jhsreq(gp,host,port,url,body,req,res){
  markenter(port);
@@ -360,7 +360,7 @@ async function jhsreq(gp,host,port,url,body,req,res){
  promise.then(good,bad);
  function good(data){replyhb(200,res,data);}
  function bad(data){
-  log('badres',port,method+decodeURIComponent(req.url),data); 
+  log('badres',port,req.method+decodeURIComponent(req.url),data); 
   if(typeof(data)=='string')
   {
    if(data.includes('ECONNREFUSED'))
