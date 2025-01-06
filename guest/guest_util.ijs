@@ -273,7 +273,7 @@ A2_key      =: ''
 A3_flags    =: '--inspect'
 A4_server   =: '/jguest/j/addons/ide/jhs/guest/guest'
 A5_guests   =: 50
-A6_limit    =: 120*60*60
+A6_limit    =: 8*60*60
 A7_dulim    =: 50e6 NB. limit for du -s -b /home/p?
 A8_idle     =: 20*60
 A9_ulimit   =: 'cpu=2 nofile=1024 as=4000000000' NB. cpu mins, as 4G lets pandas tut run

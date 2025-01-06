@@ -889,8 +889,8 @@ jhmpage=: 3 : 0
 NB. standard menu page menu
 jhmpagez=: 3 : 0
 t=.   'jmpages' jhmenugroup ''
-t=. t,'jmterm'  jhmenuitem 'term';'1'
-t=. t,'jmnext'  jhmenuitem  'previous';'2'
+t=. t,'jmleft'  jhmenuitem 'left';'^<'
+t=. t,'jmright' jhmenuitem 'right';'^>'
     t,jhmenugroupz''
 )
 

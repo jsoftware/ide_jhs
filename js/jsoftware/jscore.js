@@ -909,6 +909,11 @@ function isSPA(){
  return jijxwindow.SPA;  
 }
 
+function isPages(){
+  if(!ifjijxwindow()) return false;
+  return jijxwindow.allpages[1]!=null
+}
+
 function ev_close_click_ajax(){}
 
 function isdirty(){return dirty;} // default - override
@@ -1003,7 +1008,8 @@ function ev_menuburger_click(){
   mmhide();
 }
 
-function ev_menuburger_click(){mmshow('menu0');}
+//!function ev_menuburger_click(){mmshow('menu0');}
+function ev_menuburger_click(){menushow('menu0');}
 
 function topage(n){jijxwindow.pageswitch(window,n);}
 
@@ -1011,25 +1017,41 @@ function ev_menuclear_click(){mmhide();}
 
 // menuitem onclick 
 function menushow(menuid){
+  var id,nid,a;
   mmhide();
+
+  if(menuid=='menu0' && isPages()){
+    id= jbyid('menu0');
+    //  'jmleft'  jhmenuitem_jhs_ 'left';'^<'
+    nid= jbyid('jmleft');
+    nid.parentNode.removeChild(nid);
+    nid= jbyid('jmright');
+    nid.parentNode.removeChild(nid);
+    nid= jbyid('jmpage');
+    nid.parentNode.removeChild(nid);
+
+    a= '<a id="jmleft" href="#" class="jmenuitem" onclick="mmhide();return jev(event)" >left<span class="jmenuspanright">ctrl+<</span></a>'
+    id.insertAdjacentHTML('beforeend',a);
+    a= '<a id="jmright" href="#" class="jmenuitem" onclick="mmhide();return jev(event)" >right<span class="jmenuspanright">ctrl+></span></a>'
+    id.insertAdjacentHTML('beforeend',a);
+
+    a= '<a href="#" class="jmenuitem" id="jmpage" onclick="return menushow(\'jmpages\')" ><span class="jmenuspanleft" >&gt&nbsp;</span>term&nbsp;pages<span class="jmenuspanright"></span></a>'
+    id.insertAdjacentHTML('beforeend',a);
+
+  }
 
   if(menuid=='jmpages'){
     // populate live menu - remove old and add new
-    var id=jbyid('jmnext');
-    var nid= id;
-    while(null!=(nid= nid.nextSibling)){
-      if('A'!=nid.tagName || ''!=nid.id) continue;
-      nid.parentNode.removeChild(nid);
-      nid= id; // start at the beginning again
-    }
+    id=jbyid('jmpages'); //!
+    while (id.firstChild!=id.lastChild){id.removeChild(id.lastChild);}
     var n= jijxwindow.pagenames();
     var t= '';
-    for(var i= 1 ; i<n.length ; i++ ){ // term already there
-      var a= '<a class="jmenuitem" onclick="mmhide();topage(';
+    for(var i= 0 ; i<n.length ; i++ ){ // term already there
+      a= '<a class="jmenuitem" onclick="mmhide();topage(';
       a+= i+')" >'+n[i]+'<span class="jmenuspanright"></span></a>'
       t+= a;
     }
-    id.insertAdjacentHTML('afterend',t);
+    id.insertAdjacentHTML('beforeend',t);
   }
 
   if(menuid!="") mmshow(menuid);
@@ -1179,21 +1201,13 @@ function pageopen(url,wid,specs){
 
 // single page app stuff
 
-/*
-esc-number are the same for all pages
-esc-1 - term
-esc-2 - flip between 2 pages
-esc-4 - term pages menu
+// ctrl+shift+< or > are the same for all pages - spa left/right
 
-esc-alpha are page specific shorcuts
-*/
+function ev_less_ctrl(){ev_jmleft_click();}
+function ev_larger_ctrl(){ev_jmright_click();}
 
-function ev_jmterm_click(){ev_1_shortcut();}
-function ev_jmnext_click(){ev_2_shortcut();}
-
-function ev_1_shortcut(){mmhide();if(isTF())jijxwindow.termtab(window);}
-function ev_2_shortcut(){mmhide();if(isTF())jijxwindow.pagealt(window);}
-// function ev_4_shortcut(){if(isTF())menushow('jmpages');}
+function ev_jmleft_click() {mmhide();if(isTF())jijxwindow.termleft(window);}
+function ev_jmright_click(){mmhide();if(isTF())jijxwindow.termright(window);}
 
 function winclose(){jijxwindow.spaclose(window);}
 

@@ -366,8 +366,8 @@ async function jhsreq(gp,host,port,url,body,req,res){
    if(data.includes('ECONNREFUSED'))
    {
     // refused - redirect.html does sleep in browser - avoid sync in node
-    //log('refused',port,method+decodeURIComponent(req.url),data);
-    if(method=='GET')
+    //log('refused',port,req.method+decodeURIComponent(req.url),data);
+    if(req.method=='GET')
     {
      // kludge to quit after too many redirects
      if(port!=jhsport && gcount[port-guestbase]>30){replynoc(res,'bad refused',port);return;}

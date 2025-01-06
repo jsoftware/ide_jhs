@@ -375,8 +375,11 @@ function ev_helpwikistdlib_click(){urlopen("https://code.jsoftware.com/wiki/Stan
 function ev_comma_ctrl(){jdoajax([]);}
 function ev_dot_ctrl(){jdoajax([]);}
 function ev_slash_ctrl(){jdoajax([]);}
-function ev_less_ctrl(){jdoajax([]);}
-function ev_larger_ctrl(){jdoajax([]);}
+
+// less and larger are handled in jscore as spa page left/right
+//function ev_less_ctrl(){jdoajax([]);}
+//function ev_larger_ctrl(){jdoajax([]);}
+
 function ev_query_ctrl(){jdoajax([]);}
 function ev_semicolon_ctrl(){jdoajax([]);}
 function ev_quote_ctrl(){jdoajax([]);}
@@ -553,12 +556,10 @@ function termpage(){
     jbyid("log").focus();
 } 
 
-var jtermwprevious= null;
 var jtermwcurrent= null;
 
 function hidepage(w){
   var w= (null==jtermwcurrent)?allpages[0]:jtermwcurrent;
-  jtermwprevious= w;
   if(!isFrame(w)){
     jbyid("log").style.display= "none";
     jbyid("menuburger").style.display="none";
@@ -570,7 +571,7 @@ function hidepage(w){
 }
 
 function hideallpages(){
-  for (i= 0; i<allpages.length; i++) {hidepage(allpages[i]);} 
+  for (var i= 0; i<allpages.length; i++) {hidepage(allpages[i]);} 
 }
 
 function showpage(w){
@@ -589,30 +590,23 @@ function showpage(w){
   }
 }
 
-function termtab(w){
-  if(jtermwcurrent==allpages[0]) return; 
-  jtermwprevious= jtermwcurrent;
-  hidepage(jtermwcurrent);
-  showpage(allpages[0]);
+function findpage(w){
+  for (var i= 0; i<allpages.length; i++) {if(w==allpages[i])break;} 
+  return i;
 }
-  
-// page alternate - w is window for current page
-// switch between last 2 pages
-function pagealt(w){
-  var x= jtermwprevious; //! might not be valid
-  x= (x==null)?allpages[0]:x;
-  jtermwprevious= jtermwcurrent;
-  hidepage(jtermwcurrent);
-  showpage(x);
-} 
 
-// page titles to populate live menu
-function pagenames(){
-  var i,r= [];
-  for (i= 0; i<allpages.length; i++) { // find next page
-    r.push(decodeURIComponent(allpages[i].document.title));
-  }
-  return r;
+function termleft(w){
+  var i= findpage(w);
+  i= Math.max(0,--i);
+  hidepage(w);
+  showpage(allpages[i]);
+}
+
+function termright(w){
+  var i= findpage(w);
+  i= Math.min(allpages.length-1,++i);
+  hidepage(w);
+  showpage(allpages[i]);
 }
 
 // current-window,new-index
@@ -621,6 +615,15 @@ function pageswitch(w,n){
   showpage(allpages[n]);
 }
  
+// page titles to populate live menu
+function pagenames(){
+  var i,r= ['term']; // term page adjusts title
+  for (i= 1; i<allpages.length; i++) { // find next page
+    r.push(decodeURIComponent(allpages[i].document.title));
+  }
+  return r;
+}
+
 // spa run in jijxwindow
 function spaclose(w){
       var i= allpages.indexOf(w);
@@ -628,7 +631,6 @@ function spaclose(w){
         var id= w.frameElement.id;
         jbyid(id).parentNode.removeChild(jbyid(id)); // remove page
         allpages.splice(i, 1);
-        jtermwprevious= allpages[0];
         showpage(allpages[0]);
       }
       else w.close();

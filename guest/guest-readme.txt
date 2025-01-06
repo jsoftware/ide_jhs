@@ -17,14 +17,14 @@ https://code.jsoftware.com/wiki/System/Installation/Cloud
 $ . bin/aws.sh  # cd j9.x/addons/ide/jhs/aws
 $ ./aws-sh clr  # required if a new instance to clear known hosts
 $ ./aws-sh set a.b.c.d # done once - copied from aws console
-$ ./aws-sh bld j9.5 # continue connecting? - yes if this is new instance
+$ ./aws-sh bld j9.6 # continue connecting? - yes if this is new instance
 
 $ # following required if local git changes are required on server
 !!! old files are not deleted
 !!! old files that are not replaced will still be there
 !!! should clear out before putr - issues???
 !!! perhaps ssh and rm -r j9.5/addons/ide/jhs
-$ ./aws-sh putr $HOME/git/addons/ide/jhs j9.5/addons/ide
+$ ./aws-sh putr $HOME/git/addons/ide/jhs j9.6/addons/ide
  these changes are in base install - start required to get them to server
   or be very careful with following:
   ./aws-sh ssh

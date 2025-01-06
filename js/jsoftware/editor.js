@@ -233,13 +233,11 @@ function noIndent(_context, _pos) {
 }
 
 function saveText() {
-  ta.value = cm6.state.doc.toString(); // ta is global variable from jijs.js.
   jscdo('save'); // Call ev_save_click in jijs.ijs.
   return true;
 }
 
 function runText() {
-  ta.value = cm6.state.doc.toString();
   jscdo('runw');
   return true;
 }
@@ -331,6 +329,8 @@ window.cm6_creat = (text, parent) => {
   cm6 = createEditor(text, parent);
   jbyid("filenamed").innerHTML = jbyid("filename").value + (cm6.state.readOnly ? " (READ ONLY)" : "");
 }
+
+window.cm6_gettext = () => { return cm6.state.doc.toString(); }
 
 window.cm6_undo = () => { undo(cm6); }
 window.cm6_redo = () => { redo(cm6); }

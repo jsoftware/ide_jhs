@@ -18,6 +18,9 @@ function setnamed() { jbyid("filenamed").innerHTML = jbyid("filename").value; }
 function click() {
   t = (dirty ? "dirty" : "clean") + JASEP;
   t = t + 0 + ' ' + 0 + ' ' + 0 + ' ' + 0 + JASEP; // TODO need proper caret/selection values
+
+  ta.value = window.cm6_gettext();
+
   jdoajax(["filename", "textarea", "saveasx",], t);
 }
 
