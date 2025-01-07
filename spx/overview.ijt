@@ -143,9 +143,9 @@ JHS uses esc key for some shortcuts
 esc is not held down like ctrl/shift/alt/cmd
 press and release esc and then press shortcut
 
-for shortcut: esc-1
+for shortcut: esc-d
 press/release escape key
-then press/release 1 key 
+ then press/release d key 
 )
 
 0 : 0
@@ -154,13 +154,13 @@ next step opens file ovtour.ijs for editing
 term can run as 'single page application'
 an edit page can share the same browser window!
 
-esc-1 switch to term
-esc-2 switch to the next page
+ctrl+< switch left to previous page
+ctrl+> switch right to next page 
 
-use ☰ on touch screen without esc key
+☰ has left/right (handy on mobile)
 
 after next step shows edit page
- use esc-1/2 to switch between term and edit
+use ctrl+</> or ☰ to switch between term and edit
 )
 
 'term' edit fout NB. edit in term window
@@ -181,13 +181,13 @@ jhtml'<div><font style="color:red;font-size:2rem;">%: +/ *: y</font></div>'
 0 : 0
 try the following:
 
-esc-2 switch to edit
+ctrl+> switch to edit
 ☰.readonly - allow changes
 add new line line at end:
 d=: %: 5
 ☰.load - save and load the script
 
-esc-1 to switch to term page
+ctrl+< switch to term page
 )
 d
 

@@ -386,16 +386,14 @@ function ev_quote_ctrl(){jdoajax([]);}
 function ev_colon_ctrl(){jdoajax([]);}
 function ev_doublequote_ctrl(){jdoajax([]);}
 
-// esc-z - close all pages, exit server, close term
-function ev_exit_click(){
+// esc-q - close all pages, exit server, close term
+function ev_close_click(){
  closepages();
- jform.jmid.value= 'exit';
- jform.jtype.value= 'click';
  jdoajax([]);
 }
 
 // window.close fails in guest/server - perhaps because it starts differently
-function ev_exit_click_ajax(t){
+function ev_close_click_ajax(t){
   if(0!=t.length) window.location= "juser";
   window.close();
 }
@@ -415,9 +413,6 @@ function closepages(){
   }
   allwins_clean();
 }
-
-// esc-q - does nothing - refer to quit menu
-function ev_close_click(){alert('see menu item quit for options');}
 
 function ev_closepages_click(){closepages();}
 

@@ -15,8 +15,8 @@ jhmenu''
          jhmenulink 'build';'build apps'
          jhmenulink 'labs';'labs and tools'
          jhmenulink 'help';'help'
-'closepages' jhmenuitem 'close term pages'
-         jhmenulink 'quit';'quit'
+'closepages' jhmenuitem 'close term pages/tabs'
+'close'     jhmenuitem 'quit';'q'
 jhmenugroupz''
 
 jhmpagez''
@@ -147,7 +147,7 @@ jhtml'<hr/>'
 )
 
 NB. aws server window.close fails (depends on how started)
-ev_exit_click=: 3 : 0
+ev_close_click=: 3 : 0
 select. QRULES
 case. 0 do. NB. localhost    - close pages, exit server, close jterm
  jhrajax''

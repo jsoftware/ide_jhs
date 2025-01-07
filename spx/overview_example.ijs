@@ -1,6 +1,4 @@
-NB. esc-1 to switch back to term
-NB.  or ☰.term pages.term
-
+NB. ctrl+< or ☰.left - back to term
 NB. example script used in overview tour
 
 NB. define crsum to add row and col sums to matrix

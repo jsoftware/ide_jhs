@@ -1015,29 +1015,30 @@ function topage(n){jijxwindow.pageswitch(window,n);}
 
 function ev_menuclear_click(){mmhide();}
 
+// remove child from parent
+function removeitem(id){
+  var nid= jbyid(id);
+  if(nid!=null) nid.parentNode.removeChild(nid);
+}
+
 // menuitem onclick 
 function menushow(menuid){
-  var id,nid,a;
+  var id,a;
   mmhide();
 
-  if(menuid=='menu0' && isPages()){
-    id= jbyid('menu0');
-    //  'jmleft'  jhmenuitem_jhs_ 'left';'^<'
-    nid= jbyid('jmleft');
-    nid.parentNode.removeChild(nid);
-    nid= jbyid('jmright');
-    nid.parentNode.removeChild(nid);
-    nid= jbyid('jmpage');
-    nid.parentNode.removeChild(nid);
-
-    a= '<a id="jmleft" href="#" class="jmenuitem" onclick="mmhide();return jev(event)" >left<span class="jmenuspanright">ctrl+<</span></a>'
-    id.insertAdjacentHTML('beforeend',a);
-    a= '<a id="jmright" href="#" class="jmenuitem" onclick="mmhide();return jev(event)" >right<span class="jmenuspanright">ctrl+></span></a>'
-    id.insertAdjacentHTML('beforeend',a);
-
-    a= '<a href="#" class="jmenuitem" id="jmpage" onclick="return menushow(\'jmpages\')" ><span class="jmenuspanleft" >&gt&nbsp;</span>term&nbsp;pages<span class="jmenuspanright"></span></a>'
-    id.insertAdjacentHTML('beforeend',a);
-
+  if(menuid=='menu0'){
+    id= jbyid(menuid);
+    removeitem('jmleft');
+    removeitem('jmright');
+    removeitem('jmpage');
+    if(isPages()){
+      a= '<a id="jmleft" href="#" class="jmenuitem" onclick="mmhide();return jev(event)" >left<span class="jmenuspanright">ctrl+<</span></a>'
+      id.insertAdjacentHTML('beforeend',a);
+      a= '<a id="jmright" href="#" class="jmenuitem" onclick="mmhide();return jev(event)" >right<span class="jmenuspanright">ctrl+></span></a>'
+      id.insertAdjacentHTML('beforeend',a);
+      a= '<a href="#" class="jmenuitem" id="jmpage" onclick="return menushow(\'jmpages\')" ><span class="jmenuspanleft" >&gt&nbsp;</span>term&nbsp;pages<span class="jmenuspanright"></span></a>'
+      id.insertAdjacentHTML('beforeend',a);
+    }
   }
 
   if(menuid=='jmpages'){
