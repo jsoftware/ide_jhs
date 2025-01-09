@@ -4,7 +4,7 @@ coclass'jijs'
 coinsert'jhs'
 
 HBS=: 0 : 0
-'<script async type="module" src="~addons/ide/jhs/js/jsoftware/editor.js"></script>'
+'<script type="module" src="~addons/ide/jhs/js/jsoftware/editor.js"></script>'
 
 'saveasdlg'    jhdiva''
  'saveasdo'    jhb'save as'
