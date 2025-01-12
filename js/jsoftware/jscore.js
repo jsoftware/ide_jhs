@@ -342,7 +342,7 @@ function jev(event){
 function jijxrun(t,flag=true)
 {
  if(jijxwindow!=null) {if(jijxwindow.closed) jijxwindow= null;}
- t= t.replaceAll("'","''");
+ //! t= t.replaceAll("'","''");
  if(0==t.length) t= "\n"; // so '' displays as empty line
  if(flag) t= "jev_run'"+t+"'";
  try{jijxwindow.jdoajax([],"",t,true);}

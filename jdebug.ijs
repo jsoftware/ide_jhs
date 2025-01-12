@@ -246,6 +246,12 @@ else.
 end. 
 )
 
+0 : 0
+9.6 changed 13!:13 to have only the monad or dyad defn
+this broke getdata as it looked for the : to separate monad/dyad
+)
+
+NB. version for <9.6
 NB. 13!:13 - name,error,line,class,rep,script,args,locals,*
 getdata=: 3 : 0
 if. JMP do. JMP=: 0[dbss(>:';'i.~dbsq'')}.dbsq'' end.
@@ -294,6 +300,110 @@ a=. a,(1<n)#' - ',(":n),' suspensions in dbs'''''
 r=. r;(":line);a;stps
 )
 
+NB. 13!:13 - name,error,line,class,rep,script,args,locals,*
+getdata=: 3 : 0
+if. JMP do. JMP=: 0[dbss(>:';'i.~dbsq'')}.dbsq'' end.
+cleanstops''
+stps=. (0~:#dbsq''){::'no stops';dbsq''
+t=. 13!:13''
+s=. ;8{"1 t
+i=. s i. '*'
+if. i=#s do. '';'';nosus;stps return. end.
+s=. i{t
+
+'n err line class args'=. 0 1 2 3 6{s
+name=:  n
+namex=: basename n
+monad=: (class=3)*.1=#args
+
+d=. <;._1 ;LF,;4{s
+if. IF96__ do.
+ d=. }.}:d NB. drop 3 : 0 or {{ and ) or }}
+else.
+ if. 1~:#d do.
+  d=. }.}:d
+  if. 3=class do.
+   i=.d i.<,':'
+   if. monad do.
+    d=. i{.d
+   else.
+    d=. (i+1)}.d
+   end. 
+  end.
+ end.
+end. 
+defn=: d
+cdefn=. #defn
+
+wid=. #":cdefn NB. width required for number line numbers
+head=. wid":each i.cdefn
+stops=: (-.monad){::getstops namex
+stops=: ('*'e.stops){::stops;i.cdefn
+e=. ((i.cdefn)e. stops){' x'
+e=. <"0 e
+c=. cdefn#' '
+c=. <"0 '>' line}c
+t=. head,each e, each c,each ' ',each defn
+r=. buttons (":line);'files';(<head),(<t),<'<br>'
+e=. 1{::s
+try. a=. (<:(0=e){e,34){::9!:8'' catch. a=. ":e end.
+a=. (0{::s),'[',(':'#~-.monad),(":line),'] ',a
+n=. +/'*'=;8{"1[13!:13''
+a=. a,(1<n)#' - ',(":n),' suspensions in dbs'''''
+r=. r;(":line);a;stps
+)
+
+NB. 13!:13 - name,error,line,class,rep,script,args,locals,*
+getdata=: 3 : 0
+if. JMP do. JMP=: 0[dbss(>:';'i.~dbsq'')}.dbsq'' end.
+cleanstops''
+stps=. (0~:#dbsq''){::'no stops';dbsq''
+t=. 13!:13''
+s=. ;8{"1 t
+i=. s i. '*'
+if. i=#s do. '';'';nosus;stps return. end.
+s=. i{t
+
+'n err line class args'=. 0 1 2 3 6{s
+name=:  n
+namex=: basename n
+monad=: (class=3)*.1=#args
+
+d=. <;._1 ;LF,;4{s
+if. 1~:#d do.
+  d=. }.}:d
+  if. 3=class do.
+    i=.d i.<,':'
+    if. monad do.
+      d=. i{.d
+    else.
+      if. (i+1)<#d do. d=. (i+1)}.d end. NB. 9.6 defn only has dyad defn
+    end. 
+  end.
+end.
+
+defn=: d
+cdefn=. #defn
+
+wid=. #":cdefn NB. width required for number line numbers
+head=. wid":each i.cdefn
+stops=: (-.monad){::getstops namex
+stops=: ('*'e.stops){::stops;i.cdefn
+e=. ((i.cdefn)e. stops){' x'
+e=. <"0 e
+c=. cdefn#' '
+c=. <"0 '>' line}c
+t=. head,each e, each c,each ' ',each defn
+r=. buttons (":line);'files';(<head),(<t),<'<br>'
+e=. 1{::s
+try. a=. (<:(0=e){e,34){::9!:8'' catch. a=. ":e end.
+a=. (0{::s),'[',(':'#~-.monad),(":line),'] ',a
+n=. +/'*'=;8{"1[13!:13''
+a=. a,(1<n)#' - ',(":n),' suspensions in dbs'''''
+r=. r;(":line);a;stps
+)
+
+
 jev_get=: 3 : 0
 'jdebug' jhrx (getcss''),(getjs''),gethbs'FILES CURLINE STACK STOPS';getdata''
 )
@@ -327,7 +437,6 @@ function update(ts){ajax(ts= decodeURIComponent(ts).split(JASEP));}
 function jdoit(t)
 {
  if("no suspension"==jbyid("stack").innerHTML) return;
- // v= (t=="dbxline") ? " "+jbyid("val").value : "''";
  if(t=="dbxline")
  {
   v= parseInt(jbyid("val").value);
