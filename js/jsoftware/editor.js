@@ -342,6 +342,13 @@ window.cm6_replaceAll = () => { replaceAll(cm6); }
 window.cm6_changeLineNumbers = changeLineNumbers;
 window.cm6_changeReadOnly = changeReadOnly;
 window.cm6_changeTheme = changeTheme;
+window.cm6_getSelectionData = () => {
+  const anchorCh = cm6.state.selection.main.anchor;
+  const headCh = cm6.state.selection.main.head;
+  const anchorLine = cm6.state.doc.lineAt(anchorCh).number;
+  const headLine = cm6.state.doc.lineAt(headCh).number;
+  return [anchorLine, anchorCh, headLine, headCh];
+}
 
 // Set focus.
 

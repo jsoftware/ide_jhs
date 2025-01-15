@@ -17,7 +17,9 @@ function setnamed() { jbyid("filenamed").innerHTML = jbyid("filename").value; }
 
 function click() {
   t = (dirty ? "dirty" : "clean") + JASEP;
-  t = t + 0 + ' ' + 0 + ' ' + 0 + ' ' + 0 + JASEP; // TODO need proper caret/selection values
+  const [anchorLine, anchorCh, headLine, headCh] = window.cm6_getSelectionData();
+  t = t + anchorLine + ' ' + anchorCh + ' ' + headLine + ' ' + headCh + JASEP;
+  console.log(t);
 
   ta.value = window.cm6_gettext();
 
