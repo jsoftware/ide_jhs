@@ -338,13 +338,13 @@ function jev(event){
  return jevdo();
 }
 
-// run sentence(s) in jijxwindow - false runs with jev_run and true runs bare sentenc
+// run sentence(s) in jijxwindow - false runs with jev_run and true runs bare sentence
 function jijxrun(t,flag=true)
 {
  if(jijxwindow!=null) {if(jijxwindow.closed) jijxwindow= null;}
  //! t= t.replaceAll("'","''");
  if(0==t.length) t= "\n"; // so '' displays as empty line
- if(flag) t= "jev_run'"+t+"'";
+ if(flag) t= "jev_run'"+t.replaceAll("'","''")+"'";
  try{jijxwindow.jdoajax([],"",t,true);}
  catch(e){alert('orphaned (jijx that led to this page was closed)\n\
 this action requires access to that jijx page\n\

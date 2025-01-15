@@ -161,6 +161,7 @@ ctrl+> switch right to next page
 
 after next step shows edit page
 use ctrl+</> or ☰ to switch between term and edit
+note: < is shift , and > is shift .
 )
 
 'term' edit fout NB. edit in term window
@@ -173,10 +174,11 @@ hypot 3 4
 hypot
 
 0 : 0
-you can also show latex or html
+you can also show latex or html or gif
 )
 jhlatex_jhs_ '\sqrt{y_0^2 + y_1^2}'
 jhtml'<div><font style="color:red;font-size:2rem;">%: +/ *: y</font></div>'
+jhsgif'newfile'
 
 0 : 0
 try the following:
