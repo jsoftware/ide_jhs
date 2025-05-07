@@ -4,6 +4,8 @@ require'~addons/ide/jhs/jfif.ijs'
 
 coclass'jsp'
 
+jev=: '' NB. jijxrunx to avoid input line log
+
 sp_z_       =: sp_jsp_
 spf_z_      =: spf_jsp_
 spr_z_      =: spr_jsp_
@@ -22,7 +24,6 @@ part of JHS and can be loaded in any front end
 
 simple project:
  sp 0    init example SPFILE
- ctrl+,  load SPFILE (JHS)
  sp ''   load SPFILE
 
  sp f    set non-default SPFILE and load it
@@ -81,7 +82,9 @@ if. 0-:y do.
  end. 
  'NB. script for simple project'fwrite '~temp/spexample.ijs'
  (fread'~addons/ide/jhs/spfile_template.ijs')fwrite SPFILE
- echo'ctrl+, loads SPFILE (',SPFILE,')'
+ mkdir_j_ '~Projects/jhs/example'
+ ('NB. example script in example project',LF)fwrite '~Projects/jhs/example/example.ijs'
+ echo'   sp'''' NB. loads SPFILE (',SPFILE,')'
  return.
 end.
 if. (''-:y) *. -.fexist a do. sp 0 end.
@@ -140,8 +143,8 @@ ADVANCE_jijx_=: 'spx'
 SPXFILE_z_=: spf y
 SEM=: get SPXFILE
 SEMN=: 1
-a=. SPXFILE,LF,'advance through lab:',LF
-b=. 'keyboard: ctrl+. (ctrl+dot)<br>touchscreen: right <span style="color:green;">green</span> button'
+a=. SPXFILE,LF,'advance interactive tutorial:',LF
+b=. 'ctrl+. (ctrl+dot) or menu bar ⇒'
 echo a
 echo jhtml'<div><font style="color:red;font-weight:bold">',b,'</font></div>'
 NB. status''

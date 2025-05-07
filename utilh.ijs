@@ -367,6 +367,7 @@ HBSX=: ' id="<ID>" name="<ID>" class="<CLASS>" '
 NB. HBS is LF delimited list of sentences
 NB. jhbs returns list of sentence results
 jhbs=: 3 : 0
+jhbsjs=: '' NB. hbs js statments captured in globals
 t=. <;._2 y
 t=. LF,~LF,~LF,;jhbsex each t
 i=. 1 i.~'</div><div id="jresizeb">'E.t
@@ -375,7 +376,7 @@ if. i~:#t do.
 end.
 t=. '<div id="status-busy"><br>server busy<br>event ignored<br><br></div>',t
 t=. '<div>',t,'</div>' NB. all in a div - used by flex
-'<body onload="jevload();" onunload="jevunload();" onfocus="jevfocus();">',LF,(jhform''),LF,t,LF,'</form></body>'
+t=. '<body onload="jevload();" onunload="jevunload();" onfocus="jevfocus();">',LF,(jhform''),LF,t,jsa,jhbsjs,jsz,LF,'</form></body>'
 )
 
 jhbsex=: 3 : 0
@@ -484,14 +485,12 @@ jhchart=: 4 : 0
 '<div id="<id>_parent" class="jhchart_parent"><canvas id="<id>"></canvas></div>'hrplc 'id';x
 )
 
-NB.* jhclose*jhclose'' - menu with > term pages and close
+NB.* jhclose*jhclose title - menu with > term pages and close
 jhclose=: 3 : 0
-t=. jhmenu''
+t=. jhmenu y
 t=. t,'menu0'  jhmenugroup ''
-t=. t,         jhmpage''
 t=. t,'close'  jhmenuitem 'close';'q'
 t=. t,         jhmenugroupz''
-t=. t,         jhmpagez''
 )
 
 NB.* jhdiv*id jhdiv text- <div ...>text</div>
@@ -881,55 +880,58 @@ SKSERVER_jhs_=: _1
 
 jsencode=: 3 : 'enc_pjson_ (2,~-:$y)$y'
 
-NB. standard menu for pages
-jhmpage=: 3 : 0
-'jmpage' jhmenulink  'jmpages';'term pages' NB. ;'4' ev_4_ shortcut
-)
-
-NB. standard menu page menu
-jhmpagez=: 3 : 0
-t=.   'jmpages' jhmenugroup ''
-t=. t,'jmleft'  jhmenuitem 'left';'^<'
-t=. t,'jmright' jhmenuitem 'right';'^>'
-    t,jhmenugroupz''
+// standard menu on events
+jmon=: 0 : 0
+onblur="return jmenublur(event);"
+onfocus="return jmenufocus(event);"
+onkeyup="return jmenukeyup(event);"
+onkeydown="return jmenukeydown(event);"
+onkeypress="return jmenukeypress(event);"
 )
 
 NB. hamburger menu
 jhmenu=: 3 : 0
+'title xtras'=. 2{.(boxopen y),<''
+c=. coname''
+if. Num_j_ e.~{.;c do. c=. ;{.copath c end.
+title=. (;c),(0~:#title)#' - ',title
 menuids=:   <'menu0' 
 menutexts=: <'☰'
 menubacks=: <''
-('menuburger'jhb'☰';'jmenuburger'),('menuclear'jhb'';'jmenuclear') NB. ,jhmenulink  'jmpages';'pages'
+r=. ('jmenuburger'jhb'☰';'jmenuburger'),xtras
+r=. r,jhbr,~'jmenutitle'jhspan title
 )
 
 jhmenugroup=: 4 : 0
 menuid=: x
 i=. menuids i. <x
-if. i=#menuids do.  i=. 0 end. NB. user not informed of failuer
+if. i=#menuids do.  i=. 0 end. NB. user not informed of failure
 value=. ;i{menutexts
 backid=. ;i{menubacks
-more=. '<span class="jmenuspanleft" >',(jhfroma'<      '),'</span>'
-t=. '<a href="#" class="jmenuitem" onclick="return menushow(''<BACK>'')" ><VALUE></a>'
+more=. '<span class="jmenuspanleft" >',(jhfroma'<  '),'</span>',(x-:'menu0')#'<span class="jmenuspanright">ctrl+,</span>'
+t=. '<button id="<ID>" class="jmenuitem" ',jmon,' onclick="return menushow(''<BACK>'')" ><VALUE></button>'
 t=. t hrplc 'BACK VALUE';backid;more,jhfroma value
 t,~'<div id="<ID>" class="jmenugroup">'rplc '<ID>';x
 )
 
 jhmenugroupz=: 3 : '''</div>'''
 
-
-NB. id jhmenuitem 'test'[;esc] - esc is '' or single alphanumeric
+NB. id jhmenuitem 'test'[;esc] - esc is '' or ^? or ?
 jhmenuitem=: 4 : 0
 'text esc'=. 2{.(boxopen y),<''
 
 select. {.esc
 case. ' ' do. t=. ''
 case. '^' do. t=. 'ctrl+',1{esc
-case.     do. t=. 'esc-',esc
+case.     do. t=. esc
 end.
+xesc=.  '<span class="jmenuspanright">',t,'</span>'
 
-esc=.  '<span class="jmenuspanright">',t,'</span>'
-t=. '<a id="<ID>" href="#" class="jmenuitem" onclick="mmhide();return jev(event)" ><VALUE></a>'
-t hrplc 'ID VALUE';x;(jhfroma text),esc
+t=. '<button id="<ID>" class="jmenuitem" ',jmon,' onclick="mmhide();return jev(event)" ><VALUE></button>'
+t=. t hrplc 'ID VALUE';x;(jhfroma text),xesc
+
+if. 1=#esc do. jhbsjs=: jhbsjs,'var jmsc',esc,'= "',x,'";',LF end.
+t
 )
 
 NB. jhmenulink text;id[;esc]
@@ -942,14 +944,15 @@ if. #x do. x=. 'id="',x,'"' end.
 select. {.esc
 case. ' ' do. t=. ''
 case. '^' do. t=. 'ctrl+',1{esc
-case.     do. t=. 'esc-',esc
+case.     do. t=. esc
 end.
+
 esc=.  '<span class="jmenuspanright">',t,'</span>'
 
 menuids=: menuids,<to
 menutexts=: menutexts,<text
 menubacks=: menubacks,<menuid
 more=. '<span class="jmenuspanleft" >&gt&nbsp;</span>'
-t=. '<a href="#" class="jmenuitem" <ID> onclick="return menushow(''<TO>'')" ><VALUE></a>'
+t=. '<button class="jmenuitem" <ID> ',jmon,' onclick="return menushow(''<TO>'')" ><VALUE></button>'
 t hrplc 'ID VALUE TO';x;(more,(jhfroma text),esc);to
 )

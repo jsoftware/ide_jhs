@@ -28,7 +28,7 @@ $ ./aws-sh putr $HOME/git/addons/ide/jhs j9.6/addons/ide
  these changes are in base install - start required to get them to server
   or be very careful with following:
   ./aws-sh ssh
-  sudo cp -r -f j9.5 /jguest/j
+  sudo cp -r -f j9.6 /jguest/j
   start'...' required to use new binaries
 
 $ # following required if new instance needs letsencrypt
@@ -41,8 +41,15 @@ $ec2-user ./jc
    man
    start'key' NB. does create_jguest
 
-*** letsencrypt https cert
+*** letsencrypt - renew certificate as required (every 3 months - but better 2 months)
+$ec2-user sudo certbot certificates - get epiry date of current cert
 $ ./aws-sh lets-backup  - copy remote /etc/letsenrypt to local .ssh/jserver/letsencrypt/tar.gz
+$ec2-USER sudo certbot renew
+$eric... ./aws-sh lets-backup  - copy remote /etc/letsenrypt to local .ssh/jserver/letsencrypt/tar.gz
+latest certificate is installed by:  start'...' (create-jguest-sh)
+
+*** letsencrypt https cert
+$ ./aws-sh lets-backup  - copy remote /etc/letsenrypt to local .ssh/jserver/letsencrypt/tar.gz.2025...
 $ ./aws-sh lets-restore - restore local backup tar to remote /etc/letsencrypt
 
 certbot creates a cert (/etc/letsencrypt/) for a name (server.jsoftware.com)
@@ -55,20 +62,13 @@ $ec3-USER sudo certbot certonly --standalone # create /etc/letsencrypt
    eiverson@jsoftware.com
    server.jsoftware.com
 
-renew certificate as required (every 3 months)
-$ ./aws-sh lets-backup  - copy remote /etc/letsenrypt to local .ssh/jserver/letsencrypt/tar.gz
-$ec2-USER sudo certbot renew
-$eric... ./aws-sh lets-backup  - copy remote /etc/letsenrypt to local .ssh/jserver/letsencrypt/tar.gz
-latest certificate is installed by:  start'...' (create-jguest-sh)
 
 *** node debug
 $ node inspect localhost:9229
-desktop version 10.19.0 seems to be buggy with display of names
 debug> scripts
        help
-       sb('guest',xx)
+       sb('guest',nnn
        exec('jhsport')
-       watch('postdata')
 
 *** sudo
 aws guest - does not require edit as it already has /etc/sudoers.d/90-cloud-init-users

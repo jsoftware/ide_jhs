@@ -10,6 +10,17 @@ NB. last defn is used!
 NB. if defining script is in ~system it looks for source script in base9
 NB. would be nice to support f* to return all matches
 man=: 3 : 0
+r=.  getman y
+NB. remove NB.*blank and NB.blank 
+r=. <;.2 r
+b=. ;(<'NB.* ')=5{.each r
+r=. (b*5)}.each r
+b=. ;(<'NB. ')=4{.each r
+r=. (b*4)}.each r
+jselect_jhs_ ;r
+)
+
+getman=: 3 : 0
 n=. dltb y
 if. '_'={.n do.
  t=. ('nl',n)~1 2 3
@@ -42,13 +53,9 @@ f=. i{4!:3''
 t=. jpath'~system/'
 if. t-: (#t){.;f do.
  NB. look for defn in base9
- p=. jpath'~Base9'
- if. p-:'~Base9' do.
-  NB. ~Base9 not defined - look for base9 folder
-  d=. dirpath'~'
-  p=. ;{.(;+./each (<'/base9') E. each d)#d NB. look for folder named base9 for ~system source
-  if. 0=#p do. echo 'install git base9 source for ~system script defn comments' return.  end.
-  adduserfolder_j_'Base9 ',p
+ p=. jpath'~Base9x'
+ if. p-:'~Base9x' do.
+  '~Base9 not defined. Add ~Base9 to folders.cfg to point at Base9.'assert  0
  end. 
  dt=. {."1 dirtree p,'/*.ijs'
  for_f. dt do.
@@ -58,7 +65,7 @@ if. t-: (#t){.;f do.
 else. 
  r=. (fread f) manx n
 end.
-'   ',n,LF,('   edit''',(;f),''''),LF,(LF={.r)}.r
+r=. '   ',n,LF,('   edit''',(;f),''''),LF,(LF={.r)}.r
 )
 
 manx=: 4 : 0

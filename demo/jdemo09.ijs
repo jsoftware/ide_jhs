@@ -1,4 +1,4 @@
-coclass'jdemo13'
+coclass'jdemo09'
 coinsert'jhs'
 
 NB. css/js library files to include

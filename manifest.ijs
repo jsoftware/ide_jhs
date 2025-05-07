@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.393'
+VERSION=: '1.0.395'
 
 FILES=: 0 : 0
 app/
@@ -22,6 +22,7 @@ spx/
 extra/
 test/
 widget/
+src/
 core.ijs
 chart.ijs
 d3.ijs
@@ -30,6 +31,9 @@ gnuplot.ijs
 gpdemo.ijs
 history.txt
 installer.ijs
+jbase.ijs
+jhelp.ijs
+jlocale.ijs
 jdoc.ijs
 jpacman.ijs
 jbeacon.ijs

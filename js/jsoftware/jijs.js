@@ -6,23 +6,18 @@ function ev_body_load() {
   rep = jbyid("rep");
   ta = jbyid("textarea");
   saveasx = jbyid("saveasx");
+  jresize();
 }
 
-function dresize() { /* Empty. */ }
-window.onresize = dresize;
-
-function setdirty() { jbyid("filenamed").style.color = "red"; dirty = true; }
-function setclean() { jbyid("filenamed").style.color = "blue"; dirty = false; }
-function setnamed() { jbyid("filenamed").innerHTML = jbyid("filename").value; }
+function setdirty() { jbyid("jmenutitle").style.color = "red"; dirty = true; }
+function setclean() { jbyid("jmenutitle").style.color = "blue"; dirty = false; }
+function setnamed() { jbyid("jmenutitle").innerHTML = jbyid("filename").value; }
 
 function click() {
   t = (dirty ? "dirty" : "clean") + JASEP;
   const [anchorLine, anchorCh, headLine, headCh] = window.cm6_getSelectionData();
   t = t + anchorLine + ' ' + anchorCh + ' ' + headLine + ' ' + headCh + JASEP;
-  console.log(t);
-
   ta.value = window.cm6_gettext();
-
   jdoajax(["filename", "textarea", "saveasx",], t);
 }
 
@@ -48,10 +43,10 @@ function ev_saveasx_enter() { click(); }
 function ev_saveas_click() {
   saveasx.value = jbyid("filename").value;
   jdlgshow("saveasdlg", "saveasx");
-  dresize();
+  jresize();
 }
 
-function ev_saveasclose_click() { jhide("saveasdlg"); dresize(); }
+function ev_saveasclose_click() { jhide("saveasdlg"); jresize(); }
 
 function ev_ro_click() { window.cm6_changeReadOnly(); }
 function ev_numbers_click() { window.cm6_changeLineNumbers(); }
@@ -66,7 +61,7 @@ function ajax(ts) {
   switch (jform.jmid.value) {
 
     case 'close': winclose(); break;
-
+    case 'save': break;
     case 'saveasx':
     case 'saveasdo':
       jbyid("filename").value = ts[1];
@@ -75,14 +70,12 @@ function ajax(ts) {
       document.title = t[t.length - 1];
       break;
     case 'lineadv':
-      // i = parseInt(ts[2]);
-      // if (i < cm.doc.lineCount()) cm.doc.setCursor(i, cm.doc.getLine(i).length);
-      alert("Kernel panic! Guru Meditation!");
+      var i = parseInt(ts[2]);
+      window.cm6_setselection(i);
     default:
       jijxrun(ts[1]); // run sentence in jijx
   }
-
-  dresize();
+  jresize();
 }
 
 function ev_ijs_enter() { return true; }
@@ -103,4 +96,4 @@ function ev_h_shortcut() { jscdo("chelp"); }
 
 // override jscore.js defs
 function ev_close_click() { if (dirty) click(); else winclose(); }
-function ev_close_click_ajax() { setclean(); winclose(); }
+function ev_close_click_ajax(){ winclose(); }

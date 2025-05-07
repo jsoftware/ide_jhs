@@ -11,10 +11,8 @@ NB. sentences that define html elements
 HBS=: 0 : 0
 jhmenu''
 'menu0'  jhmenugroup ''
-         jhmpage''
 'close'  jhmenuitem 'close';'q'
          jhmenugroupz''
-jhmpagez''
 
 'puttitle'    jhtitle 'copy client file xxx to server ~/uploads/xxx'
 '<input id="fileupload" type="file" name="fileupload" />'
@@ -107,7 +105,5 @@ function ev_put_click_ajax_json(t){
 function ev_refresh_click(){jdoajax(['getsel']);}
 
 function ev_refresh_click_ajax_json(t){jbyid('selspan').innerHTML= t.list;}
-
-function ev_close_click(){winclose();}
 
 )

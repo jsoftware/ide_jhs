@@ -5,26 +5,25 @@ var phead= '<div id="prompt" class="log" onpaste="mypaste(event)">';
 var ptail= '</div>';
 var globalajax; // sentence for enter setTimeout ajax
 var TOT= 1;     // timeout time to let DOM settle before change
-var wjdebug= null; // jdebug window object
 
 function ev_body_focus(){setTimeout(scrollz,TOT);}
 
 function ev_body_load()
 {
+ // alert(jbyid("jmenuburger").clientHeight+" "+jbyid("log").clientHeight);
  // if(window.visualViewport) window.visualViewport.onresize = onvpresize;
  allpages[0]= window; // jijx is first spa page
  jijxwindow= window;
  window.name= "jijx";
+ 
+ //! why is jlocale not set by html?
+ j.jlocale.value= "jijx";
+ jevsentence= "jev_jijx_ 0";
+
  jseval(false,jbyid("log").innerHTML); // redraw canvas elements
  newpline("   ");
- 
- if(!touch){
-  ev_jmtoggle_click();
-  jbyid('uarrow').style.display="none";
-  jbyid('darrow').style.display="none";
-  jbyid('advance').style.display="none";
- }
-
+ setfocus();
+  
 // var el = jbyid('log');
 //swipedetect(el, function(d){if (d=='left')alert('swiped left!')})
 }
@@ -71,11 +70,8 @@ function removeid(id)
 // update log with new prompt
 function updatelogp(t){updatelog(t+phead+jhfroma("   ")+ptail);}
 
-//! var lastupdate; //! jijs capture error
-
 function updatelog(t)
 {
- //! lastupdate= t; 
  var n= document.createElement("div");
  n.innerHTML= jjsremove(t);
  removeid("prompt");
@@ -91,11 +87,12 @@ function addlog(t){
 
 function scrollz()
 {
- setfocus(); // required by ff
+ //! setfocus(); // required by ff
  var e= jbyid("log");
  e.scrollTop= e.scrollHeight - e.clientHeight;
  if(null==jbyid("prompt"))return;
  jsetcaret("prompt",1);
+ //! setfocus();
 }
 
 function scrollchunk(){jbyid("chunk").scrollIntoView(false);}
@@ -279,13 +276,44 @@ function ev_shortcuts_click(){jdoajax([]);}
 function ev_popups_click(){jdoajax([]);}
 function ev_closing_click(){jdoajax([]);}
 
+function framesize(t){
+  for(let i = 0; i < allpages.length; i++) {
+    allpages[i].frameElement.style.setProperty('flex',t[Math.min(i,t.length-1)]);
+  }
+}
+
 function ev_wrap_click(){
- t= jbyid('log');
- b= 'normal'==getComputedStyle(t)['overflowWrap'];
- t.style.overflowWrap= b?'break-word':'normal';
- t.style.whiteSpace=   b?'normal'    :'nowrap';
- jbyid('wrap').innerHTML= b?'NOWRAP ➜ wrap':'WRAP ➜ nowrap';
+ var t= jbyid('log');
+ var b= 'normal'==getComputedStyle(t)['overflowWrap'];
+ wrapset(b?1:0);
 };
+
+function wrapset(b){
+  var t= jbyid('log');
+  t.style.overflowWrap= b?'break-word':'normal';
+  t.style.whiteSpace=   b?'normal'    :'nowrap';
+  jbyid('wrap').innerHTML= b?'WRAP ➜ nowrap':'NOWRAP ➜ wrap'
+}
+
+function ev_flow_click(){
+  var t= allpages[0].frameElement.parentNode.style;
+  flowset('row'== t.flexFlow);
+}
+
+function flowset(b){
+  var t= allpages[0].frameElement.parentNode.style;
+  t.flexFlow= b?'column':'row';
+  jbyid('flow').innerHTML= b?'COLUMN ➜ row':'ROW ➜ column';
+}
+
+function ev_spa_click(){
+  termset(!SPA);
+}
+
+function termset(b){
+  SPA= b;
+  jbyid('spa').innerHTML= SPA?'TERM ➜ tab':'TAB ➜ term';
+}
 
 function removeelement(id){var e= jbyid(id); if(e==null) return; e.remove();}
 
@@ -301,6 +329,7 @@ function ev_jfile_click()  {linkclick("jfile");}
 function ev_jpacman_click(){linkclick("jpacman");}
 function ev_jfif_click()   {linkclick("jfif");}
 function ev_jcopy_click()  {linkclick("jcopy");}
+function ev_jdoc_click()   {linkclick("jdoc");}
 
 var jijsnum=0;
 function ev_jijs_click(){linkclick("jijs?"+jijsnum);jijsnum+=1;} 
@@ -336,7 +365,7 @@ function ev_jinputs_click(){ev_d_shortcut();}
 
 function ev_9_shortcut(){jlogwindow= pageopen('jijs?jwid=~temp/jlog.ijs','jijs?'+encodeURIComponent('jwid=~temp/jlog.ijs'));}
 
-function ev_jdebug_click(){wjdebug= pageopen('jdebug','jdebug');return false;;}
+function ev_jdebug_click(){pageopen('jdebug','jdebug');return false;}
 
 function ev_jbreak_click()
 {
@@ -395,17 +424,15 @@ function ev_close_click(){
 // window.close fails in guest/server - perhaps because it starts differently
 function ev_close_click_ajax(t){
   if(0!=t.length) window.location= "juser";
-  window.close();
+  allpages[0].frameElement.contentWindow.parent.close(); // jijx is jbase iframe
 }
 
 // close all pages opened by this term window
 // this includes pages in jijx frames
 function closepages(){
-  for(let i = 1; i < allpages.length; i++) { // do not call for jijx page
-    allpages[i].jscdo('close'); 
-  };
-  allpages= []; allpages[0]= window;
-
+  while(1<allpages.length){
+    try{allpages[1].jscdo('close');}catch(e){allpages[i].close();};
+  }
   allwins_clean();
   for(let i = 0; i < allwins.length; i++) {
     // jdemo09 iframes does not have jscdo
@@ -416,19 +443,36 @@ function closepages(){
 
 function ev_closepages_click(){closepages();}
 
-// allwins stuff
+// allwins/allpages stuff
 
 function allwins_clean(){allwins= allwins.filter(el => !el.closed)} // remove closed
 
-// return allwins window object for wid or null
-function getwindow(wid){
- allwins_clean()
- for(let i = 0; i < allwins.length; i++) {
-  w= allwins[i]
-  if(wid==w.name) return w;
- }
- return null; 
+function getwindow(n){findwindowbyJWID(n);}
+
+// find window in allwins or allpages with name n
+function findwindowbyname(n){
+  allwins_clean()
+  for(let i = 0; i < allwins.length; i++){
+    if(n==allwins[i].name.split('?')[0]) return allwins[i];
+  }
+  for(let i = 0; i < allpages.length; i++){
+    if(n==allpages[i].name.split('?')[0]) return allpages[i];
+  }
+  return null;
 }
+
+// find window in allwins or allpages with JWID n
+function findwindowbyJWID(n){
+  allwins_clean()
+  for(let i = 0; i < allwins.length; i++){
+    if(n==allwins[i].name) return allwins[i];
+  }
+  for(let i = 0; i < allpages.length; i++){
+    if(n==allpages[i].name) return allpages[i];
+  }
+  return null;
+}
+
 
 // put recent enters in log
 function recent(){
@@ -513,11 +557,6 @@ swipedetect(el, function(swipedir){
  
 // spa functions
 
-function ev_jmtoggle_click(){
-  SPA= !SPA;
-  jbyid('jmtoggle').innerHTML= SPA?'TERM ➜ tab':'TAB ➜ term';
-}
-
 // new frame for new url - or show existing frame with same url
 function newpage(myid,myclass,url){
   var i;
@@ -532,36 +571,36 @@ function newpage(myid,myclass,url){
   var ifr= document.createElement("iframe");
   ifr.id= myid;
   ifr.class= myclass;
-  jbyid("log").parentNode.appendChild(ifr);
-  hideallpages(); // brute force to hide current
-  jbyid(myid).contentWindow.location= url;
+  frameElement.parentNode.appendChild(ifr);
+  ifr.contentWindow.name= url;
+  ifr.contentWindow.location= url;
   allpages.push(ifr.contentWindow);
   jtermwcurrent= ifr.contentWindow;
-
   ifr.focus();
   // ifr.contentWindow.document.title not available until load is done
   // url could be cleaned up for title so it is the same as eventual frame title
   document.title= 'term '+url.split('?')[0]; //! TIPX
 }
-1
+
 // ->term
 function termpage(){
     jbyid("log").style.display= "block";
-    jbyid("menuburger").style.display= "";
+    jbyid("jmenuburger").style.display= "";
     jbyid("log").focus();
 } 
 
 var jtermwcurrent= null;
 
 function hidepage(w){
+  return; // share
   var w= (null==jtermwcurrent)?allpages[0]:jtermwcurrent;
   if(!isFrame(w)){
     jbyid("log").style.display= "none";
-    jbyid("menuburger").style.display="none";
+    jbyid("jmenuburger").style.display="none";
   }else{
     ifr= w.frameElement;
     ifr.style.display="none";
-    w.jbyid("menuburger").style.display="none";
+    w.jbyid("jmenuburger").style.display="none";
   }
 }
 
@@ -570,16 +609,17 @@ function hideallpages(){
 }
 
 function showpage(w){
+  if('undefined'==typeof w)return;
   jtermwcurrent= w;
   if(!isFrame(w)){
     jbyid("log").style.display= "block";
-    jbyid("menuburger").style.display="";
+    jbyid("jmenuburger").style.display="";
     jbyid("log").focus();
     document.title= 'term';
   }else{
     ifr= w.frameElement;
     ifr.style.display="block";
-    w.jbyid("menuburger").style.display="";
+    w.jbyid("jmenuburger").style.display="";
     ifr.focus();
     w.parent.document.title= 'term '+w.document.title; //! TIPX
   }
@@ -623,11 +663,17 @@ function pagenames(){
 function spaclose(w){
       var i= allpages.indexOf(w);
       if(i!=-1){
-        var id= w.frameElement.id;
-        jbyid(id).parentNode.removeChild(jbyid(id)); // remove page
+        allpages[0].frameElement.parentNode.removeChild(allpages[i].frameElement); // remove page
         allpages.splice(i, 1);
-        showpage(allpages[0]);
+        allpages[0].frameElement.focus();
+        //! showpage(allpages[0]);
       }
-      else w.close();
+      else{
+        if(isFrame(w)){
+          w.frameElement.parentNode.remove(); // remove iframe from log
+        }
+        else
+          w.close();
+      }
 }
   

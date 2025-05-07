@@ -23,7 +23,7 @@ try.
 if. _1~:SKSERVER do. try. ".'urlresponse_',URL,'_ y' catch. end. end. NB. jijx
 if. _1~:SKSERVER do. jbad'' end.
 getdata'' NB. get and parse http request
-if. 1=NVDEBUG do. smoutput seebox HNV end. NB. HNV,NV
+if. 1=NVDEBUG do. smoutput seebox NV end. NB. HNV,NV
 if. -. ((<URL)e.boxopen OKURL)+.(cookie-:gethv'Cookie:')+.PEER-:LOCALHOST
                        do. r=. 'jev_get_jlogin_ 0'
 elseif. 1=RAW          do. r=. 'jev_post_raw_',URL,'_'''''
@@ -326,24 +326,21 @@ NB. z locale utilities
 
 auto_welcome=: 0 : 0
 
-if you don't see a new jijx tab in your browser,
+if you don't see a new jterm tab in your browser,
  manually browse to: http://<LOCALHOST>:<PORT>/jijx
 
-best practice:
- close server with shortcut Esc-q (Escape then q) in the jijx page
+best practice: quit server with menu (upper left corner) quit
 
-Ctrl+c here signals an interrupt to J.
-
+ctrl+c here signals an interrupt to J
 )
 
 noauto_welcome=: 0 : 0
 
 manually browse to: http://<LOCALHOST>:<PORT>/jijx
 
-best practice:
- close server with shortcut Esc-q (Escape then q) in the jijx page
+best practice: quit server with menu (upper left corner) quit
 
-Ctrl+c here signals an interrupt to J.
+ctrl+c here signals an interrupt to J
 )
 
 setsid=: 0 : 0
@@ -377,11 +374,11 @@ PASS=:   ''          NB. 'abra' - login
 TIPX=:   ''          NB. tab title prefix - distinguish sessions
 GUEST=:  0           NB. not a guest 
 AUTO=:   1           NB. start browser (if necessary) and browse to http:/localhost:PORT/jijx
-NB. Esc-q rules
-NB. 0 - server closed     - page disabled
-NB. 1 - server not closed - page disabled
-NB. 2 - confirm() close   - guest server
-QRULES=: 0           NB. Esc-q - see ev_close_click in jijx.ijs
+NB. jterm quit rules
+NB. 0 - server closed     - page disabled - assumes localhost server
+NB. 1 - server not closed - page disabled - cloud server user
+NB. 2 - confirm() close   - guest server  - guest server guest
+QRULES=: 0           NB. see ev_close_click in jijx.ijs
 
 NB. following are options and css name values
 
@@ -542,7 +539,7 @@ if. AUTO *. (<UNAME)e.'Linux';'FreeBSD';'OpenBSD' do. NB. require linux manual s
 end. 
 
 if. AUTO do.
- url=. 'http://<LOCALHOST>:<PORT>/jijx'hrplc'LOCALHOST PORT';LOCALHOST;":PORT
+ url=. 'http://<LOCALHOST>:<PORT>/jbase'hrplc'LOCALHOST PORT';LOCALHOST;":PORT
  select. UNAME
  case. 'Win'    do. shell_jtask_'start ',url
  case. 'Linux';'FreeBSD';'OpenBSD'  do.
@@ -560,6 +557,7 @@ jfe 1
 )
 
 NB. load rest of JHS core
+load__'~addons/ide/jhs/jbase.ijs'
 load__'~addons/ide/jhs/util.ijs'
 load__'~addons/ide/jhs/utilh.ijs'
 load__'~addons/ide/jhs/sp.ijs'
@@ -568,6 +566,7 @@ load__'~addons/ide/jhs/d3.ijs'
 load__'~addons/ide/jhs/chart.ijs'
 load__'~addons/ide/jhs/vocabhelp.ijs'
 load__'~addons/ide/jhs/jdoc.ijs'
+load__'~addons/ide/jhs/jhelp.ijs'
 load__'~addons/ide/jhs/extra/man.ijs'
 load__'~addons/ide/jhs/widget/jhot.ijs'
 

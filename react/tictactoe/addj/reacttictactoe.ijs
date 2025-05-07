@@ -1,18 +1,16 @@
-coclass'tictactoe'
+coclass'reacttictactoe'
 coinsert'jhs'
 
-NB. fix css/script path - if tictactoe locale, do conew and add location change
+NB. src - path to find other bits
+src=: '~addons/ide/jhs/react/tictactoe/addj/'
+
+NB. fix css/script path
 fixhtml=: 3 : 0
-d=. y rplc './';snk
-if. ('tictactoe'-:;coname'') do.
- t=. 'location.href= "http://localhost:65001/',(;conew'tictactoe'),';'
- d=. d rplc '<script>';'<script>',LF,t
-end. 
-d
+y rplc './';src
 )
 
 jev_get=: 3 : 0
-d=. fixhtml fread snk,'index.html'
+d=. fixhtml fread src,'index.html'
 htmlresponse d,~fsrchead rplc '<TYPE>';'text/html' 
 )
 
@@ -22,11 +20,11 @@ NB. x is X or Y ; y is board
 getplays=: 4 : 0
 c=. +/y='*'
 i=. (y='*')#i.9
-plays=. ( <"0 each <"1 (i.c),.i)
+plays=. <"1 (i.c),.i
 x plays } (c,9)$y
 )
 
-NB. x is X or Y ; y is board
+NB. x is X or O ; y is board
 getwinner=: 4 : 0
 d=. x getplays y
 i=. 3 i.~ >./"1 +/"1 x=winners {"_ 1 d
@@ -51,27 +49,25 @@ B=: q=. ;s rplc each <'json_null';'*'
 a=. 0 NB. assume no winner
 
 if. 3 e. +/"1 'X'=winners{q do.
- echo'X has won'
- NB. X has won
  i=. 9
- a=. 1
+ a=. 1 NB. X wins
 else.
 
  NB. play to win
  i=. 'O' getwinner q
  if. i<9 do.
-  echo 'Y has won'
-  a=. 2
+  a=. 2 NB. Y wins
  else.
   NB. play to block
   i=. 'X' getwinner q
   if. i=9 do.
-   NB. play random
-   i=. q i. '*' NB. should be more random
+   t=. (q='*')#i.#q
+   if. 0=#t do. i=. q i.'O' else. i=. (?#t){t end. NB. random play
   end.
  end.  
 end. 
 if. i<#q do. q=. 'O' i}q end.
 last=: q
-jhrajax jsencode 'oplay';i;'winner';a
+NB. error before here - no jhrajax response - J crash
+jhrajax jsencode 'oplay';i;'winner';a{'0XO'
 )

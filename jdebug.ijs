@@ -3,9 +3,7 @@ NB. jhs debug page
 0 : 0
 dbx... prefix indicates JHS db verbs
 
-avoid assert  as this stuff runs with debug enabled
-
-ctrl shortcuts for quote and doublequote defined in jijx.ijs
+avoid assert as this stuff runs with debug enabled
 
 latent expressions update jdebug page
  13!:15 updates on suspension
@@ -17,17 +15,14 @@ dbx_z_=: 3 : 0
 9!:29[0 NB. don't run twice
 try.
  d=. getdata_jdebug_''
+ NB. term display of last error
+ if. 0~:+/'*'=;8{"1 [13!:13'' do. jhtml_jhs_ '<div class="transient" style="color:red;">',( jhfroma_jhs_;}.each<;.2 [13!:12''),'</div>' end.
  a=. jurlencode_jhs_ }:;JASEP_jhs_,~each d
- jjs_jhs_'if(wjdebug==null) alert("required: jijx menu ide>jdebug"); else wjdebug.update("',a,'");'
- e=. 2{::d
- if. nosus_jdebug_-:e do.
-  nosus_jdebug_
- else.
-  e,LF,}.;1{<;._2 [ 13!:12''
- end. 
+ jjs_jhs_'var w= findwindowbyname("jdebug"); if(w==null) alert("required: jijx menu ide>jdebug"); else w.update("',a,'");'
 catch.
  echo 'error in jdebug',LF,13!:12''
 end. 
+i.0 0
 )
 
 dbxup_z_=: 3 : 0
@@ -66,12 +61,18 @@ JMP=: 0 NB. flag to clear all stops for jmp
 nosus=: 'no suspension'
 
 HBS=: 0 : 0
-jhclose''
+jhmenu'debug'
+'menu0'       jhmenugroup ''
+'help'        jhmenuitem'help - shows in term'
+'dbhelp'      jhmenuitem'standard library - shows in term'
+'close'       jhmenuitem 'quit';'q'
+jhmenugroupz''
+
 'stops'    jhdiv'<STOPS>'
 jhhr
 'stack'    jhdiv '<STACK>'
 'dbrun'    jhb'run'
-'dbover'   jhb'over'
+'dbover'   jhb'thru'
 'dbinto'   jhb'into'
 'dbout'    jhb'out'
 'dbcut'    jhb'cut'
@@ -79,42 +80,47 @@ jhhr
 'val'      jhtext '';2
 'dbreset'  jhb'reset'
 'nox'      jhb'no x'
-'help'     jhb'help'
+'dostack'  jhb'stack'
+
 jhresize''
 'sel'      jhdiv'<FILES>'
 )
 
 help=: 0 : 0
-   dbhelp NB. noun with standard library documentation
-   
 x marks stops - click to set/unset
 > marks current line
 
 run  - run until error or stop or end
-over - run - temp stop on next line
+thru - run - temp stop on next line
 into - run - temp stop in first called explicit defn 
 out  - run - temp stop on next line in caller
 cut  - run - temp stop on current line in caller
 >    - move > to line in input field
 reset- stack (dbs'') to be empty
 no x - remove stops 
- 
-   ctrl+quote        shortcut for over
-   ctrl+doublequote  shortcut for into
 
    dbxsm''           NB. stop manager
 )
 
-dohelp=: 3 : 0
-jhslinkurlx'https://code.jsoftware.com/wiki/Vocabulary/Foreigns#m13'; 'nuvoc documentation'
-jhslinkurlx'https://www.jsoftware.com/help/dictionary/dx013.htm';'dictionary documentation'
-help
+dostack=: 3 : 0
+t=. '<div class="transient">'
+t=. t,jhfroma stack 3
+t=. t,'</div>'
+jhtml t
+i.0 0
 )
 
 dohelp=: 3 : 0
 t=. '<div class="transient">'
-t=. t,jhslinkurlxx'https://code.jsoftware.com/wiki/Vocabulary/Foreigns#m13'; 'nuvoc documentation'
-t=. t,'<br/>',jhfroma help_jdebug_
+t=. t,jhfroma help
+t=. t,'</div>'
+jhtml t
+i.0 0
+)
+
+dodbhelp=: 3 : 0
+t=. '<div class="transient">'
+t=. t,jhfroma dbhelp
 t=. t,'</div>'
 jhtml t
 i.0 0
@@ -302,18 +308,37 @@ c=. cdefn#' '
 c=. <"0 '>' line}c
 t=. head,each e, each c,each ' ',each defn
 r=. buttons (":line);'files';(<head),(<t),<'<br>'
-e=. 1{::s
-try. a=. (<:(0=e){e,34){::9!:8'' catch. a=. ":e end.
-a=. (0{::s),'[',(':'#~-.monad),(":line),'] ',a
-n=. +/'*'=;8{"1[13!:13''
-a=. a,(1<n)#' - ',(":n),' suspensions'
 
-NB. would be very nice if 13!:12 was in 13!:13
-a=. a,' - formatted last error (13!:12):',LF,13!:12''
+NB. e=. 1{::s
+NB. try. a=. (<:(0=e){e,34){::9!:8'' catch. a=. ":e end.
+NB. a=. (0{::s),'[',(':'#~-.monad),(":line),'] ',a
 
-r=. r;(":line);a;stps
+n=. +/0~:;1{"1[13!:13''
+a=. (1<n)#LF,~(":n),' errors on stack'
+a=. a,13!:12''
+
+r=. r;(":line);(jhfroma a);stps
 )
 
+getstack=: (}.~ ('*' i.~ [: > 8 {"1 ]))@(13!:13) NB. from jqt jdebug - extra 13!:13 columns
+
+NB. y is rows to discard (stack;dostack;jev_run)
+stack=: 3 : 0
+s=. y}.13!:13''
+'name en ln nc defn args'=. <"1 [ 0 1 2 3 4 6{|:s
+fem=. en{'';9!:8''
+fem=. (_6*(_6{.each fem)=<' error')}.each fem
+args=. ;#each args
+
+NB. class can be wrong for anonymous derived verb - fnc not included in display
+fnc=. <"0 (nc+each (nc=<3)*args=2){'nacmd'
+fln=. '[',each ((args=2){'';':'),        each(":each ln),each']'
+d=. <;._2 each LF,~each defn
+i=. ;>:each ln
+i=. i<.<:;#each d NB. tacit verb has only 1 line
+fld=. ;each i{each d
+seebox fem,.name,.fln,.fld
+)
 
 jev_get=: 3 : 0
 'jdebug' jhrx (getcss''),(getjs''),gethbs'FILES CURLINE STACK STOPS';getdata''
@@ -332,6 +357,8 @@ JS=: 0 : 0
 
 var line;
 
+function ev_body_load(){jresize();}
+
 function ajax(ts)
 {
  var t;
@@ -341,6 +368,9 @@ function ajax(ts)
  jbyid("stops").innerHTML= ts[3];
  t= jbyid("files*"+line); 
  if(null!=t) t.scrollIntoView({behavior: 'smooth', block: 'center'});
+
+jresize(); //!
+
 }
 
 function update(ts){ajax(ts= decodeURIComponent(ts).split(JASEP));}
@@ -355,7 +385,7 @@ function jdoit(t)
  }
  else
   v= "''";
- jijxrun(t+" dbxup"+v,false);
+ jijxrunx(t+" dbxup"+v,false);
 }
 
 function ev_body_load(){}
@@ -369,5 +399,10 @@ function ev_val_enter()      {ev_dbjmp_click();}
 function ev_dbcut_click(){jdoit('dbcut');}
 function ev_dbreset_click()  {jdoit('dbxreset');}
 function ev_nox_click(){jdoajax();}
-function ev_help_click(){jijxrun("dohelp_jdebug_''");}
+function ev_help_click(){jijxrunx("dohelp_jdebug_''");}
+function ev_example_click(){jijxrunx("doexample_jdebug_''");}
+function ev_nuvoc_click(){jijxrunx("jhswiki'nuvoc'");}
+function ev_dbhelp_click(){jijxrunx("dodbhelp_jdebug_''");}
+function ev_dostack_click(){jijxrunx("dostack_jdebug_''");}
+
 )

@@ -26,7 +26,7 @@ try.
  header=: header,>('_'={:header){'__';''
  assert 0=nc<header
  d=. 0+header~
- hot1=: 'jhot;_'cojhs 'EMPTY_z_'
+ hot1=: 'jhot;_'jpage 'EMPTY_z_'
  
  NB. sets background-color of rows 6 and later (n+6)
  CSS__hot1=: CSS__hot1,'.handsontable tr:nth-child(n+6) > td {background-color: bisque;}'
@@ -47,7 +47,7 @@ try.
  jd3'barwidth 60'
  jd3'type bar'
  jd3options=: jd3x__
- loc=: 'jd3;_;'cojhs jd3options;d
+ loc=: 'jd3;_;'jpage jd3options;d
  
 catch.
  ('create failed:',LF,13!:12'') assert 0

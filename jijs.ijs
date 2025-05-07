@@ -6,17 +6,18 @@ coinsert'jhs'
 HBS=: 0 : 0
 '<script type="module" src="~addons/ide/jhs/js/jsoftware/editor.js"></script>'
 
+jhmenu'edit'
+
+'filename'    jhhidden'<FILENAME>'
+'rep'         jhdiv'<REP>'
+
 'saveasdlg'    jhdiva''
  'saveasdo'    jhb'save as'
  'saveasx'     jhtext'';40
   'saveasclose'jhb'X'
 '<hr></div>'
 
-'rep'         jhdiv'<REP>'
-
-'filename'    jhhidden'<FILENAME>'
-'filenamed'   jhdiv'<FILENAME>'
-
+NB.! use flow instead of resize - avoid scroll due to meny space
 jhresize''
 
 'cm6_editor'   jhdiv''
@@ -25,27 +26,13 @@ jhresize''
 
 
 NB. menu must come after codemirror
-jhmenu''
-'menu0'  jhmenugroup ''
-         jhmpage''
-'save'   jhmenuitem 'save';'^s'
-'saveas' jhmenuitem 'save as ...'
-'runw'   jhmenuitem 'load';'^r'
-'runwd'  jhmenuitem 'loadd'
-
-NB. 'lineadv' jhmenuitem 'lineadv';'^.'
-NB. 'line'    jhmenuitem 'line';'^*'
-NB. 'sel'     jhmenuitem 'selection';'^/'
-'chelp'   jhmenuitem 'context sensitive';'h'
-
+'menu0'   jhmenugroup ''
+'ro'      jhmenuitem 'readonly';'t'
+'runw'    jhmenuitem 'load';'^r'
           jhmenulink 'edit';'edit'
- 'ro'      jhmenuitem 'readonly';'t'
- 'numbers' jhmenuitem 'numbers'
- 'theme' jhmenuitem 'theme'
-'close'     jhmenuitem 'close';'q'
+          jhmenulink 'more';'more'
+'close'   jhmenuitem 'close';'q'
 jhmenugroupz''
-
-jhmpagez''
 
 'edit' jhmenugroup''
 NB. cut/copy/paste do not have cm.commands - only ctrl+xcv
@@ -58,6 +45,17 @@ NB. cut/copy/paste for touch - not supported in codemirror
 'previous' jhmenuitem 'previous';'^G'
 'replace'  jhmenuitem 'replace';'^F'
 'repall'   jhmenuitem 'replaceall';'^R'
+jhmenugroupz''
+
+'more' jhmenugroup''
+'save'   jhmenuitem 'save';'^s'
+'saveas' jhmenuitem 'save as ...'
+'runwd'  jhmenuitem 'loadd'
+'lineadv' jhmenuitem 'run line/selection';'^.'
+'comment' jhmenuitem 'NB. add/remove';'^/'
+'chelp'   jhmenuitem 'context sensitive';'h'
+'numbers' jhmenuitem 'numbers'
+'theme' jhmenuitem 'theme'
 jhmenugroupz''
 
 
@@ -77,16 +75,13 @@ end.
 (jgetfile y) jhr 'FILENAME REP DATA';y;rep;d
 )
 
-NB. new way - jwid=~temp/foo.ijs
-NB. old way - mid=open&path=...
 jev_get=: 3 : 0
-if. #getv'jwid' do.
- create getv'jwid'
-elseif. 'open'-:getv'mid' do.
- create getv'path' 
-elseif. 1 do.
- create jnew''
+'a b'=. getvs'jpagearg jwid'
+if.     #a do. t=. a
+elseif. #b do. t=. b
+elseif. 1  do. t=. ''
 end.
+create ;(0=#t){t;jnew ''
 )
 
 0 : 0
@@ -98,12 +93,9 @@ spa save/load/loaded need immediate error report in spa
 NB. save only if dirty
 ev_save_click=: 3 : 0
 'dirty line'=. <;._2 getv'jdata'
-line=. 0".line
-ln=. 2{line NB. line with caret
-line=. ,/:~2 2$line NB. sorted selection
 f=. getv'filename'
 ta=. getv'textarea'
-bta=. <;._2 ta,LF,LF NB. ensure trailing LF and extra one for emtpy last line
+bta=. <;.2 ta,LF,LF NB. ensure trailing LF and extra one for emtpy last line
 if. 'chelp'-:getv'jmid' do.
  'a b'=. 2{.line
  t=. dltb;{.;:b}.;a{bta
@@ -119,31 +111,30 @@ if. dirty-:'dirty' do.
  if. r<0 do. jhrajax'file save failed' end.
 end. 
 
-caret=. >:ln
+line=. ,/:~2 2$ 0".line
+ln=. <:{.line NB. line with caret - J 0 origin - cm6 1 origin
+caret=. 2+ln
 s=. ''
 select. getv'jmid'
-case. 'runw'           do. s=. 'load ''',f,''''
-case. 'runwd'          do. s=. 'loadd ''',f,''''
-case. 'line';'lineadv' do.
- s=. 'tell_jhs_ ',ln{::bta
- if. iscolon s  do. NB. collect : lines
-  c=. >:(ln}.bta) i. <,')'
-  caret=. ln+c
-  d=. c{.ln}.bta
-  s=. ;d,each LF
- end.
-case. 'sel'    do.
- n=. >:--/0 2{ line NB. lines to select
- d=. n{.({.,line)}.bta
- i=. <:#d
- d=. (<(3{line){.i{:: d) i}d NB. drop trailing chars not in sel
- d=. (<(1{line)}.0{::d)  0}d     NB. drop leading chars not in sel
- s=. ;d,each LF
+case. 'runw'             do. s=. 'load ''',f,''''
+case. 'runwd'            do. s=. 'loadd ''',f,''''
+case. 'lineadv' do.
+ if. (2{.line)-:2}.line do. NB. run line or multiple line defn
+  s=. ln getblock bta
+  caret=. >:ln+#s
+  s=. ;s
+ else.
+  'a b'=. /:~1 3{line NB. selection positions in ta
+  s=. (b-a){.a}.ta
+  caret=. 0
+ end. 
 end.
 
-e=. ''
-try. do__ s catch. e=. 13!:12'' end. 
- jhrajax e,JASEP,s,JASEP,":caret
+NB. try. do__ s catch. e=. 13!:12'' end. 
+NB. jijsrun_jhs_=: s
+NB. 9!:27 '0!:111 jijsrun_jhs_'
+NB. 9!:29 (1)
+jhrajax '',JASEP,s,JASEP,":caret
 )
 
 ev_close_click=: ev_sel_click=: ev_line_click=: ev_lineadv_click=: ev_runw_click=: ev_save_click
@@ -184,12 +175,25 @@ urlresponse=: 3 : 0
 jhrajax''
 )
 
-NB. from spx.ijs
-iscolon=: 3 : 0
-t=. ;:y
-if. (<'define')e.t do. 1 return. end.
+NB. linenumber f lines - get block of lines
+NB. simliar to spx requirements
+NB. handles only simple cases
+NB.  does not handle multiple n : 0 on first line
+NB.  {{ on first line runs to first }} - no nesting
+getblock=: 4 : 0
+t=. ;:;x{y
 i=. t i. <,':'
-(,each':';'0')-:(i+0 1){t,'';''
+c=. 1
+if. ((<'define')e.t)+.(,each':';'0')-:(i+0 1){t,'';'' do. NB. collect up to )
+  c=. >:(dltb each x}.y)i.<')',LF
+elseif. (<'{{')e.t do. NB. collect up to }}
+  a=. ;x}.y
+  b=. (a e.'}}')i.1
+  c=. >:+/LF=(b+2){.a
+elseif. ('NB.')-:3{.dltb ;x{y do. NB. collect NBs
+ c=. >:(;(3{.each dltb each }.x}.y) -: each <'NB.')i.0
+end.
+c{.x}.y
 )
 
 NB. p{} klduge because IE inserts <p> instead of <br> for enter
@@ -201,7 +205,7 @@ CSS=: 0 : 0
 #filenamed{color:blue;background-color:white;}
 #saveasdlg{display:none;}
 *{font-family:<PC_FONTFIXED>;font-weight:550;}
-#jresizeb{overflow:visible;border:solid;border-width:1px;clear:left;}
+/* #jresizeb{overflow:visible;border:solid;border-width:1px;clear:left;} */
 #ijs { display:none; }
 div{padding-left:0;}
 #cm6_editor { height: 100vh; }

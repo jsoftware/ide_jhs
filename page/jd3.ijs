@@ -10,7 +10,7 @@ jhclose''
 'ga'jhd3_basic'' NB. ga,ga_... divs for d3_basic plot
 )
 
-NB. cojhs boilerplate from util.ijs
+NB. jpage boilerplate from util.ijs
 
 ev_create=: 3 : 0
 if. ''-: y do.

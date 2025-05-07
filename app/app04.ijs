@@ -21,7 +21,7 @@ NB. base div implicitly opened
 'css'    jhb'show CSS'
 
 jhdivz NB. base div close - flex active
-
+'foo'jhb'asdf'
 'ta'     jhtextarea '' NB. textarea element is in flex area
 
 jhdiva'' NB. base div open - flex inactive
@@ -38,7 +38,7 @@ CSS=: 0 : 0
 NB. J code - initialize and handle events
 ev_create=: 3 : 0 NB. called by page or browser to initialize locale
 manapp assert ''-:y
-t=. y jpagedefault ,LF,.~20 20$'silly text '
+t=. y jpagedefault ,LF,.~60 20$'silly text '
 'must be text'assert 2=3!:0 t
 jhcmds 'set ta *',t
 )

@@ -1,11 +1,5 @@
-//! ebi edits to script.js - original is in tmp/src/script.js
+//! ebi edits to original react script.js
 
-function jscdo(t){
- //! postdata to close locale
- window.close();
-}
-
-//!
 // postdata to JHS server and get response
 async function postData(url = '', data = {}) {
   // Default options are marked with *
@@ -141,7 +135,6 @@ class Game extends React.Component {
       React.createElement(Board, {
         squares: current.squares,
         onClick: i => this.handleClick(i) })), /*#__PURE__*/
-
 
       React.createElement("div", { className: "game-info" }, /*#__PURE__*/
       React.createElement("div", null, status), /*#__PURE__*/

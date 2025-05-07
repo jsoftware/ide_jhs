@@ -1,8 +1,5 @@
-NB. ctrl+< (shift ,) or ☰.left - back to term
-NB. example script used in overview tour
-
-NB. define crsum to add row and col sums to matrix
 NB. crsum ?2 3$10
+NB. add row and col sums to matrix
 crsum=: {{
 t=. y,+/y
 t,.+/"1 t

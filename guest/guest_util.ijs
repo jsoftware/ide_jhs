@@ -30,6 +30,7 @@ manlog=: 0 : 0
    repsnum n   NB. all records for snum n
    reptype n   NB. all records of type 
    repips''    NB. ips
+   repinbycity'' NB. inputs by city
    repmax''    NB. sorted list of max inputs
 )
 
@@ -202,15 +203,24 @@ NB. ;LF,~each~.t-.<,'                                    +'
 ~.t-.<,'+'
 )
 
+repinbycity=: {{
+ t=. replast''
+ ip=. 4{"1 t
+ city=. 1{"1  (({."1 LOC)i.ip){LOC,6#<'?'
+ c=. ;0".each 5{"1 t
+ a=. #each city </. c
+ b=. (~.city),.(<"0 city +//. c),.a
+ (/:;1{"1 b){b
+}}
+
 NB. ip address locations from ips
 getloc=: 3 : 0
-t=. (repips'')-.{."1 LOC NB. don't get ones we already have
-r=. 0 5$''
+t=. (repips'')-.{."1 LOC NB. ones we still need
 for_n. t do.
  a=. shell'curl --no-progress-meter https://ipapi.co/',(;n),'/json/'
  a=. deb each <;._2 a,LF
  if. 1=#a do.
-  echo 'too many ip loc requests - more to go: ',":(#repips'')-(#LOC)+#r
+  echo 'too many ip loc requests - more to go: ',":(#repips'')-#LOC
   break.
  end. NB. assume too many requests
  i=. (7{.each a)i.(<'"city":')
@@ -220,11 +230,12 @@ for_n. t do.
  a=. a-.LF,'"'
  a=. <;._2 a
  a=. <@>"1 a
- r=. r,deb each n,a
+ LOC=: LOC,deb each n,a
 end.
-LOC=: LOC,(/:4{"1 r){r
 i.0 0
 )
+
+
 
 NB. LOG=: amd IPLOC=: set as globals once
 repmax=: 3 : 0
@@ -303,12 +314,10 @@ getsavedastartargs=: 3 : 0
 ".fread'nodestartargs'
 )
 
-create_jguest_9_5=: 3 : 0
-echo shell'sudo j9.5/addons/ide/jhs/guest/create-jguest-sh $USER ',jpath'~install'
-)
-
+NB. y is version - '9.6' 
 create_jguest=: 3 : 0
-echo shell'sudo j9.6/addons/ide/jhs/guest/create-jguest-sh $USER ',jpath'~install'
+echo shell'sudo j',y,'/addons/ide/jhs/guest/create-jguest-sh $USER ',jpath'~install'
+y fwrite '/jguest/version.txt'
 )
 
 set_limits_conf=: 3 : 0
@@ -335,7 +344,7 @@ echo t
 
 NB. start node guest server
 start=: 3 : 0
-create_jguest''
+create_jguest '9.6' NB. 9.6 hardwired
 '/jguest folder was not created'assert 2=ftype'/jguest'
 if. ''-:getargs'' do. default'' end.
 'A0_nodeport must have hardwired value'assert NODEP=A0_nodeport
@@ -348,6 +357,8 @@ set_limits_conf''
 startNODE (<y) 2}getargs''
 6!:3[1
 echo LF,rawlog''
+
+echo '$ node inspect localhost:9229',LF,'debug> help - debug> sb(''guest'',nnn) - debug> exec(''jhsport'')',LF
 
 t=. }:shell'dig +short myip.opendns.com @resolver1.opendns.com'
 if. ''-:t do. t=. getlanip'' end.
@@ -412,6 +423,7 @@ r=. r-.<'127.0.0.1'
 if. 1<#r do. echo 'multiple lan ips: ',LF,;LF,~each' ',each r end.
 ;{.r
 )
+
 
 
 

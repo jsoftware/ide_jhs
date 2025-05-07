@@ -1,9 +1,14 @@
 NB. utils
 
-cojhs_z_=: cojhs_jhs_
-jpage_z_=: jpage_jhs_
+cojhs_z_=:     cojhs_jhs_
+jpage_z_=:     jpage_jhs_
+jhsoption_z_=: jhsoption_jhs_
+jhsflex_z_=:   jhsflex_jhs_
+jhsclosepages_z_=: jhsclosepages_jhs_
 
 coclass'jhs'
+
+cojhs=: jpage
 
 0 : 0
 opening/reopening page from J or url is fundamental
@@ -14,8 +19,6 @@ open - [xywh] open url [; jwid ] - calls pageopen
 edit - [xywh] edit'~temp/abc.ijs - calls open
 
 jpage - 'class;show;title' jpage data - calls open
-
-cojhs - same as jpage
 
 jpage create numbered locale for the page 
 
@@ -31,6 +34,46 @@ NB.* see ~addons/ide/jhs/util.ijs for complete information
 NB.* 
 NB.* jhs locale definitions:
 NB.* 
+
+NB.* jhsclosepages jhsclosepages''
+jhsclosepages=: 3 : 0
+jjs 'closepages()'
+)
+
+NB.* 
+NB.* jhsflex - set relative term iframe sizes
+NB.*    jhsflex '50 10 40' NB. term iframe sizes
+NB.* extra ignored - missing use last value
+NB.* 
+jhsflex=: 3 : 0
+t=. }:;(<'"1 1 '),each (<'%",'),~each   ":each y
+jjs 'framesize([',t,'])'
+)
+
+NB.* 
+NB.* jhsoption - set term menu option(s)
+NB.*    jhsoption 'wrap'
+NB.*    jhsoption 'term row'
+NB.* wrap / nowrap - term log text
+NB.* tab  / term   - jpage default tab or term iframe
+NB.* row  / column - term iframes
+NB.* 
+jhsoption=: 3 : 0
+r=. ''
+for_n. ;:tolower y do.
+ select. n=. ;n
+ case. 'column' do. t=. 'flowset(1)'
+ case. 'row'    do. t=. 'flowset(0)' 
+ case. 'wrap'   do. t=. 'wrapset(1)'
+ case. 'nowrap' do. t=. 'wrapset(0)'
+ case. 'term'   do. t=. 'termset(1)'
+ case. 'tab'    do. t=. 'termset(0)'
+ case.          do. (n,' not a  menu option')assert 0
+ end.
+ r=. r,t,';'
+end.
+jjs r
+)
 
 NB.* jcreatetestapp - jcreatetestapp 'test';'app1'
 jcreatetestapp=: 3 : 0
@@ -73,33 +116,28 @@ end.
 i.0 0
 )
 
+NB.* 
 NB.* jpage - locale=. 'class;show;title' jpage data
 NB.*   show: '' JS var defaultopen or '_' no show or 'tab' or 'term' or x y [w h] window location
 NB.*   title: tab title -  empty class default
 NB.*   if class has ev_create -> create object on class (numbered locale)
 NB.*     'jwatch;10 10;abc' jpage '?4 6$100'
 NB.*      app/page folder files have ev_create
-NB.*
+NB.* 
 NB.*  if class does not have ev_create then no object is created and data is ignored
 NB.*  jfile/... and demo folder files do not have ev_create
 NB.*    'jfile'jpage''
 NB.*    'jdemo01'jage''
-NB.*
+NB.* 
 NB.*  jpage show calls open which calls JS pageopen
+NB.* 
 jpage=: 4 : 0
 d=. dltb each<;._2 x,';'
 'c s t'=. 3{.d,'';''
-if. -.(<c)e. conl 0 do.
- f=. (<'~addons/ide/jhs/'),each ('app/';'page/';'demo/'),each<c,'.ijs'
- b=. fexist f
- f=. b#f
- if. 1=#f do. load f end.
- if. -.(<c)e. conl 0 do. ('locale ',c,' must be created first')assert 0 end.
-end.
-
+('locale ',c,' must be created first')assert (<c)e. conl 0
 NB. class with ev_create not defined does open
 s=. fixshow s
-if. 3~:nc<'ev_create_',c,'_' do. s open c return. end. 
+if. 3~:nc<'ev_create_',c,'_' do. s open c,'?jpagearg=',jurlencode y return. end. 
 r=. conew c
 createpage__r (;(''-:t){t;c,'-',;r);s;<y
 r
@@ -110,9 +148,6 @@ LASTY=: y
 't s a'=. y
 title=: t
 ev_create a
-NB.! if.     3=nc<'ev_create' do. ev_create a
-NB. elseif. 3=nc<'create'    do. create a
-NB. elseif. do. 'app must define ev_create or create verb'assert 0 end.
 if. '_'~:s do. show s end.
 )
 
@@ -157,8 +192,6 @@ s=. _".s
 s
 )
 
-cojhs=: jpage
-
 NB.*
 NB.* close - close wid
 close=: 3 : 0
@@ -175,12 +208,6 @@ NB.*
 NB.* focus - focus wid - focus 'jfif' - focus 'jijs?jwid=~temp/sp/spfile.ijs'
 focus=: 3 : 0
 jjs_jhs_'getwindow("',y,'").focus();'
-)
-
-NB.*
-NB.* reload - reload wid
-reload=: 3 : 0
-jjs_jhs_'getwindow("',y,'").location.reload();'
 )
 
 NB.* doc - doc '' or 'html' or 'js'
@@ -266,7 +293,7 @@ jhtml_jhs_'<img src="http://latex.codecogs.com/svg.latex?',y,'" border="0"/>'
 NB.* jselect - jselect 'i.5',LF,'a=:2' - sentences into log for selection
 jselect=: 3 : 0
 if. 1=L.y do. y=. ;y,each LF end.
-jhtml_jhs_'<div class="transient">',(jhtmlfroma  y),'</div>'
+jhtml_jhs_'<div class="transient" style="overflow-wrap: break-word; white-space: normal;">',(jhtmlfroma  y),'</div>'
 )
 
 NB.* jjs - jjs 'alert("foo");' - eval javascript sentences in ajax response
@@ -355,7 +382,7 @@ end.
 i=. 1 i.~'?jwid='E.a
 if. i<#a do.
  i=. i+6
- NB. JWID=: i}.a NB. used by cojhs report
+ NB. JWID=: i}.a NB. used by jpage report
  a=. (i{.a),jurlencode i}.a NB. jurlencode just the parameter
 end. 
 JWID=: b
@@ -462,72 +489,9 @@ js event handler:
   returns true (to continue processing) or false
 
 documented functions:
-
 )
 
-rundemo=: 3 : 0
-t=. ;y
-load'~addons/ide/jhs/demo/',t
-open _4}.t NB. less .ijs
-)
-
-gettitles=: 3 : 0
-f=. 1 dir'~addons/ide/jhs/app/app*.ijs'
-n=. }.each(f i: each '/')}.each f
-a=. fread each f
-i=. 1 i.~each (<'jhtitle')E.each a
-a=. i}.each a
-a=. (a i.each  LF){.each a
-a=. }.each (a i. each '''')}.each a
-a=. (a i.each ''''){.each a
-if. -.(4{.each n)=4{.each a do. echo 'mismatch app folder: file name - jhtitle' end.
-;a,each LF
-)
-
-runapp=: 3 : 0
-t=. ;y
-f=. '~temp/app/',t
-1!:5 :: [ <jpath'~temp/app'
-(fread '~addons/ide/jhs/app/',t)fwrite f
-load f
-(_4}.t) jpage''
-)
-
-NB. push ~temp changes to git
-pushreact=: 3 : 0
-name=. y
-src=. '~temp/jhs/react/',name,'/'
-('does not exist: ',t) assert fexist t=. src,name,'.ijs'
-snk=. '~addons/ide/jhs/react/',name,'/addj/'
-n=. {."1 [1!:0 <jpath src,'*'
-(fread each (<src),each n) fwrite each (<snk),each n
-n
-)
-
-NB. create ~temp folder with all files from src/dist/
-NB.  and then all files (possibly replacing) from src/adj/
-runreact=: 3 : 0
-name=. y
-'does not exist'assert fexist'~addons/ide/jhs/react/',y,'/addj/',name,'.ijs'
-src=: '~addons/ide/jhs/react/',name,'/'
-snk=: '~temp/jhs/react/',name,'/'
-
-mkdir_j_ snk
-
-n=. {."1 [1!:0 <jpath src,'dist/*'
-(fread each (<src,'dist/'),each n) fwrite each (<snk),each n
-
-n=. {."1 [1!:0 <jpath src,'addj/*'
-(fread each (<src,'addj/'),each n) fwrite each (<snk),each n
-(fread src,'addj/',name,'.js') fwrite snk,'script.js'
-
-echo'run following sentences to run the example:'
-echo'   load''~temp/jhs/react/',name,'/',name,'.ijs'''
-echo'   ''',name,';10 10 500 200'' jpage '''''
-i.0 0
-)
-
-NB. stadard cojhs boilerplate
+NB. stadard jpage boilerplate
 shown=: 0
 
 NB. jsdata defined indicates new style app
@@ -557,7 +521,7 @@ if. 3=nc<'ev_create' do. jpageget'' else. title jhrx (getcss''),(getjs''),gethbs
 create=: [
 saveonclose=: [
 NB. override jev_get, create, and savonclose to customize app
-NB. end cojhs boilerplate
+NB. end jpage boilerplate
 
 coclass'z'
 
@@ -572,7 +536,7 @@ NB.* monadic is '' which is js var defaultopen
 edit=: 3 : 0
  '' edit y
 :
-  x open_jhs_'jijs?jwid=',jshortname_jhs_ jpath y
+ ('jijs;',x)jpage y
 )
 
 NB.* jslog - jslog'window.location'
@@ -656,7 +620,7 @@ NB. TARGET f URL
 jhsshow=: 3 : 0
 '_blank' jhsshow y
 :
-jjs_jhs_ 'pageshow("',(y,uqs_jhs_''),'","',x,'");'
+jjs_jhs_ 'pageshow("',(y,uqs_jhs_''),'","',x,'","tab");' NB. tab is forced
 )
 
 plotjijx=: 3 : 0

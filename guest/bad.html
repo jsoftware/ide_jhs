@@ -24,7 +24,14 @@
 </div>
 
 <script>
-function load(){document.title= 'jclosed';}
-function login(){window.location.href= "jguest";}
+function load(){
+  var w= (null==frameElement)? window:parent.parent;  
+  w.document.title= 'jclosed';
+}
+
+function login(){
+    var w= (null==frameElement)? window:parent.parent;  
+    w.location.href= "jguest";
+    }
 </script>
 </body></html>

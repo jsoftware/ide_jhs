@@ -13,13 +13,13 @@ jd3'title TITLE' NB. add title option
 
 example:
 jd3'reset;type line;title My Data;legend "line one","line two","line three"'
-'jd3'cojhs jd3x;?3 4$100
+'jd3'jpage jd3x;?3 4$100
 
 jd3'reset;type bar;label "a","b","c","d"'
-'jd3;0 0;abc'cojhs jd3x;?3 4$100
+'jd3;0 0;abc'jpage jd3x;?3 4$100
 
 jd3'reset;type pie'
-'jd3;10 10;ghi'cojhs jd3x;?4$100
+'jd3;10 10;ghi'jpage jd3x;?4$100
 )
 
 jd3docoptions=: 0 : 0

@@ -55,9 +55,10 @@ plotdemos 54
 
 NB.spxsection:jd3
 jhslinkurl'www.d3js.org' NB. link to D3 home page
+require'~addons/ide/jhs/page/jd3.ijs' NB. create jd3 locale
 jd3'help'
 jd3'reset;type line;title My Data;legend "line one","line two","line three"'
-'jd3;10 10'cojhs jd3x;?3 4$100
+'jd3;10 10'jpage jd3x;?3 4$100
   
 NB.spxsection:gnuplot
 jhslinkurl'www.gnuplot.info'
@@ -163,4 +164,4 @@ NB. note how reset clears state and additional commands add to state
 )
 
 NB.spxsection:webgl
-rundemo_jhs_ 12
+jhsget'demo/jdemo12'

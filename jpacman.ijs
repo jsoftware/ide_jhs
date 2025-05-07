@@ -7,11 +7,8 @@ HBS=: 0 : 0
 
 jhmenu''
 'menu0'  jhmenugroup ''
-         jhmpage''
 'close'  jhmenuitem 'close';'q'
          jhmenugroupz''
-
-jhmpagez''
 
 'J Package Manager <a href="http://code.jsoftware.com/wiki/addons">code.jsoftware.com/wiki/addons</a>'
 '<hr>'
@@ -153,7 +150,5 @@ function check(v)
 
 function ev_check_click(){check("1");}
 function ev_uncheck_click(){check("0");}
-
-function ev_close_click(){winclose();}
 
 )

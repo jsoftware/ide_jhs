@@ -258,12 +258,12 @@ function changeLineNumbers() {
 
 function changeReadOnly() {
   if (cm6.state.readOnly) {
-    jbyid("filenamed").innerHTML = jbyid("filename").value;
+    jbyid("jmenutitle").innerHTML = jbyid("filename").value;
     cm6.dispatch({
       effects: readOnlyCompartment.reconfigure(EditorState.readOnly.of(false))
     });
   } else {
-    jbyid("filenamed").innerHTML = jbyid("filename").value + " (READ ONLY)";
+    jbyid("jmenutitle").innerHTML = jbyid("filename").value + " (READ ONLY)";
     cm6.dispatch({
       effects: readOnlyCompartment.reconfigure(EditorState.readOnly.of(true))
     });
@@ -327,7 +327,7 @@ function createEditor(text, parent) {
 
 window.cm6_creat = (text, parent) => {
   cm6 = createEditor(text, parent);
-  jbyid("filenamed").innerHTML = jbyid("filename").value + (cm6.state.readOnly ? " (READ ONLY)" : "");
+  jbyid("jmenutitle").innerHTML = jbyid("filename").value + (cm6.state.readOnly ? " (READ ONLY)" : "");
 }
 
 window.cm6_gettext = () => { return cm6.state.doc.toString(); }
@@ -348,6 +348,11 @@ window.cm6_getSelectionData = () => {
   const anchorLine = cm6.state.doc.lineAt(anchorCh).number;
   const headLine = cm6.state.doc.lineAt(headCh).number;
   return [anchorLine, anchorCh, headLine, headCh];
+}
+window.cm6_setselection = (a) => {
+  if(a>cm6.state.doc.lines || a==0)return; //alert('end of script')
+  var i= cm6.state.doc.line(a).to;
+  cm6.dispatch({selection: {anchor: i, head: i}, scrollIntoView:true});
 }
 
 // Set focus.

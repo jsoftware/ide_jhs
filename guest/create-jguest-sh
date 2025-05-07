@@ -36,3 +36,5 @@ chmod 600 .ssh/jserver/cert.pem
 chmod 600 .ssh/jserver/key.pem
 chown $1:$1 .ssh/jserver/cert.pem
 chown $1:$1 .ssh/jserver/key.pem
+
+echo $(basename $2) > "/jguest/version.txt"

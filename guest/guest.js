@@ -36,16 +36,17 @@ const crypto = require("crypto");
 const cp     = require('child_process');
 
 const guestbase= 1+parseInt(jhsport);
-const NOC= '0+0+0';  // token+serial+port
+const NOC= '0';  // token
 const bind= '0.0.0.0'; // anybody
 const jhshost= "localhost";
 const cookiename= "jhs_cookie";
-const token=  crypto.randomBytes(16).toString("hex");
+const usertoken=  crypto.randomBytes(16).toString("hex");
 
 var htmluser=  fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/user.html'),'utf8');
 var htmlbad=   fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/bad.html'),'utf8');
 var htmlredirect=   fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/redirect.html'),'utf8');
 
+var gtoken= Array(guests).fill(0); // guest token
 var gstart= Array(guests).fill(0); // 0 or time when port was allocated
 var gsnums= Array(guests).fill(0); // 0 or serial number of valid port
 var gip=    Array(guests).fill(0); // ip
@@ -73,6 +74,8 @@ process.on('uncaughtException', (err, origin) => {
 });
 
 // run periodically to kill tasks using too much storage 
+// or otherwise deserve killing
+// guest with no inputs is killed
 function poll(){
   // log('poll',0);
   clearguests();
@@ -88,6 +91,7 @@ function poll(){
 function clearguests(){
  for (let i = 0; i < gstart.length; i++) {
   p= i+guestbase; 
+  if(gstart[i]!=0 && gcount[i]==0 && Date.now()>(gstart[i]+(1000*10))) kill('kill-0',p,0);
   if(gstart[i]!=0 && Date.now()>(gstart[i]+(1000*limit))) kill('kill-limit',p,0);
   if(gstart[i]!=0 && Date.now()>(genter[i]+(1000*idle ))) kill('kill-idle',p,0);
  }
@@ -106,7 +110,7 @@ function kill(type,port,xtra){
 function clear(port){
  if(jhsport==port || 0==port)return;
  log('clear',port);
- i= port-guestbase;gstart[i]=0; gsnums[i]=0; genter[i]=0; gcount[i]=0; 
+ i= port-guestbase;gstart[i]=0; gsnums[i]=0; genter[i]=0; gcount[i]=0; gtoken[i]=0;
 }
  
 // return free guest port or 0
@@ -119,13 +123,13 @@ function getguest(){
 
 function markenter(port)  {if(jhsport!=port){ var i= port-guestbase; genter[i]= Date.now(); ++gcount[i];}}
 
-// cookie: token+snum+port
 function createcookie(port,ip){
  if(port==0) return NOC;
  var now= Date.now();
  if(port==jhsport){
   userip= ip;
   log('user',port);
+  return usertoken;
  } 
  else
  {
@@ -135,10 +139,10 @@ function createcookie(port,ip){
   genter[i]= now;
   gsnums[i]= snum;
   gip[i]= ip;
+  gtoken[i]= crypto.randomBytes(16).toString("hex");
   log('guest',port);
+  return gtoken[i];
  }
- var n= (port==jhsport)?0:snum;
- return token+'+'+n+'+'+port; //+'+'+now;
 }
 
 // client reponse with text
@@ -149,7 +153,7 @@ function replyc(code,res,p,port,ip)
 {
  var cval= createcookie(port,ip);
  var max= (port>=guestbase)? ';Max-Age='+limit : '';
- var c= cval+max+";Secure;Httponly";
+ var c= cval+max+";Secure;Httponly;SameSite=None;Partitioned;"; // SameSite=None Partitioned
  res.writeHead(code, "OK", {'Set-Cookie':cookiename+"="+c,'Content-Type': 'text/html'});
  res.end(p);
 }
@@ -158,9 +162,7 @@ function replyc(code,res,p,port,ip)
 function replynoc(res,p,port){
  log('403',port,'+',p);
  kill('kill-403',port,0);
- var cval= token+'+'+'x'+'+'+port+'+'+Date.now(); // note 'x' for snum
- //var max= (port>=guestbase)? ';Max-Age='+waitx : '';
- var c= cval+";Secure;Httponly";
+ var c= "0;Secure;Httponly";
  res.writeHead(403, "OK", {'Set-Cookie':cookiename+"="+c,'Content-Type': 'text/html'});
  res.end(p);
 }
@@ -192,19 +194,22 @@ const server = https.createServer(options, (req, res) => {
   // htmlbad=   fs.readFileSync(('/jguest/j/addons/ide/jhs/guest/bad.html'),'utf8');
   var cval= get_cookies(req).jhs_cookie;
   if(typeof(cval)=='undefined') cval= NOC; 
-  var p= cval.split('+');
-  if(token!=p[0]){cval=NOC; p=cval.split('+');} // cval reset if from another node instance
-  var c= p[0];
-  var s= p[1];
-  var port= p[2];
-  var valid= port!=0 && c==token && s==(  (port!=jhsport)?gsnums[port-guestbase]:usersnum );
+  var port=0;
+
+  // cookie must be usertoken or in gtoken
+  if(cval==usertoken) port= jhsport;
+  else{port= gtoken.indexOf(cval);port= (port==-1)?0:port+guestbase;}
+
+  var valid= port!=0;
+
   var url= decodeURIComponent(req.url);
   var  ip= req.connection.remoteAddress;
   var method= req.method;
-  var ref= req.headers.referer;
 
+  /*
   // guest apps - no cookie required
   // https://ip:65101/p6500x - connect to port 6500x and url guestapp
+  var ref= req.headers.referer;
   var gamark= '/-' // prefix for guest app requests
     var u= (-1==url.indexOf('?'))?url:url.substring(0,url.indexOf('?'));
     var t= ('undefined'==typeof ref)?'':ref.slice(ref.lastIndexOf('/'));
@@ -226,6 +231,7 @@ const server = https.createServer(options, (req, res) => {
       if(0==port) return;
       valid= 1;
   }
+  */
 
   if(valid)
    log('valid',port,method+url);
@@ -251,7 +257,6 @@ const server = https.createServer(options, (req, res) => {
 
       if("jserver-user"==cmd || restart) // validate key
       {
-       //! add code here to throw error for testing
        if(key!=val){replyx(200,res,"invalid key",jhsport); return;}
          cp.exec('sudo '+'/jguest/j/addons/ide/jhs/guest/guest-sudo-sh user '+jhsport+' '+process.env.USER+' '+restart);
          replyc(200,res,"valid",jhsport,ip);

@@ -6,18 +6,20 @@ define project verbs
 default SPFILE is: ~temp/sp/spfile.ijs
 template is: ~addons/ide/jhs/spfile_template.ijs
 
-edit/open do popups
-see: jijx>wiki>JHS>>Help>pop-up
-
-focus works in firefox, but may not work in other browsers
+   man'jhsclosepages'
+   man'jhsoption'
+   man'jhsflex'
 )
 
-p_aaa=: 3 : 0
-edit       '~temp/spexample.ijs'
-'jfif' jpage''
+p_example=: 3 : 0
+jhsclosepages''
+jhsoption'term column'
 'jfile'jpage''
+edit '~Projects/jhs/example/example.ijs'
+jhsflex 50
 testdata=: i.3 4
-echo testdata
 )
+
+NB. define your p_name verb here
 
 splist'' NB. echo project sentences

@@ -1,4 +1,4 @@
-// original jhs classic menu
+//! old menu stuff
 
 // return menu group node n
 function jfindmenu(n)
@@ -22,7 +22,7 @@ function jmenunav(tar,c)
 {
  var i,n,nn,nc,node,cnt=0,last,len,cl,m=[];
  var nodes=document.getElementsByTagName("a");
- len=nodes.length;
+ len=nodes.length
  for(i=0;i<len;++i)
  {
   node=nodes[i];
@@ -102,7 +102,7 @@ function jmenunavfocus(m,n)
 function jmenunavinfo(m,n)
 {
  if(n==m.length)return 0;
- return ("jhmg"==m[n].getAttribute("class"))?1:2;
+ return ("jhmg"==m[n].getAttribute("class"))?1:2
 }
 
 // activate menu group n
@@ -112,7 +112,6 @@ function jactivatemenu(n)
  var node= jfindmenu(n);
  if('undefined'==typeof node) return;
  node.focus(); 
- jmenushow(node);
 }
 
 var menublock= null; // menu ul element with display:block
@@ -125,8 +124,6 @@ function jmenuclick(ev)
  var tar=(typeof e.target=='undefined')?e.srcElement:e.target;
  var id=tar.id;
  if(id=="adv"){jscdo("advance");return;}
- if(id=="uarrow"){jscdo("uarrow");return;}
- if(id=="darrow"){jscdo("darrow");return;}
  var idul= id+"_ul";
  jbyid(id).focus(); // required on mac
  if(jbyid(idul).style.display=="block")
@@ -173,7 +170,7 @@ var tmenuid= 0;
 function jmenublur(ev)
 {
  if(tmenuid!=0) clearTimeout(tmenuid);
- tmenuid= setTimeout(jmenuhide,500);
+ tmenuid= setTimeout(jmenuhide,500)
  return true;
 }
 
@@ -207,3 +204,5 @@ function jmenukeyup(ev)
  jmenunav(tar,c);
  return true;
 }
+
+

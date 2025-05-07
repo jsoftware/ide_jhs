@@ -1,6 +1,6 @@
 0 : 0
 drawing on canvas
-   spx'~addons/ide/jhs/spx/canvas.ijs'
+   spx'~addons/ide/jhs/spx/canvas.ijt'
 )
 
 require'~addons/graphics/color/hues.ijs'
@@ -56,7 +56,7 @@ end.
 coclass'jcanvas'
 coinsert'jhs'
 
-NB. cojhs boilerplate from util.ijs
+NB. jpage boilerplate from util.ijs
 
 ev_create=: 3 : 0
 t=. y jpagedefault 200 200
@@ -102,6 +102,10 @@ run=: 3 : 0
 jjs_jhs_ q=: 'w=window.open("","',(;coname''),'");w.doit("',(jsxarg y),'");'
 )
 
+run=: 3 : 0
+jjs_jhs_ 'var w=findwindowbyJWID("',JWID,'");w.doit("',(jsxarg y),'");'
+)
+
 markmouse=: 3 : 0
 'a b c'=. 0".getv_jhs_'jdata'
 jsxnew''
@@ -127,6 +131,7 @@ NB. ev_mouse_move=: 3 : 0
 HBS=: 0 : 0
 jhclose''
 jhbr
+''jhdiv'mouse down,move,up'
 '<canvas id="can" width="<WIDTH>" height="<HEIGHT>"></canvas>'
 )
 

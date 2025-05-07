@@ -4,12 +4,7 @@ coinsert'jhs'
 MAXFILES=: 100000 NB. fails if too many files in search path
 
 HBS=: 0 : 0
-jhmenu''
-'menu0'  jhmenugroup ''
-         jhmpage''
-'close'  jhmenuitem 'close';'q'
-         jhmenugroupz''
-jhmpagez''
+jhclose'find in files'
 
 'find'     jhb'Find'
 'context'  jhselect(<;._2 FIFCONTEXT);1;0
@@ -242,18 +237,13 @@ function ev_find_click()
 }
 
 function ev_file_click(){
- t= 'jijs?jwid='+jsid.value;
- jijxwindow.pageopen(t,t);
-}
-
-function ev_file_click(){
   if(null!=window.frameElement){
     var a= 'jifr-jijs?jwid='+decodeURIComponent(jsid.value);
     var b= 'jijs?jwid='+(jsid.value);
     jijxwindow.newpage(a,'jifr',b);
   }else{
     var t= 'jijs?jwid='+jsid.value;
-    jijxwindow.pageopen(t,t);
+    pageopen(t,t); // open in same browser window
   } 
 }
 
@@ -280,5 +270,4 @@ function setchkstate(id,v){jbyid(id).style.backgroundColor= (v==0)?chk0:chk1;}
 
 function flipchkstate(id){setchkstate(id,getchkstate(id)!=1)};
 
-function ev_close_click(){winclose();}
 )

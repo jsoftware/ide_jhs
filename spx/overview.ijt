@@ -3,9 +3,8 @@
 
 J coding is covered by other labs and resources referenced at the end
 
-lab advance gives J next line from lab file
- keyboard: ctrl+.
- touchscreen: right green button
+ctrl+. (ctrl+dot) or menu bar ⇒
+gives J next line from lab file
 
 do a lab advance now
 )
@@ -18,22 +17,31 @@ a=. 0.1 * i. 100
 s=. sin a
 c=. cos a
 sc=. s ,: c NB. sin and cosine values
-sc
 chart sc
 jcjs'legend';'sin';'cos';'+/'
-chart sc,+/sc NB. chart data with state
+chart sc,+/sc,+/sc
 
 0 : 0
-next advance simulates your typing and pressing enter
+next line sets menu options
+suitable for this lab
+ wrap   - avoid horizontal scrolling
+ term   - edit frame shares this window
+ column - window frames in a column
 )
+jhsoption'wrap term column'
 
-NB.spxrun:jjs_jhs_ 2000 animate_jsp_ '   |. ''.| htiw atad esrever'''
+0 : 0
+this lab work well on a tablet
+ especially with a real keyboard
+
+works on a phone but much
+ easier if you are already familiar
+)
 
 0 : 0
 time to try your first input
-3 blank input prompt and result on left
-click input area (box below)
-and type a line (e.g. sin 1) and press enter
+enter a line in the input box below
+ e.g. sin 1 and press enter
 )
 
 0 : 0
@@ -44,18 +52,11 @@ this pattern:
     loop
 is a repl (read-eval-print-loop)
 
-this page (window) is a J repl
+this window is a J repl
 )
 
 0 : 0
-lab is interactive!
-instead of doing a lab advance
-click the input box below
-and run your own input
-)
-
-0 : 0
-click ☰  (page upper right corner)
+click ☰  (upper left corner)
 click outside menu to dismiss it
 )
 
@@ -66,59 +67,55 @@ if you are a J server guest you can learn more:
  ☰.help.guest files
 )
 
-0 : 0
-☰.help.mobile - mobile (touchscreen) info
-)
-
-10?10 NB. line for testing recall
+10?20 NB. 10 random from i.20
 
 0 : 0
 want to run a line again?
 
-click the line above with 10?10
+click the line above with 10?20
 press return to recall to input area
 press return again to run it
 )
 
 0 : 0
 recall previous inputs with:
- keyboard: ctrl+shift+🠅
- keyboard: ctrl+shift+🠧
-or
- touchscreen: right blue button
- touchscreen: right red button
-  
-try it now to recall the 10?10 line
+ ctrl+shift+🠅 and ctrl+shift+🠧
+
+if you have a keyboard  
+try it now to recall the 10?20 line
 and press enter to run it again
 )
 
 0 : 0
-J scripts (file names ending in .ijs) contain J code
+☰.inputs - list recent inputs
+lab lines are not treated as inputs
+so your list of input lines may be short
+(shortcut ☰.i)
+click one for and press enter to recall
+)
+
+0 : 0
+J script files (xxx.ijs) contain J code
 )
 
 fin=: '~addons/ide/jhs/spx/overview_example.ijs'
 jpath fin  NB. ~addons expands to J addons folder
 data=: fread fin NB. file read
 data
-fout=: '~temp/ovtour.ijs' NB. J temp folder
+fout=: '~temp/ovlab.ijs' NB. J temp folder
 data fwrite fout NB. data written to file
 load fout  NB. load script to define crsum
-mat=: ?3 4$10
+mat=: ?3 4$10 NB. random numbers from 3 by 4 matrix of 10s
 mat
 crsum mat NB. crsum adds row and col sums
 
-0 : 0
-the display of crsum is its defn
-older j versions display 3 : 0 up to )
- instead of with {{ ... }}
-)
-crsum
+crsum NB. display defn
 
 0 : 0
 name=: ... NB. global assignment
 name=. ... NB. local assigment - only for current definition
 
-the crsum sentence:
+crsum sentence:
 t=. y,+/y
 assigns the local name t 
 )
@@ -128,72 +125,60 @@ crsum mat
 t NB. global t is not changed by crsum local use
 
 erase'crsum'
-crsum mat NB. error as crsum not defined
+crsum mat NB. error
 load fout NB. load script again to define crsum
 crsum mat
-crsum 'asdf' NB. text causes an error
+crsum 'asdf' NB. error
 'reset' chart crsum mat
 
-names'' NB. list of defined names
-fout    NB. display
-
 0 : 0
-browsers appropriate most keyboard shortcuts
-JHS uses esc key for some shortcuts
-esc is not held down like ctrl/shift/alt/cmd
-press and release esc and then press shortcut
-
-for shortcut: esc-d
-press/release escape key
- then press/release d key 
-)
-
-0 : 0
-next step opens file ovtour.ijs for editing
-
-term can run as 'single page application'
-an edit page can share the same browser window!
-
-ctrl+< switch left to previous page
-ctrl+> switch right to next page 
-
-☰ has left/right (handy on mobile)
-
-after next step shows edit page
-use ctrl+</> or ☰ to switch between term and edit
-note: < is shift , and > is shift .
-)
-
-'term' edit fout NB. edit in term window
-
-0 : 0
-ovtour.ijs also defines verb hypot
+ovlab.ijs also defines verb hypot
 )
 
 hypot 3 4
-hypot
+hypot NB. square root of sum over squares of arg
 
 0 : 0
-you can also show latex or html or gif
+you can also show latex or html or anything that can show in a browser
 )
 jhlatex_jhs_ '\sqrt{y_0^2 + y_1^2}'
 jhtml'<div><font style="color:red;font-size:2rem;">%: +/ *: y</font></div>'
-jhsgif'newfile'
+
+names'' NB. list of defined names
+
+0 : 0
+browsers appropriate most keyboard shortcuts
+JHS uses: ctrl+. for lab advance
+          ctrl+, to show ☰
+
+editor uses ctrl+zxcvy and a few more
+)
+
+0 : 0
+next step opens file ovlab.ijs for editing
+
+focus will be in the edit frame
+ click term input area to focus the term frame
+)
+
+edit fout
 
 0 : 0
 try the following:
-
-ctrl+> switch to edit
-☰.readonly - allow changes
-add new line line at end:
-d=: %: 5
-☰.load - save and load the script
-
-ctrl+< switch to term page
+ in edit frame:
+ ☰.readonly - allow changes
+ add new first line:
+  d=: %: 5
+ ☰.load - save and load the script
 )
 d
 
-NB. next step sleeps for 3 seconds
+0 : 0
+in edit frame:
+ ☰.close
+)
+
+NB. next advamce will sleep for 3 seconds
 jxsleep 3 NB. sleep for 3 seconds
 
 0 : 0
@@ -203,44 +188,54 @@ you need to signal break to get back control
 )
 
 0 : 0
-click ☰
-note: break item has shortcut esc-c
-
-esc-c or ☰.break signals break
+☰.break
 no effect if nothing is running
 
 if J is running locally: signal break with
  ctrl+c in window that started your server
 
 it takes 2 breaks to break a sleep
- but only one to break a loop
- 
-run following sentence in input area:
-   jxsleep 10 NB. 2 breaks to end the delay
+ and one to break a loop
+
+next step will sleep for 15 seconds
+use ☰.break twice
+ or
+ctrl+c twice in your JHS server
+to break out of the sleep
+) 
+
+0 : 0
+enter the following line in the input area:
+   jxsleep 15
+
+and then signal 2 breaks with ☰.break or ctrl+c
+)
+
+0 : 0
+explore the help docs
+☰.help
 )
 
 0 : 0
 JHS is a browser interface to J
 
 A J installation also includes:
-  Jqt - an IDE built in Qt
+  Jqt - an interface with Qt
   jconsole - terminal repl interface
 )
 
 0 : 0
-quit  J session with esc-z in term page
-close J pages with esc-q or ☰.close
-)
-
-0 : 0
 this is the end of the overview
-esc-p for links to J web resources
-explore tours (JHS labs) and labs
 
-☰.entry.tour
-recall and run plot tour
+recall and run lines from the following:
+   jhshelp''
 
-☰.entry.lab
-recall and run line for core
-then recall and run 'A J Introduction'
-)
+or try one of the tours listed:
+   jhshelp 'tour'
+
+or try (following jhshelp'lab'->jhslab'core')
+   jhsrun'A J Introduction'
+
+or browse the wiki:
+   jhshelp'wiki'
+)   

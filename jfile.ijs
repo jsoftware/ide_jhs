@@ -5,22 +5,20 @@ require'~addons/convert/misc/base64.ijs'
 
 HBS=: 0 : 0
 
-jhmenu''
-'menu0'  jhmenugroup ''
-         jhmpage''
-'close'  jhmenuitem 'close';'q'
-         jhmenugroupz''
-jhmpagez''
+jhmenu'file explorer'
 
-'edit'     jhb 'edit'
-'load'     jhb 'load'
-'rename'   jhb 'rename'
-'new'      jhb 'new'
-'del'      jhb 'del'
-'copy'     jhb 'copy'
-'cut'      jhb 'cut'
-'paste'    jhb 'paste'
-'download' jhb 'copy to downloads'
+'menu0'  jhmenugroup ''
+'edit'     jhmenuitem 'edit'
+'load'     jhmenuitem 'load'
+'rename'   jhmenuitem 'rename'
+'new'      jhmenuitem 'new'
+'del'      jhmenuitem 'del'
+'copy'     jhmenuitem 'copy'
+'cut'      jhmenuitem 'cut'
+'paste'    jhmenuitem 'paste'
+'download' jhmenuitem 'copy to downloads'
+'close'    jhmenuitem 'close';'q'
+           jhmenugroupz''
 
 'renamedlg'  jhdiva''
  jhbr
@@ -48,7 +46,6 @@ jhmpagez''
 
 'report'    jhdiv'<R>'
 
-jhhr
 'recent'   jhrad 'Recent';0;'paths'
 shorts''
 'path'      jhhidden'<F>'
@@ -300,14 +297,14 @@ if. '/'={:f do.
  f=. }:jpath f
  n=. f}.~>:f i:'/'
  f=. (-#n)}.f
- shell q__=: 'tar -C "',f,'" -czf  ',n,'.tgz ',n
+ shell 'tar -C "',f,'" -czf  ',n,'.tgz ',n
  n=. n,'.tgz'
  d=. fread n
 else.
  d=. fread f
  n=. f}.~>:f i:'/'
 end.
-jhrjson qq__=: 'report';(jhfroma n,' copied to server Downloads');'data';(tobase64 d);'name';n
+jhrjson 'report';(jhfroma n,' copied to server Downloads');'data';(tobase64 d);'name';n
 )
 
 NB. copyfiles src;snk
@@ -420,7 +417,6 @@ function ev_paths_dblclick(){;}
 function ev_x_shortcut(){jscdo("cut");}
 function ev_c_shortcut(){jscdo("copy");}
 function ev_v_shortcut(){jscdo("paste");}
-//function ev_2_shortcut(){jbyid("sel").childNodes[0].focus();}
 
 function setanchor(scroll){
  t= path.value;
@@ -528,11 +524,9 @@ function ev_file_dblclick(){
     jijxwindow.newpage(a,'jifr',b);
   }else{
     var t= 'jijs?jwid='+jform.path.value;
-    jijxwindow.pageopen(t,t);
+    pageopen(t,t); // open same browser window
   }  
 }
-
-function ev_close_click(){winclose();}
 
 function ev_download_click(){clr();jdoajax(['path']);}
 function ev_download_click_ajax_json(t){

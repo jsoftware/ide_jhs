@@ -248,16 +248,16 @@ function jdomwalk(node)
 
 function jdomshow(node)
 {
- var i,j,t="";
+ var i,j,n,t="";
  jdominit(node);
  for(i=0;i<jdwn.length;++i)
  {
   for(j=0;j<jdwi[i];++j)t+="| ";
-  name=jdwn[i].nodeName;
-  if(name=="#text")
-   t+=name+" "+jdwn[i].nodeValue;
+  n=jdwn[i].nodeName;
+  if(n=="#text")
+   t+=n+" "+jdwn[i].nodeValue;
   else
-   t+=name;
+   t+=n;
   t+="\n";
  }
  return t;
@@ -294,12 +294,6 @@ function jevload()
  jform= document.j;
  jevsentence= "jev_"+jform.jlocale.value+"_ 0";
  dirty= !isNaN(parseInt(jbyid('jlocale').value)); // cojhs always dirty 
- var e= jbyid('menuburger'); 
- if(null!=e){
-  if(!isTF()){
-    e= jbyid('jmpage');if(null!=e) e.style.display= 'none'; // kill unwanted > term menu
-  }
- }
  jscdo("body","","load");
  return false;
 }
@@ -317,7 +311,6 @@ function jevfocus()
 // enter event return or return+shift - iOS touch #+= has shift
 // enter+shift no longer inserts newline in contenteditable
 function jev(event){
- // jmenuhide(event);
  mmhide();
  jevev= window.event||event;
  // event.target gets child of element with handler
@@ -338,11 +331,13 @@ function jev(event){
  return jevdo();
 }
 
+// run sentence with jev_jsp_[ prefix to avoid dipslay of input line
+function jijxrunx(t,flag=true){jijxrun('jev_jsp_]'+t,flag);}
+
 // run sentence(s) in jijxwindow - false runs with jev_run and true runs bare sentence
 function jijxrun(t,flag=true)
 {
  if(jijxwindow!=null) {if(jijxwindow.closed) jijxwindow= null;}
- //! t= t.replaceAll("'","''");
  if(0==t.length) t= "\n"; // so '' displays as empty line
  if(flag) t= "jev_run'"+t.replaceAll("'","''")+"'";
  try{jijxwindow.jdoajax([],"",t,true);}
@@ -625,6 +620,13 @@ function ifjijxwindow(){return (jijxwindow===undefined || jijxwindow==null || ji
 function jijxset()
 {
   var w;
+  if(isFrame(window)){
+    w= window.frameElement.ownerDocument.getElementById("jifr-jijx");
+    if(w==null) return;
+    jijxwindow= window.frameElement.ownerDocument.getElementById("jifr-jijx").contentWindow
+    return;
+  }
+
   w= window.parent;
   if(w!=window){jijxwindow= w;return;}
   w= window.opener;
@@ -639,8 +641,6 @@ document.onkeyup= keyup; // bad things happen if this is keydown
 document.onkeypress= keypress;
 
 var jsc= 0;
-
-function jscset(){jsc=1;}
 
 // page redefines to avoid std shortcuts
 function jdostdsc(c)
@@ -658,13 +658,24 @@ function keypress(ev)
  var c=e.charCode||e.keyCode;
 
  // touch escape
- if(e.key=='è'){jsc=!jsc;return false;}  // esc shortcut - letter e + slide up
+ //if(e.key=='è'){jsc=!jsc;return false;}  // esc shortcut - letter e + slide up
 
  var s= String.fromCharCode(c);
  if(!jsc)return true;
+ ev.preventDefault();
  jsc=0;
- try{eval("ev_"+s+"_shortcut()");}
- catch(ee){jdostdsc(s);}
+
+ // esc x same as menu shortcut x
+ // esc x ev_x_shortcut()
+ // esc x standard shortcuts for all (esc-q)
+ var ta= window['jmsc'+s];
+ var tb= window["ev_"+s+"_shortcut()"];
+ if('string'==typeof ta)
+   jscdo(ta)
+ elseif('function'==typeof tb)
+   tb();
+ elseif(true)
+   jdostdsc(s);
  return false;
 }
 
@@ -679,6 +690,11 @@ function keyup(ev)
    if(c==188&&e.shiftKey&&'function'==typeof uarrow){uarrow();return false;}
    if(c==190&&e.shiftKey&&'function'==typeof darrow){darrow();return false;}
   }
+
+  // if(c==188&&!e.shiftKey){jsc=!jsc; return !jsc;}// ctrl+, as esc 
+
+  if(c==188&&!e.shiftKey) {ev_jmenuburger_click(); return false;}
+
   if(c==188){jscdo(e.shiftKey?"less":"comma",undefined,"ctrl");return false;}
   if(c==190){jscdo(e.shiftKey?"larger":"dot",undefined,"ctrl");return false;}
   if(c==191){jscdo(e.shiftKey?"query":"slash",undefined,"ctrl");return false;}
@@ -686,6 +702,9 @@ function keyup(ev)
   if(c==222){jscdo(e.shiftKey?"doublequote":"quote",undefined,"ctrl");return false;}
   if(c==38&&e.shiftKey&&'function'==typeof uarrow){uarrow();return false;}
   if(c==40&&e.shiftKey&&'function'==typeof darrow){darrow();return false;}
+
+  if(c==37&&e.shiftKey) mmshow('menu0');
+
  }
  if(c==27&&!e.shiftKey&&!e.altKey){jsc=!jsc;return !jsc;} // esc shortcut
  return true; 
@@ -737,26 +756,8 @@ function jgpbodymh()
 // get pixel div height - IE/FF bugs vs <h1>
 function jgpdivh(id){return jbyid(id).offsetHeight;}
 
-/*
-function jgpdivh(id)
-{
- var e=jbyid(id);
- if(e==null)return 50;
- //alert(e+" "+id);
- // alert(e.offsetHeight);
- //return jbyid(id).offsetHeight;
- var v=e.offsetHeight;
- //alert(id+" "+v);
- return v;
-}
-*/
 
-// get pixel end
-
-// debug
-
-// numbers from unicode
-
+// debug - numbers from unicode
 function debcodes(t)
 {
  r= "";
@@ -897,6 +898,24 @@ function ev_close_click(){
 
 }
 
+// jfif/... just close - cojhs call J ev_close_click
+// overidden by jijx, jijs and cojhs that need extra dirty work
+function ev_close_click(){
+ if(dirty) jdoajax();
+ winclose();
+}
+
+function ev_close_click_ajax(){}
+
+function winclose(){
+  if(isFrame(window))
+    jijxwindow.spaclose(window);
+  else{
+    document.open(); document.write('You quit this JHS page and can now close the browser window.'); // in case close fails
+    window.close();
+  }
+}
+
 // isFrame - true if w is embeded in a frame
 function isFrame(w){return null!=w.frameElement;}
 
@@ -913,8 +932,6 @@ function isPages(){
   if(!ifjijxwindow()) return false;
   return jijxwindow.allpages[1]!=null
 }
-
-function ev_close_click_ajax(){}
 
 function isdirty(){return dirty;} // default - override
 
@@ -984,21 +1001,34 @@ function removeElementsByClass(className){
 
 // hamburger menu
 var mmshowing='';
+var mmfocusn=0; // child in menu with focus
 
 function mmhide(){
-//  alert('mmhide'+mmshowing); //!
-  jbyid('menuclear').style.visibility= 'hidden';
   if(mmshowing!="")jbyid(mmshowing).style.visibility= 'hidden';
+  if('menu0'==mmshowing) {setTimeout(winfocus,0);} 
   mmshowing= "";
 }
 
-function mmshow(e){
- jbyid('menuclear').style.visibility= 'visible';
- jbyid(e).style.visibility= 'visible';
- mmshowing= e;
+// set focus back to where it was before the menu/dialog ran
+// document.activeElement - onblur bubbles
+// for now we just brute force the few we really care about
+// jijx prompt seems to need setcaret not focus
+// maybe HBS should set id for desired focus
+function winfocus(){
+  var id= jbyid('prompt');
+  if(id!=undefined) jsetcaret('prompt',1); // gives jijx prompt focus
 }
 
-function ev_menuburger_click(){
+function mmshow(e){
+ jbyid(e).style.visibility= 'visible';
+ mmshowing= e;
+ mmfocusn= 0;
+ setTimeout(mmfocus,100); 
+}
+
+function mmfocus(){jbyid(mmshowing).children[mmfocusn].focus();}
+
+function ev_jmenuburger_click(){
  if(''==mmshowing)
  {
   mmshowing= 'menu0';
@@ -1008,12 +1038,9 @@ function ev_menuburger_click(){
   mmhide();
 }
 
-//!function ev_menuburger_click(){mmshow('menu0');}
-function ev_menuburger_click(){menushow('menu0');}
+function ev_jmenuburger_click(){menushow('menu0');}
 
 function topage(n){jijxwindow.pageswitch(window,n);}
-
-function ev_menuclear_click(){mmhide();}
 
 // remove child from parent
 function removeitem(id){
@@ -1025,41 +1052,59 @@ function removeitem(id){
 function menushow(menuid){
   var id,a;
   mmhide();
-
-  if(menuid=='menu0'){
-    id= jbyid(menuid);
-    removeitem('jmleft');
-    removeitem('jmright');
-    removeitem('jmpage');
-    if(isPages()){
-      a= '<a id="jmleft" href="#" class="jmenuitem" onclick="mmhide();return jev(event)" >left<span class="jmenuspanright">ctrl+<</span></a>'
-      id.insertAdjacentHTML('beforeend',a);
-      a= '<a id="jmright" href="#" class="jmenuitem" onclick="mmhide();return jev(event)" >right<span class="jmenuspanright">ctrl+></span></a>'
-      id.insertAdjacentHTML('beforeend',a);
-      a= '<a href="#" class="jmenuitem" id="jmpage" onclick="return menushow(\'jmpages\')" ><span class="jmenuspanleft" >&gt&nbsp;</span>term&nbsp;pages<span class="jmenuspanright"></span></a>'
-      id.insertAdjacentHTML('beforeend',a);
-    }
-  }
-
-  if(menuid=='jmpages'){
-    // populate live menu - remove old and add new
-    id=jbyid('jmpages'); //!
-    while (id.firstChild!=id.lastChild){id.removeChild(id.lastChild);}
-    var n= jijxwindow.pagenames();
-    var t= '';
-    for(var i= 0 ; i<n.length ; i++ ){ // term already there
-      a= '<a class="jmenuitem" onclick="mmhide();topage(';
-      a+= i+')" >'+n[i]+'<span class="jmenuspanright"></span></a>'
-      t+= a;
-    }
-    id.insertAdjacentHTML('beforeend',t);
-  }
-
   if(menuid!="") mmshow(menuid);
   return false; // essential!
  }
 
- // jscore stuff - new for jhchk and jhrad
+function jmenukeyup(ev)
+{
+  if(ev.shiftKey||ev.ctrlKey) return true;  
+ var g= jbyid(mmshowing);
+ switch(ev.key){
+  case 'ArrowLeft':
+    if(''==mmshowing) mmhide(); else g.children[0].click(); break;
+  case 'ArrowUp':
+   mmfocusn= Math.max(mmfocusn-1,0); mmfocus(); break;
+  case 'ArrowRight':
+    g.children[mmfocusn].click(); break;
+  case 'ArrowDown':
+    mmfocusn= Math.min(mmfocusn+1,g.children.length-1); mmfocus(); break;
+  default:
+    var k= window['jmsc'+ev.key];
+    if('undefined'!=typeof k){ mmhide(); jscdo(k);};
+ }
+ return true; 
+ }
+
+ var tmenuid= 0;
+
+ function jmenublur(ev)
+{
+ if(tmenuid!=0) clearTimeout(tmenuid);
+ tmenuid= setTimeout(mmhide,500)
+ return true;
+}
+
+function jmenufocus(ev)
+{
+ if(tmenuid!=0) clearTimeout(tmenuid);
+ tmenuid= 0;
+ return true;
+}
+
+function jmenukeydown(ev)
+{
+ var c=ev.keyCode;
+ return(c>36&&c<41)?false:true;
+}
+
+function jmenukeypress(ev)
+{
+ var c=ev.keyCode;
+ return(c>36&&c<41)?false:true;
+}
+
+// jscore stuff - new for jhchk and jhrad
 
 function ev_body_load(){
   if('object'==typeof jsdata){
@@ -1180,12 +1225,13 @@ function pageopen(url,wid,specs){
   wid= decodeURIComponent(wid);
 
   if(specs=='term' || isSPA() && (null==specs || specs==""))
-    return jijxwindow.newpage('jifr-'+url,'jifr',wid); //! jijxwindow.
+    return jijxwindow.newpage('jifr-'+url,'jifr',wid);
 
   if(specs=='tab') specs= '';
 
   if(ifjijxwindow()) w= jijxwindow.getwindow(wid); else w=null;
   if(null!=w){w.setTimeout(function(){w.focus();},25);return;}
+
   w=window.open(url,wid,specs); // pageopen
   if(null==w){alert(PUBLOCKED);return w;}
   if(ifjijxwindow()) jijxwindow.allwins.push(w);
@@ -1200,17 +1246,16 @@ function pageopen(url,wid,specs){
   return w;
  }
 
+// used by plot etc to show files
+// uqs used to get new file values
+// sets new location in existing window or opens new window
+function pageshow(url,wid,specs){
+ wid= decodeURIComponent(wid);
+ w= jijxwindow.getwindow(wid);
+ if(null!=w) w.location= url; else pageopen(url,wid,specs);
+}
+
 // single page app stuff
-
-// ctrl+shift+< or > are the same for all pages - spa left/right
-
-function ev_less_ctrl(){ev_jmleft_click();}
-function ev_larger_ctrl(){ev_jmright_click();}
-
-function ev_jmleft_click() {mmhide();if(isTF())jijxwindow.termleft(window);}
-function ev_jmright_click(){mmhide();if(isTF())jijxwindow.termright(window);}
-
-function winclose(){jijxwindow.spaclose(window);}
 
 // save server file to client downloads
 function saveAs(content,fileName) {
@@ -1236,6 +1281,5 @@ function base64ToArrayBuffer(base64) {
     }
     return bytes.buffer;
 }
-
 
 

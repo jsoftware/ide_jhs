@@ -1,10 +1,10 @@
 NB. handsontable - minimal
-NB. 'jhot'cojhs'n__'[n__=: i.3 9
+NB. 'jhot'jpage'n__'[n__=: i.3 9
 
 coclass'jhot'
 coinsert'jhs'
 
-NB. cojhs boilerplate from util.ijs
+NB. jpage boilerplate from util.ijs
 
 NB. create=: 3 : 'setdata y~'
 ev_create=: 3 : 0

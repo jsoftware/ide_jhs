@@ -12,7 +12,7 @@ jhclose''
 '</div>'
 )
 
-NB. cojhs boilerplate from util.ijs
+NB. jpage boilerplate from util.ijs
 
 ev_create=: 3 : 0
 if. ''-:y do.
@@ -30,10 +30,10 @@ try.
  (header)=: (,:^:({.2-$$d)) d
  hot=: 'jhot;_'jpage'EMPTY_z_'
  setdata__hot header~
- qa__=: JS__hot
+ JS__hot
  fixjs__hot'' NB. apply options and data to JS
- qz__=: JS__hot
- NB.! show__hot 'tab' NB.!!!
+ JS__hot
+ NB. show__hot 'tab' 
  jhcmds 'set head *table: ',header
 catchd.
  ('create failed:',LF,13!:12'') assert 0
