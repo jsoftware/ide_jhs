@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.395'
+VERSION=: '1.0.396'
 
 FILES=: 0 : 0
 app/
@@ -29,6 +29,7 @@ d3.ijs
 favicon.ico
 gnuplot.ijs
 gpdemo.ijs
+help.txt
 history.txt
 installer.ijs
 jbase.ijs
@@ -40,7 +41,6 @@ jbeacon.ijs
 jbinfo.ijs
 jfif.ijs
 jfile.ijs
-jcopy.ijs
 jfilesrc.ijs
 jgcp.ijs
 jijs.ijs
