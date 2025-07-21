@@ -16,7 +16,8 @@ jhmenu'file explorer'
 'copy'     jhmenuitem 'copy'
 'cut'      jhmenuitem 'cut'
 'paste'    jhmenuitem 'paste'
-'download' jhmenuitem 'copy to downloads'
+'download' jhmenuitem 'server file -> browser'
+'upload'   jhmenuitem 'browser file -> server'
 'close'    jhmenuitem 'close';'q'
            jhmenugroupz''
 
@@ -48,8 +49,10 @@ jhmenu'file explorer'
 
 'recent'   jhrad 'Recent';0;'paths'
 shorts''
-'path'      jhhidden'<F>'
+'path'     jhhidden'<F>'
 'pathd'    jhdiv'<F>'
+'<input id="fileupload" type="file" name="fileupload" />'
+'uploadf'  jhhidden'' NB. client file name to upload to server
 jhresize''
 
 'sel'       jhdiv'<FILES>'
@@ -294,17 +297,27 @@ ev_download_click=: 3 : 0
 f=. getv'path'
 if. '/'={:f do.
  NB. tar it
+ NB.! tar file should be created in ~temp
  f=. }:jpath f
  n=. f}.~>:f i:'/'
  f=. (-#n)}.f
  shell 'tar -C "',f,'" -czf  ',n,'.tgz ',n
  n=. n,'.tgz'
  d=. fread n
+ ferase n
 else.
  d=. fread f
  n=. f}.~>:f i:'/'
 end.
-jhrjson 'report';(jhfroma n,' copied to server Downloads');'data';(tobase64 d);'name';n
+jhrjson 'report';(jhfroma n,' copied to browser Downloads');'data';(tobase64 d);'name';n
+)
+
+ev_upload_click=: 3 : 0
+f=. getv'uploadf'
+d=: frombase64 getv'jdata'
+mkdir_j_ '~temp/uploads'
+d fwrite '~temp/uploads/',f
+jhrjson 'report';(jhfroma f,' copied to ~temp/uploads')
 )
 
 NB. copyfiles src;snk
@@ -400,12 +413,57 @@ CSS=: 0 : 0
 #renamedlg{display:none;}
 #deletedlg{display:none;}
 #newdlg{display:none;}
+#fileupload{display:none;}
 )
 
 JS=: 0 : 0
 var anchor=null;
 
-function ev_body_load(){jresize();setanchor(true);}
+function ev_body_load(){
+  jbyid('fileupload').addEventListener('change', (event) => {
+        // This code executes when the user selects a file and closes the dialog
+        const selectedFiles = event.target.files; // Get the FileList object
+        if (selectedFiles.length > 0) {
+            // A file (or files) were selected
+            const firstFile = selectedFiles[0];
+            read(firstFile);
+            // You can now process the file, e.g., read its content with FileReader
+        } else {
+            // The user cancelled the file selection dialog
+            alert('File selection cancelled.');
+        }
+    });
+  jresize();setanchor(true);
+}
+
+function ev_upload_click(){jbyid('fileupload').click();} // open file dialog
+
+function read(file) {
+  const reader = new FileReader();
+  reader.addEventListener('load', (event) => {
+    s= arrayBufferToBase64(event.target.result);
+    jset("uploadf",file.name);
+    jmid.value= 'upload';
+    jtype.value= 'click';
+    jdoajax(["uploadf"],s);
+  });
+  reader.readAsArrayBuffer(file);
+}
+
+function arrayBufferToBase64( buffer ) {
+ var binary = '';
+ var bytes = new Uint8Array( buffer );
+ var len = bytes.byteLength;
+ for (var i = 0; i < len; i++) {
+  binary += String.fromCharCode( bytes[ i ] );
+ }
+ return window.btoa( binary );
+}
+
+function ev_upload_click_ajax_json(t){
+ jbyid('report').innerHTML= t.report;
+}
+
 
 function setpath(t){jform.path.value= t;jbyid("pathd").innerHTML= t;}
 function ev_paths_click(){jsubmit();}
@@ -429,7 +487,6 @@ function setanchor(scroll){
  if(scroll) anchor.scrollIntoView({behavior: 'auto', block: 'nearest'});
 }
 
-//! kill off files/fif/copy
 function ev_files_click() // file select
 {
  clr();
@@ -529,6 +586,7 @@ function ev_file_dblclick(){
 }
 
 function ev_download_click(){clr();jdoajax(['path']);}
+
 function ev_download_click_ajax_json(t){
  if(t.data!=undefined){saveAs(base64ToArrayBuffer(t.data),t.name);}
  jbyid('report').innerHTML= t.report;

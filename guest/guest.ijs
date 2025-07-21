@@ -21,10 +21,6 @@ A guest session ends when it:
 •is idle for <IDLE> minutes
 •more disk than <DULIM> MB
 •uses excessive resources
-)
-
-tool_guest_files_jijx_=: 0 : 0
-☰.file >jcopy moves files between server and your machine.
 
 All files created are deleted when the session ends.
 

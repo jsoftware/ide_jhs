@@ -53,8 +53,8 @@ f=. i{4!:3''
 t=. jpath'~system/'
 if. t-: (#t){.;f do.
  NB. look for defn in base9
- p=. jpath'~Base9x'
- if. p-:'~Base9x' do.
+ p=. jpath'~Base9'
+ if. p-:'~Base9' do.
   '~Base9 not defined. Add ~Base9 to folders.cfg to point at Base9.'assert  0
  end. 
  dt=. {."1 dirtree p,'/*.ijs'

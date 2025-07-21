@@ -585,7 +585,6 @@ stub=: 3 : 0
 NB. app stubs to load app file
 jev_get_jijx_=:    3 : (stub'jijx')
 jev_get_jfile_=:   3 : (stub'jfile')
-jev_get_jcopy_=:   3 : (stub'jcopy')
 jev_get_jijs_=:    3 : (stub'jijs')
 jev_get_jfif_=:    3 : (stub'jfif')
 jev_get_jpacman_=: 3 : (stub'jpacman')

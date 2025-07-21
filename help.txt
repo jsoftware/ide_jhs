@@ -1,0 +1,307 @@
+***start 
+recall line from log and to run it
+   jhshelp ''
+   jhshelp 'welcome'
+   jhshelp 'browser pages'
+   jhshelp 'tour'   NB. JHS tutorial
+   jhshelp 'lab'    NB. J tutorial
+   jhshelp 'project manager'
+   jhshelp 'debug'
+   jhshelp 'tool'
+   jhshelp 'wiki'
+   jhshelp 'shortcuts'
+   jhshelp 'copy browser<->server files'
+   jhshelp 'popup'
+   jhshelp 'close'
+   jhshelp 'guest rules'
+   jhshelp 'about'
+
+***start welcome
+welcome - browser interface to J
+
+if new to the JHS interface to J
+ take a quick tour by clicking button
+ under the menu when you start JHS
+
+the tour can be useful to refresh
+ your memory or to get pointers
+ about new features in a new release 
+ 
+***start browser pages
+page - html/css/javascript for display in browser
+J locale creates page when requested from browser
+browser displays page in tab/window/iframe
+page source come from named or object (numbered) locale
+   jhshelp 'system' NB. term/edit/jfile/jfif/...
+   jhshelp 'page'   NB. examples with best practices 
+   jhshelp 'demo'   NB. older examples
+   jhshelp 'app'    NB. how to build your own pages
+
+***start system
+there are several system pages
+ available through the jijx menu
+
+jijx    - J repl (term)
+jijs    - file edit (edit)
+jfile   - file explorer
+jfif    - find in files
+jdebug  - debugger 
+jpacman - addon package manager
+jlocale - locale explorer
+jcopy   - copy client/server files
+
+***start app
+apps are built with J, JHS framework,
+ HTML, CSS, and javascript
+learning curve is long, but not steep
+ with significant rewards along the way
+what you learn is applicable not just to JHS,
+ but to every aspect of web programming
+JHS is built with the same facilities
+☰.options.TAB - if you have larger screen
+run and study each app in order
+if possible, have term and app pages visible
+run 1 of the following:
+   jhsget 'app/app01' NB. overview
+   jhsget 'app/app02' NB. html
+   jhsget 'app/app03' NB. css custmizing look and feel
+   jhsget 'app/app04' NB. flex - ta textarea
+   jhsget 'app/app05' NB. css flex - ta beside tb
+   jhsget 'app/app06' NB. css flex - ta above tb
+   jhsget 'app/app07' NB. chartjs
+   jhsget 'app/app08' NB. password
+
+for additional info:
+   jhshelp 'app overview'
+
+***start page
+simple apps showing JHS gui programming - run 1 of the following:
+   jhsget 'page/jcanvas'
+   jhsget 'page/jcjs'
+   jhsget 'page/jd3'
+   jhsget 'page/jhotd3'
+   jhsget 'page/jtable';'t'[t=: 2 2$1;'abc';2;'def'
+   jhsget 'page/jwatch';​'?4 ​6$100'
+   jhsget 'page/tictactoe'
+
+
+***start demo
+simple apps showing JHS gui programming
+run demos to see some of the possibilities
+study the source to see how it is done
+run 1 of the following:
+   jhsget 'demo/jdemo01' NB. Roll with submit
+   jhsget 'demo/jdemo02' NB. Roll with ajax
+   jhsget 'demo/jdemo03' NB. Flip - ajax args and results
+   jhsget 'demo/jdemo04' NB. Controls with javascript and CSS
+   jhsget 'demo/jdemo05' NB. chartjs
+   jhsget 'demo/jdemo06' NB. Grid Demo
+   jhsget 'demo/jdemo07' NB. Table layout
+   jhsget 'demo/jdemo08' NB. Dynamic Resize
+   jhsget 'demo/jdemo09' NB. d3 basic
+   jhsget 'demo/jdemo10' NB. Ajax chunks
+   jhsget 'demo/jdemo11' NB. Ajax interval timer
+   jhsget 'demo/jdemo12' NB. WebGL 3d graphics
+
+***start debug
+debug facilities: suspend execution at stop or error
+ examine/modify values and definitions and continue
+
+practice before you need it for real!
+☰.d - show debug page - best if you can see both debug and term page
+
+   dbr 1       NB. enable debug
+   calendar'a' NB. will stop on error
+   y=. 0       NB. fix error
+   
+press thru button to step through verb
+ check values as you move along
+ step until the verb is finished
+ 
+   dbxsm'calendar 0:0' NB. stop on monadic/dyadic line 0
+   calendar 0
+
+press run button to run to stop on dyadic line 0
+
+press thru button to step through
+
+***start tour
+<TOUR>
+
+***start lab
+<CATEGORIES>
+
+***start project manager
+file SPFILE defines project verbs
+running a project verb sets up your session
+getting to work as quickly as possible
+
+   sp'' NB. load SPFILE to define project verbs
+
+   sphelp NB. project utilities
+
+***start tool
+<TOOL>
+
+***start debugjs
+browser ​html/css/javascript ​debuggers ​are ​excellent!
+spend ​time ​getting ​familiar ​with ​your ​favorite ​browser
+online ​docs ​are ​good, ​but ​mostly ​you ​just ​have ​to ​play
+ctrl+shift+i ​might ​open ​the ​dbugger ​sub ​window
+
+detect ​syntax ​errors ​with ​visual ​studio ​code ​(jshint ​extension)
+ ​or ​install ​jshint ​in ​nodejs ​and ​run ​jshint ​cli
+ ​~/.jshintrc ​- ​{"esversion": ​6,"multistr": ​true}
+
+***start jd3
+most visualization requirements are more easily handled
+ with facilities documented in jhstour'chart' or jhstour'plot'
+
+plot ​d3 ​uses ​D3 ​javascript ​library
+see: https://d3js.org
+ ​ ​ ​jd3''
+ 
+***start node
+node ​- ​commercial ​server ​- ​https://nodejs.org
+node ​https ​proxy ​server ​sits ​between ​JHS ​and ​client
+securely ​access ​your ​JHS ​server ​from ​any ​device ​on ​lan ​or ​remote
+
+ ​ ​ ​load'~addons/ide/jhs/node.ijs'
+ ​ ​ ​node_jhs_''
+
+***start man
+experimental unix like doc of a name
+name is tracked to a script
+and NB. lines preceding the defn are reported
+   man'jhsoption'
+   man'jhsflex'
+   man'jpage'
+   man'man'
+
+***start print
+simple ​printing
+ ​ ​ ​ ​ ​print_jhs_ ​ ​ ​ ​ ​ ​ ​'abc';i.2 ​3 ​4
+ ​ ​ ​0 ​print_jhs_ ​ ​ ​ ​ ​ ​ ​'display ​without ​print ​dialog'
+ ​ ​ ​ ​ ​printscript_jhs_ ​'~addons/ide/jhs/config/jhs.cfg'
+ ​ ​ ​0 ​printscript_jhs_ ​'~addons/ide/jhs/config/jhs.cfg'
+ ​ ​ ​printwidth_jhs_=: ​80 ​NB. ​truncate ​longer ​lines ​with ​... ​
+ ​ ​ ​printstyle_jhs_=: ​'font-family:"courier ​new";font-size:16px;'
+
+***start table
+table ​(spreadsheet) ​uses ​Handsontable ​javascript ​library
+see ​www.handsontable.com ​for ​more ​info ​
+ ​ ​ ​'jtable;0 ​0'jpage'n' ​[ ​n=. ​i.3 ​4
+n ​immediately ​reflects ​any ​changes
+edit ​cells ​and ​add ​new ​rows/cols
+initial ​data ​was ​numeric, ​so ​non-numeric ​is ​red
+ ​ ​ ​'jtable;20 ​20'jpage's' ​[ ​s=: ​2 ​2$'aa';'b';'c';'dd'
+
+***start wiki
+<WIKI>
+
+***start shortcuts
+browser ​uses ​most ​ctrl ​shortcuts
+
+☰ shortcut key on right side
+☰ shortcut works when any menu shows
+
+ctrl+, shows menu
+ arrow keys navigate menus
+
+esc-key - press ​and ​release ​esc ​then ​key
+is same as ☰ shortcut
+
+undo/cut/copy/paste/redo
+ ​ctrl+zxcvy ​- ​standard
+
+J ​ctrl ​shortcuts ​are ​supported ​for
+ ​,./<>?
+
+custom ​jterm ​(jijx) ​handler ​for ​ctrl+?
+ev_query_ctrl_jijx_=: ​3 ​: ​'i.5'
+
+***start copy browser<->server files
+if your browser and JHS server are on the same system,
+ they see the same files and copy is not relevant
+
+if they have different file systems, you may sometimes
+ want to copy files between them
+
+server<->browser copy is provided by:
+  ​☰.system pages.explore files
+
+to copy from the JHS server to your browser Downloads:
+  navigate to select a file
+  ☰.server file -> browser
+  (a folder is copied as a tar gzip of the folder)
+
+to copy from your browser system to the JHS server Downloads:
+  ​☰.browser file -> server
+  navigate to select a file
+  click open
+
+***start popup
+JHS ​works ​best ​if ​popups ​allowed
+some ​browers ​require ​permission
+some ​browsers ​let ​you ​configure
+ ​(make ​as ​restrictive ​as ​possible)
+
+ ​ ​ 'tab' ​edit '' ​NB. popup edit new temp in tab
+
+***start close
+close ​​page ​with ​☰.close
+this ​lets ​J ​manage ​the ​close
+ ​(save ​changes ​and ​free ​up ​resources)
+browser ​close ​button ​misses ​these ​steps
+
+***start guest rules
+<GRULES>
+
+***start about
+Engine: j9.6.3/j64avx2/linux
+Build: commercial/2025-04-05T16:25:53/clang-11-0-0/SLEEF=1
+Library: 9.6.13
+Platform: Linux 64
+Installer: j9.6 install
+InstallPath: /home/ericb/j9.6
+Contact: www.jsoftware.com
+ 
+Copyright 1994-2025 Jsoftware Inc.
+
+***start app overview
+App appname is defined by a script that defines 
+ locale appname with HBS, event handler verbs, ...
+
+The script that defines appname must be run first.
+
+App appname is usually started by:
+   'appname' jpage args
+
+It can also be started by:
+   browse to url JHS-server:port/appname
+
+The browser interacts with an object (numbered) locale
+ that is an instance of appname.
+
+app has 4 parts: HBS, CSS, J code, JS javascript code
+ HBS (html build sentences) defines html elements (buttons ...)
+ CSS (cascading style sheet) defines how elements look
+ J code defines event handlers (what a button click does)
+ JS is not required except in advanced apps
+
+HBS is a set of J lines that create html.
+
+Try the following:
+   c=: jhsget'app/app01' NB. run app1 and return object locale
+   HBS__c
+   gethbs__c''  NB. html from HBS
+
+Event handler example:
+  user clicks button with id 'one'
+   -> browser calls J verb ev_one_click
+    -> ev_one_click calls jhrcmds with list of browser commands
+     -> browser runs commands
+
+Browser gives event data to J in a dictionary (accessed by getv).
+J passes cmds back to browser as JSON built from jhrcmds arg.
+

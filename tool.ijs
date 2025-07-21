@@ -17,8 +17,8 @@ jselect gethelp y
 
 gethelp=: 3 : 0
 t=. fread'~addons/ide/jhs/help.txt'
-n=. 'GRULES GFILES WIKI TOOL TOUR CATEGORIES'
-t =. t hrplc n;tool_guest_rules;tool_guest_files;(getwiki'');(gettool'');(gettour'');(getcategories'')
+n=. 'GRULES WIKI TOOL TOUR CATEGORIES'
+t =. t hrplc n;tool_guest_rules;(getwiki'');(gettool'');(gettour'');(getcategories'')
 d=. <;.2 t,LF
 b=. (<'***')=3{.each d
 h=. b <;.1 d

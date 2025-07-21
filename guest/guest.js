@@ -282,6 +282,7 @@ const server = https.createServer(options, (req, res) => {
          }
         }
        }
+       log('post',port,req.post);
        jhsreq("POST",jhshost,port,url,req.post,req,res); // pass to JHS
       }
     });
@@ -303,7 +304,7 @@ const server = https.createServer(options, (req, res) => {
   else if(url=='/jguest')
   {
    if(valid && port!=jhsport)
-    jhsreq("GET",jhshost,port,'/jijx',"",req,res);
+    replyc(200,res,htmlredirect,port,ip); // reconnect to guest
    else
    {
      port= getguest();
@@ -421,7 +422,7 @@ function log(type,port,val){
   d+= port+' '+gsnums[i]+' '+gip[i]+' '+gcount[i];
  }
  else
-  d+= port+' + + + + ';
+  d+= port+' + + + ';
 
  for (var i = 2; i < arguments.length; i++) {
   d= d+' '+arguments[i];

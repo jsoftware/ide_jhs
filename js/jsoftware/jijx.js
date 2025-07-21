@@ -328,7 +328,6 @@ function ev_jlocale_click(){linkclick("jlocale");}
 function ev_jfile_click()  {linkclick("jfile");}
 function ev_jpacman_click(){linkclick("jpacman");}
 function ev_jfif_click()   {linkclick("jfif");}
-function ev_jcopy_click()  {linkclick("jcopy");}
 function ev_jdoc_click()   {linkclick("jdoc");}
 
 var jijsnum=0;
@@ -580,6 +579,7 @@ function newpage(myid,myclass,url){
   // ifr.contentWindow.document.title not available until load is done
   // url could be cleaned up for title so it is the same as eventual frame title
   document.title= 'term '+url.split('?')[0]; //! TIPX
+  framesize(['1 1 50%']); // all term pages same size
 }
 
 // ->term

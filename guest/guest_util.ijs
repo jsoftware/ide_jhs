@@ -2,6 +2,7 @@ NB. utils for JHS guest server
 
 load'~addons/ide/jhs/aws/aws-utils.ijs' NB. define create_swap_jaws_
 create_swap=: create_swap_jaws_
+see=: seebox_jhs_
 
 man=: 0 : 0
    default'' NB. set default args
@@ -17,21 +18,28 @@ NB.browse: https://localhost.or.aws-server:65101/jguest
 manlog=: 0 : 0
    ports''     NB. ports in use
    repmem''    NB. shell'free'
-   repspace''   NB. du /home/p*
-   dir logfolder' NB. log files
- NB. repnodeout is the log file used for reports - default is logfolder,'guest.log'
-   rawlog''    NB. show rawlog
-   getlog''    NB. LOG=: from rawlog
-   getloc''    NB. LOC=: from LOG
-   repget''    NB. LOG=: and LOC=: from rawlog
+   repspace''  NB. du /home/p*
+   logfolder   NB. folder for nodeout and geoout files
+   nodeout     NB. log file used for reports - default is logfolder,'guest.log'
+   geoout      NB. log file for geo ipdata - logfolder,'geo.txt'
+   rawlog''    NB. fread nodeout
+   getlog''    NB. LOG=: formatted from rawlog
+   repget''    NB. getlog'' and geoupdate''
    rep''       NB. summary
+   see ...     NB. seebox_jhs_ - display without boxes
+   repposts''  NB. summary of quests with post
+   repposts'~' NB. summary of guests with no posts
+   repgeo''    NB. ipdata location from ip
+   repgeox''   NB. unigue geos
    replog n    NB. last n entries
    replast''   NB. last entry for each snum
    repsnum n   NB. all records for snum n
+   repsn       NB. see main records for snum n
    reptype n   NB. all records of type 
-   repips''    NB. ips
    repinbycity'' NB. inputs by city
-   repmax''    NB. sorted list of max inputs
+   getndx'...' NB. col index of 1 or more col names
+   getgcol'...' NB. cols from LOG
+ g getcol'...'  NB. cols from g
 )
 
 require'~addons/data/jd/base/util_epoch_901.ijs' NB. sfe convert javascript ts to string
@@ -54,6 +62,7 @@ NB. start of log utils
 
 logfolder=:  jpath'~temp/guest/'
 nodeout=:    logfolder,'guest.log' NB. current log file
+geoout=:     logfolder,'geo.txt'   NB. ipdata geo info
 
 3 : 0''
 if. _1=nc<'repnodeout' do. repnodeout=: nodeout end.
@@ -64,6 +73,7 @@ dumps=: '/var/lib/systemd/coredump'
 NB. rename old guest.log as guest_n.log before starting new one
 logroll=: 3 : 0
 mkdir_j_ logfolder
+('0',TAB,'0.0.0.0',TAB,'admin',LF) fwrite geoout
 if. fexist nodeout do. NB. save last log before a new one is started
  d=. ,.(_4)}.each(6+#logfolder)}.each 1 dir logfolder
  d=. _4{.!.'0' ":>:>./0,;0".each d
@@ -72,7 +82,7 @@ end.
 )
 
 rawlog=: 3 : 0
-t=. fread repnodeout
+fread repnodeout
 )
 
 repnonjhs=: 3 : 0
@@ -83,23 +93,13 @@ b=. (<'jhs ')=4{.each t
 ;LF,~each(-.b)#t
 )
 
-NB. LOG=: and LOC=: for subsequent reports
+NB. format LOG from nodeout and get ipdata
 repget=: 3 : 0
-if. _1=nc<'LOG'do.
- LOC=: 0 6$''
- OLDLOG=: OLDLOC=: ''
-else.
- OLDLOG=: LOG
- OLDLOC=: LOC
-end. 
 getlog''
-getloc''
-echo 'last log: ',;{.{:LOG
-echo 'new logs: ',":(#LOG)-#OLDLOG
-echo 'new locs: ',":(#LOC)-#OLDLOC
+geoupdate''
 )
 
-NB. LOG set from current log or arg
+NB. LOG set from log file
 getlog=: 3 : 0
 t=. rawlog''
 t=. t,(LF~:{:t)#LF
@@ -111,10 +111,10 @@ c=. >./;#each t
 t=. ":each 9{."1 >c{.each t
 t=. }."1 t
 
-NB. truncate url
+NB. truncate url or postdata
 i=. <a:;getndx'url'
 q=. i{t
-c=. 40 <. each #each q
+c=. 50 <. each #each q
 q=. c{.each q
 t=. q i}t
 
@@ -149,30 +149,70 @@ r=. 0 2$''
 a=. efs_jd_ aa=. ;{.{.LOG
 b=. efs_jd_ ;{.{:LOG
 a=. 3{.365 24 60 60 1000000000 #: b-a
-r=. r,'start / days hrs mins';aa,' / ',":a
-t=. #logfolder
-r=. r,'log';(t*logfolder-:t{.repnodeout)}.repnodeout
+r=. r,'start';aa
+r=. r,'days hrs mins';":a
 r=. r,'records';#LOG
 r=. r,'nonjhs';+/LF=nonjhs
 r=. r,'dumps';#1 dir dumps
-r=. r,'#~.ips';<.#~.(getcol'ip')-.<,'+'
 r=. r,'max port';>./}.;0".each getcol'port'
 t=.   (getndx'type'){"1 LOG
 c=. +/"1 =t
 r=. r,(~.t),.<"0 c
 
-c=. ;0".each(getndx'count'){"1 replast''
-c=. \:~c
+c=. \:~;".each 6{"1 repposts''
+
 if. #c do.
  r=. r,'inputs max mean';(+/c),({.c),(<.2%~#c){c
- NB. r=. r,'inputs max';{.c
- NB. r=. r,'inputs mean';(<.2%~#c){c
+end.
+see ":each r
+)
+
+NB. report snums with or without posts
+repposts=: 3 : 0
+repget''
+assert (y-:'')+.y-:'~'
+snums=. ,;_1".each ,getcol'snum'
+locs=. repgeo''
+c=. #locs
+r=. 0 6$''
+for_i. i.c do.
+ t=. (i=snums)#i.#LOG
+ h=. 5{.({.t){LOG
+ url=. ,(getndx'url'){"1 t{LOG
+ cnt=. +/(<'POST/jijx')=url
+ n=.  +/(<'POST/jijx')~:url
+ b=. ;(y-:'~'){(cnt>0);(cnt=0)*.n~:0
+ if. b do.
+  r=. r,h,({:i{repgeo''),<":cnt
+ end.
 end.
 r
 )
 
 repsnum=: 3 : 0
 LOG#~y=;_1".each(getndx'snum'){"1 LOG
+)
+
+NB. jurldecode that handles truncated data ending in % or %x
+decode=: 3 : 0
+n=. (#y)-y i: '%'
+if. n e. 1 2 do. y=. (-n)}.y end.
+t=. ~.<"1 (1 2 +"1 0 (y='%')#i.#y){y
+d=. ".each(<'16b'),each tolower each t
+d=. d{each <a.
+t=. '%',each t
+,t,.d
+y rplc ,t,.d
+)
+
+repsn=: 3 : 0
+repget''
+t=. repsnum y
+b=. |:t
+t=. |:(decode each 6{b) 6} b
+t=. see 0 1 6{"1 t#~(6{"1 t)~:<'POST/jijx'
+t=. (;' ',~each y{repgeo''),LF,t
+t rplc'%20';' ' NB. cheap jurldecode
 )
 
 reptype=: 3 : 0
@@ -191,16 +231,20 @@ shell'free'
 
 NB. last record for each snum
 replast=: 3 : 0
-t=. getcol'snum'
+t=. ,getcol'snum'
 t=. t i: ~.t-.(,'+');,'0'
 t{LOG
 )
 
-NB. seebox_jhs_ repips''
-repips=: 3 : 0
-t=. getcol'ip'
-NB. ;LF,~each~.t-.<,'                                    +'
-~.t-.<,'+'
+repgeo=: 3 : 0
+><;._1 each  TAB,each<;._2 fread geoout
+)
+
+NB. unique geos
+repgeox=: 3 : 0
+d=. repgeo''
+a=. 2{"1 d
+see   (a i: ~.a){d
 )
 
 repinbycity=: {{
@@ -213,8 +257,8 @@ repinbycity=: {{
  (/:;1{"1 b){b
 }}
 
-NB. ip address locations from ips
-getloc=: 3 : 0
+NB. old way to get geo info - no longer used
+xxxgetloc=: 3 : 0
 t=. (repips'')-.{."1 LOC NB. ones we still need
 for_n. t do.
  a=. shell'curl --no-progress-meter https://ipapi.co/',(;n),'/json/'
@@ -235,26 +279,42 @@ end.
 i.0 0
 )
 
-
-
-NB. LOG=: amd IPLOC=: set as globals once
-repmax=: 3 : 0
-t=. replast''
-d=. LOC
-
-i=. /:;0".each (getndx'count'){"1 t
-a=. i{t
-b=. 0 5{"1 a
-p=. 4{"1 a
-p=. (0{"1 d)i.p
-g=. p{d,''
-b,.g
+NB. update geoout.txt with ipdata for new snums
+geoupdate=: 3 : 0
+d=. fread geoout
+s=. <:#<;.2 d NB. count of guest locations
+c=. #reptype'guest' 
+if. 0=c-s do. i.0 0 return. end.
+e=. ;LF,~each geofromnewsnum each >:s}.i.c NB. new ones
+echo e
+(d,e) fwrite geoout
+i.0 0
 )
 
-getndx=: 3 : 'heads i.<y'
+getipdata=: 3 : 0
+d=. shell'curl "https://api.ipdata.co/',y,'?api-key=',(fread'~temp/guest/ipdata.key'),'"'
+q=: dec_json_pjson_ d
+)
+
+NB. get geo info for snum
+geofromnewsnum=: 3 : 0
+ip=. ;((<:y){reptype'guest') getcol 'ip'
+d=. getipdata ip
+i=. ({.d)i.;:'city region country_name postal'
+try. d=. i{{:d
+catch. d=. <'no-ipdata'
+end.
+d=. }:;d,each','
+d=. d rplc'json_null';'_';'json_false';'0';'json_true';'1'
+(":y),TAB,ip,TAB,d
+)
+
+getndx=: 3 : 'heads i.;:y'
 
 getcol=: 3 : 0
-(getndx y){"1 LOG
+LOG getcol y
+:
+(getndx y){"1 x
 )
 
 NB. sel data;'type';'guest'

@@ -167,7 +167,7 @@ jhtml t jhaddatts'style=',s
 jcjs'labels';{:$>data
 jcjs'data';data
 d=. jurlencode jsencode jcmds 'chartjs ',id,' *',jcjs'get'
-jjs 'jsdata=[];runjhrcmds("',d,'");'
+jjs ';jsdata=[];runjhrcmds("',d,'");'
 )
 
 chart_z_=: {{

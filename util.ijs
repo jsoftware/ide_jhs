@@ -536,7 +536,7 @@ NB.* monadic is '' which is js var defaultopen
 edit=: 3 : 0
  '' edit y
 :
- ('jijs;',x)jpage y
+ ('jijs;',":x)jpage y
 )
 
 NB.* jslog - jslog'window.location'
