@@ -33,17 +33,17 @@ start J
  ...$ git commit -a -m "pacman release ..."
  ...$ git push
 
-*** test pacman build:
- ferase'~addons/ide/jhs' NB. erase ln symbolic link file to git/addons/ide/jhs
- esc+q
- 
- start jconsole
+*** test pacman build: start jconsole
+   load'git/addons/ide/jhs/nopacman/jhsdev.ijs'
+   ferase'~addons/ide/jhs' NB. erase link to git
    load'pacman'
+   'update'jpkg'' NB. current info
    'install'jpkg'ide/jhs'
 
- shutdown/start JHS/test
+start JHS/test/shutdown JHS - pacman 
 
-*** ln to ~Addons for development:
- start JHS
- jhs_create_symbolic_link''
+   jhs_create_symbolic_link''
+
+start JHS/test/shutdown JHS - git
+   
 )

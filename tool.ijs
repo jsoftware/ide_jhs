@@ -67,7 +67,7 @@ c=. (>:i)}.p
 b=. i{.p
 t=. '~addons/ide/jhs/',p,'.ijs'
 'source file does not exist'assert fexist t
-1!:5 :: [ <jpath'~temp/jhs/',b
+mkdir_j_ jpath'~temp/jhs/',b
 (fread t)fwrite f
 load f
 echo 'source file: ',t
