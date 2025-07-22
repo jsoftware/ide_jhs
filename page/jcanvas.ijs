@@ -108,11 +108,19 @@ jjs_jhs_ 'var w=findwindowbyJWID("',JWID,'");w.doit("',(jsxarg y),'");'
 
 markmouse=: 3 : 0
 'a b c'=. 0".getv_jhs_'jdata'
+echo a;b;c
 jsxnew''
 jscbeginPath''
 jscfillStyle jsxucp y
 jscarc a,b,5,0,(jsxradian 2*o.1),1
 jscfill''
+if. c do.
+ start=: a,b
+else.
+ jscmoveTo start
+ jsclineTo a,b
+ jscstroke''
+end.
 jsxarg jsxnew''
 )
 
@@ -122,7 +130,7 @@ i.0 0
 )
 
 ev_mouse_up=: 3 : 0
-jhrajax markmouse'blue'
+jhrajax markmouse'red'
 i.0 0
 )
 

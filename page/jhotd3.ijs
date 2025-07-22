@@ -1,6 +1,8 @@
 coclass'jhotd3'
 coinsert'jhs'
 
+require'~addons/ide/jhs/page/jd3.ijs'
+
 man=: 'jpage y must be 5 by 12 integer table'
 
 HBS=: 0 : 0
