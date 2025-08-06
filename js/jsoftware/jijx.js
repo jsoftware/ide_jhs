@@ -16,7 +16,6 @@ function ev_body_load()
  jijxwindow= window;
  window.name= "jijx";
  
- //! why is jlocale not set by html?
  j.jlocale.value= "jijx";
  jevsentence= "jev_jijx_ 0";
 
@@ -87,12 +86,10 @@ function addlog(t){
 
 function scrollz()
 {
- //! setfocus(); // required by ff
  var e= jbyid("log");
  e.scrollTop= e.scrollHeight - e.clientHeight;
  if(null==jbyid("prompt"))return;
  jsetcaret("prompt",1);
- //! setfocus();
 }
 
 function scrollchunk(){jbyid("chunk").scrollIntoView(false);}
@@ -278,7 +275,10 @@ function ev_closing_click(){jdoajax([]);}
 
 function framesize(t){
   for(let i = 0; i < allpages.length; i++) {
-    allpages[i].frameElement.style.setProperty('flex',t[Math.min(i,t.length-1)]);
+    if(0!=t.length)
+     allpages[i].frameElement.style.setProperty('flex',t[Math.min(i,t.length-1)]);
+    else
+     allpages[i].frameElement.style.setProperty('flex','auto');
   }
 }
 
@@ -296,14 +296,41 @@ function wrapset(b){
 }
 
 function ev_flow_click(){
-  var t= allpages[0].frameElement.parentNode.style;
-  flowset('row'== t.flexFlow);
+  flowset(jbyid("flow").style.flow=="row");
 }
 
+var pagepx= "300px";
+
 function flowset(b){
-  var t= allpages[0].frameElement.parentNode.style;
-  t.flexFlow= b?'column':'row';
-  jbyid('flow').innerHTML= b?'COLUMN ➜ row':'ROW ➜ column';
+  var e= jbyid("flow");
+  if(b){
+    e.style.flow= 'column';
+    e.innerHTML= 'COLUMN&nbsp;➜&nbsp;row<span class="jmenuspanright">u</span>';  
+    t= allpages[0].frameElement.parentNode;
+    t.removeAttribute("data-flex-splitter-horizontal");
+    t.dataset.flexSplitterVertical="";
+    // if(1==allpages.length) return;
+    setwidth("100vw","100vw");
+  }
+  else{f
+    e.style.flow= 'row';
+    e.innerHTML= 'ROW&nbsp;➜&nbsp;column<span class="jmenuspanright">u</span>';  
+    t= allpages[0].frameElement.parentNode;
+    t.removeAttribute("data-flex-splitter-vertical");
+    t.dataset.flexSplitterHorizontal="";
+    // if(1==allpages.length) return;
+    setheight("100vh","100vh");
+  }
+}
+
+function setwidth(first,rest){
+  for (let i = 0; i < allpages.length; i++)
+    allpages[i].frameElement.style.width= (i==0)?first:rest;
+}
+
+function setheight(first,rest){
+  for (let i = 0; i < allpages.length; i++)
+    allpages[i].frameElement.style.height= (i==0)?first:rest;
 }
 
 function ev_spa_click(){
@@ -567,19 +594,22 @@ function newpage(myid,myclass,url){
     }
   }
 
+  // term splitter
+  var sp= document.createElement("div");
+  sp.role= "separator";
+  sp.tabindex= "1";
+  allpages[0].frameElement.parentNode.appendChild(sp);
+  
   var ifr= document.createElement("iframe");
   ifr.id= myid;
   ifr.class= myclass;
-  frameElement.parentNode.appendChild(ifr);
+  ifr.setAttribute('style','flex:auto;');
+  allpages[0].frameElement.parentNode.appendChild(ifr);
   ifr.contentWindow.name= url;
   ifr.contentWindow.location= url;
   allpages.push(ifr.contentWindow);
   jtermwcurrent= ifr.contentWindow;
   ifr.focus();
-  // ifr.contentWindow.document.title not available until load is done
-  // url could be cleaned up for title so it is the same as eventual frame title
-  document.title= 'term '+url.split('?')[0]; //! TIPX
-  framesize(['1 1 50%']); // all term pages same size
 }
 
 // ->term
@@ -621,7 +651,7 @@ function showpage(w){
     ifr.style.display="block";
     w.jbyid("jmenuburger").style.display="";
     ifr.focus();
-    w.parent.document.title= 'term '+w.document.title; //! TIPX
+    w.parent.document.title= 'term '+w.document.title; // TIPX
   }
 }
 
@@ -663,10 +693,11 @@ function pagenames(){
 function spaclose(w){
       var i= allpages.indexOf(w);
       if(i!=-1){
+        let s= allpages[i].frameElement.previousElementSibling;
+        if(s!=null) allpages[0].frameElement.parentNode.removeChild(s); // remove page separator
         allpages[0].frameElement.parentNode.removeChild(allpages[i].frameElement); // remove page
         allpages.splice(i, 1);
         allpages[0].frameElement.focus();
-        //! showpage(allpages[0]);
       }
       else{
         if(isFrame(w)){

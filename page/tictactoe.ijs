@@ -1,4 +1,4 @@
-require'~addons/ide/jhs/react/tictactoe/addj/reacttictactoe.ijs'
+load'~addons/ide/jhs/react/tictactoe/addj/reacttictactoe.ijs'
 
 coclass'tictactoe'
 coinsert'jhs'

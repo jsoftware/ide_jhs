@@ -1,0 +1,36 @@
+{
+  "name": "flex-splitter-directive",
+  "version": "0.5.1",
+  "description": "Dead simple pane-splitter control based on flexbox.",
+  "license": "WTFPL",
+  "repository": "luncheon/flex-splitter-directive",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "styles.css",
+    "styles.min.css",
+    "styles2.css",
+    "styles2.min.css",
+    "src"
+  ],
+  "keywords": [
+    "layout",
+    "splitter",
+    "split-pane",
+    "split-panes",
+    "split-layout",
+    "vanilla",
+    "vanilla-js"
+  ],
+  "scripts": {
+    "clean": "node -e \"const fs=require('fs');['index.js','styles1.min.css','styles2.min.css'].forEach(f=>fs.existsSync(f)&&fs.unlinkSync(f))\"",
+    "build": "npm run clean && node build.mjs",
+    "start": "node build.mjs --serve"
+  },
+  "devDependencies": {
+    "esbuild": "^0.15.7"
+  },
+  "prettier": {
+    "printWidth": 140
+  }
+}

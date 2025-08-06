@@ -41,13 +41,18 @@ jjs 'closepages()'
 )
 
 NB.* 
-NB.* jhsflex - set relative term iframe sizes
-NB.*    jhsflex '50 10 40' NB. term iframe sizes
-NB.* extra ignored - missing use last value
+NB.* jhsflex - set relative term iframe sizes and freeze splitter
+NB.*    jhsflex '50 10 40' NB. term iframe sizes and freeze splitter
+NB.*                       NB. missing use last value
+NB.*    jhsflex ''         NB. unfreeze splitter
 NB.* 
 jhsflex=: 3 : 0
-t=. }:;(<'"1 1 '),each (<'%",'),~each   ":each y
-jjs 'framesize([',t,'])'
+if. y-:'' do.
+ jjs 'framesize([])'
+else.
+ t=. }:;(<'"1 1 '),each (<'%",'),~each   ":each y
+ jjs 'framesize([',t,'])'
+end. 
 )
 
 NB.* 

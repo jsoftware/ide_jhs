@@ -34,6 +34,11 @@ INC_chartjs=: 0 : 0
 ~addons/ide/jhs/js/chartjs/defaults.js
 )
 
+INC_splitter=: 0 : 0
+~addons/ide/jhs/js/splitter/styles.min.css
+~addons/ide/jhs/js/jsoftware/jsplitter.js
+)
+
 NB. extra html - e.g. <script .... src=...> - included after CSS and before JSCORE,JS
 HEXTRA=: '' 
 
@@ -491,6 +496,7 @@ t=. jhmenu y
 t=. t,'menu0'  jhmenugroup ''
 t=. t,'close'  jhmenuitem 'close';'q'
 t=. t,         jhmenugroupz''
+t=. jhdivz,~jhdiva t
 )
 
 NB.* jhdiv*id jhdiv text- <div ...>text</div>
@@ -735,6 +741,58 @@ jhbr=: '<br/>'
 
 jhhr=: '<hr/>' NB. deprecated - use jhline
 
+NB. jhsplitter type;style 
+jhsplitter=: 3 : 0
+'type style'=. 2{. (boxopen y),<''
+select. y
+case. 'vertical' do.
+ '<div data-flex-splitter-vertical ',style,'>'
+case. 'horizontal' do.
+ '<div data-flex-splitter-horizontal ',style,'>'
+case. 'separator' do.
+ '<div role="separator" tabindex="1" ',style,'></div>'
+end.
+)
+
+NB.* [id] jhsplits [style] - separator -- 'style="abc:123"'
+jhsplits=: 3 : 0
+''jhsplits y
+:
+ '<div ',(getidn x),' role="separator" tabindex="1" ',y,'></div>'
+)
+
+NB.* [id] jhsplitv [style] - vertical - 'style="abc:123"'
+jhsplitv=: 3 : 0
+''jhsplitv y
+:
+ '<div ',(getidn x),' data-flex-splitter-vertical ',y,'>'
+)
+
+NB.* [id] jhsplith [style] - horiztonatl - 'style="abc:123"'
+jhsplith=: 3 : 0
+''jhsplith y
+:
+ '<div ',(getidn x),' data-flex-splitter-horizontal ',y,'>'
+)
+
+NB. get html id and name from y
+getidn=: 3 : 0
+a=. vid y
+;(-.''-:a){'';' id="A" name="A" 'rplc'A';a
+)
+
+NB.* jhiframe
+NB. [id] jhiframe src[;class[;style]]
+jhiframe=: 3 : 0
+'' jhiframe y
+:
+idn=. getidn x
+'src class style'=. y addd 'jhiframe';''
+class=. gdef class;'jhiframe'
+s=. ;(-.''-:style){'';' style="',style,'" '
+'<iframe ',idn,' src="',src,'" class="',class,'" ',s,' ></iframe>'
+)
+
 NB.* jhbshtml*jhbshtml_jdemo1_'' -  show HBS sentences and html
 jhbshtml=: 3 : 0
 s=.<;._2 HBS
@@ -784,20 +842,19 @@ b=. ;fexist each t
 t
 )
 
+NB. INC css provided inline - not as href - avoid cache woes
 getcss=: 3 : 0
 'getcss arg not empty'assert ''-:y
 t=. getincs'.css'
-t=. ;(<'<link rel="stylesheet" href="'),each t,each<'" />',LF
+t=. ;(<'<style type="text/css">',LF),each (fread each t),each<'</style>',LF
 t,css CSS hrplc 'PS_FONTCODE';PS_FONTCODE NB. PS_FONTCODE contains PC_... 
 )
 
+NB. INC js provided inline - not as src - avoid cache woes
 fixjsi=: 3 : 0
-if. NOCACHE do.
  '<script type="text/javascript">',LF,'// NOCACHE: ',y,LF,(fread y),LF,'</script>'
-else.
- '<script src="',y,'"></script>'
-end. 
 )
+
 
 jsa=: LF,'<script type="text/javascript">',LF
 jsz=: LF,'</script>',LF

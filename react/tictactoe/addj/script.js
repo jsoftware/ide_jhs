@@ -75,7 +75,6 @@ class Game extends React.Component {
       winner: 0 };
 
   }
-
   
   //! ebi changes
   handleClick(i) {

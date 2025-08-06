@@ -97,3 +97,6 @@ input[type=text],input[type=password]{ margin: 2px;padding:2px;border: 1px solid
  .jmenuitem   {height:2em;}
 }
 
+/* splitter */
+[role=separator]{background:black;}
+

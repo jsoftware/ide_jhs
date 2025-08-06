@@ -7,8 +7,8 @@ man=: 'jpage y must be 5 by 12 integer table'
 
 HBS=: 0 : 0
 jhclose''
-jhh1'Budget'
-'<span id="title">budget 2016</span>'
+NB.! jhh1'Budget'
+NB.! '<span id="title">budget 2016</span>'
 '<div id="hots">'
 '<iframe id="hot1" name="hot1" src="',(;hot1),'"></iframe>'
 '<iframe id="jd3" name="jd3" src="',(;loc),'"></iframe>'
@@ -70,6 +70,14 @@ CSS=: 0 : 0
 #hots{height:90vh;overflow:hidden;}
 #hot1{width:100%;height:50%;overflow:hidden;}
 #jd3 {width:100%;height:50%;overflow:hidden;}
+)
+
+NB. new CSS3 calc will allow better layout control
+xxxCSS=: 0 : 0
+#title{margin-left:50px;text-align:center;font-size:22pt;}
+#hots{height:90vh;overflow:hidden;}
+#hot1{width:100%;height:40%;overflow:hidden;}
+#jd3 {width:100%;height:40%;overflow:hidden;}
 )
 
 calc=: 3 : '(<./y),(>./y),(<.(+/%#) y),(+/y),:+/\ +/y'

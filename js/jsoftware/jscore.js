@@ -605,13 +605,12 @@ function jhrcmds(ts){
   }
 }
 
-// log lines in ~temp/jlog.ijs file
-// printf/echo debugging tool
-function jlog(t)
-{
- if(jlogwindow==null) return;
- a= jlogwindow.cm.doc.getValue()+'\n'+t;
- jlogwindow.cm.doc.setValue(a);
+// log lines in jlog app textarea
+function jlog(text){
+  let w= jijxwindow.findwindowbyname("jlog");
+  let t= w.jbyid("jlog");
+  t.value+= "\n"+text;
+  t.scrollTop= t.scrollHeight;
 }
 
 function ifjijxwindow(){return (jijxwindow===undefined || jijxwindow==null || jijxwindow.closed) ? false:true;}

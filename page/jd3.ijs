@@ -34,15 +34,16 @@ tabdata="<TABDATA>"; // set by ev_create
 
 function ev_body_load()
 {
- if (window.frameElement){jhide("close");} // demo14.ijs - only 1 close button in iframe set
+ //!if (window.frameElement){jbyid("jmenuburger").style.display="none";jbyid("jmenutitle").style.display="none";} // demo14.ijs - only 1 close button in iframe set
  resize();
  window.onresize= resize;
 }
 
 function resize()
 {
- jbyid("ga_box").style.width=window.innerWidth-20+"px";
- jbyid("ga_box").style.height=window.innerHeight-20+"px";
+ let s= 60; // 20   
+ jbyid("ga_box").style.width=window.innerWidth-s+"px";
+ jbyid("ga_box").style.height=window.innerHeight-s+"px";
  plot("ga",tabdata);
 }
 

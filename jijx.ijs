@@ -30,7 +30,7 @@ jhmenugroupz''
 'options'      jhmenugroup''
 'wrap'         jhmenuitem 'NOWRAP ➜ wrap'
 'spa'          jhmenuitem 'TERM ➜ tab'
-'flow'         jhmenuitem 'COLUMN ➜ row'
+'flow'         jhmenuitem 'COLUMN ➜ row';'u' NB. see flowset for kludge to preserve shortcut
 'cleartemps'   jhmenuitem 'remove red boxes';'r'
 'clearwindow'  jhmenuitem 'clear window'
 'clearrefresh' jhmenuitem 'clear refresh'
