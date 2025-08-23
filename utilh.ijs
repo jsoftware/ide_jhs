@@ -131,6 +131,12 @@ jhfroma=: 3 : 0
 y rplc '<';'&lt;';'>';'&gt;';'&';'&amp;';'"';'&quot;';CRLF;'<br>';LF;'<br>';CR;'<br>';' ';'&nbsp;';bad;''
 )
 
+NB. special version for input text value
+NB. ' '->&nbsp; causes problems in input text
+jhfromax=: 3 : 0
+y rplc '<';'&lt;';'>';'&gt;';'&';'&amp;';'"';'&quot;';bad;''
+)
+
 NB. app did not send response - send one now
 jbad=: 3 : 0
 if. METHOD-:'get' do.
@@ -577,7 +583,7 @@ id=. vid x
 'value size class options'=. y addd 10;'jhtext';''
 size=. gdef size;10
 class=. gdef class;'jhpassword'
-value=. jhfroma value
+value=. jhfromax value NB. special jhfroma
 t=. '<input type="password" id="<ID>" name="<ID>" class="<CLASS>" ',jeditatts,'placeholder="<VALUE>" '
 t=. t,'size="<SIZE>" onkeydown="return jev(event)" >'
 t=. t hrplc 'ID CLASS VALUE SIZE';id;class;value;size
@@ -783,6 +789,7 @@ a=. vid y
 
 NB.* jhiframe
 NB. [id] jhiframe src[;class[;style]]
+NB. src can be named locale like jfile or object locale like '123'
 jhiframe=: 3 : 0
 '' jhiframe y
 :

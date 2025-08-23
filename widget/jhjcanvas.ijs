@@ -1,157 +1,79 @@
+NB. jhcanvas creates jpage and uses as src in iframe
+
 0 : 0
-drawing on canvas
-   spx'~addons/ide/jhs/spx/canvas.ijt'
+usage:
+can=: 'jhjcanvas;_'jpage ''
+setrefresh__can jsxnew jscfont '12pt ',PC_FONTFIXED
 )
 
-require'~addons/graphics/color/hues.ijs'
+0 : 0
+query to browser
+when the canvas page is created by ev_body_load
+ creates the canvas context, and based on either a default font
+ or font set in the initial command buffer
+ gets text metrics and calls the server ev_query_event handler
+ to set fontwidth,fonthweight
 
-coclass'z'
-
-3 : 0''
-if. _1=nc<'jsxbuf' do. jsxbuf=: '' end.
+following do not work - would be nice if it did
+jjs_jhs_'qdata= "mumble";callj(qdata);'
+jjs_jhs_'qdata= "mumble";setTimeout(function(){callj(qdata);},200);
 )
 
-jsxnew_z_=: 3 : 'r[jsxbuf_z_=:''''[r=. jsxbuf_z_'
+require'~addons/ide/jhs/gl2.ijs'
 
-jsxucp_z_=: 3 u: 7 u: ]              NB. int codepoints from utf8 string
-jsxradian_z_=: 3 : '<.1e7*y'         NB. ints from fractional radians
-jsxarg_z_=: 3 : '(":y)rplc'' '';'',''' NB. javascript string from int list
-
-NB. y is number of colors required
-jsxpalette_z_=: 3 : 0
-t=. jsxarg each ":each<"1[255<.<.0.5+hues 5r6*(i.%<:)y
-(<'rgb('),each t,each')'
-)
-
-jsxlines_z_=: 3 : 0
-assert 0=2|#y
-jscmoveTo 2{.y
-i=. 2 
-while. i<#y do.
- jsclineTo (i+0 1){y
- i=. i+2
-end.
-jscstroke''
-)
-
-NB. simple viewmat
-jsxvm_z_=: 3 :0
-'a b'=. $y
-s=. >./jsxwh
-d=. >./$y
-r=. <.s%d
-offset=. <.2%~jsxwh-r*$y
-data=.  (~.,y) i. y
-pal=. jsxpalette >:>./,data
-for_i. i.a do.
- for_j. i.b do.
-  jscbeginPath''
-  jscfillStyle jsxucp ;(i{j{data){pal
-  jscrect (offset+r*i,j),r,r
-  jscfill''
- end.
-end.
-)
-
-coclass'jcanvas'
+coclass'jhjcanvas'
 coinsert'jhs'
+coinsert'jgl2'
 
-NB. jpage boilerplate from util.ijs
+jsxbuf=: ''
 
 ev_create=: 3 : 0
-t=. y jpagedefault 200 200
-'width height'=: t
-refresh=: '' NB. blank canvas 
-NB. (getjs'BUFFER CMDS';(jsxarg refresh);CMDS),gethbs'WIDTH HEIGHT';width;height
+PARENT=: COCREATOR
+refresh=: ''
 JS=: JS hrplc'BUFFER CMDS';(jsxarg refresh);CMDS
-HBS=: HBS hrplc'WIDTH HEIGHT';width;height
 )
 
-NB. jsc... commands and asserts
-t=. <;._2 [ 0 : 0
-fillStyle     0<#
-strokeStyle   0<#
-rect          4=#
-fillText      2<#
-font          0<#
-lineWidth     1=#
-beginPath     0=#
-fill          0=#
-stroke        0=#
-clearRect     4=#
-moveTo        2=#
-lineTo        2=#
-closePath     0=#
-ellipse       8=#
-strokeText    2<#
-arc           6=#
+NB. JWID run doit_cmds
+run=: 4 : 0
+jjs_jhs_ 'findwindowbyJWID("',x,'").jbyid("jcanvas").contentWindow.doit("',(jsxarg y),'");'
 )
 
-ncmds=:    (t i.each' '){.each t
-nasserts=: (>:each t i:each' ')}.each t
-
-bld=: 3 : 0''
-for_i. i.#ncmds do.
- a=. ;i{nasserts
- ('jsc',(;i{ncmds),'_z_')=: 3 : ('i.0 0[jsxbuf_z_=: jsxbuf_z_,',(":i),',(#d),d[''',(;i{ncmds),'''assert ',a,' d=. <. y' )
-end.
-i.0 0
-)
-
-run=: 3 : 0
-jjs_jhs_ q=: 'w=window.open("","',(;coname''),'");w.doit("',(jsxarg y),'");'
-)
-
-run=: 3 : 0
-jjs_jhs_ 'var w=findwindowbyJWID("',JWID,'");w.doit("',(jsxarg y),'");'
-)
-
-markmouse=: 3 : 0
-'a b c'=. 0".getv_jhs_'jdata'
-echo a;b;c
-jsxnew''
-jscbeginPath''
-jscfillStyle jsxucp y
-jscarc a,b,5,0,(jsxradian 2*o.1),1
-jscfill''
-if. c do.
- start=: a,b
-else.
- jscmoveTo start
- jsclineTo a,b
- jscstroke''
-end.
-jsxarg jsxnew''
+NB. pass mouse click to parent
+ev_mouse_click=: 3 : 0
+ev_mouse_click__PARENT''
 )
 
 ev_mouse_down=: 3 : 0
-echo NV
-jhrajax markmouse'green'
-i.0 0
+ev_mouse_down__PARENT''
 )
 
 ev_mouse_up=: 3 : 0
-jhrajax markmouse'red'
-i.0 0
+ev_mouse_up__PARENT''
 )
 
-NB. ev_mouse_move=: 3 : 0
+NB. ev_mouse_move too slow
 
 HBS=: 0 : 0
-jhclose''
-jhbr
-''jhdiv'mouse down,move,up'
-'<canvas id="can" width="<WIDTH>" height="<HEIGHT>"></canvas>'
+'<canvas id="can" width="2000px" height="2000px"></canvas>'
 )
 
+NB.! #can{width:500px;height:500px;}
 CSS=: 0 : 0
-form{margin:0px 2px 2px 2px;}
-canvas {border: 1px solid black;}
+)
+
+NB. ev_body_load creates context, sets font, gets width,height, calls this handler
+ev_query_click=: 3 : 0
+'fontwidth fontheight'=: 0".getv'jdata'
+jhrcmds''
 )
 
 fixcmds=: 3 : 0
 a=. (<': '),~each (<'case '),each   ":each<"0 i.#y
 ;LF,~each a,each (<'(d);break;'),~each   (<'jsc'),each y
+)
+
+setrefresh=: 3 : 0
+JS=: JS,LF,'buffer="',(jsxarg y),'"',LF
 )
 
 CMDS=: fixcmds ncmds
@@ -169,11 +91,16 @@ function init(){
 
  // ajax calls are slow and mouse events are lost - especially mousmove
  // handle only mousedown and mouseup
- can.addEventListener('mousedown', e => {down= 1;mevent("down",e);});
- can.addEventListener('mouseup', e =>   {down= 0;mevent("up",e);});
+ can.addEventListener('click', e =>     {down= 0;mevent("click",e);});
+ //can.addEventListener('mousedown', e => {down= 1;mevent("down",e);});
+ //can.addEventListener('mouseup', e =>   {down= 0;mevent("up",e);});
  // can.addEventListener('mousemove', e => {mevent("move",e);});
 
 doit(buffer);
+
+var t= context.measureText("iiiiiwwwww");
+qdata= (t.width/10)+" "+(t.fontBoundingBoxDescent+t.fontBoundingBoxAscent);
+callj(qdata);
 }
 
 // jsc... cmds map directly to canvas commands

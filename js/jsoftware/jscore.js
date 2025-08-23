@@ -360,6 +360,16 @@ function newrq()
  alert("XMLHttpRequest not supported.");
 }
 
+// call j with data
+function callj(d)
+{
+  jform.jid.value= "query";
+  jform.jmid.value="query";
+  jform.jtype.value="click";
+  jform.jsid.value="";
+  jdoajax([],d);
+}
+
 // ajax request to J
 //  ev_mid_type() -> jdoaajax(ids,data)
 //   -> ev_mid_type=:  (getv...)
@@ -562,6 +572,13 @@ function jhrcmds(ts){
         else
           id.value= val;
         break; 
+
+        case 'canvasjs' :
+          if('CANVAS'==jbyid(cmd[1]).nodeName) // mouse jhrcmds already in canvas element
+            doit(val);
+          else
+            jbyid(cmd[1]).contentWindow.doit(val); // draw  jhrcmds must get to canvas element
+          break; 
 
         case 'chartjs' :
           jsdata[cmd[1]]= val;

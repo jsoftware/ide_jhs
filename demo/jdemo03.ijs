@@ -22,7 +22,9 @@ NB. JASEP separates ajax results
 ev_flip_click=: 3 : 0
 smoutput seebox NV
 't1 t2'=. getvs't1 t2'
-jhrajax (8 u:|.7 u: t1),JASEP,(8 u:|.7 u: t2)
+NB. problems with non-ascii jhfrmoma 
+NB. jhrajax (8 u:|.7 u: t1),JASEP,(8 u:|.7 u: t2)
+jhrajax (|.t1),JASEP,|.t2
 )
 
 jev_get=: create NB. browser get request
