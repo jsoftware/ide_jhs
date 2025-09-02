@@ -1,11 +1,10 @@
-NB. dissect gl2 proof of concept
-
 NB. create page with jhjcanvas widget
-run=: {{ p=: 'dpoc;10 10;Dissect gl2 Proof of Concept'jpage''[y }}
+NB. jsx... gl... playground
+run=: {{ p=: 'jcanvasx;10 10;Dissect gl2 Proof of Concept'jpage''[y }}
 
 require'~addons/ide/jhs/widget/jhjcanvas.ijs'
 
-coclass'dpoc'
+coclass'jcanvasx'
 coinsert'jhs'
 coinsert'jhjcanvas'
 
@@ -21,7 +20,7 @@ gltext 'click the mouse' [ gltextxy 10 100
 )
 
 HBS=: 0 : 0
-jhclose'Dissect gl2 Proof of Concept'
+jhclose'gl... and jsc... playground'
 'cmds'    jhtextarea default;7;30
 jhbr
 'runcmds' jhb 'runcmds'
@@ -39,7 +38,7 @@ CSS=: 0 : 0
 
 ev_create=: 3 : 0
 can=: 'jhjcanvas;_'jpage ''
-setrefresh__can jsxnew jscfont '11pt ',PC_FONTFIXED
+setrefresh__can jsxnew jscfont jsxucp '16pt ',PC_FONTFIXED
 shown=: 1
 )
 
@@ -49,12 +48,26 @@ destroy__can'' NB.! should destroy all widgets
 codestroy''
 )
 
+NB. called from canvas iframe
+
+firstpaint=: 3 : 0
+jhrcmds''
+)
+
 ev_mouse_click=: 3 : 0
 markmouse'green'
 )
 
+ev_mouse_resize=: 3 : 0
+jhrcmds''
+)
+
+ev_mouse_down=: ev_mouse_up=: ev_mouse_move=: jhrcmds
+
 ev_runcmds_click=: 3 : 0
-".each <;._2 getv'cmds'
+c=. getv'cmds'
+c=. c,(LF~:{:c)#LF
+".each <;._2 c
 paint''
 )
 

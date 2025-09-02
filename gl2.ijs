@@ -1,3 +1,22 @@
+NB. JHS dissect wd stuff
+wd_dissect_=: 3 : 0
+c=. (y i.' '){.y
+NB. echo 'wd: ',,y
+select. c
+case. 'pc' do. run''
+case. 'timer'       do. '0'
+case. 'qscreen'     do. '0 0 ',":glqwh''
+case. 'qchildxywhx' do. '0 0 ',":glqwh''
+case. 'qform'       do. '0 0 ',":glqwh'' 
+case. 'qformx'      do. '0 0 ',":glqwh''
+case. 'set'         do. 
+ t=.  'set fmstatline *'
+ if. t-:(#t){.y do. status=: (#t)}.y end.
+case. 'setenable'   do. '0' 
+case.               do. NB. echo 'no wd defn'
+end.
+)
+
 0 : 0
 JHS gl2 definitions
 drawing commands are jsc... or gl2...
@@ -10,7 +29,9 @@ coclass 'jgl2'
 
 NB. gl2 covers for jsc...
 
+NB. css hex colors - transparency is first
 gethex=: 3 : 0
+assert 4=#y
 '#',(,16 16 #: y){'0123456789abcdef'
 )
 
@@ -18,17 +39,31 @@ NB. GL state info for jsc
 GLCOLOR=:  gethex 0 0 0 255
 GLTEXTXY=: 100 100
 GLTEXTCOLOR=: GLCOLOR
+GLBRUSHNULL=: 0
 
+gl2log=: 3 : 0
+'n d'=: y
+if. 2=3!:0 d do.
+ t=. n,' ''',d,''''
+else.
+ t=. n,' ',":,d
+end. 
+NB. echo t,' NB. ',;coname''
+)
+
+NB. draw 0 or more lines (4 values for each)
+NB. gl2 docs says 'connected lines'
+NB. but that seems to be wrong
+NB. y can be matrix 
 gllines=: 3 : 0
-assert 0=2|#y
-if. 0=#y do. return. end.
+y=. ,y
+gl2log 'gllines';y
+while. #y do.
  jscbeginPath''        NB. start path that will be painted
  jscmoveTo 0 1{y
- y=. 2}.y
-while. #y do.
- jsclineTo 2{.y
+ jsclineTo 2 3{y
  jscstroke''           NB. draw line
- y=. 2}.y
+ y=. 4}.y
 end. 
 )
 
@@ -37,49 +72,127 @@ glrgba y,255
 )
 
 glrgba=: 3 : 0
+gl2log 'glrgba';y
 assert (4=#y)*.(_1<y)*256>y
 GLCOLOR=: gethex y
 )
 
 glbrush=: 3 : 0
+gl2log 'glbrush';y
+GLBRUSHNULL=: 0
 jscfillStyle jsxucp GLCOLOR
 )
 
+glbrushnull=: 3 : 0
+gl2log 'glbrushnull';y
+GLBRUSHNULL=: 1
+i.0 0
+)
+
+NB. glpen has min width of 1
 glpen=: 3 : 0
+gl2log 'glpen';y
 assert 2=#y
-jsclineWidth 0{y
+jsclineWidth 2>.0{y NB.! min 1,but 2 shows
 jscstrokeStyle jsxucp GLCOLOR
 )
 
+NB. 0 or more rectangles
 glrect=: 3 : 0
+y=. ,y
+gl2log 'glrect';y
 jscbeginPath''        NB. start path that will be painted
-jscrect y
-jscfill''
-jscstroke''
+while. #y do.
+ jscrect 4{.y
+ if. -.GLBRUSHNULL do. jscfill'' end.
+ jscstroke''
+ y=. 4}.y
+end.
+i.0 0
 )
 
 NB. hardwired font - mono to avoid glqextent
 glfont=: 3 : 0
-NB. must use default mono font as that has set fontwindt,fontheight for textmetrics
+NB. must use default mono font as that has set fontwidth,fontheight for textmetrics
 NB. jscfont jsxucp '11pt ',PC_FONTFIXED
 i.0 0
 )
 
 gltextcolor=: 3 : 0
+gl2log'gltextcolor';y
 assert 0=#y
 GLTEXTCOLOR=: GLCOLOR
 )
 
 gltextxy=: 3 : 0
+gl2log'gltextxy';y
 assert 2=#y
-GLTEXTXY=: y
+GLTEXTXY=: y + 0,25 NB.! fontheight
 )
 
 gltext=: 3 : 0
+gl2log'gltext';y
 jscbeginPath''
 jscfillStyle   jsxucp GLTEXTCOLOR
-NB. jscfont jsxucp '80px Arial'
 jscfillText GLTEXTXY, jsxucp y
+)
+
+NB. dissect gl commands
+glsel=: 3 : 0
+gl2log'glsel';y
+i.0 0
+)
+
+glpixels=: 3 : 0
+gl2log'glpixels';y
+i.0 0
+)
+
+glclear=: 3 : 0
+gl2log'glclear';y
+jscbeginPath''
+jscclearRect 0 0,2000,2000 NB.! hard width,height
+)
+
+glclipreset=: 3 : 0
+gl2log'glclipreset';y
+jscrestore''
+i.0 0
+)
+
+glclip=: 3 : 0
+gl2log'glclip';y
+jscsave''
+jscbeginPath''
+jscrect y
+jscclip''
+i.0 0
+)
+
+glpaint=: 3 : 0
+gl2log'glpaint';y
+i.0 0
+)
+
+NB. glq... return result - do not add to buffer
+
+NB. fontwidth calc , fontheight
+glqextent=: 3 : 0
+gl2log'glqextent';y
+if. _1=nc<'canvaswidth__gsellocale' do. 200 24 return. end.
+(<.0.5+canvasfontwidth__gsellocale*#;y),canvasfontheight__gsellocale
+)
+
+glqwh=: 3 : 0
+gl2log'glqwh';y
+if. _1=nc<'canvaswidth__gsellocale' do. 592 536 return. end.
+canvaswidth__gsellocale,canvasheight__gsellocale
+)
+
+NB. not supported
+glqpixels=: 3 : 0
+gl2log'glqpixels';y
+(0>.*/2}.y)#255
 )
 
 require'~addons/graphics/color/hues.ijs'
@@ -102,24 +215,19 @@ closePath     0=#
 ellipse       8=#
 strokeText    2<#
 arc           6=#
+clip          0=#
+save          0=#
+restore       0=#
 )
 
 ncmds=:    (t i.each' '){.each t
 nasserts=: (>:each t i:each' ')}.each t
 
-NB. build jsc... verbs
 bld=: 3 : 0''
 for_i. i.#ncmds do.
  a=. ;i{nasserts
- ('jsc',(;i{ncmds),'')=: 3 : ('i.0 0[jsxbuf=: jsxbuf,',(":i),',(#d),d[''',(;i{ncmds),'''assert ',a,' d=. <. y' )
+ ('jsc',(;i{ncmds),'')=: 3 : ('i.0 0[   (JHSCANVAS_z_)=: (JHSCANVAS_z_~),',(":i),',(#d),d [''',(;i{ncmds),'''assert ',a,' d=. <. y' )
 end.
-i.0 0
-)
-
-NB. override default defn
-jscfont=: 3 : 0
-assert 2=3!:0 y
-jsxbuf=: jsxbuf,4,(#y),jsxucp y
 i.0 0
 )
 
@@ -132,11 +240,20 @@ jscstrokeStyle jsxucp b
 jscfillStyle   jsxucp c
 )
 
-jsxnew=: 3 : 'r[jsxbuf=:''''[r=. jsxbuf'
+jsxnew=: 3 : 0
+r [ (n)=: '' [ r=. n~ [ n=. CANVAS_ID_z_,'_buffer_',(;CANVAS_PARENT_z_),'_'
+)
+
+jsxnew=: 3 : 0
+r [ (JHSCANVAS_z_)=: '' [ r=. JHSCANVAS_z_~
+)
+
 
 jsxucp=: 3 u: 7 u: ]              NB. int codepoints from utf8 string
 jsxradian=: 3 : '<.1e7*y'         NB. ints from fractional radians
-jsxarg=: 3 : '(":y)rplc'' '';'',''' NB. javascript string from int list
+jsxarg=: 3 : 0
+(":y)rplc' ';',';'_';'-' NB. javascript string from int list
+)
 
 NB. y is number of colors required
 jsxpalette=: 3 : 0
@@ -173,6 +290,15 @@ for_i. i.a do.
  end.
 end.
 )
+
+NB. gl2 constant
+
+PS_NULL=: 0
+PS_SOLID=: 1
+PS_DASH=: 2
+PS_DOT=: 3
+PS_DASHDOT=: 4
+PS_DASHDOTDOT=: 5
 
 {{)n
 following is qt definitions

@@ -726,3 +726,12 @@ shutdownx=: 3 : 0
 wd_z_=: 3 : '''wd not supported in JHS''assert 0'
 
 jxsleep_z_=: 6!:3
+
+NB. JHS dissect support
+loaddissect_z_=: 3 : 0
+load'~addons/ide/jhs/gl2.ijs' NB. before dissect
+load'~addons/debug/dissect/dissect.ijs'
+load'~addons/ide/jhs/widget/jhjcanvas.ijs'
+load'~addons/ide/jhs/dissect.ijs'
+load'~addons/ide/jhs/gl2.ijs' NB. and again after ???
+)

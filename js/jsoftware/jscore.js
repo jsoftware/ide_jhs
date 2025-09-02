@@ -552,8 +552,12 @@ function runjhrcmds(t){
   jhrcmds(c);
 }
 
+//! kludge set -id to target id in parent
+// id might be in active window, or in parent, or in child
+// jhrcmds needs better id handling - id in window, in parent, in child xxx
 function jhrcmds(ts){
-  var a,i,j,t,cmd,val,id; 
+  var a,i,j,t,cmd,val,id,w,n; 
+  w= window;
   for(i=0;i<ts.length;++i){
     try{ 
       // id can be mid*sid so search for start of value must be ' *'
@@ -563,9 +567,12 @@ function jhrcmds(ts){
       if(-1==j){val='';cmd=a}
       else{val= a.substring(j+2);cmd= a.substring(0,j);}
       cmd= cmd.split(' ');
+
       switch(cmd[0]){
         case 'set' :
-        id= jbyid(cmd[1]);
+        n= cmd[1];  
+        if('-'==n[0]){w= w.parent;n= n.substring(1);} // id is in parent
+        id= w.jbyid(n);
         if(null==id) throw cmd[1]+" is invalid id";
         if("undefined"==typeof id.value)
           id.innerHTML= val;

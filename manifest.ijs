@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.400'
+VERSION=: '1.0.401'
 
 FILES=: 0 : 0
 app/
@@ -25,6 +25,7 @@ widget/
 src/
 core.ijs
 chart.ijs
+dissect.ijs
 d3.ijs
 favicon.ico
 gl2.ijs
