@@ -21,7 +21,7 @@ jhclose'Dissect gl2 Proof of Concept'
 'reset' jhb'<<'
 'undo'  jhb'<' NB. dissect_fmbwd_button
 'redo'  jhb'>'
-'redraw' jhb'redraw'
+NB. 'redraw' jhb'redraw'
 'stat'  jhspan'statline'
 '</div>' NB. enable flex
 'can'   jhiframe (;'can'~);'';'flex:auto;' 
