@@ -4,53 +4,7 @@ NB. jhcanvas creates jpage and uses as src in iframe
 usage:
 can=: 'jhjcanvas;_'jpage ''
 setrefresh__can jsxnew jscfont jsxucp '12pt ',PC_FONTFIXED
-
-jjs_jhs_'findwindowbyJWID("jcanvasx?jlocale=176").jbyid("can").contentWindow.jbyid("can").width=300'
 )
-
-0 : 0
-query to browser
-when the canvas page is created by ev_body_load
- creates the canvas context, and based on either a default font
- or font set in the initial command buffer
- gets text metrics and calls the server ev_query_event handler
- to set fontwidth,fonthweight
-
-following do not work - would be nice if it did
-jjs_jhs_'qdata= "mumble";callj(qdata);'
-jjs_jhs_'qdata= "mumble";setTimeout(function(){callj(qdata);},200);
-)
-
-NB. dev tools and experiments
-
-NB. JWID run doit_cmds
-run=: 4 : 0
-jjs_jhs_ 'findwindowbyJWID("',x,'").jbyid("can").contentWindow.doit("',(jsxarg y),'");'
-)
-
-NB. y is locale number from page title
-getwh=: 3 : 0
-t=. 'var w= findwindowbyJWID("dpoc?jlocale=',(":y),'").jbyid("can").contentWindow.jbyid("can");alert(w.width+" "+w.height)'
-jjs_jhs_ t
-)
-
-getwh=: 3 : 0
-t=. 'var el= findwindowbyJWID("dpoc?jlocale=',(;q),'").jbyid("can").contentWindow.jbyid("can");alert(el.clientWidth+" "+el.clientHeight)'
-jjs_jhs_ t
-)
-
-getwhx=: 3 : 0
-t=. 'var el= findwindowbyJWID("dpoc?jlocale=',(;q),'").jbyid("can");alert(el.clientWidth+" "+el.clientHeight)'
-jjs_jhs_ t
-)
-
-fix=: 3 : 0
-t=. 'var el= findwindowbyJWID("dpoc?jlocale=',(;q),'").jbyid("can").contentWindow.jbyid("can");'
-t=. t,'el.height=',y,';'
-jjs_jhs_ t
-)
-
-NB. el.parentElement.clientHeight
 
 require'~addons/ide/jhs/gl2.ijs'
 
@@ -61,36 +15,31 @@ coinsert'jgl2'
 ev_create=: 3 : 0
 PARENT=: COCREATOR
 buffer=: ''
-JHSCANVAS_z_=: 'buffer_',(;coname''),'_'
-gsellocale_jgl2_=: coname'' NB. gsel???
+JHSCANVAS_z_=: coname'' 
+canvaspixels=: 0 NB. length of pixels buffer for qpixels and pixels  
 refresh=: ''
 JS=: (fread'~addons/ide/jhs/widget/jhjcanvas.js')hrplc'BUFFER';jsxarg refresh
 )
 
-NB. pass mouse click to parent
-ev_mouse_click=: 3 : 0
-ev_mouse_click__PARENT''
+destroy=: 3 : 0
+if. shown do. close ;coname'' end.
+codestroy''
 )
 
-ev_mouse_down=: 3 : 0
-ev_mouse_down__PARENT''
-)
-
-ev_mouse_up=: 3 : 0
-ev_mouse_up__PARENT''
-)
-
-ev_mouse_move=: 3 : 0
-ev_mouse_move__PARENT''
-)
-
-ev_mouse_resize=: 3 : 0
-'canvaswidth canvasheight canvasfontwidth canvasfontheight'=: 0".getv'jdata'
-ev_mouse_resize__PARENT''
+NB. all events come here and are passed to form ev_id_canvas
+jev_canvas=: 3 : 0
+d=. getv'jdata'
+jdata=: d
+d=. <;._2 d,' '
+eventdata=: ;0".each 12{.d
+'canvaswidth canvasheight canvasfontwidth canvasfontheight'=: ,0".each 2 3 12 13{d
+'eventtype eventid'=: 14 15{d
+eventlostcount=: 0".;16{d
+('ev_',eventid,'_canvas__PARENT')~ 0 NB. call handler for id in form
 )
 
 HBS=: 0 : 0
-'<canvas id="can" </canvas>'
+'<canvas id="canvas" </canvas>'
 )
 
 CSS=: '' NB. can width,height cause scaling

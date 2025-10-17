@@ -473,7 +473,7 @@ function ev_closepages_click(){closepages();}
 
 function allwins_clean(){allwins= allwins.filter(el => !el.closed)} // remove closed
 
-function getwindow(n){findwindowbyJWID(n);}
+function getwindow(n){return findwindowbylocale(n);}
 
 // find window in allwins or allpages with name n
 function findwindowbyname(n){
@@ -495,6 +495,22 @@ function findwindowbyJWID(n){
   }
   for(let i = 0; i < allpages.length; i++){
     if(n==allpages[i].name) return allpages[i];
+  }
+  return null;
+}
+
+// find window in allwins or allpages with ?locale=n
+function findwindowbylocale(n){
+  var s;
+  n= '?jlocale='+n;
+  allwins_clean();
+  for(let i = 0; i < allwins.length; i++){
+    s= allwins[i].name; s= s.slice(s.indexOf('?')); 
+    if(n==s) return allwins[i];
+  }
+  for(let i = 0; i < allpages.length; i++){
+    s= allpages[i].name; s= s.slice(s.indexOf('?')); 
+    if(n==s) return allpages[i];
   }
   return null;
 }
@@ -572,16 +588,7 @@ swipedetect(el, function(swipedir){
 })
 */
 
- // used by plot etc to show files
- // uqs used to get new file values
- // sets new location in existing window or opens new window
- function pageshow(url,wid,specs){
-  wid= decodeURIComponent(wid);
-  w= jijxwindow.getwindow(wid);
-  if(null!=w) w.location= url; else pageopen(url,wid,specs);
- }
- 
-// spa functions
+ // spa functions
 
 // new frame for new url - or show existing frame with same url
 function newpage(myid,myclass,url){

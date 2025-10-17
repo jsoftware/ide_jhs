@@ -200,7 +200,7 @@ s
 NB.*
 NB.* close - close wid
 close=: 3 : 0
-jjs_jhs_'getwindow("',y,'").close();'
+jjs_jhs_'jijxwindow.getwindow("',y,'").close();'
 )
 
 NB.*
@@ -212,7 +212,7 @@ cbdata_jhs_=. y rplc '\n';LF;'\\';'\';'\''';''''
 NB.*
 NB.* focus - focus wid - focus 'jfif' - focus 'jijs?jwid=~temp/sp/spfile.ijs'
 focus=: 3 : 0
-jjs_jhs_'getwindow("',y,'").focus();'
+jjs_jhs_'jijxwindow.getwindow("',y,'").focus();'
 )
 
 NB.* doc - doc '' or 'html' or 'js'
@@ -532,9 +532,6 @@ coclass'z'
 
 
 reload=: 3 : 'load RELOAD[echo RELOAD'
-
-NB.!   jjs_jhs_'newpage("jifr-jfile","jifr","jfile")'
-NB.!   jjs_jhs_'newpage("jifr-jpacman","jifr","jpacman")'
 
 NB.* edit - [tab/term/xywh] edit'~temp/abc.ijs
 NB.* monadic is '' which is js var defaultopen

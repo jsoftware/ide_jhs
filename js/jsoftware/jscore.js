@@ -307,6 +307,13 @@ function jevfocus()
  return false;
 }
 
+// jinfo values
+// screen.availWidth
+// screen.availHeight
+function setjinfo(e){
+  jform.jinfo.value= screen.availWidth+' '+screen.availHeight;
+}
+
 // event handler onclick etc - id is mid[*sid]
 // enter event return or return+shift - iOS touch #+= has shift
 // enter+shift no longer inserts newline in contenteditable
@@ -324,6 +331,8 @@ function jev(event){
  jform.jmid.value = (-1==i)?id:id.substring(0,i);
  jform.jsid.value = (-1==i)?"":id.substring(++i,id.length);
  jform.jclass.value= jbyid(id).className;
+ setjinfo(event);
+ 
  if(type=='keydown'&&27==jevev.keyCode)return false; // IE ignore esc
  if(type=='keydown'&&13==jevev.keyCode&&!jevev.ctrlKey) // iOS touch #+=
   {jform.jtype.value="enter";return jevdo();} 
@@ -428,7 +437,7 @@ function get_nv_ids()
 }
 
 // missing j jlocale jid status-busy
-j_post_ids= ["jdo","jtype","jmid","jsid","jclass"];
+j_post_ids= ["jdo","jtype","jmid","jsid","jclass","jinfo"];
 
 // return post args from standard form ids and extra form ids
 function jpostargs(ids)
@@ -552,39 +561,81 @@ function runjhrcmds(t){
   jhrcmds(c);
 }
 
-//! kludge set -id to target id in parent
-// id might be in active window, or in parent, or in child
-// jhrcmds needs better id handling - id in window, in parent, in child xxx
-function jhrcmds(ts){
-  var a,i,j,t,cmd,val,id,w,n; 
+// return html element from id [locale+]id
+// jbyid undefined - probably page not finished loading
+function efromid(id){
+  var w,i,c,idx,e; 
   w= window;
+  idx= id;
+  i= id.indexOf('+');
+  if(i!=-1){
+    c= id.substring(0,i);
+    id= id.substring(i+1);
+    w= jijxwindow.findwindowbylocale(c);
+ }
+ if(w==null) throw new Error(cmd+' '+idx+' is invalid locale');
+ if(null!=w.frameElement) w= w.parent; // if framelement - we want parent
+ if('undefined'==typeof(w.jbyid)) throw new Error('jbyid undefined - page probably not loaded');
+ e= w.jbyid(id);
+ if(e==null) throw new Error(cmd+' '+idx+' is invalid id');
+ return e;
+}
+
+// array of cmd strings
+// string - cmd ...[ *data]
+// some cmds have an id for the html target
+// set [locale+]id ... *data
+// target selects an html element
+//  id   - jbyid in current window
+//  [locale+]id - findwindowbylocale(locale).jbyid(id)
+//
+// response from an event handler for a window element
+// window may be the form window
+//  or it may be a widget iframe
+//  in which case the event should be handled as if it were in the widget parent
+// jifr- iframes do not get the parent like widget iframes
+//
+// jhrcmds can be run in form window or in widget iframe
+// if in a widget iframe first get the form window
+// widget is in an iframe element
+// jijx term pages are also in iframe
+// page iframe has id prefix of jifr
+function jhrcmds(ts){
+  var a,i,j,t,cmd,val,id,w,n,e,ww;
+
+  ww= window; // window for event
+  if(isFrame(ww)) ww= ww.parent;
+
   for(i=0;i<ts.length;++i){
     try{ 
-      // id can be mid*sid so search for start of value must be ' *'
+      w= ww;
       a= ts[i];
       if(0==a.replaceAll(' ','').length) return;
-      j= a.indexOf(' *');
+      j= a.indexOf(' *'); // id can be mid*sid so value starts after ' *'
       if(-1==j){val='';cmd=a}
       else{val= a.substring(j+2);cmd= a.substring(0,j);}
       cmd= cmd.split(' ');
 
       switch(cmd[0]){
         case 'set' :
-        n= cmd[1];  
-        if('-'==n[0]){w= w.parent;n= n.substring(1);} // id is in parent
-        id= w.jbyid(n);
-        if(null==id) throw cmd[1]+" is invalid id";
-        if("undefined"==typeof id.value)
-          id.innerHTML= val;
-        else
-          id.value= val;
-        break; 
+          e= efromid(cmd[1]);
+          if("undefined"==typeof e.value)
+            e.innerHTML= val;
+          else
+            if(null==e.getAttribute("data-jhscheck"))
+              e.value= val;
+            else
+              jsetchk(e.id,val);
+          break; 
+
+        case 'setproperty' :
+          e= efromid(cmd[1]);
+          e.style.setProperty(cmd[2],val);
+          break;
 
         case 'canvasjs' :
-          if('CANVAS'==jbyid(cmd[1]).nodeName) // mouse jhrcmds already in canvas element
-            doit(val);
-          else
-            jbyid(cmd[1]).contentWindow.doit(val); // draw  jhrcmds must get to canvas element
+          e= efromid(cmd[1]);
+          e.contentWindow.doit(val); // draw  jhrcmds must get to canvas element
           break; 
 
         case 'chartjs' :
@@ -612,18 +663,37 @@ function jhrcmds(ts){
            break;
 
          case 'pageopen':
-          var args= val.split(',');
+          // val: url LF wid LF specs - specs can contain ,
+          var args= val.split('\n');
           pageopen(args[0],args[1],args[2]);
           break;
-           
+
+          case 'urlopen':
+            // val: url LF specs - specs can contain ,
+            var args= val.split('\n');
+            urlopen(args[0],args[1]);
+            break;
+  
+         case 'close':
+          try{jijxwindow.getwindow(cmd[1]).jscdo('close');}catch(e){;};
+          break;
+
+         case 'show':
+           try{jijxwindow.getwindow(cmd[1]).focus();}catch(e){;};
+           break;
+
+         case 'eval':
+            try{eval(val)}catch(e){;};
+            break;
      
          default: 
-           throw cmd[0]+" is invalid command";
+           throw new Error(cmd[0]+" is invalid command");
            break;
       }
     }
     catch(e){
-      alert('jhrcmds command failed:\n'+a+'\n'+e);
+      alert('jhrcmds command failed:\n'+e+'\n'+a);
+      //alert('jhrcmds command failed');
       return;
     }
   }
@@ -637,26 +707,44 @@ function jlog(text){
   t.scrollTop= t.scrollHeight;
 }
 
-function ifjijxwindow(){return (jijxwindow===undefined || jijxwindow==null || jijxwindow.closed) ? false:true;}
+//function ifjijxwindow(){return (jijxwindow===undefined || jijxwindow==null || jijxwindow.closed) ? false:true;}
 
-// set jijxwindow as jijx that led to this window
+function ifjijxwindow(w){return (null==w || undefined===w.jijxwindow || null==w.jijxwindow || w.jijxwindow.closed) ? false:true;}
+
+
+// every window created should have jijxwindow set
+// this is for form windows, widget frames, and psa frames
+// set jijxwindow as jijx window that led to this window
+//  that has been created by pageopen or iframe src load
+// window that loads iframes from src will not have finished loading
+// when the iframe finishes so jijxwindow will not have been set in the parent
+// but it should be in opener
 function jijxset()
 {
   var w;
   if(isFrame(window)){
+    w= frameElement.contentWindow.parent;
+    
+    // if iframe loaded with src= then opener has jijxwindw
+    if(null!=w.opener && undefined!=w.opener.jijxwindow){
+      frameElement.contentWindow.jijxwindow= w.opener.jijxwindow;
+      return;
+    }
+
+    // if iframe loaded with newpage (spa) then get it from jifr-jijx
     w= window.frameElement.ownerDocument.getElementById("jifr-jijx");
     if(w==null) return;
     jijxwindow= window.frameElement.ownerDocument.getElementById("jifr-jijx").contentWindow
-    return;
-  }
+    return
 
-  w= window.parent;
-  if(w!=window){jijxwindow= w;return;}
+  }  
+
   w= window.opener;
-  if(w!=null && "jijx"!=w.name) w= w.opener;
-  if(w!=null && "jijx"!=w.name) w= null; // jijx->jfile->jijs
-  jijxwindow= w;
-}
+  if(ifjijxwindow(w))
+    jijxwindow= w.jijxwindow; // inherit
+  else
+    ; // alert('jijxwindow not set'); 
+} 
 
 // app keyboard shortcuts
 
@@ -909,22 +997,6 @@ function setlast(id)
 // overidden by jijx, jijs and cojhs that need extra dirty work
 function ev_close_click(){
  if(dirty) jdoajax();
-
- if('undefined'==typeof window.parent.spaclose)
- {
-  document.open(); document.write('You quit this JHS page and can now close the browser window.'); // in case close fails
-  window.close();
- }
- else{
-   window.parent.spaclose(window);
- }
-
-}
-
-// jfif/... just close - cojhs call J ev_close_click
-// overidden by jijx, jijs and cojhs that need extra dirty work
-function ev_close_click(){
- if(dirty) jdoajax();
  winclose();
 }
 
@@ -947,13 +1019,8 @@ function isTF(){return 'undefined'!=typeof(SPA) || isFrame(window);}
 
 // isSPA - true if term window and SPA default is true
 function isSPA(){
- if(!ifjijxwindow()) return false;
+ if(!ifjijxwindow(window)) return false;
  return jijxwindow.SPA;  
-}
-
-function isPages(){
-  if(!ifjijxwindow()) return false;
-  return jijxwindow.allpages[1]!=null
 }
 
 function isdirty(){return dirty;} // default - override
@@ -1252,12 +1319,12 @@ function pageopen(url,wid,specs){
 
   if(specs=='tab') specs= '';
 
-  if(ifjijxwindow()) w= jijxwindow.getwindow(wid); else w=null;
+  if(ifjijxwindow(window)) w= jijxwindow.findwindowbyJWID(wid); else w=null;
   if(null!=w){w.setTimeout(function(){w.focus();},25);return;}
 
   w=window.open(url,wid,specs); // pageopen
   if(null==w){alert(PUBLOCKED);return w;}
-  if(ifjijxwindow()) jijxwindow.allwins.push(w);
+  if(ifjijxwindow(window)) jijxwindow.allwins.push(w);
   return w;
  }
  
@@ -1274,7 +1341,7 @@ function pageopen(url,wid,specs){
 // sets new location in existing window or opens new window
 function pageshow(url,wid,specs){
  wid= decodeURIComponent(wid);
- w= jijxwindow.getwindow(wid);
+ w= jijxwindow.findwindowbyJWID(wid);
  if(null!=w) w.location= url; else pageopen(url,wid,specs);
 }
 

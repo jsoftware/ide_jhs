@@ -81,6 +81,7 @@ formtmpl=: 0 : 0 -. LF
 <input type="hidden" id="jmid" name="jmid"    value="">
 <input type="hidden" id="jsid" name="jsid"    value="">
 <input type="hidden" id="jclass" name="jclass"    value="">
+<input type="hidden" id="jinfo" name="jinfo"    value="">
 <input type="submit" value="" onclick="return false;" style="display:none;width:0px;height:0px;border:none">
 )
 
@@ -131,10 +132,9 @@ jhfroma=: 3 : 0
 y rplc '<';'&lt;';'>';'&gt;';'&';'&amp;';'"';'&quot;';CRLF;'<br>';LF;'<br>';CR;'<br>';' ';'&nbsp;';bad;''
 )
 
-NB. special version for input text value
-NB. ' '->&nbsp; causes problems in input text
+NB. special version with normal space entity instead of &nbsp; - used in jhtext and jhpassword
 jhfromax=: 3 : 0
-y rplc '<';'&lt;';'>';'&gt;';'&';'&amp;';'"';'&quot;';bad;''
+y rplc '<';'&lt;';'>';'&gt;';'&';'&amp;';'"';'&quot;';CRLF;'<br>';LF;'<br>';CR;'<br>';' ';'&#32;';bad;''
 )
 
 NB. app did not send response - send one now
@@ -690,7 +690,7 @@ id=. vid x
 'value size class options'=. y addd 10;'jhtext';''
 size=. gdef size;10
 class=. gdef class;'jhtext'
-value=. jhfroma value
+value=. jhfromax value
 t=. '<input type="text" id="<ID>" name="<ID>" class="<CLASS>" ',jeditatts,'value="<VALUE>" '
 t=. t,'size="<SIZE>" onkeydown="return jev(event)" >'
 t=. t hrplc 'ID CLASS VALUE SIZE';id;class;value;size
@@ -895,13 +895,25 @@ t=. boxopen y
 'jhrcmds';<t
 )
 
-NB.* jhrcmds*jhrcmds ajax cmds - 0 or more boxed cmds
-NB.* run in event handler to return cmds to javascript ajax routine
+jwdbuffer=: '' NB. empty in jhs - buffer of cmds for jhrcmds
+
+NB.* jwd* jwd cmds - y is 0 or more strings that are jhrcmds cmds
+NB.* *add y cmds to jwdbuffer in locale
+jwd=: 3 : 'jwdbuffer=: jwdbuffer,boxopen y'
+
+NB.* jhrcmds*jhrcmds cmds - 0 or more boxed cmds
+NB.* *y cmds are added to jwdbuffer and all cmds are then run
+NB.* *jwdbuffer is cleared
+NB.* *run in event handler to return cmds to javascript
 NB.* *set id *value     - html elements (e.g. jhtext) with value
+NB.* *id can be id of jhrad or jhchk
 NB.* *set id *innerHTML - html elements with HTML (e.g. jhspan)
 NB.* *css *css          - set new extra CSS
+NB.* *other cmds need to be documented here
 jhrcmds=: 3 : 0
-jhrajax ({.a.),jsajaxdata=: jsencode jcmds y NB. ajax cmds
+jwdlast=: jwd y
+jwdbuffer=: ''
+jhrajax ({.a.),jsajaxdata=: jsencode jcmds jwdlast
 )
 
 NB.* jhcmds*jhcmds - 0 or or more cmds to be run by ev_body_load

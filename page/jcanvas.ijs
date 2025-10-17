@@ -1,3 +1,5 @@
+echo'jcanvas.ijs is old and unused'
+
 0 : 0
 drawing on canvas
    spx'~addons/ide/jhs/spx/canvas.ijt'
@@ -68,6 +70,7 @@ HBS=: HBS hrplc'WIDTH HEIGHT';width;height
 )
 
 NB. jsc... commands and asserts
+NB. must match switch values in jhjcanvas.js
 t=. <;._2 [ 0 : 0
 fillStyle     0<#
 strokeStyle   0<#
@@ -85,6 +88,11 @@ closePath     0=#
 ellipse       8=#
 strokeText    2<#
 arc           6=#
+clip          4=#
+save          0=#
+restore       0=#
+qpixels       4=#
+pixels        4<#
 )
 
 ncmds=:    (t i.each' '){.each t
