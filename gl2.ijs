@@ -158,7 +158,7 @@ i.0 0
 glclear=: 3 : 0
 gl2log'glclear';y
 jscbeginPath''
-jscclearRect 0 0,2000,2000 NB.! hard width,height
+jscclearRect 0 0,glqwh''
 )
 
 glclipreset=: 3 : 0

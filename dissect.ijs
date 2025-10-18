@@ -31,9 +31,6 @@ JHSFORM_z_   - form locale that is wd target
 JHSCANVAS_z_ - canvas locale - buffer__JHSCANVAS is target for jsc... and gl... cmds
 )
 
-
-NB. RESIZEHANDLEXYWH_dissect_ =: 2 2 $ _6 _6 12 12
-
 coclass'dissectjhs'
 coinsert'jhs'
 coinsert'jhjcanvas'
@@ -93,6 +90,7 @@ HBS=: 0 : 0
 'menu0' jhmenugroup ''
 'help'  jhmenuitem'help'
 'pref'  jhmenuitem'preferences'
+'tip'   jhmenuitem'tip'
 'using'    jhmenuitem'using dissect'
 'learning' jhmenuitem'learning dissect'
 'wikidissect' jhmenuitem 'Dissect wiki'
@@ -108,6 +106,8 @@ jhtr '% explore width:'   ; 'ex' jhselect whvals;1;1
 jhtr '% explore height:'  ; 'ey' jhselect whvals;1;1
 jhtr 'float precision'    ; 'fp' jhselect fpvals;1;1
 jhtablez
+'fmshowstealth'    jhchk   'show ][ and 0-9:'
+jhbr
 'fmshowcompmods'   jhchk   'show full compound-name'
 jhbr
 'fmshowstructmods' jhchk   'show @ @: hook fork etc'
@@ -163,6 +163,11 @@ qhide=: 3 : 0
 jwd'setproperty <ID> display *none' rplc'<ID>';y
 )
 
+ev_tip_click=: 3 : 0
+qshow'tut'
+jhrcmds'set tut *','Tip: ' , _1 {:: tiplist_dissect_ =: 1 |. tiplist_dissect_
+)
+
 ev_pref_click=: 3 : 0
 qhide'tut'
 qshow'prefs'
@@ -174,6 +179,7 @@ jwd'set dy *',":0{dmax
 jwd'set ex *',":1{emax
 jwd'set ey *',":0{emax
 jwd'set fp *',":displayprecision__caller
+jwd'set fmshowstealth *',   ":displayshowstealth__caller
 jwd'set fmshowcompmods *',  ":displayshowcompmods__caller
 jwd'set fmshowstructmods *',":displayshowstructmods__caller
 jwd'set fmautoexpand2 *',   ":displayautoexpand2__caller
@@ -202,6 +208,12 @@ ev_fp_change=: 3 : 0
 displayprecision__caller=: 2".getv'fp'
 dochange''
 )
+
+ev_fmshowstealth_click=: 3 : 0
+displayshowstealth__caller=: 0".getv'fmshowstealth'
+dochange''
+)
+
 
 ev_fmshowcompmods_click=: 3 : 0
 displayshowcompmods__caller=: 0".getv'fmshowcompmods'
@@ -432,7 +444,7 @@ CSS=: 0 : 0
 
 ev_create=: 3 : 0
 mcan=: 'jhjcanvas;_'jpage ''
-setrefresh__mcan jsxnew jscfont jsxucp c_font_dissectjhs_ NB.! c_font should come from main
+setrefresh__mcan jsxnew jscfont jsxucp c_font_dissectjhs_ NB.c_font perhaps should come from main
 NB. shown=: 1
 )
 
@@ -517,6 +529,11 @@ NB. override htmltoplain before it is used in the load
 htmltoplain_dissecthelplearning_=: htmltoplain_dissecthelpusing_=: [
 
 load'~addons/debug/dissect/dissect.ijs'
+
+NB. tip in stat line causes problems - menu item shows tip in tut
+displayshowtipoftheday_dissect_=: 0 
+
+NB. RESIZEHANDLEXYWH_dissect_ =: 2 2 $ _6 _6 12 12
 
 reflowtooltip_dissect_=: 4 : 'y' NB. avoid converting tooltip to pixels
 

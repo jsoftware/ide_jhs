@@ -147,8 +147,8 @@ const myResizeHandler = (entries => {
       for (let entry of entries) {
           if (entry.target === can.parentElement.parentElement) {
               // Update the canvas size
-              can.width = entry.contentRect.width-4;   //! 2*borderwidth
-              can.height = entry.contentRect.height-8; // ?
+              can.width = entry.contentRect.width-4;   //? 2*borderwidth
+              can.height = entry.contentRect.height-8; //?
               doit(buffer); // set default fixed pitch font
               mevent('resize',entry);
           }
