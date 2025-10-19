@@ -2,34 +2,51 @@ coclass'jman'
 man_z_=: man_jman_
 zloc=: <,'z'
 
-NB.! perhaps base9 (<500k) should be included in base library
+base9install=: 0 : 0
+~system/base9 does not exist
+manual install:
+$ cd j9.6/system - jpath'~system'
+$ git clone https://github.com/jsoftware/base9 base9
+)
 
-NB. y is name - abc abc_jd_ abc__c or locale - _jhs_
-NB. display comments before definition in defining script
-NB. last defn is used!
-NB. if defining script is in ~system it looks for source script in base9
+NB. y is name - abc abc_jd_ abc__c or locale _abc_
+NB. finds script where name is defined
+NB.  and displays NB. lines that are before the defn
+NB. the NB. is removed and no other formating is done
+NB. lines starting with *-+ probably indicate scriptdoc lines
+NB. if defined in multiple scripts they are listed
+NB. if script is in ~system - look for source script in base9
+NB. man'_abc_' displays man lines for each name in the locale
 NB. would be nice to support f* to return all matches
+NB. finds a=:b=: 123 but does not find 'a b c'=: ... 
+NB. perhaps base9 (<500k) should be included in base library
+NB. 
+NB. base library and JHS have NB. conventions that
+NB.  allow extracting documention from scripts
+NB. 
+NB. base library convention has NB. lines
+NB.  with first char *-+ for formatting
+NB. 
+NB. JHS convention is all NB. line before =: line
 man=: 3 : 0
 r=.  getman y
 NB. remove NB.*blank and NB.blank 
 r=. <;.2 r
-b=. ;(<'NB.* ')=5{.each r
-r=. (b*5)}.each r
-b=. ;(<'NB. ')=4{.each r
-r=. (b*4)}.each r
+b=. ;(<'NB.')=3{.each r
+r=. (b*3)}.each r
 jselect_jhs_ ;r
 )
 
 getman=: 3 : 0
 n=. dltb y
 if. '_'={.n do.
- t=. ('nl',n)~1 2 3
+ t=. ('nl',n)~0 1 2 3
  t=. ;LF,~each(<''''),~each(<'   man'''),each t,each<n
  return.
 end.
-'__ not allowed in name' assert 0=+./'__'E. n
+if. 0~:+./'__'E. n do. '__ not allowed in name' return. end.
 if. -.'_'={:n do.
- t=. 'nl 1 2 3' doin conl 0
+ t=. 'nl 0 1 2 3' doin conl 0
  t=. ;(<<n)e. each t
  t=. t#conl 0
  
@@ -39,7 +56,7 @@ if. -.'_'={:n do.
   end.
  end.  
  
- if. 0=#t do. 'not found'assert 0 end.
+ if. 0=#t do. 'not found' return. end.
  if. 1<#t do. 
   tt=. (<n),each '_',each '_',~each t
   r=. ;LF,~each(<'   man'''),each '''',~each tt
@@ -48,15 +65,13 @@ if. -.'_'={:n do.
  n=. n,'_',(;t),'_'
 end.
 i=. 4!:4<n
-'not an explicit defn defined by loading a script'assert i>0 
+if. i<:0 do. 'not an explicit defn defined by loading a script' return. end. 
 f=. i{4!:3''
 t=. jpath'~system/'
 if. t-: (#t){.;f do.
  NB. look for defn in base9
- p=. jpath'~Base9'
- if. p-:'~Base9' do.
-  '~Base9 not defined. Add ~Base9 to folders.cfg to point at Base9.'assert  0
- end. 
+ p=. jpath'~system/base9'
+ if. -.fexist p do. base9install return. end.
  dt=. {."1 dirtree p,'/*.ijs'
  for_f. dt do.
   r=. (fread f) manx n
@@ -107,17 +122,3 @@ r=. (>:h)}.(>:i){.bdx
 
 doin=: 4 : '(<x)(4 : ''do__y x'')each<"0 y' NB. run sentence in each locale
 
-NB.! experimental 
-adduserfolder_j_=: 3 : 0
-f=. '~config/folders.cfg'
-d=. fread f
-d=. d,(LF~:{:d)#LF
-
-i=. y i. ' '
-n=. i{.y
-'first letter must be uppercase'assert ({.n)=toupper{.n
-p=. dltb i}.y
-d=. d,n,((1>.9-#n)#' '),p,LF
-d fwrite f
-UserFolders_j_=: UserFolders_j_,n;jpath p 
-)

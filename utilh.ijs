@@ -133,6 +133,7 @@ y rplc '<';'&lt;';'>';'&gt;';'&';'&amp;';'"';'&quot;';CRLF;'<br>';LF;'<br>';CR;'
 )
 
 NB. special version with normal space entity instead of &nbsp; - used in jhtext and jhpassword
+NB. javascript inverse: jtfromh
 jhfromax=: 3 : 0
 y rplc '<';'&lt;';'>';'&gt;';'&';'&amp;';'"';'&quot;';CRLF;'<br>';LF;'<br>';CR;'<br>';' ';'&#32;';bad;''
 )
@@ -426,7 +427,7 @@ ev_jscript_click=: jhijshandler
 
 jhijshandler=: 3 : 0
 t=. pageopenargs'jijs?jwid=',JSCRIPT
-jhrcmds'pageopen *',}:;t,each','
+jhrcmds'pageopen *',}:;t,each LF
 )
 
 NB.* html link to defining script

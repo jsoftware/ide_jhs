@@ -573,11 +573,13 @@ function efromid(id){
     id= id.substring(i+1);
     w= jijxwindow.findwindowbylocale(c);
  }
- if(w==null) throw new Error(cmd+' '+idx+' is invalid locale');
- if(null!=w.frameElement) w= w.parent; // if framelement - we want parent
+ if(w==null) throw new Error(idx+' is invalid locale');
+ if(null!=w.frameElement){ // want widget parent - but not term frame parent
+   if('jifr-'!=w.frameElement.id.slice(0,5)) w= w.parent; // if widget framelement - we want parent
+ }
  if('undefined'==typeof(w.jbyid)) throw new Error('jbyid undefined - page probably not loaded');
  e= w.jbyid(id);
- if(e==null) throw new Error(cmd+' '+idx+' is invalid id');
+ if(e==null) throw new Error(idx+' is invalid id');
  return e;
 }
 

@@ -72,14 +72,24 @@ canvasfontwidth__new=:  canvasfontwidth__old
 JHSFORM_z_=: p
 }}
 
-tutinitial=: 0 : 0
+tuthelp=: 0 : 0
 JHS interface to dissect tool<br>
 &bull; shift+click element - tutorial<br>
 &bull; ctrl+click data and then press explore button<br>
+&bull; docs are for Jqt - for now you have to translate to JHS<br>
+&bull; esc-j in term will dissect input area sentence<br>
 &bull; gentler learning curve if familiar with JHS and Jqt dissect<br>
 &bull; hovering does not show tooltips - shift+click required<br>
 &bull; right mouse click is not currently supported<br>
 &bull; not currently integrated with debug<br>
+)
+
+tutexplore=: 0 : 0
+large data area to explore in separate<br>
+window has not been selected<br><br>
+
+select data area with ctrl+click and<br>
+then press explore again
 )
 
 whvals=: ":each<"0[ 5 10 20 30 40 50 60 70 80
@@ -121,9 +131,9 @@ jhdivz
 'undo'  jhb'<' NB. dissect_fmbwd_button
 'redo'  jhb'>'
 'explore' jhb'explore'
-NB. test'  jhb'test'
+'help'  jhb'help'
 'stat'  jhspan'statline'
-'tut'   jhdiv tutinitial
+'tut'   jhdiv ''
 '</div>' NB. enable flex
 'mcan'  jhiframe (;'mcan'~);'';'flex:auto;' 
 '<div>'  NB. restart main div
@@ -132,7 +142,7 @@ NB. test'  jhb'test'
 CSS=: 0 : 0
 #mcan{width:100vw;height:100vh;border: 2px solid red;}
 #tut{position:absolute;top:4em;left:0;background-color:lightblue;width:50vw;max-height:50vh;
- overflow-y:auto;word-wrap:normal;padding:15px;border:solid 2px black;}
+ overflow-y:auto;word-wrap:normal;padding:15px;display:none;border:solid 2px black;}
 #prefs{position:absolute;top:4em;left:0;background-color:lightblue;display:none;border:solid 2px black;}
 .jhchk{background-color:lightblue;}
 )
@@ -236,9 +246,8 @@ dochange''
 )
 
 ev_help_click=: 3 : 0
-qhide'prefs'
 qshow'tut'
-jhrcmds'set tut *',tutinitial
+jhrcmds'set tut *',tuthelp
 )
 
 ev_learning_click=: 3 : 0
@@ -306,7 +315,7 @@ exploresd=: ":12#0
 NB. no psel done so not a valid explore
 if. start=JHSFORM do.
   qshow'tut'
-  jhrcmds 'set tut *',jhfromax'data area to explore not selected',LF,'select data area with ctrl+click and then press explore again'
+  jhrcmds 'set tut *',tutexplore
   return.
 end. 
 

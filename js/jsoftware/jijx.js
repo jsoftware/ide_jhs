@@ -148,21 +148,11 @@ function colorinput(t){
  e.style.color=t;
 }
 
-/*
-function newpline(t){
- if(jbyid("prompt")==null)
-  updatelog(phead+jhfroma(t)+ptail);
- else 
-  jbyid("prompt").innerHTML= phead+jhfroma(t)+ptail;
-}
-*/
-
-// function keyp(){jbyid("kbsp").style.display= "block";scrollz();return true;} // space for screen kb
-
 function ev_advance_click(){jdoajax([]);}
 function ev_return_click(){ev_log_enter();}
 function ev_uarrow_click(){uarrow();}
 function ev_darrow_click(){darrow();}
+function ev_dissect_click(){jdoajax([],jtfromh(jbyid('prompt').innerHTML));}
 
 // log enter - contenteditable
 // run or recall line with caret
@@ -241,8 +231,6 @@ function ev_log_enter()
 
 // firefox can't do ajax call withint event handler (default action runs)
 function TOajax(){jdoajax([],"",globalajax,true);}
-
-/* function document_recall(v){newpline(v);} */
 
 function document_recall(v){jbyid("prompt").innerHTML= jhfroma(v); jsetcaret("prompt",1);}
 
@@ -361,19 +349,16 @@ var jijsnum=0;
 function ev_jijs_click(){linkclick("jijs?"+jijsnum);jijsnum+=1;} 
 function ev_framework_click(){linkclick("jdoc");}
 
-function ev_c_shortcut(){jscdo('jbreak');}
-function ev_e_shortcut(){ev_jfile_click();}
-function ev_f_shortcut(){ev_jfif_click();}
-function ev_l_shortcut(){ev_jlocale_click();}
-
-function ev_p_shortcut(){jscdo('helplinks');}
-function ev_n_shortcut(){ev_jijs_click();}
-
-function ev_s_shortcut(){ev_cleartemps_click();}
+// ev_?_shortcut wired by menu
+//function ev_c_shortcut(){jscdo('jbreak');}
+//function ev_e_shortcut(){ev_jfile_click();}
+//function ev_f_shortcut(){ev_jfif_click();}
+//function ev_l_shortcut(){ev_jlocale_click();}
+//function ev_n_shortcut(){ev_jijs_click();}
+//function ev_s_shortcut(){ev_cleartemps_click();}
 
 function ev_z_shortcut(){ev_exit_click();};
-
-//function ev_2_shortcut(){scrollz();}
+function ev_2_shortcut(){scrollz();}
 
 function ev_8_shortcut(){
  jlog('\nesc-8 '+allwins.length);

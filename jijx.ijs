@@ -9,6 +9,7 @@ jhmenu'term';'advance'jhb'⇒';'jmenuburger'
 'sp'         jhmenuitem 'projects';'p'
 'jinputs'    jhmenuitem  'inputs';'i'
 'jbreak'     jhmenuitem 'break';'c'
+'dissect'    jhmenuitem 'dissect input line';'j'
 'jhshelp'    jhmenuitem 'help';'h'         
 'closepages' jhmenuitem 'close pages'
              jhmenulink 'jpages';'system pages'
@@ -99,6 +100,13 @@ end.
 )
 
 jloadnoun_z_=: 0!:100
+
+ev_dissect_click=: 3 : 0
+d=. getv'jdata'
+d=. ('|'={.d)}.d NB. assume first | is from error report
+dissect__ d
+jhtml''
+)
 
 ev_clearrefresh_click=: 3 : 'LOG_jhs_=: '''''
 
