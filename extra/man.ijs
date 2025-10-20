@@ -1,13 +1,44 @@
 coclass'jman'
-man_z_=: man_jman_
-zloc=: <,'z'
 
-base9install=: 0 : 0
-~system/base9 does not exist
-manual install:
-$ cd j9.6/system - jpath'~system'
-$ git clone https://github.com/jsoftware/base9 base9
+3 : 0''
+if. -.IFJHS do.
+ man_z_=: man_jman_
+ jselect_z_=: [
+ edit_z_=: open_z_
+end.
+i.0 0
 )
+
+NB. install base9 library in ~system - so docs can be found
+base9install=: 3 : 0
+require'pacman'
+a=. jpath'~system'
+'r p'=. httpget_jpacman_ 'https://github.com/jsoftware/base9/archive/refs/heads/master.zip'
+'download failed'assert 0=r
+if. fexist a,'/base9' do.
+  'r m'=. rmdir_j_ a,'/base9'
+  ('remove old ~system/base9 folder failed: ',m) assert 0=r
+end. 
+hostcmd_jpacman_ 'unzip -o ',(dquote p),' -d ',dquote a
+'base9-master not created'assert fexist a,'/base9-master'
+(a,'/base9') frename (a,'/base9-master')
+echo'base9 library installed in ~system'
+)
+
+base9installhelp=: 0 : 0
+standard library scripts (e.g., in ~system)
+are built from base library source files
+and comments have been stripped out
+
+man needs access to the base library source
+to show those comments
+
+to install base library in ~system/base9 run:
+
+   base9install_jman_''
+)
+
+zloc=: <,'z'
 
 NB. y is name - abc abc_jd_ abc__c or locale _abc_
 NB. finds script where name is defined
@@ -19,15 +50,15 @@ NB. if script is in ~system - look for source script in base9
 NB. man'_abc_' displays man lines for each name in the locale
 NB. would be nice to support f* to return all matches
 NB. finds a=:b=: 123 but does not find 'a b c'=: ... 
-NB. perhaps base9 (<500k) should be included in base library
 NB. 
-NB. base library and JHS have NB. conventions that
-NB.  allow extracting documention from scripts
+NB. in addition to man getting NB. lines before =:
+NB. base library, JHS, and others have NB. conventions
+NB. that help in getting documention from  their scripts
 NB. 
 NB. base library convention has NB. lines
 NB.  with first char *-+ for formatting
 NB. 
-NB. JHS convention is all NB. line before =: line
+NB. JHS convention is first char * and simple rules
 man=: 3 : 0
 r=.  getman y
 NB. remove NB.*blank and NB.blank 
@@ -71,7 +102,7 @@ t=. jpath'~system/'
 if. t-: (#t){.;f do.
  NB. look for defn in base9
  p=. jpath'~system/base9'
- if. -.fexist p do. base9install return. end.
+ if. -.fexist p do. base9installhelp return. end.
  dt=. {."1 dirtree p,'/*.ijs'
  for_f. dt do.
   r=. (fread f) manx n
@@ -121,4 +152,3 @@ r=. (>:h)}.(>:i){.bdx
 )
 
 doin=: 4 : '(<x)(4 : ''do__y x'')each<"0 y' NB. run sentence in each locale
-
