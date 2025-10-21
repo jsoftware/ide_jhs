@@ -1,4 +1,4 @@
-var SPA= true;
+var SPA= false;
 var allpages= []; // windows for all spa pages (jijx and all frame windows)
 var allwins= [];   // all windows created by jijx (some may have been closed)
 var phead= '<div id="prompt" class="log" onpaste="mypaste(event)">';

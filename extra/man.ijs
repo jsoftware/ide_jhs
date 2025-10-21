@@ -1,8 +1,20 @@
+{{)n [man] [doc] [html]
+must have man or doc or both
+
+man - used by man'name' and runs up to the =: line man found
+
+doc - include following line if not blank in extracted doc
+
+html - html vs plain
+}}
+
 coclass'jman'
 
+man_z_=: man_jman_
+
 3 : 0''
-if. -.IFJHS do.
- man_z_=: man_jman_
+if. 3~:nc<'jhrcmds_jhs_' do. NB. IFJHS not defined when script loaded
+ NB. man in jqt and jconsole
  jselect_z_=: [
  edit_z_=: open_z_
 end.
