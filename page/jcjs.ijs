@@ -39,7 +39,7 @@ JS=: 0 : 0
 function show(t){
  t= t.replace(/</g, '&lt;')
  t= t.replace(/>/g, '&gt;');
- t= t.replace(/\n/g, '<br/>');
+ t= t.replace(/\n/g, '<br>');
  t= t.replace(/ /g,  '&nbsp;');
  t= t.replace(/\"/g, '&quot;');
  t= t.replace(/'/g, '&#39;');

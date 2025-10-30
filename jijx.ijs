@@ -103,8 +103,9 @@ jloadnoun_z_=: 0!:100
 
 ev_dissect_click=: 3 : 0
 d=. getv'jdata'
-d=. ('|'={.d)}.d NB. assume first | is from error report
-dissect__ d
+d=. quote ('|'={.d)}.d NB. asssume leading | is from error report
+9!:27'dissect ',d
+9!:29[1
 jhtml''
 )
 

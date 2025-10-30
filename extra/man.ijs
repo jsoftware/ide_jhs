@@ -1,12 +1,22 @@
-{{)n [man] [doc] [html]
-must have man or doc or both
+0 : 0
+NBblock - contiguous lines that are 1 or more NB. lines , 0 or more blank lines , next line (=:)
 
-man - used by man'name' and runs up to the =: line man found
+NB*block - NBblock where first line starts with NB.*
 
-doc - include following line if not blank in extracted doc
+   man'name' - report manblock for defining =:
 
-html - html vs plain
-}}
+   man script - extract all NB.*blocks from script
+
+   man'locale?' - extract all NB.+blocks for scripts that defined the locale
+
+script NBblock with first line start with NB.+ documents the script
+
+
+
+NB.* marks NB.   
+
+
+)
 
 coclass'jman'
 
@@ -52,26 +62,39 @@ to install base library in ~system/base9 run:
 
 zloc=: <,'z'
 
-NB. y is name - abc abc_jd_ abc__c or locale _abc_
-NB. finds script where name is defined
-NB.  and displays NB. lines that are before the defn
-NB. the NB. is removed and no other formating is done
-NB. lines starting with *-+ probably indicate scriptdoc lines
-NB. if defined in multiple scripts they are listed
-NB. if script is in ~system - look for source script in base9
-NB. man'_abc_' displays man lines for each name in the locale
-NB. would be nice to support f* to return all matches
-NB. finds a=:b=: 123 but does not find 'a b c'=: ... 
+NB. y is 'name' or 'name_abc_' or '_locale_' or file
+NB.
+NB. name is searched in all locales (or just abc) and if found
+NB. the defining script is searched for the last defn line
+NB. the block of NB. lines preceding the defn line
+NB.  ignoring blank lines before the defn line
+NB. and the defn line are included in the result
 NB. 
-NB. in addition to man getting NB. lines before =:
+NB. if name starts with - then search for name...
+NB. if name starts with * then search for ...name...
+NB. -* not supported for 'name_abc_'
+NB.
+NB. if name is defined in multiple scripts they are listed
+NB. if script is in ~system the search continues in base9
+NB.
+NB. man'_abc_' - shows man line for each name in abc locale
+NB. 
+NB. man file - returns all NB. blocks starting with NB.*
+NB. a following defn line with =: is included
+NB. 
 NB. base library, JHS, and others have NB. conventions
-NB. that help in getting documention from  their scripts
-NB. 
-NB. base library convention has NB. lines
-NB.  with first char *-+ for formatting
-NB. 
-NB. JHS convention is first char * and simple rules
+NB. that help with pulling documention from a script
+NB. NB. block starting with NB.* indicates documentation
+NB. for extraction and possible formating
+NB. NB.* starts doc block
+NB. JHS NB.*.n ... - n selects htmln css for the text
+NB. 1 major section - 2 minor section - 3 sub section
+
 man=: 3 : 0
+erase'man_jpacman_' NB.! avoid 2 man defines
+man_z_=: man_jman_ NB. erase might have man_z_
+
+if. 0~:+/'./\'e. y do. manscript y return. end.
 r=.  getman y
 NB. remove NB.*blank and NB.blank 
 r=. <;.2 r
@@ -83,13 +106,21 @@ jselect_jhs_ ;r
 getman=: 3 : 0
 n=. dltb y
 if. '_'={.n do.
- t=. ('nl',n)~0 1 2 3
- t=. ;LF,~each(<''''),~each(<'   man'''),each t,each<n
+ t=. ('nl',n)~i.4
+ t=. manfix t,each<n
  return.
 end.
 if. 0~:+./'__'E. n do. '__ not allowed in name' return. end.
 if. -.'_'={:n do.
- t=. 'nl 0 1 2 3' doin conl 0
+ NB. man'name' or '-name' or '*name'
+ if. ({.n)e. '-*' do.
+  r=. manall n
+  if. 1<#r do. manfix r return. end.
+  n=. ;r NB. only 1 found so get it
+  n=. (_2{(n='_')#i.#n){.n NB. strip off locale
+ end.
+ t=. ('nl 0 1 2 3') doin conl 0
+ t=. ('''',n,'''',' nl i.4') doin_jman_ conl 0
  t=. ;(<<n)e. each t
  t=. t#conl 0
  
@@ -110,20 +141,45 @@ end.
 i=. 4!:4<n
 if. i<:0 do. 'not an explicit defn defined by loading a script' return. end. 
 f=. i{4!:3''
+bs=. '' NB. might be script leading to base9
 t=. jpath'~system/'
 if. t-: (#t){.;f do.
  NB. look for defn in base9
+ bs=. ('   edit''',(;f),''''),LF NB. script leading to base9
  p=. jpath'~system/base9'
  if. -.fexist p do. base9installhelp return. end.
  dt=. {."1 dirtree p,'/*.ijs'
+ dt=. dt-.<p,'/project/standalone.ijs' NB. standalone.ijs defines load_z_ etc
  for_f. dt do.
   r=. (fread f) manx n
   if. -.r-:'not found' do. r break. end.
  end.
-else. 
+else.
+ bs=. '' NB. not script leading to base9
  r=. (fread f) manx n
 end.
-r=. '   ',n,LF,('   edit''',(;f),''''),LF,(LF={.r)}.r
+r=. '   ',n,LF,bs,('   edit''',(;f),''''),LF,(LF={.r)}.r
+)
+
+manfix=: 3 :0
+;LF,~each(<''''),~each(<'   man'''),each y
+)
+
+NB. -abc - names that start with abc
+NB. *abd - names that contain abc
+manall=:3 : 0
+n=. dltb y
+n=. ('-'={.n)}.n
+t=. ('''',n,'''',' nl i.4') doin_jman_ conl 0
+b=. 0~:;#each t
+t=. b#t
+c=. b#conl 0
+r=. ''
+for_i. i.#t do.
+ r=. r, (;i{t),each '_',each (i{c),each'_'
+end. 
+t;<c
+r
 )
 
 manx=: 4 : 0
@@ -132,35 +188,51 @@ p=. ('_'={:y){::y; ((}:y)i:'_'){.y
 nna=. '(^|[^[:alnum:]_])'
 nnz=. '($|[^[:alnum:]_])' NB. .: removed
 gass=. '[[:space:]]*=:'
-p=. nna,p,gass
-b=. p rxmatches_jregex_ d
-select. #b
-case. 0 do. 'not found' return.
-case. 1 do. 
-case.   do. 'found: ',":#b
-end.
+b=.   (nna,p,gass) rxmatches_jregex_ d NB. name
+b=. b,(nna,y,gass) rxmatches_jregex_ d NB. name_loc_
+if. 0=#b do. 'not found' return. end.
+i=. {.{:{:b/:b NB. use the latest in the file if more than 1
+i=. i+LF=i{d
+i=. +/LF=i{.d NB. lines up to defn
+
 bdx=. <;._2 d,LF
 bd=. dltb each bdx
 
-i=. {.{:{:b
-i=. i+LF=i{d
-i=. +/LF=i{.d
+t=. i{.bd NB. lines before defn
+defn=. i{bd
 
-t=. i{.bd
-a=. (;(<'NB.')=3{.each t)+.0=;#each t
-h=. a i: 0
-
-if. 0*.')'=;h{bd do. NB. back up over one set of 0 : 0 lines
- t=. h{.bd
- a=. ;+./each (<'0 : 0') E. each t
- a=. a+.;+./each (<'0 :0') E. each t
- a=. a+.;t=<,')'
- a=. a i: 1
- h=. h-<:((#t)-a)*a<#t
-end.
-
-r=. (>:h)}.(>:i){.bdx
+msk=. 0=;#each t
+bb=. +/(msk i: 0)}.msk NB. count of block of blank lines before defn
+msk=. ;(<'NB.')=3{.each (-bb)}.t
+bnb=. +/(msk i: 0)}.msk NB. count of block of NB. lines before defn
+t=. (-bb+bnb){.t
+t=. bnb{.t
+r=. t,defn
+r=. r,(1~:#b)#<'warning: reporting last of ',(":#b),' defns'
 ;r,each LF
 )
 
 doin=: 4 : '(<x)(4 : ''do__y x'')each<"0 y' NB. run sentence in each locale
+
+manscript=: 3 : 0
+r=. ''
+d=. <;.2 LF,~fread y
+bd=. dltb each d
+bdp=. 4{.each bd
+i=. 0
+while. i<#bdp do.
+ i=. i+(i}.bdp) i. <'NB.*' NB. start of next doc block
+ if. i=#bdp do. ;r return. end.
+ t=. i}.bdp
+ a=. ((3{.each t)=<'NB.')i.0 NB. include NB. block
+ t=. a}.t
+ b=. (1=;#each (i+a)}.bd)i. 0 NB. blank block
+ n=. a{.i}.d
+ c=. (<'=:')e.;:;(i+a+b){d NB. next line included if it has =:
+ c=. c *. '<'~:4{;{.n 
+ i=. i+a+b+c 
+ if. c do. n=. n,(i-1){d end.
+ r=. r,n,<LF
+end.
+;r
+)

@@ -30,10 +30,7 @@ default jev_get calls jpageget if ev_create is defined (indicates jpage)
  jpageget creates numbered locale for the page
 )
 
-NB.* see ~addons/ide/jhs/util.ijs for complete information
-NB.* 
-NB.* jhs locale definitions:
-NB.* 
+NB.*.1 general utils 
 
 NB.* jhsclosepages jhsclosepages''
 jhsclosepages=: 3 : 0
@@ -45,7 +42,6 @@ NB.* jhsflex - set relative term iframe sizes and freeze splitter
 NB.*    jhsflex '50 10 40' NB. term iframe sizes and freeze splitter
 NB.*                       NB. missing use last value
 NB.*    jhsflex ''         NB. unfreeze splitter
-NB.* 
 jhsflex=: 3 : 0
 if. y-:'' do.
  jjs 'framesize([])'
@@ -62,7 +58,6 @@ NB.*    jhsoption 'term row'
 NB.* wrap / nowrap - term log text
 NB.* tab  / term   - jpage default tab or term iframe
 NB.* row  / column - term iframes
-NB.* 
 jhsoption=: 3 : 0
 r=. ''
 for_n. ;:tolower y do.
@@ -185,8 +180,6 @@ cocurrent n NB. run in app locale
 title jhrx (getcss''),(getjs''),gethbs''
 )
 
-NB.* 
-
 NB. return valid open show
 NB. '_' or 'tab' or 'term' or xywh
 fixshow=: 3 : 0
@@ -197,63 +190,19 @@ s=. _".s
 s
 )
 
-NB.*
 NB.* close - close wid
 close=: 3 : 0
 jjs_jhs_'jijxwindow.getwindow("',y,'").close();'
 )
 
-NB.*
 NB.* cbfix - fix ' \ \n from clipboard paste in jijx prompt
 cbfix=: 3 : 0
 cbdata_jhs_=. y rplc '\n';LF;'\\';'\';'\''';''''
 )
 
-NB.*
 NB.* focus - focus wid - focus 'jfif' - focus 'jijs?jwid=~temp/sp/spfile.ijs'
 focus=: 3 : 0
 jjs_jhs_'jijxwindow.getwindow("',y,'").focus();'
-)
-
-NB.* doc - doc '' or 'html' or 'js'
-doc=: 3 : 0
-select. y
-case. 'html' do.
- NB. should be changed be simpler util.ijs comments
- r=. ''
- t=. <;.2 LF,~fread '~addons/ide/jhs/utilh.ijs'
- for_n. t do.
-  n=. >n
-  if. 'NB.* '-:5{.n do.
-   n=. 5}.n
-   i=. n i.'*'
-   if. i~:#n do.
-    n=.(10{.i{.n),' ',}.i}.n
-   end.
-   r=. r,n
-  end.
-  r
- end.
-case. 'js'   do.
- NB. should be expanded and use simpler comments similar to util.ijs
- r=. docjsn
- t=. <;.2 LF,~fread jpath JSPATH,'jscore.js'
- for_n. t do.
-  n=. >n
-  if. '//* '-:4{.n do.
-   n=. 4}.n
-   i=. n i.'*'
-   if. i~:#n do.
-    n=.(10{.i{.n),' ',}.i}.n
-   end.
-   r=. r,n
-  end.
- end.
- r
-case.        do.
- t=. <;.2 LF,~fread '~addons/ide/jhs/util.ijs'
- ;5}.each t#~(<'NB.* ')=5{.each t
-end.
 )
 
 NB. thanks to Raul Miller for this forum contribution
@@ -415,44 +364,53 @@ end.
 NB.* utf8_from_jboxdraw - utf8_from_jboxdraw string - rplc i.11 boxdraw with utf8
 utf8_from_jboxdraw=: 3 : 'y rplc (<"0 [11{.16}.a.),.<"1 [11 3$8 u: u:9484 9516 9488 9500 9532 9508 9492 9524 9496 9474 9472'
 
-NB.* printstyle=: 'font-family:"courier new";font-size:16px;'
-printstyle=: 'font-family:"courier new";font-size:16px;'
+NB.* printstyle - css style for printing
+printstyle=: 'font-family:"courier new","courier","monospace";font-size:16px;'
 
 NB.* printwidth=: 80 - truncate long lines with ... 
 printwidth=: 80
 
-NB.* print - [x] print 23;noun - x default 1 - x 0 for manual print
+NB.* print_jhs_ ('abc';i.3) [dialog [ width [ style ] ] ]
+NB.  see printscript
+NB.  width does not fold - displays ... after width
+NB.  print_jhs_ (],'=: ',[:5!:5<)'printscript_jhs_'
 print=: 3 : 0
-1 print y
-:
-t=. fmt0 ":y
+a=. boxopen y
+a=. a,(<:#a)}.1;printwidth;printstyle
+'noun dialog width style'=: a
+t=. fmt0 ":noun
 t=. t,;(LF={:t){LF;''
 t=. <;._2 t
 c=. ;#each t
-t=. (c<.printwidth){.each t
-t=. t,each ;(c>printwidth){each <'';'...'
+t=. (c<.width){.each t
+t=. t,each ;(c>width){each <'';'...'
 t=. ;t,each LF
 t=. utf8_from_jboxdraw jhfroma t
-x printsub t
+printsub dialog;style;t
 )
 
-NB.* printscript - [x] printscript '~temp/abc.ijs' - x same as for print
+NB.* printscript_jhs_ '~temp/abc.ijs' [dialog [width [style] ] ]
+NB.  dialog   - default 1 - 0 display - 1 print dialog
+NB.  width    - default printwidth_jhs_
+NB.  style    - default printstyle_jhs_ - css
 printscript=: 3 : 0
-1 printscript y
-:
-y=. spf y
+a=. boxopen y
+a=. a,(<:#a)}.1;printwidth;printstyle
+'file dialog width style'=: a
+y=. spf file
 t=. toJ fread y
 t=. t,;(LF={:t){LF;''
-d=. printwidth foldtext each <;._2 t
+d=. width foldtext each <;._2 t
 d=. (' ',~each 5":each <"0 >:i.$d),each d
 d=. d rplc each <LF;LF,9#' '
 t=. jhfroma y,LF,;d,each LF
-x printsub t
+printsub dialog;style;t
 )
 
-printsub=: 4 : 0
-s=. printstyle rplc '"';''''
-jjs'win=urlopen("");win.document.write("<style type=''text/css''>pre{',s,'}</style><pre>',y,'<pre/>");',x#'win.print();win.close();'
+printsub=: 3 : 0
+'dialog style text'=. y
+s=. style rplc '"';''''
+jjs'win=urlopen("");win.document.write("<style type=''text/css''>pre{',s,'}</style><pre>',text,'<pre/>");win.document.title="print";',dialog#'win.print();win.close();'
 )
 
 NB.* tablefromjs - tablefromjs '[[1,2,3],[4,5,6]]' 

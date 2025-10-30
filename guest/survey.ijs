@@ -150,7 +150,7 @@ end.
 r=. r,<(getid q;i;question;''),' jhtextarea '''';1;20'
 r=. r,<'jhhr'
 t=. ;r,each LF
-t=. t rplc LF;LF,'''<br/>''',LF
+t=. t rplc LF;LF,'''<br>''',LF
 t,LF,~'''sub''jhb''submit'''
 )
 

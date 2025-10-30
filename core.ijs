@@ -559,6 +559,7 @@ jfe 1
 NB. load rest of JHS core
 load__'~addons/ide/jhs/util.ijs'
 load__'~addons/ide/jhs/utilh.ijs'
+load__'~addons/ide/jhs/form.ijs'
 load__'~addons/ide/jhs/jbase.ijs'
 load__'~addons/ide/jhs/sp.ijs'
 load__'~addons/ide/jhs/tool.ijs'

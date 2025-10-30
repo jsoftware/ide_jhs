@@ -2,13 +2,6 @@ load'~addons/ide/jhs/gl2.ijs' NB. first
 load'~addons/ide/jhs/widget/jhjcanvas.ijs'
 NB. Jqt dissect code is loaded and modified at the end of this script
 
-dtest=: 3 : 0
-select. y
-case. 0 do. dissect 'a ([ + (+/ % #)@]) z' [ a =. 6 5 3 [ z =. 3 9 6 */ 1 5 9 2 
-case. 1 do. dissect'a+b+a'[a=. b=. i.200 200
-end.
-)
-
 0 : 0
 bugs can leave dissect damaged - possible patch to avoid restart
    dissectionlist_dissect_=:     (,:($0);10 10)
@@ -29,17 +22,24 @@ JHS explorer locale
 
 JHSFORM_z_   - form locale that is wd target
 JHSCANVAS_z_ - canvas locale - buffer__JHSCANVAS is target for jsc... and gl... cmds
+
+dissect 'a ([ + (+/ % #)@]) z' [ a =. 6 5 3 [ z =. 3 9 6 */ 1 5 9 2 
+dissect'a+b+a'[a=. b=. i.200 200
 )
 
 coclass'dissectjhs'
 coinsert'jhs'
 coinsert'jhjcanvas'
 
+
 NB. JHS dissect config
 NB. JHS uses standard dissect ~config/dissect.ijs
 config=: 3 : 0 
-c_dxywh=: ":10  10 600 600 NB. dissect paints main based on config % and qscreen
-c_exywh=: ":10 720 800 150
+NB. browser header junk is in addition to pageopen height (outerHeight-innerHeight)
+'sw sh'=. 2{.0".getv_jhs_'jinfo' NB. screen width height
+'w h'=. <.0.6 0.6*sw,sh
+c_dxywh=: ":10  10 ,w,h NB. main dissect window
+c_exywh=: ":(20+10) , (<.h*0.4) , (w+20+100) , <.h*0.2
 c_font=:  '11pt ',PC_FONTFIXED_jhs_
 )
 
@@ -76,20 +76,18 @@ tuthelp=: 0 : 0
 JHS interface to dissect tool<br>
 &bull; shift+click element - tutorial<br>
 &bull; ctrl+click data and then press explore button<br>
-&bull; docs are for Jqt - for now you have to translate to JHS<br>
-&bull; esc-j in term will dissect input area sentence<br>
+&bull; term window menu - dissect input line<br>
+&bull; debug window - dissect button dissects current line<br>
 &bull; gentler learning curve if familiar with JHS and Jqt dissect<br>
+&bull; docs are for Jqt - for now you have to translate to JHS<br>
 &bull; hovering does not show tooltips - shift+click required<br>
 &bull; right mouse click is not currently supported<br>
-&bull; not currently integrated with debug<br>
 )
 
 tutexplore=: 0 : 0
-large data area to explore in separate<br>
-window has not been selected<br><br>
+large data area to explore in separate window has not been selected<br><br>
 
-select data area with ctrl+click and<br>
-then press explore again
+select data area with ctrl+click and then press explore again
 )
 
 whvals=: ":each<"0[ 5 10 20 30 40 50 60 70 80
@@ -326,6 +324,7 @@ NB. runexplorer created new one
 c=. explorer
 t=. ;(Num_j_ e.~{.;c){(,~c);(;{.copath c),'?jlocale=',;c
 t=. (0".c_exywh) pageopenargs t
+echo t
 c=. 'pageopen *',}:;t,each LF
 jhrcmds c
 )
@@ -539,6 +538,12 @@ htmltoplain_dissecthelplearning_=: htmltoplain_dissecthelpusing_=: [
 
 load'~addons/debug/dissect/dissect.ijs'
 
+NB. parse errors - extra woes in debugger
+failmsg_dissect_=: 3 : 0
+echo y
+'undissectable sentence'assert 0
+)
+
 NB. tip in stat line causes problems - menu item shows tip in tut
 displayshowtipoftheday_dissect_=: 0 
 
@@ -587,7 +592,7 @@ hoverinitloc =: $0
 drawtooltip_dissect_=: [
 
 NB. list of wd cmds that echo - only first cmd - psel;pshow sees only psel
-wdlist__=: ;:'' NB. pc qhwnd ...
+wdlist__=: ;:'mb' NB. pc qhwnd ...
 
 NB. JHS dissect wd stuff
 NB. wd command can be single command or multiple commands delimited by ;

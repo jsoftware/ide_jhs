@@ -19,9 +19,9 @@ login=: 0 : 0
 )
 
 loggedin=: 0 : 0
-<br/><span style="color:red;">
-SECURITY! logout when finished<br/>
-close all browser windows or run sentence<br/>
+<br><span style="color:red;">
+SECURITY! logout when finished<br>
+close all browser windows or run sentence<br>
 <tt>&nbsp;&nbsp;&nbsp;jlogoff_jhs_ 0</tt>
 </span>
 )

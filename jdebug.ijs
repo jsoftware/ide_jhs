@@ -13,14 +13,17 @@ latent expressions update jdebug page
 NB. update jdebug page - called by debug or dbxup latent expression
 dbx_z_=: 3 : 0
 9!:29[0 NB. don't run twice
+e=. 13!:12''
 try.
  d=. getdata_jdebug_''
- NB. term display of last error
- if. 0~:+/'*'=;8{"1 [13!:13'' do. jhtml_jhs_ '<div class="transient" style="color:red;">',( jhfroma_jhs_;}.each<;.2 [13!:12''),'</div>' end.
+ NB. term display of last error if not stop
+ if. 18~:dberr'' do.
+  if. 0~:+/'*'=;8{"1 [13!:13'' do. jhtml_jhs_ '<div class="transient" style="color:red;">',( jhfroma_jhs_;}.each<;.2 e),'</div>' end.
+ end. 
  a=. jurlencode_jhs_ }:;JASEP_jhs_,~each d
  jjs_jhs_'var w= findwindowbyname("jdebug"); if(w==null) alert("required: jijx menu ide>jdebug"); else w.update("',a,'");'
 catch.
- echo 'error in jdebug',LF,13!:12''
+ echo 'error in jdebug',LF,e
 end. 
 i.0 0
 )
@@ -81,6 +84,7 @@ jhhr
 'dbreset'  jhb'reset'
 'nox'      jhb'no x'
 'dostack'  jhb'stack'
+'dissect'  jhb'dissect'
 
 jhresize''
 'sel'      jhdiv'<FILES>'
@@ -157,6 +161,10 @@ n=. 0".getv'jsid'
 if. n e. stops do. stops=: stops-.n else. stops=: /:~stops,n end.
 monad setstops namex
 reply''
+)
+
+ev_dissect_click=: 3 : 0
+jhrajax 'dissect ',quote ;ln{defn
 )
 
 dbxsm_usage=: 0 : 0
@@ -297,6 +305,7 @@ end.
 
 defn=: d
 cdefn=. #defn
+ln=: line
 
 wid=. #":cdefn NB. width required for number line numbers
 head=. wid":each i.cdefn
@@ -405,4 +414,6 @@ function ev_nuvoc_click(){jijxrunx("jhswiki'nuvoc'");}
 function ev_dbhelp_click(){jijxrunx("dodbhelp_jdebug_''");}
 function ev_dostack_click(){jijxrunx("dostack_jdebug_''");}
 
+function ev_dissect_click(){jdoajax([]);}
+function ev_dissect_click_ajax(ts){jijxrunx(ts[0]);};
 )

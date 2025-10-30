@@ -152,7 +152,9 @@ function ev_advance_click(){jdoajax([]);}
 function ev_return_click(){ev_log_enter();}
 function ev_uarrow_click(){uarrow();}
 function ev_darrow_click(){darrow();}
-function ev_dissect_click(){jdoajax([],jtfromh(jbyid('prompt').innerHTML));}
+function ev_dissect_click(){
+  var h= jtfromh(jbyid('prompt').innerHTML).slice(0,-1); // remove LF
+  jdoajax([],h); newpline(h);}
 
 // log enter - contenteditable
 // run or recall line with caret
