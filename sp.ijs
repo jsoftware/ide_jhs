@@ -143,10 +143,10 @@ ADVANCE_jijx_=: 'spx'
 SPXFILE_z_=: spf y
 SEM=: get SPXFILE
 SEMN=: 1
-a=. SPXFILE,LF,'advance interactive tutorial:',LF
-b=. 'ctrl+. (ctrl+dot) or menu bar ⇒'
+a=. SPXFILE,LF,'to advance interactive tutorial:',LF
+b=. 'type ctrl+. (ctrl dot) or<br>click ⇒ in menu bar'
 echo a
-echo jhtml'<div><font style="color:red;font-weight:bold">',b,'</font></div>'
+echo jhtml'<div><font style="color:blue;font-weight:bold">',b,'</font></div>'
 NB. status''
 i.0 0
 )
@@ -221,8 +221,7 @@ end.
 if. 'NB.spxrun:'-:10{.deb d do.
  SEMN=:>:SEMN
  ".10}.d
- i.0 0
- return.
+ goto_top.
 end. 
 
 if. 'NB.spxaction:'-:13{.deb d do.

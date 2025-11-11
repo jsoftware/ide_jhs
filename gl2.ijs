@@ -130,7 +130,8 @@ GLTEXTCOLOR=: GLCOLOR
 gltextxy=: 3 : 0
 gl2log'gltextxy';y
 assert 2=#y
-GLTEXTXY=: y + 0,canvasfontheight__JHSCANVAS
+NB.! textBaseline= "top" puts text right at top - kluge add 3
+GLTEXTXY=: y + 0,3 NB. canvasfontheight__JHSCANVAS
 )
 
 gltext=: 3 : 0

@@ -1,6 +1,11 @@
 NB. JHS - core services
 require 'socket'
 
+NB.! kill off
+new_www_z_=: 3 : 0
+jjs_jhs_'urlopen("~addons/ide/jhs/guest/new/newindex.html")'
+)
+
 JHSVERSION_z_=: ' '''-.~9}.(d i. LF){.d=. (1 i.~ 'VERSION=:' E. d)}.d=. fread'~addons/ide/jhs/manifest.ijs'
 
 coclass'jhs'
@@ -515,7 +520,7 @@ LOCALHOST=: '127.0.0.1'
 logappfile=: <jpath'~user/.applog.txt' NB. username
 SETCOOKIE=: 0
 NVDEBUG=: 0 NB. 1 shows NV on each input
-LOG=: jmarka,('overview'jhb'J - click me'),jmarkz
+LOG=: jmarka,('overview'jhb'click for interactive session'),jmarkz
 LOGN=: ''
 PDFOUTPUT=: 'output pdf "',(jpath'~temp\pdf\plot.pdf'),'" 480 360;'
 DATAS=: ''

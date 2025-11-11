@@ -47,7 +47,7 @@ function jscellipse(a){context.ellipse(a[0],a[1],a[2],a[3],a[4]/rfi,a[5]/rfi,a[6
 function jscarc(a){context.arc(a[0],a[1],a[2],a[3]/rfi,a[4]/rfi,a[5]);}
 function jscclip(){context.clip();}
 function jscsave(){context.save();}
-function jscrestore(){context.restore();}
+function jscrestore(){context.restore();context.textBaseline= "top";}
 function jscpixels(a){context.putImageData(pixels[a[4]-pixelbase],a[0],a[1]);}
 
 function jscqpixels(a){

@@ -22,6 +22,7 @@ function ev_body_load()
  jseval(false,jbyid("log").innerHTML); // redraw canvas elements
  newpline("   ");
  setfocus();
+ //jresize();
   
 // var el = jbyid('log');
 //swipedetect(el, function(d){if (d=='left')alert('swiped left!')})
@@ -75,7 +76,7 @@ function updatelog(t)
  n.innerHTML= jjsremove(t);
  removeid("prompt");
  jbyid("log").appendChild(n);
- setTimeout(scrollz,TOT); // bigger value does not help iphone scrollintoview
+ setTimeout(scrollz,TOT); // bigger value does not help ipad scrollz
 }
 
 function addlog(t){
@@ -87,7 +88,7 @@ function addlog(t){
 function scrollz()
 {
  var e= jbyid("log");
- e.scrollTop= e.scrollHeight - e.clientHeight;
+ e.scrollTop= e.scrollHeight - e.clientHeight; // fiddling does not help ipad
  if(null==jbyid("prompt"))return;
  jsetcaret("prompt",1);
 }

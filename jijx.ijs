@@ -30,7 +30,7 @@ jhmenugroupz''
 
 'options'      jhmenugroup''
 'wrap'         jhmenuitem 'NOWRAP ➜ wrap'
-'spa'          jhmenuitem 'TERM ➜ tab'
+'spa'          jhmenuitem 'Tab ➜ term'
 'flow'         jhmenuitem 'COLUMN ➜ row';'u' NB. see flowset for kludge to preserve shortcut
 'cleartemps'   jhmenuitem 'remove red boxes';'r'
 'clearwindow'  jhmenuitem 'clear window'
@@ -43,6 +43,7 @@ jhmenugroupz''
 HBS=: 0 : 0 rplc '<termmenu>';termmenu
 <termmenu>
 jhdivz NB. flex active
+      jhresize''
 'log' jhec'<LOG>'
 'jframes'jhdiva''
 jhdivz
@@ -155,10 +156,9 @@ ev_doublequote_ctrl =: 3 : 'echo''doublequote'''
 
 load'~addons/ide/jhs/loadx.ijs'
 
+
+NB. csscore has log css
 CSS=: 0 : 0 
-
-#log{width:100%;height:100%;resize:none;overflow:auto;}
-
 *{font-family:<PC_FONTFIXED>;font-weight:550;}
 form{margin-top:0;margin-bottom:0;}
 *.fm   {color:<PC_FM_COLOR>;}
@@ -167,7 +167,7 @@ form{margin-top:0;margin-bottom:0;}
 *.sys  {color:<PC_SYS_COLOR>;}
 *.file {color:<PC_FILE_COLOR>;}
 
-.jhb#overview{background-color:<PC_JICON>;font-weight:bold;font-size:1em;margin-left:2em;}
+.jhb#overview{background-color:<PC_JICON>;font-weight:bold;font-size:1em;margin-left:1em;}
 #prompt{background-color:blanchedalmond;border:2px solid black;padding:8px 0 8px 0;}
 )
 

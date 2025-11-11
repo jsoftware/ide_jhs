@@ -166,7 +166,6 @@ if. #c do.
 end.
 see ":each r
 )
-
 NB. report snums with or without posts
 repposts=: 3 : 0
 repget''

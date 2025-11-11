@@ -279,12 +279,17 @@ getdata=: 3 : 0
 if. JMP do. JMP=: 0[dbss(>:';'i.~dbsq'')}.dbsq'' end.
 cleanstops''
 stps=. (0~:#dbsq''){::'no stops';dbsq''
+
+decho 13!:12''
+
 t=. 13!:13''
+
+decho 13!:12''
+
 s=. ;8{"1 t
 i=. s i. '*'
 if. i=#s do. '';'';nosus;stps return. end.
 s=. i{t
-
 'n err line class args'=. 0 1 2 3 6{s
 name=:  n
 namex=: basename n

@@ -44,12 +44,14 @@ image/tiff                     tif
 image/tiff                     tiff
 image/x-icon                   ico
 image/x-ms-bmp                 bmp
+image/svg+xml                  svg
 text/css                       css
 text/csv                       csv
 text/html                      htm
 text/html                      html
 text/plain                     text
 text/plain                     txt
+text/plain                     md
 video/x-ms-wmv                 wmv
 video/x-msvideo                avi
 

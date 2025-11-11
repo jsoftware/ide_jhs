@@ -1,10 +1,12 @@
+NB.spxrun: jhsoption'wrap term column'
+NB.spxrun: jcjs'reset'
 0 :0
-6 minutes with this lab covers J programming mechanics with the JHS interface
+5 minutes with this lab covers J programming mechanics with the JHS interface
 
 J coding is covered by other labs and resources referenced at the end
 
-ctrl+. (ctrl+dot) or menu bar ⇒
-gives J next line from lab file
+ctrl+. or menu bar ⇒
+advances to next step in the lab
 
 do a lab advance now
 )
@@ -12,7 +14,7 @@ do a lab advance now
 i. 5 NB. first 5 ints
 +/ i. 5 NB. sum over first 5 ints
 *: i. 5 NB. square first 5 ints
-'reset' chart *: i. 100
+chart *: *: i. 100
 a=. 0.1 * i. 100
 s=. sin a
 c=. cos a
@@ -22,15 +24,11 @@ jcjs'legend';'sin';'cos';'+/'
 chart sc,+/sc,+/sc
 
 0 : 0
-next line sets menu options
-suitable for this lab
- wrap   - avoid horizontal scrolling
- term   - edit frame shares this window
- column - window frames in a column
-)
-jhsoption'wrap term column'
+this lab has set options:
+ wrap   - avoid horizontal scrol
+ term   - pages share this window
+ column - term pages in a column
 
-0 : 0
 this lab work well on a tablet
  especially with a real keyboard
 
@@ -90,8 +88,21 @@ and press enter to run it again
 ☰.inputs - list recent inputs
 lab lines are not treated as inputs
 so your list of input lines may be short
-(shortcut ☰.i)
-click one for and press enter to recall
+click one and press enter to recall
+)
+
+0 : 0
+browsers appropriate most ctrl shortcuts
+JHS uses: ctrl+. for lab advance
+          ctrl+, to show ☰
+
+editor uses ctrl+zxcvy and a few more
+
+JHS shortcuts are with esc
+press/release esc and then press/release shortcut
+
+menu item has the shortcut at the right side
+menu item inputs has the letter i
 )
 
 0 : 0
@@ -145,14 +156,6 @@ jhlatex_jhs_ '\sqrt{y_0^2 + y_1^2}'
 jhtml'<div><font style="color:red;font-size:2rem;">%: +/ *: y</font></div>'
 
 names'' NB. list of defined names
-
-0 : 0
-browsers appropriate most keyboard shortcuts
-JHS uses: ctrl+. for lab advance
-          ctrl+, to show ☰
-
-editor uses ctrl+zxcvy and a few more
-)
 
 0 : 0
 next step opens file ovlab.ijs for editing

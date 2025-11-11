@@ -50,7 +50,6 @@ button:hover{cursor:pointer;}
 
 .jmenuitem {color:black;padding:2px;margin:0px;background-color: white;width:16em;text-decoration:none;border-top:0px solid black;
   display:block;text-align:left;}
-.jmenuitem:focus{border:2px solid black;}
 .jmenuitem:hover{background-color:PC_MENU_HOVER;}
 
 .jmenuspanleft   {font-family:PC_FONTFIXED;pointer-events: none;}
@@ -73,6 +72,9 @@ button:hover{cursor:pointer;}
 
 input[type=text],input[type=password]{ margin: 2px;padding:2px;border: 1px solid black;}
 
+/* jijx here so it can be overridden by table and phone */
+#log{width:100%;height:100%;resize:none;overflow:auto;}
+
 /* tablet */
 @media screen and (max-device-width: 992px){
  *{font-size:24px;}
@@ -80,7 +82,7 @@ input[type=text],input[type=password]{ margin: 2px;padding:2px;border: 1px solid
  .jhb{min-height:2em;min-width:2em;}
  .jmenuburger,.jmenuitem,.jmenutitle{min-height:2.5em;min-width:2.5em;}
  input::file-selector-button{font-size:24px;color:green;}
- #log{overflow-wrap:break-word;white-space:normal;} /* jijx log wrap */
+ #log{height:90%;overflow-wrap:break-word;white-space:normal;} /* jijx log wrap */
 }
 
 /* phone */
@@ -90,7 +92,7 @@ input[type=text],input[type=password]{ margin: 2px;padding:2px;border: 1px solid
  .jhb{min-height:2.5em;min-width:2.5em;}
  .jmenuburger,.jmenuitem,.jmenutitle{height:2.5em;}
  input::file-selector-button{font-size:48px;color:red;} /*min-height:180px;min-width:180px;*/
- #log{overflow-wrap:break-word;white-space:normal;} /* jijx log wrap */
+ #log{height:85%;overflow-wrap:break-word;white-space:normal;} /* jijx log wrap */
 
  /* phone hamburger menu */
  .jmenuburger {height:2em;}
