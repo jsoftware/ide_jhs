@@ -58,7 +58,9 @@ jhresize''
 'sel'       jhdiv'<FILES>'
 )
 
-LASTPATH=: jpath'~temp/'
+3 : 0''
+if. _1=nc<'LASTPATH' do. LASTPATH=: jpath'~temp/' end.
+)
 
 NB. get valid path (based on folderinfo) ; folderinfo
 getfandp=: 3 : 0

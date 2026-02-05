@@ -1,29 +1,42 @@
 NB. jhs debug page
 
 0 : 0
-dbx... prefix indicates JHS db verbs
+z locale names
+ dbx... prefix indicates JHS db verbs
+ dbxx.. prefix indicates JHS db nouns
+
+ dbxxerr - 13!:12'' - when dbx is run
+ dbxxstk - 13!:13'' - when dbx is run
+
+prior some late 9.7 fix a 13!:13'' could get an error for dbl (foo__dbl)
+ that overwrote original error
 
 avoid assert as this stuff runs with debug enabled
 
 latent expressions update jdebug page
  13!:15 updates on suspension
   9!:27 updates when no suspension
+
+9.6 changed 13!:13 to have only the monad or dyad defn
+ also has some new cols
 ) 
 
 NB. update jdebug page - called by debug or dbxup latent expression
+NB. set dbxxerr and dbxxstk now for all subseguent users
 dbx_z_=: 3 : 0
 9!:29[0 NB. don't run twice
-e=. 13!:12''
+dbxxerr_z_=: 13!:12''
+dbxxstk_z_=: 13!:13''
 try.
  d=. getdata_jdebug_''
  NB. term display of last error if not stop
  if. 18~:dberr'' do.
-  if. 0~:+/'*'=;8{"1 [13!:13'' do. jhtml_jhs_ '<div class="transient" style="color:red;">',( jhfroma_jhs_;}.each<;.2 e),'</div>' end.
+  if. 0~:+/'*'=;8{"1 [dbxxstk do. jhtml_jhs_ '<div class="transient" style="color:red;">',( jhfroma_jhs_;}.each<;.2 dbxxerr),'</div>' end.
  end. 
  a=. jurlencode_jhs_ }:;JASEP_jhs_,~each d
- jjs_jhs_'var w= findwindowbyname("jdebug"); if(w==null) alert("required: jijx menu ide>jdebug"); else w.update("',a,'");'
+ jjs_jhs_'var w= findwindowbyname("jdebug"); if(w==null) alert("required: debug page (term menu>system pages>debug)"); else w.update("',a,'");'
 catch.
- echo 'error in jdebug',LF,e
+ echo 'error in jdebug',LF,dbxxerr
 end. 
 i.0 0
 )
@@ -36,7 +49,7 @@ y
 
 NB. move > to line
 dbxline_z_=: 3 : 0
-n=. 0{::1{::13!:13''
+n=. 0{::1{::dbxxstk
 dbss (n,' * : * ;'),dbsq''
 JMP_jdebug_=: 1 NB. get rid of all stops after jmp
 13!:7 y
@@ -44,9 +57,9 @@ JMP_jdebug_=: 1 NB. get rid of all stops after jmp
 
 NB. clear stack
 dbxreset_z_=: 3 : 0
-if. 1<#13!:13'' do.
+if. 1<#13!:13'' do. NB. 13!:13 ok here
  dblxs'' NB. turn off db lx
- 9!:27'dbxreset'''''
+ 9!:27'dbxreset''''' NB. dbxup should allow dbxxstk
  9!:29[1
  dbcut''
 else.
@@ -269,23 +282,12 @@ else.
 end. 
 )
 
-0 : 0
-9.6 changed 13!:13 to have only the monad or dyad defn
-this broke getdata as it looked for the : to separate monad/dyad
-)
-
-NB. 13!:13 - name,error,line,class,rep,script,args,locals,*
+NB. stack - name,error,line,class,rep,script,args,locals,*
 getdata=: 3 : 0
 if. JMP do. JMP=: 0[dbss(>:';'i.~dbsq'')}.dbsq'' end.
 cleanstops''
 stps=. (0~:#dbsq''){::'no stops';dbsq''
-
-decho 13!:12''
-
-t=. 13!:13''
-
-decho 13!:12''
-
+t=. dbxxstk NB. dbxxstk
 s=. ;8{"1 t
 i=. s i. '*'
 if. i=#s do. '';'';nosus;stps return. end.
@@ -327,18 +329,16 @@ NB. e=. 1{::s
 NB. try. a=. (<:(0=e){e,34){::9!:8'' catch. a=. ":e end.
 NB. a=. (0{::s),'[',(':'#~-.monad),(":line),'] ',a
 
-n=. +/0~:;1{"1[13!:13''
+n=. +/0~:;1{"1 dbxxstk NB. dbxxstk
 a=. (1<n)#LF,~(":n),' errors on stack'
-a=. a,13!:12''
+a=. a,dbxxerr
 
 r=. r;(":line);(jhfroma a);stps
 )
 
-getstack=: (}.~ ('*' i.~ [: > 8 {"1 ]))@(13!:13) NB. from jqt jdebug - extra 13!:13 columns
-
-NB. y is rows to discard (stack;dostack;jev_run)
+NB. display error stack
 stack=: 3 : 0
-s=. y}.13!:13''
+s=. }.dbxxstk NB. first engry is dbx
 'name en ln nc defn args'=. <"1 [ 0 1 2 3 4 6{|:s
 fem=. en{'';9!:8''
 fem=. (_6*(_6{.each fem)=<' error')}.each fem
@@ -355,6 +355,8 @@ seebox fem,.name,.fln,.fld
 )
 
 jev_get=: 3 : 0
+dbxxerr_z_=: 13!:12''
+dbxxstk_z_=: }.13!:13'' NB. drop jev_get_jdebug_
 'jdebug' jhrx (getcss''),(getjs''),gethbs'FILES CURLINE STACK STOPS';getdata''
 )
 

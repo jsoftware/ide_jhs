@@ -14,7 +14,7 @@ $ start jconsole
 *** setup aws guest server
 https://code.jsoftware.com/wiki/System/Installation/Cloud
 
-$ . bin/aws.sh  # cd j9.x/addons/ide/jhs/aws
+$ cd j9.x/addons/ide/jhs/aws
 $ ./aws-sh clr  # required if a new instance to clear known hosts
 $ ./aws-sh set a.b.c.d # done once - copied from aws console
 $ ./aws-sh bld j9.6 # continue connecting? - yes if this is new instance
@@ -26,6 +26,8 @@ $ ./aws-sh putr $HOME/git/addons/ide/jhs j9.6/addons/ide
  these changes are in base install - start required to get them to server
   or be very careful with following:
   ./aws-sh ssh - sudo cp -r -f j9.6 /jguest/j
+
+$ ./aws-sh putr $HOME/git/addons/data/jd j9.6/addons/data
 
 $ # following required if new instance needs letsencrypt
 $ ./aws-sh lets-restore # restore local backup tar to remote /etc/letsencrypt
@@ -158,6 +160,18 @@ backup of ~temp is stored in /home/base/jpersist/NAME.tgz
 
 the iphone text width:
 testtesttest: backup when session
+
+*** zmq
+zmq required on server to run jd server
+not available through yum and must be built from source
+
+/usr/local/lib needs to be added so ldconfig will find zmq
+$ sudo touch /etc/ld.so.conf.d/usr-local.conf
+$ echo "/usr/local/lib" | sudo tee /etc/ld.so.conf.d/usr-local.conf > /dev/null
+$ sudo ldconfig
+
+wget  https://github.com/zeromq/libzmq/releases/download/v4.3.5/zeromq-4.3.5.tar.gz
+follow google instructions to untar/config/make/make install
 
 *** survey
 start guest user

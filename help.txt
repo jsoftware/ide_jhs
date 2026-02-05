@@ -108,7 +108,8 @@ debug facilities: suspend execution at stop or error
  examine/modify values and definitions and continue
 
 practice before you need it for real!
-☰.d - show debug page - best if you can see both debug and term page
+☰.system pages.debug - show debug page
+best if you can see both debug and term page
 
    dbr 1       NB. enable debug
    calendar'a' NB. will stop on error

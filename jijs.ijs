@@ -17,7 +17,7 @@ jhmenu'edit'
   'saveasclose'jhb'X'
 '<hr></div>'
 
-NB.! use flow instead of resize - avoid scroll due to meny space
+NB.! use flow instead of resize - avoid scroll due to menu space
 jhresize''
 
 'cm6_editor'   jhdiv''
@@ -51,7 +51,7 @@ jhmenugroupz''
 'save'   jhmenuitem 'save';'^s'
 'saveas' jhmenuitem 'save as ...'
 'runwd'  jhmenuitem 'loadd'
-'lineadv' jhmenuitem 'run line/selection';'^.'
+'lineadv' jhmenuitem 'run line/selection';'^'''
 'comment' jhmenuitem 'NB. add/remove';'^/'
 'chelp'   jhmenuitem 'context sensitive';'h'
 'numbers' jhmenuitem 'numbers'

@@ -81,7 +81,7 @@ function ajax(ts) {
 function ev_ijs_enter() { return true; }
 
 function ev_comma_ctrl() { jscdo("line"); }
-function ev_dot_ctrl() { jscdo("lineadv"); }
+function ev_quote_ctrl() { jscdo("lineadv"); }
 function ev_slash_ctrl() { jscdo("sel"); }
 
 function ev_z_shortcut() { } // Handled by cm6.

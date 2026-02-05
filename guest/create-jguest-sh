@@ -10,7 +10,7 @@ cp -Lr $2 /jguest/j
 
 if [ -d /etc/letsencrypt/live/ ]
 then
- d=`sudo find /etc/letsencrypt/live/ -name cert.pem`
+ d=`sudo find /etc/letsencrypt/live/ -name fullchain.pem`
 else
  d=""
 fi  
@@ -18,23 +18,23 @@ fi
 if [ -z "$d" ]
 then
  echo 'unsigned certificate'
- cert=/jguest/j/addons/ide/jhs/node/cert.pem
+ fullchain=/jguest/j/addons/ide/jhs/node/cert.pem
  key=/jguest/j/addons/ide/jhs/node/key.pem
 else
  echo 'letsencrypt certificate'
- cert=${d#s} 
- key=${cert::-8}privkey.pem
+ fullchain=${d#s} 
+ key=${fullchain::-13}privkey.pem
 fi
 
 mkdir -p jpersist 
 mkdir -p .ssh/jserver
 chmod 700 .ssh/jserver
 chown $1:$1 .ssh/jserver
-cp $cert .ssh/jserver/cert.pem
+cp $fullchain .ssh/jserver/fullchain.pem
 cp $key  .ssh/jserver/key.pem
-chmod 600 .ssh/jserver/cert.pem
+chmod 600 .ssh/jserver/fullchain.pem
 chmod 600 .ssh/jserver/key.pem
-chown $1:$1 .ssh/jserver/cert.pem
+chown $1:$1 .ssh/jserver/fullchain.pem
 chown $1:$1 .ssh/jserver/key.pem
 
 echo $(basename $2) > "/jguest/version.txt"

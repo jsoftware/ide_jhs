@@ -463,6 +463,12 @@ function allwins_clean(){allwins= allwins.filter(el => !el.closed)} // remove cl
 
 function getwindow(n){return findwindowbylocale(n);}
 
+/* give up yet again on giving focus back to jijx
+function jijxfocus(){
+  setTimeout(function(){window.frameElement.contentWindow.setfocus();},25);
+}
+*/
+
 // find window in allwins or allpages with name n
 function findwindowbyname(n){
   allwins_clean()

@@ -143,7 +143,7 @@ ADVANCE_jijx_=: 'spx'
 SPXFILE_z_=: spf y
 SEM=: get SPXFILE
 SEMN=: 1
-a=. SPXFILE,LF,'to advance interactive tutorial:',LF
+a=. 'edit''',SPXFILE,'''',LF,'to advance interactive tutorial:',LF
 b=. 'type ctrl+. (ctrl dot) or<br>click ⇒ in menu bar'
 echo a
 echo jhtml'<div><font style="color:blue;font-weight:bold">',b,'</font></div>'

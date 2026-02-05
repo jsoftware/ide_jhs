@@ -7,6 +7,7 @@ jhmenu'term';'advance'jhb'⇒';'jmenuburger'
 
 'menu0'      jhmenugroup ''
 'sp'         jhmenuitem 'projects';'p'
+'spdefault'  jhmenuitem 'project default';'o'
 'jinputs'    jhmenuitem  'inputs';'i'
 'jbreak'     jhmenuitem 'break';'c'
 'dissect'    jhmenuitem 'dissect input line';'j'
@@ -142,6 +143,13 @@ end.
 )
 
 ev_sp_click=:  3 : 'sp__'''''
+
+ev_spdefault_click=: 3 : 0
+SPFILE_z_=: '~temp/sp/spfile.ijs'
+load SPFILE
+echo'   p_default_jsp_'''''
+p_default_jsp_''
+)
 
 ev_comma_ctrl =:  3 : 'i.0 0'
 ev_dot_ctrl=: ev_advance_click

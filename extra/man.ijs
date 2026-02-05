@@ -1,21 +1,10 @@
 0 : 0
 NBblock - contiguous lines that are 1 or more NB. lines , 0 or more blank lines , next line (=:)
-
 NB*block - NBblock where first line starts with NB.*
-
    man'name' - report manblock for defining =:
-
    man script - extract all NB.*blocks from script
-
    man'locale?' - extract all NB.+blocks for scripts that defined the locale
-
 script NBblock with first line start with NB.+ documents the script
-
-
-
-NB.* marks NB.   
-
-
 )
 
 coclass'jman'
@@ -62,7 +51,13 @@ to install base library in ~system/base9 run:
 
 zloc=: <,'z'
 
-NB. y is 'name' or 'name_abc_' or '_locale_' or file
+NB. y is '' or 'name' or 'name_abc_' or 'name _locale_' or '_locale_' or file
+NB. coders should document work where and when it is done - man makes it available
+NB.
+NB. '' lists all man_... names defined
+NB. man_jd_server=: docs for system jd system topic server
+NB. listed with blanks separating system and topics
+NB.    man'  jd  server  ' NB. same as: man'man_jd_server'
 NB.
 NB. name is searched in all locales (or just abc) and if found
 NB. the defining script is searched for the last defn line
@@ -70,9 +65,9 @@ NB. the block of NB. lines preceding the defn line
 NB.  ignoring blank lines before the defn line
 NB. and the defn line are included in the result
 NB. 
-NB. if name starts with - then search for name...
-NB. if name starts with * then search for ...name...
-NB. -* not supported for 'name_abc_'
+NB. name* searches for name...
+NB. *name searches for ...name...
+NB. * not supported for 'name_abc_'
 NB.
 NB. if name is defined in multiple scripts they are listed
 NB. if script is in ~system the search continues in base9
@@ -94,7 +89,13 @@ man=: 3 : 0
 erase'man_jpacman_' NB.! avoid 2 man defines
 man_z_=: man_jman_ NB. erase might have man_z_
 
+y=. deb y
+if. ''-:y do. jselect_jhs_ mansort getman 'man_*' return. end.
+if. 0~:+./'__'E. y do. '__ not allowed' return. end.
 if. 0~:+/'./\'e. y do. manscript y return. end.
+if. '_'={.y do. manfix (('nl',y)~i.4),each<y return. end.
+if. ' 'e.y do. y=. 'man_',(dltb y)rplc ' ';'_' end.
+
 r=.  getman y
 NB. remove NB.*blank and NB.blank 
 r=. <;.2 r
@@ -103,19 +104,26 @@ r=. (b*3)}.each r
 jselect_jhs_ ;r
 )
 
+mansort=: 3 : 0
+d=. <;._2 y
+d=. /:~((_2}.each d)i:each '_'){.each d
+d=. d rplc each <'''man_';'''  '
+d=. d rplc each <'_';'  '
+i=. >./;#each d
+c=. i-;#each d
+d=. d,each (c # each <' '),each <'  ''',LF
+;d
+)
+
 getman=: 3 : 0
-n=. dltb y
-if. '_'={.n do.
- t=. ('nl',n)~i.4
- t=. manfix t,each<n
- return.
-end.
-if. 0~:+./'__'E. n do. '__ not allowed in name' return. end.
-if. -.'_'={:n do.
+n=. y
+if. '*'={:n do. n=. '-',}:n end. NB. map n* to -n
+wc=. ({.n)e.'-*' NB. wildcard
+if. wc+.-.'_'={:n do.
  NB. man'name' or '-name' or '*name'
  if. ({.n)e. '-*' do.
   r=. manall n
-  if. 1<#r do. manfix r return. end.
+  if. 1~:r do. manfix r return. end. NB. found 0 or more than 1
   n=. ;r NB. only 1 found so get it
   n=. (_2{(n='_')#i.#n){.n NB. strip off locale
  end.
@@ -158,7 +166,13 @@ else.
  bs=. '' NB. not script leading to base9
  r=. (fread f) manx n
 end.
-r=. '   ',n,LF,bs,('   edit''',(;f),''''),LF,(LF={.r)}.r
+
+NB. man_ nouns special
+if. ('man_'-: (>:n i.'_'){.n)*.-.n-:'man_jman_' do.
+ r=. '   ',n,LF,bs,('   edit''',(;f),''''),LF,n~
+else.
+ r=. '   ',n,LF,bs,('   edit''',(;f),''''),LF,(LF={.r)}.r
+end.
 )
 
 manfix=: 3 :0

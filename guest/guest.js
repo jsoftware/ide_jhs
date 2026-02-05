@@ -176,7 +176,7 @@ function replyhb(code,res,p)
 
 const options = {
   key:  fs.readFileSync('.ssh/jserver/key.pem'),
-  cert: fs.readFileSync('.ssh/jserver/cert.pem'),
+  cert: fs.readFileSync('.ssh/jserver/fullchain.pem'),
   'trust proxy': true
 };
 
