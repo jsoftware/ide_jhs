@@ -6,7 +6,7 @@ coclass'jport'
 
 killport=: 3 : 0 
 'must be single port'assert 1=#y
-pid=: pidfromport y
+pid=: getpid y
 if. _1~:pid do. 
  select. UNAME
   case. 'Win' do. shell_jtask_'taskkill /f /pid ',":pid
@@ -32,9 +32,9 @@ else.
  NB. lsof reporting no ports gets interface error
  NB. lsof - some always reports f field and some only if requested - always request
  NB. p field can be followed by multiple f and n fields
- d=. shell_jtask_ :: 0: 'lsof -F pfn -s TCP:LISTEN -i TCP'
+ d=. shell_jtask_ :: 0: 'lsof -P -n -F pfn -s TCP:LISTEN -i TCP'
  if. d-:0 do. i.2 0 return. end.
- d=. <;._2 shell_jtask_'lsof -F pfn -s TCP:LISTEN -i TCP'
+ d=. <;._2 shell_jtask_'lsof -P -n -F pfn -s TCP:LISTEN -i TCP'
  r=. ''
  while. #d do.
   if. 'p'={.;{.d do.
@@ -55,19 +55,16 @@ else.
 end.
 )
 
-NB. delays to allow task to start
-pidfromport=: 3 : 0
-'pid port'=. pidport''
-r=. (port i. y){pid,_1
-if. r=_1 do.
- 6!:3[0.1
- 'pid port'=. pidport''
- r=. (port i. y){pid,_1
- if. r=_1 do.
-  6!:3[0.4
-  'pid port'=. pidport''
-  r=. (port i. y){pid,_1
- end. 
+NB. get pid from port - _1 if none
+getpid=: 3 : 0
+d=. shell_jtask_ :: 0: 'lsof -P -n -F pfn -i TCP:',":y
+if. d-:0 do.
+ 6!:3[0.2
+ d=. shell_jtask_ :: 0: 'lsof -P -n -F pfn -i TCP:',":y
 end.
-r
+if. d-:0 do. _1 return. end.
+d=. <;._2 d
+if. 3=#d do. 0".}.;{.d return. end.
+i=. d i. <'n*:',":y
+0".}.;{(i-2){d
 )

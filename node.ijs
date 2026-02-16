@@ -103,7 +103,7 @@ t=. t rplc '<BIN>';bin;'<FILE>';file;'<ARG>';arg;'<OUT>';nodeout
 echo t
 
 fork_jtask_ t
-'server failed to start' assert _1~:pidfromport_jport_ nport NB. pidfromport has delays
+'server failed to start' assert _1~:getpid_jport_ nport NB. getpid does delay
 node_status''
 )
 
@@ -125,7 +125,7 @@ NB. value error PORT
 NB. report how to access node JHS proxy server
 node_status=: 3 : 0
 'node pem port key'=. node_config_get''
-if. _1=pidfromport_jport_ 0".port do. 'node server is not running' return. end.
+if. _1=getpid_jport_ 0".port do. 'node server is not running' return. end.
 nodetemplate rplc '<NODEPORT>';(":port);'<PORT>';(":PORT);'<LAN>';(getlanip_jhs_'');'<REMOTE>';getexternalip_jhs_''
 )
 
@@ -144,7 +144,7 @@ jhsout=: jpath'~temp/jhsnode/jhs.log'
 t=. '"<BIN>" "<FILE>" > "<OUT>" 2>&1'
 a=. t rplc '<BIN>';(hostpathsep jpath'~bin/jconsole');'<FILE>';f;'<OUT>';jhsout
 fork_jtask_ a
-if. _1=pidfromport_jport_ port do. NB. pidfromport has delays
+if. _1=getpid_jport_ port do. NB. has delay
  echo a,LF,fread jhsout_jhs_
  'JHS server failed to start' assert 0
 end.
@@ -161,7 +161,7 @@ killport_jport_ nodeport
 port=. nodeport-100
 
 NB. breakfile needs pid from the JHS server
-breakfile=. (jpath '~break/'),(":pidfromport_jport_ port),'.node'
+breakfile=. (jpath '~break/'),(":getpid_jport_ port),'.node'
 
 pem=. ;(pem-:''){pem;jpath'~addons/ide/jhs/node'
 
@@ -172,7 +172,7 @@ bin=. LF-.~fread'nodebin'
 t=. '"<BIN>" "<FILE>" <ARG> > "<OUT>" 2>&1' 
 a=. t rplc '<BIN>';bin;'<FILE>';file;'<ARG>';arg;'<OUT>';nodeout
 fork_jtask_ a
-if. _1=pidfromport_jport_ nodeport do. NB. pidfromport has delays
+if. _1=getpid_jport_ nodeport do. NB. has delay
  echo a,LF,fread nodeout_jhs_
  'NODE server failed to start' assert 0
 end. 
