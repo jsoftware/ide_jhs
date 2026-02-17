@@ -68,3 +68,37 @@ if. 3=#d do. 0".}.;{.d return. end.
 i=. d i. <'n*:',":y
 0".}.;{(i-2){d
 )
+
+lsof=: 3 : 0
+d=. shell_jtask_ :: 0: 'lsof -P -n -F pfn -i TCP:',":y
+if. d-:0 do. _1 return. end.
+d=. <;._2 d
+if. 3=#d do. 0".}.;{.d return. end.
+i=. d i. <'n*:',":y
+0".}.;{(i-2){d
+)
+
+NB. get pid from port - _1 if none
+getpid=: 3 : 0
+if. UNAME-:'Win' do.
+ NB.! may have same problem as lsof with multiple pid ports
+ d=. shell'netstat -ano | findstr :',":y
+ NB. d=.  CR-.~each deb each <;._2 shell'netstat -ano -p tcp'
+ NB. b=. d#~;(<'TCP')-:each 3{.each d
+ NB. d=. ><;._2 each d,each' '
+ NB. d=. d#~(<'LISTENING')=3{"1 d
+ NB. a=. 1{"1 d
+ NB. a=. ;0".each(>:;a i: each':')}.each a
+ NB. d=. ;0".each 4{"1 d
+ NB. d,:a
+else.
+ d=. lsof y
+ if. d>0 do. d return. end.
+ 6!:3[0.2
+ d=. lsof y
+ if. d>0 do. d return. end.
+ 6!:3[0.2
+ d=. lsof y
+end. 
+)
+
