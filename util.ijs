@@ -161,8 +161,7 @@ NB. getv'locale' is a: if request from browser url
 NB.              is new locale if request from jpage 
 jpageget=: 3 : 0
 n=. <getv'jlocale'
-if. a:-:n do. NB.!!!!!
-
+if. a:-:n do.
  if. Num_j_ e.~ {.;coname'' do.
   NB. jtable with jhot iframe - in object and createpage has run
   title jhrx (getcss''),(getjs''),gethbs''

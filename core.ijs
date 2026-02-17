@@ -1,11 +1,6 @@
 NB. JHS - core services
 require 'socket'
 
-NB.! kill off
-new_www_z_=: 3 : 0
-jjs_jhs_'urlopen("~addons/ide/jhs/guest/new/newindex.html")'
-)
-
 JHSVERSION_z_=: ' '''-.~9}.(d i. LF){.d=. (1 i.~ 'VERSION=:' E. d)}.d=. fread'~addons/ide/jhs/manifest.ijs'
 
 coclass'jhs'
@@ -35,7 +30,7 @@ elseif. 1=RAW          do. r=. 'jev_post_raw_',URL,'_'''''
 elseif. 'post'-:METHOD do.
  r=. getv'jdo'
  t=. 0 i.~ r=' '
- NB. if. ')'={.t}.r do. r=. (t#' '),'jev_jcmd''',(}.t}.r),'''' end. NB.!
+ NB. if. ')'={.t}.r do. r=. (t#' '),'jev_jcmd''',(}.t}.r),'''' end.
 elseif. '.'e.URL       do. r=. 'jev_get_jfilesrc_ URL_jhs_'
 elseif. 1              do. r=. 'jev_get_',URL,'_'''''
 end.

@@ -394,7 +394,6 @@ end.
 fx=: 3 : 0
 s=. ;shorts_jsp_ y
 t=. jshortname y
-NB.!f=. ;(1>.10-#s)#<'&nbsp;'
 f=. ;(1>.10-#s)#<' '
 (('file*',jurlencode t)jhab s,f,t),jhbr
 )
