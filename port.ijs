@@ -16,59 +16,6 @@ end.
 i.0 0
 )
 
-NB. pids,.ports
-pidport=: 3 : 0
-if. UNAME-:'Win' do.
-NB.! may have same problem as lsof with multiple pid ports
- d=.  CR-.~each deb each <;._2 shell'netstat -ano -p tcp'
- b=. d#~;(<'TCP')-:each 3{.each d
- d=. ><;._2 each d,each' '
- d=. d#~(<'LISTENING')=3{"1 d
- a=. 1{"1 d
- a=. ;0".each(>:;a i: each':')}.each a
- d=. ;0".each 4{"1 d
- d,:a
-else.
- NB. lsof reporting no ports gets interface error
- NB. lsof - some always reports f field and some only if requested - always request
- NB. p field can be followed by multiple f and n fields
- d=. shell_jtask_ :: 0: 'lsof -P -n -F pfn -s TCP:LISTEN -i TCP'
- if. d-:0 do. i.2 0 return. end.
- d=. <;._2 shell_jtask_'lsof -P -n -F pfn -s TCP:LISTEN -i TCP'
- r=. ''
- while. #d do.
-  if. 'p'={.;{.d do.
-   p=. {.d
-   r=. r,3{.d
-   d=. 3}.d
-  else.
-   r=. r,p,2{.d
-   d=. 2}.d
-  end.
- end.
- 'unexpected lsof result'assert 0=3|#r
- d=. (3,~<.3%~#r)$r
- pids=. ;_1".each}.each{."1 d
- a=. {:"1 d
- ports=. ;_1".each a}.~each >:;a i: each':'
- pids,:ports
-end.
-)
-
-NB. get pid from port - _1 if none
-getpid=: 3 : 0
-d=. shell_jtask_ :: 0: 'lsof -P -n -F pfn -i TCP:',":y
-if. d-:0 do.
- 6!:3[0.2
- d=. shell_jtask_ :: 0: 'lsof -P -n -F pfn -i TCP:',":y
-end.
-if. d-:0 do. _1 return. end.
-d=. <;._2 d
-if. 3=#d do. 0".}.;{.d return. end.
-i=. d i. <'n*:',":y
-0".}.;{(i-2){d
-)
-
 osgetpid=: 3 : 0
 if. UNAME-:'Win' do.
  d=. CR-.~each deb  each <;._2 shell'netstat -ano -p TCP | findstr LISTENING | findstr :',":y
@@ -86,13 +33,11 @@ else.
 end. 
 )
 
-NB. get pid from port - _1 if none
+NB. may need waits to let new task spin up
 getpid=: 3 : 0
-d=. osgetpid y
-if. d>0 do. d return. end.
-6!:3[0.2
-d=. osgetpid y
-if. d>0 do. d return. end.
-6!:3[0.3
-osgetpid y
+for. i.10 do. NB. 1 second
+ if. 0<d=. osgetpid y do. d return. end.
+ 6!:3[0.1
+end.
+_1
 )
