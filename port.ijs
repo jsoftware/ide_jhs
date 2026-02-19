@@ -16,7 +16,8 @@ end.
 i.0 0
 )
 
-osgetpid=: 3 : 0
+NB. pid from port - no delay
+getpid=: 3 : 0
 if. UNAME-:'Win' do.
  d=. CR-.~each deb  each <;._2 shell'netstat -ano -p TCP | findstr LISTENING | findstr :',":y
  if. 0=#d do. _1 return. end.
@@ -33,10 +34,10 @@ else.
 end. 
 )
 
-NB. may need waits to let new task spin up
-getpid=: 3 : 0
+NB. we expect port to become valid so wait for pid to show up
+getpidx=: 3 : 0
 for. i.10 do. NB. 1 second
- if. 0<d=. osgetpid y do. d return. end.
+ if. 0<d=. getpid y do. d return. end.
  6!:3[0.1
 end.
 _1
