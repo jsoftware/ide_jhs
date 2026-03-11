@@ -1,6 +1,16 @@
-jhs guest server
+*** restart guest server
+ $ . bin/aws.sh
+ ...$ ./aws-sh ssh
+ ec2 $ ./jc
+   load'guest_util.ijs'
+   start'key'
 
-use -sh instead of .sh so pacman will have LF eol on windows
+*** Jd
+   load'jd'
+   load '~addons/data/jd/server/server1.ijs'
+   s1_start'' NB. serve simple on 3000
+
+*** use -sh instead of .sh so pacman will have LF eol on windows
 
 *** setup lan guest server - sudo ufw enable - firewall config - firewall must allow nodeport!
 *** static lan ip - advanced network configuration

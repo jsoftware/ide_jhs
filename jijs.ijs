@@ -149,7 +149,7 @@ if. f-:jpath getv'filename' do. jhrajax'same name' end.
 if. fexist f do. jhrajax'already exists' return. end.
 if. '~'={.f do. jhrajax'~ bad name' return. end.
 try.
- mkdir_j_ (f i:'/'){.f
+ if. 0~:+/'/'=f do. mkdir_j_ (f i:'/'){.f end.
  r=. (toHOST getv'textarea')fwrite f
  addrecent_jsp_ f
  jhrajax JASEP,jshortname f

@@ -38,7 +38,7 @@ NB. we expect port to become valid so wait for pid to show up
 getpidx=: 3 : 0
 for. i.10 do. NB. 1 second
  if. 0<d=. getpid y do. d return. end.
- 6!:3[0.1
+ 6!:3[0.2
 end.
 _1
 )
