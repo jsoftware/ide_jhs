@@ -242,7 +242,7 @@ function ev_file_click(){
     var b= 'jijs?jwid='+(jsid.value);
     jijxwindow.newpage(a,'jifr',b);
   }else{
-    var t= 'jijs?jwid='+jsid.value;
+    var t= 'jijs?jpagearg='+jsid.value;
     pageopen(t,t); // open in same browser window
   } 
 }

@@ -137,7 +137,7 @@ d=. dltb each<;._2 x,';'
 ('locale ',c,' must be created first')assert (<c)e. conl 0
 NB. class with ev_create not defined does open
 s=. fixshow s
-if. 3~:nc<'ev_create_',c,'_' do. s open c,'?jpagearg=',jurlencode y return. end. 
+if. 3~:nc<'ev_create_',c,'_' do. s open c,'?jpagearg=',y return. end. 
 r=. conew c
 createpage__r (;(''-:t){t;c,'-',;r);s;<y
 r

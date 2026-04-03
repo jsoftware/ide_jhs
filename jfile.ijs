@@ -581,7 +581,7 @@ function ev_file_dblclick(){
     var b= 'jijs?jwid='+encodeURIComponent(jform.path.value);
     jijxwindow.newpage(a,'jifr',b);
   }else{
-    var t= 'jijs?jwid='+jform.path.value;
+    var t= 'jijs?jpagearg='+jform.path.value;
     pageopen(t,t); // open same browser window
   }  
 }
