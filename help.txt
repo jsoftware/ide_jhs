@@ -83,7 +83,7 @@ simple apps showing JHS gui programming - run 1 of the following:
    jhsget 'page/jtable';'t'[t=: 2 2$1;'abc';2;'def'
    jhsget 'page/jwatch';​'?4 ​6$100'
    jhsget 'page/tictactoe'
-
+   jhsget 'page/dates'
 
 ***start demo
 simple apps showing JHS gui programming

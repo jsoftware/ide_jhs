@@ -6,9 +6,10 @@
    start'key'
 
 *** Jd
-   load'jd'
+   load 'jd'
    load '~addons/data/jd/server/server1.ijs'
-   s1_start'' NB. serve simple on 3000
+   s1_build'' NB. serve simple on 3000
+   jdserver'server1';'start'
 
 *** use -sh instead of .sh so pacman will have LF eol on windows
 
@@ -27,17 +28,17 @@ https://code.jsoftware.com/wiki/System/Installation/Cloud
 $ cd j9.x/addons/ide/jhs/aws
 $ ./aws-sh clr  # required if a new instance to clear known hosts
 $ ./aws-sh set a.b.c.d # done once - copied from aws console
-$ ./aws-sh bld j9.6 # continue connecting? - yes if this is new instance
+$ ./aws-sh bld j9.7 # continue connecting? - yes if this is new instance
 
 $ # following required if local git changes are required on server
 $ # delete old ide/jhs folder and put new one
-$ ./aws-sh run 'rm -r j9.6/addons/ide/jhs'
-$ ./aws-sh putr $HOME/git/addons/ide/jhs j9.6/addons/ide
+$ ./aws-sh run 'rm -r j9.7/addons/ide/jhs'
+$ ./aws-sh putr $HOME/git/addons/ide/jhs j9.7/addons/ide
  these changes are in base install - start required to get them to server
   or be very careful with following:
-  ./aws-sh ssh - sudo cp -r -f j9.6 /jguest/j
+  ./aws-sh ssh - sudo cp -r -f j9.7 /jguest/j
 
-$ ./aws-sh putr $HOME/git/addons/data/jd j9.6/addons/data
+$ ./aws-sh putr $HOME/git/addons/data/jd j9.7/addons/data
 
 $ # following required if new instance needs letsencrypt
 $ ./aws-sh lets-restore # restore local backup tar to remote /etc/letsencrypt

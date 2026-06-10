@@ -373,7 +373,7 @@ getsavedastartargs=: 3 : 0
 ".fread'nodestartargs'
 )
 
-NB. y is version - '9.6' 
+NB. y is version - '9.7' 
 create_jguest=: 3 : 0
 echo shell'sudo j',y,'/addons/ide/jhs/guest/create-jguest-sh $USER ',jpath'~install'
 y fwrite '/jguest/version.txt'
@@ -403,7 +403,7 @@ echo t
 
 NB. start node guest server
 start=: 3 : 0
-create_jguest '9.6' NB. 9.6 hardwired
+create_jguest '9.7' NB. 9.7 hardwired
 '/jguest folder was not created'assert 2=ftype'/jguest'
 if. ''-:getargs'' do. default'' end.
 'A0_nodeport must have hardwired value'assert NODEP=A0_nodeport

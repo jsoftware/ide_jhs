@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.411'
+VERSION=: '1.0.412'
 
 FILES=: 0 : 0
 app/
@@ -65,6 +65,7 @@ tool.ijs
 util.ijs
 utilh.ijs
 vocabhelp.ijs
+README.md
 )
 
 FILESWIN=: 0 : 0

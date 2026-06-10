@@ -4,20 +4,21 @@ NB. Jd currently loads this script
 
 coclass'jport'
 
-killport=: 3 : 0 
+NB. kill pid - shell failure assumed to mean pid not valid
+killport=: 3 : 0 "0
 'must be single port'assert 1=#y
 pid=: getpid y
 if. _1~:pid do. 
  select. UNAME
-  case. 'Win' do. shell_jtask_'taskkill /f /pid ',":pid
-  case. do. shell_jtask_'kill ',":pid
+  case. 'Win' do. shell :: ['taskkill /f /pid ',(":pid),' >null 2>&1'
+  case. do. shell :: ['kill ',(":pid),' >null 2>&1'
  end.
 end. 
 i.0 0
 )
 
 NB. pid from port - no delay
-getpid=: 3 : 0
+getpid=: 3 : 0 "0
 if. UNAME-:'Win' do.
  d=. CR-.~each deb  each <;._2 shell'netstat -ano -p TCP | findstr LISTENING | findstr :',":y
  if. 0=#d do. _1 return. end.
@@ -25,12 +26,11 @@ if. UNAME-:'Win' do.
  d=. ;d
  0". (d i:' ')}.d
 else.
- d=. shell_jtask_ :: 0: 'lsof -P -n -F pfn -i TCP:',":y
+ NB. lsof - find p line ahead of n*:port lline
+ d=. shell_jtask_ :: 0: 'lsof -P -n -F p -s TCP:LISTEN -i TCP:',":y
  if. d-:0 do. _1 return. end.
- d=. <;._2 d
- if. 3=#d do. 0".}.;{.d return. end.
- i=. d i. <'n*:',":y
- 0".}.;{(i-2){d
+ 'unexpected lsof result'assert (LF={:d)*.'p'={.d
+ 0".}.}:d
 end. 
 )
 
