@@ -374,7 +374,7 @@ NB.  see printscript
 NB.  width does not fold - displays ... after width
 NB.  print_jhs_ (],'=: ',[:5!:5<)'printscript_jhs_'
 print=: 3 : 0
-a=. boxopen y
+a=. boxopen ":y
 a=. a,(<:#a)}.1;printwidth;printstyle
 'noun dialog width style'=: a
 t=. fmt0 ":noun
