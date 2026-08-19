@@ -4,14 +4,13 @@ NB. Jd currently loads this script
 
 coclass'jport'
 
-NB. kill pid - shell failure assumed to mean pid not valid
+NB. kill pid -  sigkill not sigeterm - shell failure assumed to mean pid not valid
 killport=: 3 : 0 "0
-'must be single port'assert 1=#y
 pid=: getpid y
 if. _1~:pid do. 
  select. UNAME
   case. 'Win' do. shell :: ['taskkill /f /pid ',(":pid),' >null 2>&1'
-  case. do. shell :: ['kill ',(":pid),' >null 2>&1'
+  case. do. shell :: ['kill -9 ',(":pid),' >null 2>&1'
  end.
 end. 
 i.0 0
