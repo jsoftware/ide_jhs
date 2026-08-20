@@ -21,5 +21,6 @@ else.
  shell :: ['rmdir /S /Q ',s NB. delete if it is a folder
  shell'mklink /J ',s,' ',t NB. junction does not require admin
 end.
+i.0 0
 )
 
