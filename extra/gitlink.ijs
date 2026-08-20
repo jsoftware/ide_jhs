@@ -1,6 +1,8 @@
 NB. replace addons folder with link to git/dev/...
 
 NB. * path-to-git-folder
+NB. * 'git/addons/data/jd'
+NB. * 'git/addons/ide/jhs'
 NB. create link in !addons/... to git folder
 gitlink=: 3 : 0
 'must not have trailing /'assert '/'~:{:y
