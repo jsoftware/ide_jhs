@@ -15,8 +15,11 @@ if. IFUNIX do.
  shell'rm -rf ',s
  shell'ln -s ',t,' ',s
 else.
- +a.
+ t=. hostpathsep t
+ s=. hostpathsep s
+ shell::['rmdir ',t NB. delete if it is a sumlink
+ shell::['rmdir /S /Q ',t NB. delete if it is a folder
+ shell'mklink /D ',s,' ',t
 end.
-
 )
 
