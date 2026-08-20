@@ -19,7 +19,7 @@ else.
  s=. hostpathsep s
  shell :: ['rmdir ',s NB. delete if it is a sumlink
  shell :: ['rmdir /S /Q ',s NB. delete if it is a folder
- shell'mklink /D ',s,' ',t
+ shell'mklink /J ',s,' ',t NB. junction does not require admin
 end.
 )
 
