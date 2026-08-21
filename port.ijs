@@ -23,13 +23,9 @@ if. UNAME-:'Win' do.
  if. 0=#d do. _1 return. end.
  'port has more than 1 listener'assert 1=#d
  d=. ;d
- 0". (d i:' ')}.d
+ _1". (d i:' ')}.d
 else.
- NB. lsof - find p line ahead of n*:port lline
- d=. shell_jtask_ :: 0: 'lsof -P -n -F p -s TCP:LISTEN -i TCP:',":y
- if. d-:0 do. _1 return. end.
- 'unexpected lsof result'assert (LF={:d)*.'p'={.d
- 0".}.}:d
+ _1".LF-.~":shell :: _1: 'lsof -t -s TCP:LISTEN -i TCP:',":y
 end. 
 )
 
