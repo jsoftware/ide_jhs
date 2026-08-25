@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.415'
+VERSION=: '1.0.414'
 
 FILES=: 0 : 0
 app/
@@ -75,3 +75,4 @@ grep.exe
 RELEASE=: 'j805'
 
 FOLDER=: 'ide/jhs'
+
