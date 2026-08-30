@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.432' NB. adf
+VERSION=: '1.0.433'
 
 FILES=: 0 : 0
 app/
