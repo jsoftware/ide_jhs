@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.441' NB. 1.0.441 force pacman update
+VERSION=: '1.0.442' NB. 1.0.442 force pacman update
 
 FILES=: 0 : 0
 app/
