@@ -104,8 +104,14 @@ r=. (b*3)}.each r
 jselect_jhs_ ;r
 )
 
+NB. sorted by first line
 mansort=: 3 : 0
 d=. <;._2 y
+t=. ".each }:each (>:;d i.each '''')}.each d
+t=. (t i. each LF){.each t
+(/:t){d
+
+return.
 d=. /:~((_2}.each d)i:each '_'){.each d
 d=. d rplc each <'''man_';'''  '
 d=. d rplc each <'_';'  '

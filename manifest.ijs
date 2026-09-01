@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.438' NB. 338
+VERSION=: '1.0.439' NB. 1.0.439 force pacman update
 
 FILES=: 0 : 0
 app/
@@ -75,5 +75,6 @@ grep.exe
 RELEASE=: 'j805'
 
 FOLDER=: 'ide/jhs'
+
 
 
