@@ -31,7 +31,7 @@ b=. t=LF
 
 NB. get help.txt with generated sections
 gethelptxt=: 3 : 0
-t=. fread'~addons/ide/jhs/help.txt'
+t=. CR-.~fread'~addons/ide/jhs/help.txt'
 n=. 'ABOUT GRULES WIKI TOOL TOUR CATEGORIES '
 t hrplc n;JVERSION;tool_guest_rules;(getwiki'');(gettool'');(gettour'');(getcategories'')
 )
