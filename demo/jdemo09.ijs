@@ -80,3 +80,5 @@ jbyid("gb_box").style.height=h;
 plot("ga",'type="line"\n'+tabdata);
 plot("gb",'type="bar"\n'+tabdata);
 }
+
+)

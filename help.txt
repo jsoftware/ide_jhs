@@ -1,20 +1,5 @@
 ***start 
-recall line from log and to run it
-   jhshelp ''
-   jhshelp 'welcome'
-   jhshelp 'browser pages'
-   jhshelp 'tour'   NB. JHS tutorial
-   jhshelp 'lab'    NB. J tutorial
-   jhshelp 'project manager'
-   jhshelp 'debug'
-   jhshelp 'tool'
-   jhshelp 'wiki'
-   jhshelp 'shortcuts'
-   jhshelp 'copy browser<->server files'
-   jhshelp 'popup'
-   jhshelp 'close'
-   jhshelp 'guest rules'
-   jhshelp 'about'
+this help is result of gethelp0''
 
 ***start welcome
 welcome - browser interface to J
@@ -259,15 +244,7 @@ browser ​close ​button ​misses ​these ​steps
 <GRULES>
 
 ***start about
-Engine: j9.6.3/j64avx2/linux
-Build: commercial/2025-04-05T16:25:53/clang-11-0-0/SLEEF=1
-Library: 9.6.13
-Platform: Linux 64
-Installer: j9.6 install
-InstallPath: /home/ericb/j9.6
-Contact: www.jsoftware.com
- 
-Copyright 1994-2025 Jsoftware Inc.
+<ABOUT>
 
 ***start app overview
 App appname is defined by a script that defines 

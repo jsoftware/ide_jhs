@@ -16,9 +16,8 @@ jselect gethelp y
 )
 
 gethelp=: 3 : 0
-t=. fread'~addons/ide/jhs/help.txt'
-n=. 'GRULES WIKI TOOL TOUR CATEGORIES'
-t =. t hrplc n;tool_guest_rules;(getwiki'');(gettool'');(gettour'');(getcategories'')
+if. ''-:y do. gethelp0'' return. end.
+t=. gethelptxt''
 d=. <;.2 t,LF
 b=. (<'***')=3{.each d
 h=. b <;.1 d
@@ -28,6 +27,36 @@ if. i=#s do. y,' - topic not found' return. end.
 t=. ;}.;i{h
 b=. t=LF
 (b i. 0)}.(>:b i: 0){.t
+)
+
+NB. get help.txt with generated sections
+gethelptxt=: 3 : 0
+t=. fread'~addons/ide/jhs/help.txt'
+n=. 'ABOUT GRULES WIKI TOOL TOUR CATEGORIES '
+t hrplc n;JVERSION;tool_guest_rules;(getwiki'');(gettool'');(gettour'');(getcategories'')
+)
+
+NB. get list of available helps
+gethelp0=: 3 : 0
+t=. gethelptxt''
+d=. <;._2 t,LF
+b=. (<'***')=3{.each d
+h=. b <;.1 d
+s=. ;{.each h
+s=. }.(#'start*** ')}.each s
+s=. (<'   jhshelp '''),each s,each ''''
+s=. s-.gethelpsub'' NB. remove from main index those pointed at by others
+'recall line from log and run it',LF,;s,each LF
+)
+
+NB. get helps that are referred to by another help
+gethelpsub=: 3 : 0
+t=. gethelptxt''
+i=.  ('jhshelp ''' E. t)#i.#t
+a=. ((<"0 i)+each <i.30){each<t
+j=. (9}.each a)i.each''''
+a=. (10+each j){.each a
+a=. (<'   '),each a
 )
 
 walkhelp=: 3 : 0
