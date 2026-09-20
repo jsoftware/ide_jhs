@@ -126,6 +126,33 @@ getting to work as quickly as possible
 
    sphelp NB. project utilities
 
+***start canvas
+   jhstour 'canvas'
+   
+jsc... map directly to javascript canvas commands
+   'jsc' names_jgl2_ 3
+jscfont sets GLFONT   
+jscreset/save/restore set textBaseline='top'
+
+jsx.. manage canvas buffer and provide utilities
+   'jsx' names_jgl2_ 3
+
+gl verbs are implemented with jsc verbs
+originally for j6.02 windows graphics
+helps porting gl apps (e.g. dissect)
+   'gl' names_jgl2_ 3
+
+you can mix gl and jsc commands - but keep it simple   
+
+JHSCANVAS in current locale is the canvas locale
+gl and jsc can be called in any locale
+they use JHSCANVAS to access the canvas locale
+state info (buffer/canvawidth/GLFONT/...)
+
+JHSCANVAS is set in parent locale by jhcanvas create
+
+dissect gets some special treatment
+
 ***start tool
 <TOOL>
 

@@ -149,9 +149,6 @@ ev_create=: 3 : 0
 wdcmds=: ''
 explocs=: '' NB. explorer locales
 mcan=: 'jhjcanvas;_'jpage ''
-setrefresh__mcan jsxnew jscfont jsxucp c_font
-
-NB. shown=: 1
 )
 
 destroy=: 3 : 0
@@ -324,7 +321,6 @@ NB. runexplorer created new one
 c=. explorer
 t=. ;(Num_j_ e.~{.;c){(,~c);(;{.copath c),'?jlocale=',;c
 t=. (0".c_exywh) pageopenargs t
-echo t
 c=. 'pageopen *',}:;t,each LF
 jhrcmds c
 )
@@ -337,7 +333,8 @@ NB. all canvas events come here - fan out to handler
 ev_mcan_canvas=: 3 : 0
 NB. ensure we are wd and gl targets
 wd_dissect_'psel ',;coname''
-glsel 'mcan'
+
+glsel 'dissectisi'
 sysdata__caller=: ":eventdata__mcan
 
 if. eventtype__mcan-:'down' do.
@@ -452,8 +449,6 @@ CSS=: 0 : 0
 
 ev_create=: 3 : 0
 mcan=: 'jhjcanvas;_'jpage ''
-setrefresh__mcan jsxnew jscfont jsxucp c_font_dissectjhs_ NB.c_font perhaps should come from main
-NB. shown=: 1
 )
 
 NB. explorer window is closed with jhrcmds in parent
@@ -467,7 +462,7 @@ NB. all explorer canvas events come here - fan out to handler
 ev_mcan_canvas=: 3 : 0
 NB. ensure we are wd and gl targets
 wd_dissect_'psel ',;coname''
-glsel 'mcan'
+glsel 'dissectisi'
 sysdata__caller=: ":eventdata__mcan
 select. eventtype__mcan
 case. 'resize' do. ev_mouse_resize''

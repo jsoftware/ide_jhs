@@ -16,6 +16,7 @@ demo/
 guest/
 js/
 node/
+old/
 page/
 react/
 spx/
@@ -54,7 +55,6 @@ jjserver.ijs
 jlogin.ijs
 loadx.ijs
 spfile_template.ijs
-jum.ijs
 manifest.ijs
 node.ijs
 port.ijs

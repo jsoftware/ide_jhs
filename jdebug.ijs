@@ -99,8 +99,7 @@ jhhr
 'dostack'  jhb'stack'
 'dissect'  jhb'dissect'
 
-jhresize''
-'sel'      jhdiv'<FILES>'
+jhflex 'sel'jhdiv'<FILES>'
 )
 
 help=: 0 : 0
@@ -149,6 +148,7 @@ form{margin:0px 2px 2px 2px;}
 *.jhspan{<PS_FONTCODE>}
 *.jhab{<PS_FONTCODE>}
 *.jhac{<PS_FONTCODE>text-decoration:none;background-color:aqua;} 
+#sel{PS_FLEX}  
 )
 
 NB. x is current - -1 or d2 or m3
@@ -373,8 +373,6 @@ JS=: 0 : 0
 
 var line;
 
-function ev_body_load(){jresize();}
-
 function ajax(ts)
 {
  var t;
@@ -384,9 +382,6 @@ function ajax(ts)
  jbyid("stops").innerHTML= ts[3];
  t= jbyid("files*"+line); 
  if(null!=t) t.scrollIntoView({behavior: 'smooth', block: 'center'});
-
-jresize(); //!
-
 }
 
 function update(ts){ajax(ts= decodeURIComponent(ts).split(JASEP));}

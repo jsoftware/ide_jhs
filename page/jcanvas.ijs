@@ -1,247 +1,144 @@
-echo'jcanvas.ijs is old and unused'
+NB. create page with jhjcanvas widget
 
-0 : 0
-drawing on canvas
-   spx'~addons/ide/jhs/spx/canvas.ijt'
+require'~addons/ide/jhs/widget/jhjcanvas.ijs'
+
+coclass'jcanvas'
+coinsert'jgl2'
+coinsert'jhs'
+NB. coinsert'jhjcanvas'
+
+drawverb=: 3 : 0
 )
 
-require'~addons/graphics/color/hues.ijs'
-
-coclass'z'
-
-3 : 0''
-if. _1=nc<'jsxbuf' do. jsxbuf=: '' end.
+addlines=: 3 : 0
+t=. <;._2 LF,~5!:5 <'drawverb'
+a=. <;._2 y
+t=. q__=: (}.}:t),a
+echo t
+drawverb=: 3 : t
+i.0 0
 )
 
-jsxnew_z_=: 3 : 'r[jsxbuf_z_=:''''[r=. jsxbuf_z_'
-
-jsxucp_z_=: 3 u: 7 u: ]              NB. int codepoints from utf8 string
-jsxradian_z_=: 3 : '<.1e7*y'         NB. ints from fractional radians
-jsxarg_z_=: 3 : '(":y)rplc'' '';'',''' NB. javascript string from int list
-
-NB. y is number of colors required
-jsxpalette_z_=: 3 : 0
-t=. jsxarg each ":each<"1[255<.<.0.5+hues 5r6*(i.%<:)y
-(<'rgb('),each t,each')'
+draw=: 3 : 0
+formset 'canvasjs can *',jsxarg__can buffer__can
 )
 
-jsxlines_z_=: 3 : 0
-assert 0=2|#y
-jscmoveTo 2{.y
-i=. 2 
-while. i<#y do.
- jsclineTo (i+0 1){y
- i=. i+2
-end.
+help=: 0 : 0 
+jsc... - map directly to javascipt canvas commands
+jsx... - jsc extensions - e.g. jsxtext xy;text;ratio
+gl...  - gl cmds implemented with jsc commands
+
+   jhshelp'canvas' NB. more info
+   jhstour'canvas' NB. drawing to canvas from term
+)
+
+gldefault=: 0 : 0
+glclear''
+glfont 'arial 22'
+glpen 4 0 [ glrgb 255 0 0
+gllines 0 0,glqwh''
+glbrush '' [ glrgb 0 0 255
+glrect 100 30 40 40
+gltextcolor'' [ glrgb 0 0 0
+gltext 'iiiwww click the mouse' [ gltextxy 10 100
+)
+
+jscdefault=: 0 : 0
+jscbeginPath''
+jscclearRect 0 0,glqwh''
+jscbeginPath''        NB. start path that will be painted
+jsclineWidth 4        NB. pen width
+jscstrokeStyle jsxucp'red' NB. red pen
+jscmoveTo 0 0         NB. upper left 
+jsclineTo glqwh''     NB. lower right
+jscstroke''           NB. draw line
+jscrect 10 10 300 300
 jscstroke''
 )
 
-NB. simple viewmat
-jsxvm_z_=: 3 :0
-'a b'=. $y
-s=. >./jsxwh
-d=. >./$y
-r=. <.s%d
-offset=. <.2%~jsxwh-r*$y
-data=.  (~.,y) i. y
-pal=. jsxpalette >:>./,data
-for_i. i.a do.
- for_j. i.b do.
-  jscbeginPath''
-  jscfillStyle jsxucp ;(i{j{data){pal
-  jscrect (offset+r*i,j),r,r
-  jscfill''
- end.
-end.
-)
-
-coclass'jcanvas'
-coinsert'jhs'
-
-NB. jpage boilerplate from util.ijs
-
-ev_create=: 3 : 0
-t=. y jpagedefault 200 200
-'width height'=: t
-refresh=: '' NB. blank canvas 
-NB. (getjs'BUFFER CMDS';(jsxarg refresh);CMDS),gethbs'WIDTH HEIGHT';width;height
-JS=: JS hrplc'BUFFER CMDS';(jsxarg refresh);CMDS
-HBS=: HBS hrplc'WIDTH HEIGHT';width;height
-)
-
-NB. jsc... commands and asserts
-NB. must match switch values in jhjcanvas.js
-t=. <;._2 [ 0 : 0
-fillStyle     0<#
-strokeStyle   0<#
-rect          4=#
-fillText      2<#
-font          0<#
-lineWidth     1=#
-beginPath     0=#
-fill          0=#
-stroke        0=#
-clearRect     4=#
-moveTo        2=#
-lineTo        2=#
-closePath     0=#
-ellipse       8=#
-strokeText    2<#
-arc           6=#
-clip          4=#
-save          0=#
-restore       0=#
-qpixels       4=#
-pixels        4<#
-)
-
-ncmds=:    (t i.each' '){.each t
-nasserts=: (>:each t i:each' ')}.each t
-
-bld=: 3 : 0''
-for_i. i.#ncmds do.
- a=. ;i{nasserts
- ('jsc',(;i{ncmds),'_z_')=: 3 : ('i.0 0[jsxbuf_z_=: jsxbuf_z_,',(":i),',(#d),d[''',(;i{ncmds),'''assert ',a,' d=. <. y' )
-end.
-i.0 0
-)
-
-run=: 3 : 0
-jjs_jhs_ q=: 'w=window.open("","',(;coname''),'");w.doit("',(jsxarg y),'");'
-)
-
-run=: 3 : 0
-jjs_jhs_ 'var w=findwindowbyJWID("',JWID,'");w.doit("',(jsxarg y),'");'
-)
-
-markmouse=: 3 : 0
-'a b c'=. 0".getv_jhs_'jdata'
-echo a;b;c
-jsxnew''
-jscbeginPath''
-jscfillStyle jsxucp y
-jscarc a,b,5,0,(jsxradian 2*o.1),1
-jscfill''
-if. c do.
- start=: a,b
-else.
- jscmoveTo start
- jsclineTo a,b
- jscstroke''
-end.
-jsxarg jsxnew''
-)
-
-ev_mouse_down=: 3 : 0
-echo NV
-jhrajax markmouse'green'
-i.0 0
-)
-
-ev_mouse_up=: 3 : 0
-jhrajax markmouse'red'
-i.0 0
-)
-
-NB. ev_mouse_move=: 3 : 0
+run_last=: ''
 
 HBS=: 0 : 0
-jhclose''
+jhclose'gl... playground'
+'cmds'    jhtextarea gldefault;12;30
 jhbr
-''jhdiv'mouse down,move,up'
-'<canvas id="can" width="<WIDTH>" height="<HEIGHT>"></canvas>'
+'runcmds'    jhb 'run'
+'gldefault'  jhb 'gl cmds'
+'jscdefault' jhb 'jsc cmds'
+'help'       jhb 'help'
+jhflexa
+'can'        jhcanvas ''
+jhflexz
 )
 
 CSS=: 0 : 0
-form{margin:0px 2px 2px 2px;}
-canvas {border: 1px solid black;}
+#cmds{width:100vw;resize:none;}
+#can{width:100vw;height:100vh;border: 4px solid red;}
 )
 
-fixcmds=: 3 : 0
-a=. (<': '),~each (<'case '),each   ":each<"0 i.#y
-;LF,~each a,each (<'(d);break;'),~each   (<'jsc'),each y
+ev_create=: 3 : 0
+can=: 'jhjcanvas;_'jpage ''
+shown=: 1
 )
 
-CMDS=: fixcmds ncmds
+destroy=: 3 : 0
+if. shown do. close ;coname'' end.
+destroy__can'' NB.! should destroy all widgets
+codestroy''
+)
 
-JS=: 0 : 0
+NB. called from canvas iframe
 
-var x= 0, y= 0, down= 0, rfi= 10000000, can, context;
-buffer="<BUFFER>"; // refresh buffer
+firstpaint=: 3 : 0
+jhrcmds''
+)
 
-function ev_body_load(){init();}
+NB. all canvas events come here - fan out to handler
+NB. see gl2.ijs for jdata values
+NB. see dissect for examples
+ev_can_canvas=: 3 : 0
+select. ;14{<;._1 ' ',getv'jdata'
+case. 'down'   do. markmouse 255 0 0
+case. 'up'     do. markmouse 0 255 0
+case. 'resize' do.
+ drawverb__can drawarg__can
+ paint''
+case.          do. jhrcmds''
+end.
+)
 
-function init(){
- can = document.getElementById('can');
- context = can.getContext('2d');
+ev_runcmds_click=: 3 : 0
+drawverb__can=: 3 : (getv'cmds')
+drawarg__can=: ''
+drawverb__can drawarg__can
+paint''
+)
 
- // ajax calls are slow and mouse events are lost - especially mousmove
- // handle only mousedown and mouseup
- can.addEventListener('mousedown', e => {down= 1;mevent("down",e);});
- can.addEventListener('mouseup', e =>   {down= 0;mevent("up",e);});
- // can.addEventListener('mousemove', e => {mevent("move",e);});
+ev_gldefault_click=: 3 : 0
+jhrcmds 'set cmds *',gldefault
+)
 
-doit(buffer);
-}
+ev_jscdefault_click=: 3 : 0
+jhrcmds 'set cmds *',jscdefault
+)
 
-// jsc... cmds map directly to canvas commands
-function jscclearRect(a){context.clearRect(a[0],a[1],a[2],a[3]);}
-function jscrect(a){context.rect(a[0],a[1],a[2],a[3]);}
-function jscfillStyle(a){context.fillStyle= stringfints(a);}
-function jscstrokeStyle(a){context.strokeStyle= stringfints(a);}
-function jscbeginPath(){context.beginPath();}
-function jscclosePath(){context.closePath();}
-function jscfill(){context.fill();}
-function jscstroke(){context.stroke();}
-function jsclineWidth(a){context.lineWidth= a[0];}
-function jscfont(a){context.font= stringfints(a);}
-function jscfillText(a){context.fillText(stringfints(a.slice(2,a.length)),a[0],a[1]);}
-function jscstrokeText(a){context.strokeText(stringfints(a.slice(2,a.length)),a[0],a[1]);}
-function jscmoveTo(a){context.moveTo(a[0],a[1]);}
-function jsclineTo(a){context.lineTo(a[0],a[1]);}
-function jscellipse(a){context.ellipse(a[0],a[1],a[2],a[3],a[4]/rfi,a[5]/rfi,a[6]/rfi,a[7]);}
-function jscarc(a){context.arc(a[0],a[1],a[2],a[3]/rfi,a[4]/rfi,a[5]);}
+ev_help_click=: 3 : 0
+glclear''
+glfont 'arial 11'
+h=. 1.4*0".(GLFONT i.'p'){.GLFONT
+jsxtext 10 20;h;help
+paint''
+)
 
-// convert UTF-16 array to string
-function stringfints(a)
-{
- var str = "";
- for (var i=0;i<a.length;i++ ) 
-  str += String.fromCharCode(a[i]);
- return str;
-}
+paint=: 3 : 0
+jhrcmds 'canvasjs ','can',' *',jsxarg jsxnew''
+)
 
-// a is string of , separated numbers - command,#,args ...
-function doit(a)
-{
- if(0==a.length)return; // avoid empty string -> 0
- a= a.split(",").map(Number) // convert string to int array
- for(var i=0;i<a.length;i=i+2+a[i+1])
- {
-  var d= a.slice(i+2,i+2+a[i+1]);
-  switch(a[i])
-  {
-<CMDS>
-    break;
-   default:
-    break;
-  }
- }
-}
-
-// call J mouse event handler
-function mevent(type,e)
-{
-  jform.jid.value= "mouse";
-  jform.jmid.value="mouse";
-  jform.jtype.value=type;
-  jform.jsid.value="";
-  jdoajax([],e.offsetX+" "+e.offsetY+" "+down);
-}
-
-// process J mouse event handler result
-function ev_mouse_down_ajax(){doit(rq.responseText.substr(rqoffset));}
-function ev_mouse_up_ajax(){ev_mouse_down_ajax();}
-function ev_mouse_move_ajax(){ev_mouse_down_ajax();}
-
+markmouse=: 3 : 0
+ab=. 2{.0".getv'jdata'
+glpen 1 0 [ glrgb y
+glbrush '' [ glrgb y
+r=. 1 1
+glellipse (ab-r),2*r
+paint''
 )

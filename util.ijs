@@ -8,6 +8,27 @@ jhsclosepages_z_=: jhsclosepages_jhs_
 
 coclass'jhs'
 
+NB. routines to affect selected app from j
+
+NB. * mid sid type
+NB. * 'run';'';'click'
+NB. run event handler in form
+NB. runs in form locale
+formrun_jhs_=: 3 : 0
+jjs'findwindowbylocale("<LOC>").jscdo("<MID>","<SID>","<TYPE>");'hrplc 'LOC MID SID TYPE';(":;coname'');y
+)
+
+NB. * 'set id *asdf';'alert * fubar'
+NB. javascript jhrcmds runs commands
+formset_jhs_=: 3 :0
+a=. boxopen y
+a=. '"',~each '"',each a
+a=. a,each','
+a=. }:;a
+jjs'findwindowbylocale("<LOC>").jhrcmds([<CMDS>])'hrplc 'LOC CMDS';(":;coname'');a
+)
+
+
 cojhs=: jpage
 
 0 : 0

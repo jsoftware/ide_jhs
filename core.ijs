@@ -381,7 +381,7 @@ NB. 2 - confirm() close   - guest server  - guest server guest
 QRULES=: 0           NB. see ev_close_click in jijx.ijs
 
 NB. following are options and css name values
-
+NB. text to be replaced by the value can be the form <NAME> or just NAME
 PC_JICON=:         '#33D2F6'
 PC_FONTFIXED=:     '"courier new","courier","monospace"'
 PC_FONTVARIABLE=:  '"sans-serif"'
@@ -403,6 +403,7 @@ PC_CHECK0_BACKGROUND=: 'white'
 
 NB. following are css chunks - PS_... PC_... values replaced in getcss''
 PS_FONTCODE=:      'font-family:',PC_FONTFIXED,';font-weight:550;white-space:pre;'
+PS_FLEX=:          'width:100%;height:100%;resize:none;overflow:auto;'
 
 )
 

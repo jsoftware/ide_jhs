@@ -19,8 +19,8 @@ jhmenu''
 'desc'   jhb'Descriptions'
 'all'    jhb'Upgrade/Install All'
 'buttons'jhdiv'<BUTTONS>'
-jhresize''
-'result' jhdiv'<RESULT>'
+
+jhflex 'result'jhdiv'<RESULT>'
 )
 
 checkers=: ('check'jhb'Check all'),'uncheck'jhb'Uncheck all'
@@ -117,9 +117,12 @@ r=. ;d
 create '';r rplc LF;'<br>'
 )
 
-JS=: 0 : 0
-function ev_body_load(){jresize();}
+CSS=: 0 : 0
+#result{PS_FLEX}     
+)
 
+
+JS=: 0 : 0
 function ev_upable_click(){jsubmit();}
 function ev_remable_click(){jsubmit();}
 function ev_inst_click(){jsubmit();}

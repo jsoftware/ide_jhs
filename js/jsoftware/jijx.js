@@ -22,7 +22,6 @@ function ev_body_load()
  jseval(false,jbyid("log").innerHTML); // redraw canvas elements
  newpline("   ");
  setfocus();
- //jresize();
   
 // var el = jbyid('log');
 //swipedetect(el, function(d){if (d=='left')alert('swiped left!')})

@@ -17,13 +17,10 @@ jhmenu'edit'
   'saveasclose'jhb'X'
 '<hr></div>'
 
-NB.! use flow instead of resize - avoid scroll due to menu space
-jhresize''
+jhflex 'cm6_editor'jhdiv''
 
-'cm6_editor'   jhdiv''
 'ijs'         jhtextarea'<DATA>';20;10
 'textarea'    jhhidden''
-
 
 NB. menu must come after codemirror
 'menu0'   jhmenugroup ''
@@ -197,7 +194,6 @@ c{.x}.y
 )
 
 NB. p{} klduge because IE inserts <p> instead of <br> for enter
-NB. codemirror needs jresizeb without scroll
 NB. codemirror requires no div padding (line number vs caret) so set padding-left:0
 NB. see activeline-background in util/jheme.4.2.css
 CSS=: 0 : 0
@@ -205,10 +201,9 @@ CSS=: 0 : 0
 #filenamed{color:blue;background-color:white;}
 #saveasdlg{display:none;}
 *{font-family:<PC_FONTFIXED>;font-weight:550;}
-/* #jresizeb{overflow:visible;border:solid;border-width:1px;clear:left;} */
 #ijs { display:none; }
 div{padding-left:0;}
-#cm6_editor { height: 100vh; }
+#cm6_editor{PS_FLEX}  
 )
 
 JS=: fread JSPATH,'jijs.js'

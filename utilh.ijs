@@ -43,12 +43,13 @@ NB. extra html - e.g. <script .... src=...> - included after CSS and before JSCO
 HEXTRA=: '' 
 
 NB. core plus page styles with config replaces
+NB. PC_... or PS_... or <PC_...> or <PS_...> are replaced 
 NB. css from y has legacy <PC_FONTFIXED> and may have PC_FONTFIXED
 NB. csscore.css has only PC_FONTFIXED
 css=: 3 : 0
 core=. fread JSPATH,'csscore.css'
-t=. 'PC_JICON PC_FONTFIXED PC_FONTVARIABLE PC_FM_COLOR PC_ER_COLOR PC_LOG_COLOR PC_SYS_COLOR PC_FILE_COLOR PC_BUTTON PC_MENU_HOVER PC_MENU_FOCUS'
-d=. PC_JICON;PC_FONTFIXED;PC_FONTVARIABLE;PC_FM_COLOR;PC_ER_COLOR;PC_LOG_COLOR;PC_SYS_COLOR;PC_FILE_COLOR;PC_BUTTON;PC_MENU_HOVER;PC_MENU_FOCUS
+t=. 'PC_JICON PC_FONTFIXED PC_FONTVARIABLE PC_FM_COLOR PC_ER_COLOR PC_LOG_COLOR PC_SYS_COLOR PC_FILE_COLOR PC_BUTTON PC_MENU_HOVER PC_MENU_FOCUS PS_FONTCODE PS_FLEX'
+d=. PC_JICON;PC_FONTFIXED;PC_FONTVARIABLE;PC_FM_COLOR;PC_ER_COLOR;PC_LOG_COLOR;PC_SYS_COLOR;PC_FILE_COLOR;PC_BUTTON;PC_MENU_HOVER;PC_MENU_FOCUS;PS_FONTCODE;PS_FLEX
 page=. y hrplc t;d                NB. <PC_...>
 page=. page rplc (;:t),.":each d  NB. PC_...>
 core=. core rplc (;:t),.":each d  NB. PC_...
@@ -382,10 +383,6 @@ jhbs=: 3 : 0
 jhbsjs=: '' NB. hbs js statments captured in globals
 t=. <;._2 y
 t=. LF,~LF,~LF,;jhbsex each t
-i=. 1 i.~'</div><div id="jresizeb">'E.t
-if. i~:#t do.
- t=. '<div id="jresizea">',t,'</div>'
-end.
 t=. '<div id="status-busy"><br>server busy<br>event ignored<br><br></div>',t
 t=. '<div>',t,'</div>' NB. all in a div - used by flex
 t=. '<body onload="jevload();" onunload="jevunload();" onfocus="jevfocus();">',LF,(jhform''),LF,t,jsa,jhbsjs,jsz,LF,'</form></body>'
@@ -461,8 +458,12 @@ getcss=: 3 : 0
 'getcss arg not empty'assert ''-:y
 t=. getincs'.css'
 t=. ;(<'<style type="text/css">',LF),each (fread each t),each<'</style>',LF
-t,css CSS hrplc 'PS_FONTCODE';PS_FONTCODE NB. PS_FONTCODE contains PC_... 
+a=. css CSS hrplc 'PS_FONTCODE PS_FLEX';PS_FONTCODE;PS_FLEX
+a=. a rplc 'PS_FONTCODE';PS_FONTCODE;'PS_FLEX';PS_FLEX 
+t,a
 )
+
+
 
 NB. INC js provided inline - not as src - avoid cache woes
 fixjsi=: 3 : 0

@@ -5,7 +5,7 @@ HBS=: 0 : 0
 jhclose''
 'run'jhb'run'
 'sentence'jhtext'<SENTENCE>';30
-'display'jhdiv''
+jhflex 'display'jhdiv''
 )
 
 ev_create=: 3 : 0
@@ -25,4 +25,5 @@ ev_sentence_enter=: ev_run_click
 
 CSS=: 0 : 0
 #sentence,#display{<PS_FONTCODE>}
+#display{<PS_FLEX>}   
 )

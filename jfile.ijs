@@ -53,9 +53,8 @@ shorts''
 'pathd'    jhdiv'<F>'
 '<input id="fileupload" type="file" name="fileupload" />'
 'uploadf'  jhhidden'' NB. client file name to upload to server
-jhresize''
 
-'sel'       jhdiv'<FILES>'
+jhflex 'sel'jhdiv'<FILES>'
 )
 
 3 : 0''
@@ -415,6 +414,7 @@ CSS=: 0 : 0
 #deletedlg{display:none;}
 #newdlg{display:none;}
 #fileupload{display:none;}
+#sel{PS_FLEX}   
 )
 
 JS=: 0 : 0
@@ -434,7 +434,7 @@ function ev_body_load(){
             alert('File selection cancelled.');
         }
     });
-  jresize();setanchor(true);
+  setanchor(true);
 }
 
 function ev_upload_click(){jbyid('fileupload').click();} // open file dialog

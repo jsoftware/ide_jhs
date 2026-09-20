@@ -1,24 +1,26 @@
 NB. jhcanvas creates jpage and uses as src in iframe
-
-0 : 0
-usage:
-can=: 'jhjcanvas;_'jpage ''
-setrefresh__can jsxnew jscfont jsxucp '12pt ',PC_FONTFIXED
-)
-
 require'~addons/ide/jhs/gl2.ijs'
-
 coclass'jhjcanvas'
 coinsert'jhs'
 coinsert'jgl2'
 
+drawverb=: 3 : 'i.0 0'
+drawarg=: ''
+buffer=: ''
+
+draw=: 3 : 0
+drawarg=: y NB. used by resize
+drawverb y
+formset__PARENT 'canvasjs can *',jsxarg buffer
+)
+
 ev_create=: 3 : 0
 PARENT=: COCREATOR
 buffer=: ''
-JHSCANVAS_z_=: coname'' 
+JHSCANVAS__PARENT=: coname''  NB. default gl target
+JHSCANVAS=: coname''          NB. point at ourselves
 canvaspixels=: 0 NB. length of pixels buffer for qpixels and pixels  
-refresh=: ''
-JS=: (fread'~addons/ide/jhs/widget/jhjcanvas.js')hrplc'BUFFER';jsxarg refresh
+JS=: (fread'~addons/ide/jhs/widget/jhjcanvas.js')hrplc'BUFFER';''
 )
 
 destroy=: 3 : 0
@@ -49,10 +51,11 @@ a=. (<': '),~each (<'case '),each   ":each<"0 i.#y
 ;LF,~each a,each (<'(d);break;'),~each   (<'jsc'),each y
 )
 
-NB. set initial state and reset after resize
-setrefresh=: 3 : 0
-JS=: JS,LF,'buffer="',(jsxarg y),'"',LF
+findx=:'findwindowbyJWID("jcanvasplay?jlocale=<LOC>").jbyid("can").contentDocument.defaultView.doit("<CMDS>");'
+
+find=: 'findwindowbyJWID("jglplay?jlocale=<LOC>").jbyid("can").contentDocument.defaultView.doit("<CMDS>");'
+
+run=: 3 : 0
+'loc id data'=: y
+jjs_jhs_ find rplc '<LOC>';(;loc);'<CMDS>';jsxarg data
 )
-
-
-   

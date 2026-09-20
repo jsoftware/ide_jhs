@@ -2,32 +2,25 @@ coclass'app05'
 coinsert'jhs'
 
 HBS=: 0 : 0
-NB. base div implicity opened
       jhclose''
-'title'  jhh1 'css flex - ta beside tb'
-         jhijs''                        NB. button to edit source script
-         jhhr
-'hbs'    jhb  'show HBS'
-'css'    jhb  'show CSS'
+'title' jhh1 'flex - jhtextarea , jhdiv'                        NB. button to edit source script
+        jhijs'' NB. button to edit source script
+'hbs'   jhb  'show HBS'
+'css'   jhb  'show CSS'
 
-jhdivz NB. base div close - flex active
+jhflexa
+ jhflexrowa NB. side by side
+  'ta'jhtextarea''
+  'tb'jhdiv'' 
+ jhflexrowz
+jhflexz
 
-'jflexrow'jhdiva''      NB. allow side by side resizing
-      'ta'jhtextarea''
-      'tb'jhtextarea''
-jhdivz NB. close jflexrow div
-
-jhdiva'' NB. base div open - flex inactive
-
-'footer'jhhn 3;'page footer'
-NB. base div implicity closed
+'footer'jhhn 3;'footer'
 )
 
 CSS=: 0 : 0
-#ta{<PS_FONTCODE>;resize:none;} /* code font - no resize handle */
-#tb{<PS_FONTCODE>;resize:none;} /* code font - no resize handle */
-#ta{width: 50%;height:100%;} /* fill available space */
-#tb{width: 50%;height:100%;}
+#ta{<PS_FONTCODE>;<PS_FLEX>;width:50%;}
+#tb{<PS_FONTCODE>;<PS_FLEX>;width:50%;}
 )
 
 manapp=: 'jpage y must be '''''
@@ -35,7 +28,7 @@ manapp=: 'jpage y must be '''''
 ev_create=: {{
  manapp assert ''-:y
  t=. y jpagedefault ,LF,.~20 20$'some text '
- jhcmds ('set ta *',t);'set tb *',100}.|.t
+ jhcmds ('set ta *','jhtextarea',LF,t);'set tb *','<span style="color:blue;font-size:3rem;">jhdiv</span><br>',t
 }}
 
 ev_hbs_click=: {{ jhrcmds 'set ta *',HBS }}

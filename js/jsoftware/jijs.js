@@ -6,7 +6,6 @@ function ev_body_load() {
   rep = jbyid("rep");
   ta = jbyid("textarea");
   saveasx = jbyid("saveasx");
-  jresize();
 }
 
 function setdirty() { jbyid("jmenutitle").style.color = "red"; dirty = true; }
@@ -43,10 +42,9 @@ function ev_saveasx_enter() { click(); }
 function ev_saveas_click() {
   saveasx.value = jbyid("filename").value;
   jdlgshow("saveasdlg", "saveasx");
-  jresize();
 }
 
-function ev_saveasclose_click() { jhide("saveasdlg"); jresize(); }
+function ev_saveasclose_click() { jhide("saveasdlg"); }
 
 function ev_ro_click() { window.cm6_changeReadOnly(); }
 function ev_numbers_click() { window.cm6_changeLineNumbers(); }
@@ -75,7 +73,6 @@ function ajax(ts) {
     default:
       jijxrun(ts[1]); // run sentence in jijx
   }
-  jresize();
 }
 
 function ev_ijs_enter() { return true; }

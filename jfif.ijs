@@ -16,12 +16,18 @@ jhbr
 jhbr
 'where'    jhtext '<where>';50
 jhbr
-jhresize''
-'area'     jhdiv''
+
+jhflex 'area'jhdiv''
 )
 
 CSS=: 0 : 0
 *{font-family:PC_FONTFIXED;}
+#area{width:100%;height:100%;resize:none;overflow:auto;}
+)
+
+CSS=: 0 : 0
+*{font-family:PC_FONTFIXED;}
+#area{PS_FLEX}
 )
 
 jev_get=: 3 : 0
@@ -210,7 +216,6 @@ function ev_body_load()
  setchkstate('mfolders',getls('mfolders'));
  setchkstate('nameonly',getls('nameonly'));
  jbyid("what").focus();
- jresize();
 }
 
 function ev_what_enter(){jscdo("find");}

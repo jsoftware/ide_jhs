@@ -43,12 +43,10 @@ jhmenugroupz''
 
 HBS=: 0 : 0 rplc '<termmenu>';termmenu
 <termmenu>
-jhdivz NB. flex active
-      jhresize''
+jhflexa
 'log' jhec'<LOG>'
 'jframes'jhdiva''
-jhdivz
-jhdiva'' NB. flex inactive - reopen main div
+jhflexz
 )
 
 jev_get=: create

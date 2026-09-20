@@ -8,13 +8,18 @@ HBS=: 0 : 0
 jhclose''
 'dict'jhb'show chart config'
 'defn'jhb'show chart defintion'
-jhdivz NB. base div close - flex active
 
-NB. share remaining vertical space
-'charta'jhchart''
-'show'jhdiv''
+jhflexa
+ 'charta'jhchart''
+ 'show'jhdiv''
+jhflexz
+)
 
-jhdiva'' NB. reopen main div
+NB. style html elements (color,size,border,..)
+CSS=: 0 : 0
+#charta_parent{background-color:pink;}
+#charta_parent{height:50%;width:100%;}
+#show{<PS_FONTCODE>;<PS_FLEX>;}
 )
 
 ev_create=: 3 : 0
@@ -24,13 +29,6 @@ if. ''-:y do.
  jcjs'labels';5
 end. 
 jhcmds 'chartjs charta *',cjsdata
-)
-
-NB. style html elements (color,size,border,..)
-CSS=: 0 : 0
-#charta_parent{background-color:pink;}
-#charta_parent{height:50%;width:100%;}
-#show{font-family:monospace;}
 )
 
 NB. javascript code

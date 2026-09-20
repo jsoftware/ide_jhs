@@ -14,25 +14,18 @@ serious use requires study of extensive online resources
 HBS=: 0 : 0
 NB. base div implicitly opened
          jhclose''
-'title'  jhh1 'css flex - ta textarea'
+'title'  jhh1 'flex - jhtextarea'
          jhijs''                        NB. button to edit source script
-         jhhr
 'hbs'    jhb'show HBS'
 'css'    jhb'show CSS'
 
-jhdivz NB. base div close - flex active
-'foo'jhb'asdf'
-'ta'     jhtextarea '' NB. textarea element is in flex area
-
-jhdiva'' NB. base div open - flex inactive
+jhflex 'ta'jhtextarea''  NB. wrap element in jhflexa and jhflexz
 
 'footer' jhhn 3;'page footer'
-NB. base div implicitly closed
 )
 
 CSS=: 0 : 0
-#ta{font-family:<PC_FONTFIXED>;resize:none;} /* id ta - fixed font - no resize handle */
-#ta{width:100%;height:100%;}                 /* id ta - fill available space          */
+#ta{<PS_FONTFIXED>;<PS_FLEX>}
 )
 
 NB. J code - initialize and handle events

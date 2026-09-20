@@ -12,6 +12,7 @@ function init(){
   can.addEventListener('mousedown', e => {down= 1;mevent("down",e);});
   can.addEventListener('mouseup', e =>   {down= 0;mevent("up",e);});
   can.addEventListener('mousemove', e =>   {down= 0;mevent("move",e);});
+  
   const resizeObserver = new ResizeObserver(myResizeHandler);
   resizeObserver.observe(can.parentElement.parentElement); // watch iframe to resize canvas
 }
@@ -58,6 +59,8 @@ function jscqpixels(a){
   }
 }
 
+function jscreset(a){context.reset();context.textBaseline= "top";}
+
 // convert UTF-16 array to string
 function stringfints(a)
 {
@@ -68,6 +71,7 @@ function stringfints(a)
 }
 
 // a is string of , separated numbers - command,#,args ...
+// order in gl2 must match order here
 function doit(a)
 {
  if(0==a.length)return; // avoid empty string -> 0
@@ -98,6 +102,7 @@ function doit(a)
     case 18: jscrestore(d);break;
     case 19: jscqpixels(d);break;
     case 20: jscpixels(d);break;
+    case 21: jscreset(d);break;
     break;
    default:
     alert('doit bad command: '+a[i]);
@@ -143,6 +148,9 @@ function fixit(){
     setTimeout(fixit,10);
 }
 
+let timeout;
+
+// resizer plus with debouncer
 const myResizeHandler = (entries => {
       for (let entry of entries) {
           if (entry.target === can.parentElement.parentElement) {
@@ -150,7 +158,11 @@ const myResizeHandler = (entries => {
               can.width = entry.contentRect.width-4;   //? 2*borderwidth
               can.height = entry.contentRect.height-8; //?
               doit(buffer); // set default fixed pitch font
-              mevent('resize',entry);
+
+              clearTimeout(timeout); 
+              timeout= setTimeout(() => {
+               mevent('resize',entry); // Execute the function after the delay
+              }, 200);
           }
       }
 });

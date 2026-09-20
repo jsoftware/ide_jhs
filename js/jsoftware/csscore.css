@@ -17,9 +17,9 @@ form{min-height: 100svh;display: flex;flex-flow: column;} /* row */
 
 div{padding-left:2px;}
 
-#jflexcol{display: flex; flex-flow: column; flex: 1; height:100%;}
-#jflexrow{display: flex; flex-flow: row   ; flex: 1; width: 100%;}
-#jresizeb{overflow:scroll;border:solid;border-width:1px;clear:left;}
+/* min-width/height critical for flex */
+#jflexcol{display: flex; flex-flow: column; flex: 1; height:100%; min-width:100px;}
+#jflexrow{display: flex; flex-flow: row   ; flex: 1; width: 100%; min-height:100px;}
 
 iframe[id^="jifr"]{overflow:auto;flex:1 1 10em;}
 iframe[id^="jifr-jijx"]{overflow:auto;flex:3 1 auto;} 

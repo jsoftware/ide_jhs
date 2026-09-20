@@ -19,7 +19,7 @@ NB. y is exclude 0 or 1 - initialize all
 init=: 3 : 0
 t=. conl 0
 if. y do. t=. ('j'~:;{.each t)#t end.
-d=.   <'set locsdiv *','locsdiv'  jhdiv 'locs'  jhselect t;5;0
+d=.   <'set locsdiv *','locs'  jhselect t;5;0
 d=. d,<'set atsdiv *','ats'   jhselect (cobinst {.t);5;0
 d=. d,<'set namesdiv *', 'names' jhselect (cobnames ({.t);0 1 2 3);5;0
 d=. d,<'set rep *undefined'
@@ -134,9 +134,15 @@ jhmenu''
 'nl*conj'   jhchk 'conjunction';1
 'nl*verb'   jhchk 'verb';1
 'exclude'   jhchk 'exclude j...';0
-'locsdiv'   jhdiv ''
-'atsdiv'    jhdiv ''
-'namesdiv'  jhdiv ''
+
+jhflexa
+ jhflexrowa
+  'locsdiv'   jhdiv ''
+  'atsdiv'    jhdiv ''
+  'namesdiv'  jhdiv ''
+ jhflexrowz
+jhflexz 
+
 'rep'       jhdiv ''
 jhhr
 'def'       jhdiv ''
@@ -144,8 +150,11 @@ jhhr
 
 CSS=: 0 : 0
 *.jhdiv,select,option{<PS_FONTCODE>}
-select{min-width:100px;max-width:200px;float:left;min-height:300px;}
+select{width:100%;height:100%;}
 hr{clear:both;}
+#locsdiv{<PS_FLEX>;width:30%;}
+#atsdiv  {<PS_FLEX>;width:20%;}
+#namesdiv {<PS_FLEX>;width:50%;}
 #rep{clear:both;float:left;}
 #def{clear:both;float:left;min-width:300px;}
 )

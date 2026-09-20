@@ -36,6 +36,12 @@ t jhaddatts ('~'e.options)#'data-jhsnojdefault="1"'
 NB.* <br>
 jhbr=: '<br>'
 
+NB.* id jhcanvas ''
+NB. assumes id=: 'jhjcanvas;_'jpage ''* 
+jhcanvas=: 4 : 0
+x jhiframe (;x~);'';'flex:auto;' 
+)
+
 NB.* id jhchart '' - chartjs
 jhchart=: 4 : 0
 '<div id="<id>_parent" class="jhchart_parent"><canvas id="<id>"></canvas></div>'hrplc 'id';x
@@ -115,6 +121,26 @@ jhecwrap=: 4 : 0
 y=. y rplc '&nbsp;';'&nbsp;&ZeroWidthSpace;' NB. breaking space
 '<div  class="html" style="overflow-wrap: break-word; white-space: normal;">',y,'</div>'
 )
+
+NB.* jhldlex html
+NB.* jhflex 'id'jhdiv'...'
+NB.* jhflex 'id'jhtextarea'...''
+jhflex=: 3 : 0
+jhflexa,y,jhflexz
+)
+
+NB.* jhflexa - flex start
+jhflexa=: '</div>'
+
+NB.* jhflexa - flex end
+jhflexz=: '<div>'
+
+
+NB.* start flex row
+jhflexrowa=: '<div id="jflexrow" class="jhdiv" >'
+
+NB.* end flex row
+jhflexrowz=: '</div>'
 
 NB.* id jhhidden value - <input type="hidden"....>
 jhhidden=: 4 : 0
@@ -282,9 +308,6 @@ jhref=: 3 : 0
 t=. '<a href="<REF>?jwid=<TARGET>" target="<TARGET>" class="jhref" ><TEXT></a>'
 t hrplc 'REF TARGET TEXT';page;target;text
 )
-
-NB.* jhresize'' - separate fixed div from resizable div
-jhresize=: 3 : '''</div><div id="jresizeb">'''
 
 NB.* id jhselect texts [;size [;sel [;class [;options ]]]]
 NB.  dropdown selection box
