@@ -22,7 +22,7 @@ d=. <;.2 t,LF
 b=. (<'***')=3{.each d
 h=. b <;.1 d
 s=. ;{.each h
-i=. s i. <'***start ',y,LF,~IFWIN#CR
+i=. s i. <'***start ',y,LF
 if. i=#s do. y,' - topic not found' return. end.
 t=. ;}.;i{h
 b=. t=LF
