@@ -119,7 +119,6 @@ GLTEXTCOLOR=: GLCOLOR
 
 NB. gl and jsc use textBaseline='top' as set by jscrestore and jscreset
 gltextxy=: 3 : 0
-gl2log'textxy'
 assert 2=#y
 NB.! kludge add 3 for dissect
 GLTEXTXY=: y + 0,3
