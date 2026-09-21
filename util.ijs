@@ -96,21 +96,27 @@ end.
 jjs r
 )
 
-NB.* jcreatetestapp - jcreatetestapp 'test';'app1'
-jcreatetestapp=: 3 : 0
+NB.* 'test';'~addons/ide/jhs/app/app01.ijs'
+NB.* create clone of app at ~temp/test.ijs
+clone=: 3 : 0
 'snk src'=. y
 f=. snk,src
-t=. fread '~addons/ide/jhs/app/',src,'.ijs'
-i=. t i. LF
-a=. deb i{.t
-'src must start with coclass'assert a-:'coclass''',src,''''
-b=. a i.''''
-t=. ( (b{.a),'''',f,''''),i}.t
-t fwrite'~temp/',f,'.ijs'
-fn=. '~temp/',f,'.ijs'
+src=. jpathsep src
+'src file must exist'assert 1=ftype src
+n=. }.(src i:'/')}.src
+t=. fread src
+t=. deb each <;.2 t,(LF={:t)#LF
+c=. ;(<'coclass')=7{.each t
+'src file must have 1 and only 1 line starting with coclass' assert 1=+/c
+i=. c i. 1
+t=. (<;'coclass''',snk,'''',LF) i}t
+t=. ;t
+fn=. '~temp/',snk,'.ijs'
+t fwrite fn
 edit fn
 load fn
-echo'   ''',f,''' jpage '''''
+echo'created, loaded, and opened: ',fn
+echo'   ''',snk,';10 10 600 600'' jpage '''''
 )
 
 NB.* jtestall'app' - app/page/demo
