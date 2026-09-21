@@ -116,7 +116,7 @@ t fwrite fn
 edit fn
 load fn
 echo'created, loaded, and opened: ',fn
-echo'   ''',snk,';10 10 600 600'' jpage '''''
+echo'   ''',snk,';10 10 300 300'' jpage '''''
 )
 
 NB.* jtestall'app' - app/page/demo
