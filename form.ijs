@@ -185,7 +185,7 @@ NB.  also creates the ev_jscript_click handler
 jhijs=: 3 : 0
 c=. ;coname''
 c=. '.ijs',~;(_~:_".c){c;{.copath coname''
-t=. 4!:3''
+t=. jpathsep each 4!:3''
 s=. (>:;t i:each '/')}.each t
 p=. ;(s i: <c){t NB. get last script
 JSCRIPT=: p

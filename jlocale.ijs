@@ -52,7 +52,7 @@ cobview=: 3 : 0
   name=. <name,'_',loc,'_'
   if. _1=nc name do. undef return. end.
     ni=. 4!:4 name
-    if. 0<:ni do. sc=. fx >ni{4!:3'' else. sc=. 'defined in session' end.
+    if. 0<:ni do. sc=. fx >ni{jpathsep each 4!:3'' else. sc=. 'defined in session' end.
     sp=. 'c'>@(8!:0) 7!:5 name
     if. 0=nc name do.
       v=. (>name)~

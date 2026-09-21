@@ -154,7 +154,7 @@ if. wc+.-.'_'={:n do.
 end.
 i=. 4!:4<n
 if. i<:0 do. 'not an explicit defn defined by loading a script' return. end. 
-f=. i{4!:3''
+f=. i{jpathsep each 4!:3''
 bs=. '' NB. might be script leading to base9
 t=. jpath'~system/'
 if. t-: (#t){.;f do.
