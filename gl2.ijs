@@ -25,7 +25,8 @@ NB. gl2 covers for jsc...
 coclass 'jgl2'
 
 gl2log=: 3 : 0
-decho y;(;coname'');JHSCANVAS
+NB. decho y;(;coname'');JHSCANVAS
+i.0 0
 )
 
 NB. css hex colors - transparency is first
@@ -101,9 +102,8 @@ jscstroke''
 NB. glfont: 'name pt'
 NB. canvas: 'px name'
 glfont=: 3 : 0
-if. 'dissectjhs'-: 10{.;{.copath PARENT__JHSCANVAS do.
-  y=. '11pt ',PC_FONTFIXED_jhs_ NB. dissect forced fixed for qglqextent
-end.
+gl2log'glfont'
+if. (<'dissect') e. copath coname'' do. y=. '11pt ',PC_FONTFIXED_jhs_ end. NB. dissect forced fixed for qglqextent
 t=. deb y
 i=. t i: ' '
 s=. ":1.33*0".}.i}.t NB. points to pixels
@@ -134,7 +134,10 @@ NB. dissect gl commands
 
 NB. dissect has dissectisi as id of isigraph - map to mcan
 glsel=: 3 : 0
-if. 'dissectisi'-:y do. JHSCANVAS=: mcan__JHSFORM return. end.
+if. 'dissectisi'-:y do.
+ c=. JHSFORM_dissectisi_
+ JHSCANVAS=: mcan__c return.
+end.
 'invalid locale'assert y e. conl 1
 JHSCANVAS=: y
 )

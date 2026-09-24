@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.454' NB. 2026 9 21 14 40 29.1687 force pacman update
+VERSION=: '1.0.455' NB. 2026 9 24 12 5 32.359 force pacman update
 
 FILES=: 0 : 0
 app/

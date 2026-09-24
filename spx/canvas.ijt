@@ -1,4 +1,5 @@
 NB. graphics - drawing on an html canvas
+coinsert'jgl2'
 require'~addons/ide/jhs/page/jcanvas.ijs'
 form=: 'jcanvas;10 10 700 700'jpage''
 
@@ -7,11 +8,11 @@ NB.spxaction: move focus back to term window
 can=: can__form
 
 drawadd=: 3 : 0 NB. add lines to drawverb
-drawverb__can=: 3 : (y,~;}.}:<;.2 LF,~5!:5<'drawverb__can')
+mydraw=: 3 : (y,~;}.}:<;.2 LF,~5!:5<'mydraw')
 i.0 0
 )
 
-drawverb__can=: 3 : 0
+mydraw=: 3 : 0
 'penwidth color1 color2'=. y
 jsxnew'' NB. clear drawing buffer
 jscreset''            NB. reset canvas
@@ -22,6 +23,9 @@ jscmoveTo 0 0         NB. upper left
 jsclineTo jsxqwh''     NB. lower right
 jscstroke''           NB. draw line
 )
+
+drawverb__can=: mydraw_base_
+glsel can NB. mydraw locale must have the canvas selected
 
 draw__can 5;'red';'green'
 
@@ -41,16 +45,14 @@ jscrect 200 200 100 100
 jscfill''
 jscstroke''
 jscfont jsxucp '80px Arial'
-jscfillText 20 150, jsxucp 'hello Ü'
+jscfillText 20 100, jsxucp 'hello Ü'
 )
 
 draw__can 5;'red';'green'
 
-NB.spxaction: mouse event handlers - click mouse down, move, and mouse up
-
 drawadd 0 : 0 NB. add lines to draw a pie
 r=. 0 , 0.5*o.1
-b=. 100 200
+b=. 100 250
 jscbeginPath''
 jscmoveTo b
 jscarc b,50,(jsxradian r),0
@@ -76,7 +78,7 @@ jscfillStyle jsxucp'blue'
 jscfill''
 )
 
-draw__can drawarg__can
+draw__can 5;'red';'green'
 
 drawverb__can=: 3 : 0 
 jsxnew''
@@ -96,7 +98,17 @@ wh=. jsxtextwh t
 wh=. ({.wh),h
 jscfillText (wh+250 100),jsxucp t
 
-jsxlines ?40$300
+jsxlines (40$200 0)+?40$300
 )
 
 draw__can''
+
+NB. draw to selected canvas
+formx=: 'jcanvas;200 200 700 700'jpage''
+
+NB.spxaction: move focus back to term window
+
+canx=: can__formx
+drawverb__canx=: mydraw_base_
+glsel canx NB. mydraw locale must have the canvas selected
+draw__canx 5;'red';'green'

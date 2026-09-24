@@ -20,8 +20,8 @@ JHS explorer locale
  mcan       - locale of canvas widget
  parent     - locale of main JHS locale
 
-JHSFORM_z_   - form locale that is wd target
-JHSCANVAS_z_ - canvas locale - buffer__JHSCANVAS is target for jsc... and gl... cmds
+JHSFORM     - form locale that is wd target
+JHSCANVAS   - canvas locale - buffer__JHSCANVAS is target for jsc... and gl... cmds
 
 dissect 'a ([ + (+/ % #)@]) z' [ a =. 6 5 3 [ z =. 3 9 6 */ 1 5 9 2 
 dissect'a+b+a'[a=. b=. i.200 200
@@ -45,13 +45,19 @@ c_font=:  '11pt ',PC_FONTFIXED_jhs_
 
 config''
 
+dopsel=: 3 : 0
+JHSFORM_dissectisi_=: y
+JHSFORM_dissect_=: y
+JHSFORM_dissectjhs_=: y
+)
+
 NB. create dissect page - y is locale of dissect caller
 pcdissect=: {{
 t=. 'dissectjhs;',c_dxywh
 p=. t jpage''[y 
 qd__=: p
 caller__p=: y
-JHSFORM_z_=: p
+dopsel p
 }}
 
 NB. create explore page - y is locale of dissect caller
@@ -68,8 +74,7 @@ new=. mcan__p
 old=. mcan__parent
 canvasfontheight__new=: canvasfontheight__old
 canvasfontwidth__new=:  canvasfontwidth__old
-
-JHSFORM_z_=: p
+dopsel p
 }}
 
 tuthelp=: 0 : 0
@@ -294,8 +299,7 @@ paint''
 )
 
 ev_explore_click=: 3 : 0
-JHSFORM_z_=: coname''        NB.psel
-JHSCANVAS_z_=: mcan__JHSFORM NB. gsel
+dopsel coname''
 
 qhide'prefs'
 qhide'tut'
@@ -533,6 +537,10 @@ htmltoplain_dissecthelplearning_=: htmltoplain_dissecthelpusing_=: [
 
 load'~addons/debug/dissect/dissect.ijs'
 
+NB. dissect.ijs references names_jgl2_ and this fails because there is no JHSCANVAS_jg2_
+NB. the use of _jgl2_ is not needed (jgl2 is in path) and is removed here
+glfontextent_dissect_=: glfont
+
 NB. parse errors - extra woes in debugger
 failmsg_dissect_=: 3 : 0
 echo y
@@ -608,9 +616,8 @@ case. 'pc' do.
 
 case. 'psel'        do.
   t=. deb (y i.';'){.y
-  JHSFORM_z_=:   <0".5}.t NB. form locale for wd cmds
-  JHSCANVAS_z_=: mcan__JHSFORM NB. psel gets default target - sometimes no gsel
-
+  dopsel_dissectjhs_ <0".5}.t NB. different 
+   
 case. 'pshow'       do. ''
 
 case. 'qscreen'     do. '0 0 ',":2{.0".getv_jhs_'jinfo' NB. screen.availableWidth height

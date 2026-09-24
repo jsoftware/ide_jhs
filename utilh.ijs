@@ -388,15 +388,31 @@ t=. '<div>',t,'</div>' NB. all in a div - used by flex
 t=. '<body onload="jevload();" onunload="jevunload();" onfocus="jevfocus();">',LF,(jhform''),LF,t,jsa,jhbsjs,jsz,LF,'</form></body>'
 )
 
+hbserror=: 0 : 0
+
+if the above does not make the fix clear
+you can run HBS under debug with:
+   dbr 1
+   jhbsdebug_<APP>_ ''
+) 
+
 jhbsex=: 3 : 0
 try.
  t=. LF,}.' ',,".y NB. need lit list
 catch.
- echo t=.'HBS error: locale: ',(>coname''),' line: ',y,LF,13!:12''
+ t=. 'HBS error: locale: ',(>coname''),' line: ',y,LF,13!:12''
+ t=. t,hbserror rplc '<APP>';coname''
  t=.'<div>',(jhfroma t),'</div>'
 end.
 t
 ) 
+
+NB. debug html generation from HBS
+jhbsdebug=: 3 : 0
+jhbsjs=: '' NB. hbs js statments captured in globals
+t=. <;._2 HBS
+for_s. t do. ".;s end. 
+)
 
 NB.? autocapitalize="none"
 jeditatts=: ' autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" '

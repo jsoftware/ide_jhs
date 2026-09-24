@@ -28,6 +28,8 @@ jsc... - map directly to javascipt canvas commands
 jsx... - jsc extensions - e.g. jsxtext xy;text;ratio
 gl...  - gl cmds implemented with jsc commands
 
+mouse event handlers - mouse down, move, and mouse up
+
    jhshelp'canvas' NB. more info
    jhstour'canvas' NB. drawing to canvas from term
 )
