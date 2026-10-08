@@ -1,4 +1,4 @@
-coclass'jd3'
+coclass'd3'
 coinsert'jhs'
 
 NB. css/js library files to include
@@ -7,6 +7,7 @@ INC=: INC_d3_basic
 NB. J sentences - create html body
 HBS=: 0 : 0
 jhclose''
+'title'jhh1'd3js.org graphics'
 'ga'jhd3_basic'' NB. ga,ga_... divs for d3_basic plot
 )
 

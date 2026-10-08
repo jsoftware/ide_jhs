@@ -6,7 +6,7 @@ DESCRIPTION=: 0 : 0
 JHS IDE
 )
 
-VERSION=: '1.0.455' NB. 2026 9 24 12 6 54.793 force pacman update
+VERSION=: '1.0.455'
 
 FILES=: 0 : 0
 app/
@@ -18,6 +18,7 @@ js/
 node/
 old/
 page/
+page_js/
 react/
 spx/
 extra/
@@ -51,8 +52,6 @@ jijs.ijs
 jijx.ijs
 jdebug.ijs
 jj.ijs
-jjserver.ijs
-jlogin.ijs
 loadx.ijs
 spfile_template.ijs
 manifest.ijs

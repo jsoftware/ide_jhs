@@ -15,6 +15,7 @@ addj code runs in an iframe
 NB. define html for the page
 HBS=: 0 : 0
 jhclose'react'
+'title'jhh1'tictactoe - react'
 'desc'jhdiv desc
 jhdivz
 '<iframe id="react" src="reacttictactoe"  ></iframe>'
@@ -28,5 +29,5 @@ CSS=: 0 : 0
 )
 
 ev_create=: 3 : 0 
-jhcmds ''  NB. browser commands when page loads
+jhrcmds ''  NB. browser commands when page loads
 )

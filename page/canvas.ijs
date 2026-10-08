@@ -2,10 +2,28 @@ NB. create page with jhjcanvas widget
 
 require'~addons/ide/jhs/widget/jhjcanvas.ijs'
 
-coclass'jcanvas'
+coclass'canvas'
 coinsert'jgl2'
 coinsert'jhs'
-NB. coinsert'jhjcanvas'
+
+HBS=: 0 : 0
+jhclose''
+'title'jhh1'canvas gl2/jsc playground'
+'cmds'    jhtextarea gldefault;12;30
+jhbr
+'runcmds'    jhb 'run'
+'gldefault'  jhb 'gl cmds'
+'jscdefault' jhb 'jsc cmds'
+'help'       jhb 'help'
+jhflexa
+'can'        jhcanvas ''
+jhflexz
+)
+
+CSS=: 0 : 0
+#cmds{width:100vw;resize:none;}
+#can{width:100vw;height:100vh;border: 4px solid red;}
+)
 
 drawverb=: 3 : 0
 )
@@ -60,27 +78,10 @@ jscstroke''
 
 run_last=: ''
 
-HBS=: 0 : 0
-jhclose'gl... playground'
-'cmds'    jhtextarea gldefault;12;30
-jhbr
-'runcmds'    jhb 'run'
-'gldefault'  jhb 'gl cmds'
-'jscdefault' jhb 'jsc cmds'
-'help'       jhb 'help'
-jhflexa
-'can'        jhcanvas ''
-jhflexz
-)
-
-CSS=: 0 : 0
-#cmds{width:100vw;resize:none;}
-#can{width:100vw;height:100vh;border: 4px solid red;}
-)
-
 ev_create=: 3 : 0
 can=: 'jhjcanvas;_'jpage ''
 shown=: 1
+jhrcmds''
 )
 
 destroy=: 3 : 0

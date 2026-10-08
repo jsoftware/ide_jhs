@@ -8,13 +8,9 @@ clicking e*c1 calls ev_e_click (main id)
 event handler can get secondary id with getv'jsid'
 )
 
-manapp=: 'jpage y must be '''' or similar to ''text1'';''text2'''
-
 HBS=: 0 : 0
         jhclose ''
 'title' jhh1    'html'
-        jhijs''                        NB. button to edit source script
-        jhhr
 'b1'    jhb     'b1 flip t1'
 'b2'    jhb     'b2 flip both'
 'b3'    jhb     'error'
@@ -36,10 +32,12 @@ t=. t,LF,'NV has following name value pairs and getv''...'' gets a value'
  
 return=: {{ jhrcmds  (report'');boxopen y }}
 
+NB. y is jpage arg
 ev_create=: 3 : 0 
-y=. y jpagedefault 't1 default';'t2 default'
-manapp assert (1=L. y)*.(2=#y)*.2=;3!:0 each y
-jhcmds ('set e*t1 *',0{::y);'set e*t2 *',1{::y NB. browser commands when page loads
+t=. (''-:y){::y;<'t1 def';'t2 def' NB. y or default
+v=. (1=L. t)*.(2=#t)*.2=;3!:0 each t NB. validate 
+'jpage y must be empty or similar to text1;text2' assert v
+jhrcmds ('set e*t1 *',0{::t);'set e*t2 *',1{::t NB. browser commands
 )
 
 ev_b1_click=:  {{ return 'set e*t1 *',|.getv'e*t1' }}

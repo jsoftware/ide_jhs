@@ -1,9 +1,7 @@
-coclass'jhotd3'
+coclass'hotd3'
 coinsert'jhs'
 
-require'~addons/ide/jhs/page/jd3.ijs'
-
-man=: 'jpage y must be 5 by 12 integer table'
+require'~addons/ide/jhs/page_js/d3.ijs'
 
 HBS=: 0 : 0
 jhclose''
@@ -18,9 +16,9 @@ NB.! '<span id="title">budget 2016</span>'
 months=: '"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"'
 
 ev_create=: 3 : 0
-y=. y jpagedefault ?5 12$200
-man assert (4=3!:0 y)*. 5 12-:$y
-temp__=: y
+t=. (''-:y){::y;<?5 12$200 NB. y or default
+'jpage y must be 5 by 12 integer table' assert (4=3!:0 t)*. 5 12-:$t
+temp__=: t
 t=. 'temp'
 try.
  shown=: 1
@@ -49,12 +47,12 @@ try.
  jd3'barwidth 60'
  jd3'type bar'
  jd3options=: jd3x__
- loc=: 'jd3;_;'jpage jd3options;d
+ loc=: 'd3;_;'jpage jd3options;d
  
 catch.
  ('create failed:',LF,13!:12'') assert 0
 end. 
-jhcmds''
+jhrcmds''
 )
 
 destroy=: 3 : 0
@@ -70,14 +68,6 @@ CSS=: 0 : 0
 #hots{height:90vh;overflow:hidden;}
 #hot1{width:100%;height:50%;overflow:hidden;}
 #jd3 {width:100%;height:50%;overflow:hidden;}
-)
-
-NB. new CSS3 calc will allow better layout control
-xxxCSS=: 0 : 0
-#title{margin-left:50px;text-align:center;font-size:22pt;}
-#hots{height:90vh;overflow:hidden;}
-#hot1{width:100%;height:40%;overflow:hidden;}
-#jd3 {width:100%;height:40%;overflow:hidden;}
 )
 
 calc=: 3 : '(<./y),(>./y),(<.(+/%#) y),(+/y),:+/\ +/y'

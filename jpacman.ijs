@@ -7,7 +7,7 @@ HBS=: 0 : 0
 
 jhmenu''
 'menu0'  jhmenugroup ''
-'close'  jhmenuitem 'close';'q'
+'close'  jhmenuitem 'close';'x'
          jhmenugroupz''
 
 'J Package Manager <a href="http://code.jsoftware.com/wiki/addons">code.jsoftware.com/wiki/addons</a>'

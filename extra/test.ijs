@@ -12,8 +12,6 @@ move__=: 3 : 0
    jjs_jhs_'{var spacer= allwins[1].jbyid("spacer");var testw= allwins[1]; testw.mover(spacer,false, M);}' rplc 'M';":y
 )
 
-manapp=: 'jpage y must be ''''' NB. doc jpage y arg
-
 INC=: INC_splitter NB. css/js library files to include
 
 HBS=: 0 : 0
@@ -39,7 +37,7 @@ jhdivz NB. close vertical
 
 NB. jpage (or url) calls to init page for browser
 ev_create=: 3 : 0 
-manapp assert ''-:y
+'jpage y must be empty' assert ''-:y
 jhcmds ''
 )
 

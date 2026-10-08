@@ -1,14 +1,14 @@
-NB.spxrun: jhsoption'wrap term column'
 NB.spxrun: jcjs'reset'
 0 :0
-5 minutes with this lab covers J programming mechanics with the JHS interface
+5 minutes with this lab covers coding
+mechanics with the JHS interface
 
-J coding is covered by other labs and resources referenced at the end
+J coding is covered by other labs and
+resources referenced at the end
 
-ctrl+. or menu bar ⇒
-advances to next step in the lab
+menu bar advance runs next lab step
 
-do a lab advance now
+do an advance now
 )
 
 i. 5 NB. first 5 ints
@@ -22,19 +22,6 @@ sc=. s ,: c NB. sin and cosine values
 chart sc
 jcjs'legend';'sin';'cos';'+/'
 chart sc,+/sc,+/sc
-
-0 : 0
-this lab has set options:
- wrap   - avoid horizontal scrol
- term   - pages share this window
- column - term pages in a column
-
-this lab work well on a tablet
- especially with a real keyboard
-
-works on a phone but much
- easier if you are already familiar
-)
 
 0 : 0
 time to try your first input
@@ -56,13 +43,6 @@ this window is a J repl
 0 : 0
 click ☰  (upper left corner)
 click outside menu to dismiss it
-)
-
-0 : 0
-if you are a J server guest you can learn more:
- ☰ then help then guest rules
- ☰.help.guest rules
- ☰.help.guest files
 )
 
 10?20 NB. 10 random from i.20
@@ -92,25 +72,26 @@ click one and press enter to recall
 )
 
 0 : 0
-browsers appropriate most ctrl shortcuts
-JHS uses: ctrl+. for lab advance
-          ctrl+, to show ☰
+this session has default options:
+   jhsoption'nowrap tab row'
+   
+nowrap - long lines have horizontal scroll
+tab    - new pages are in new tabs
+row    - term page frames are in a row
 
-editor uses ctrl+zxcvy and a few more
-
-JHS shortcuts are with esc
-press/release esc and then press/release shortcut
-
-menu item has the shortcut at the right side
-menu item inputs has the letter i
+on a tablet or phone you might prefer:
+   jhsoption'wrap term column'
+you can recall and run the line above
 )
 
+jhshelp 'shortcuts'
+
 0 : 0
-J script files (xxx.ijs) contain J code
+script files (xxx.ijs) contain J code
 )
 
 fin=: '~addons/ide/jhs/spx/overview_example.ijs'
-jpath fin  NB. ~addons expands to J addons folder
+jpath fin  NB. ~addons expands to addons folder
 data=: fread fin NB. file read
 data
 fout=: '~temp/ovlab.ijs' NB. J temp folder
@@ -124,7 +105,7 @@ crsum NB. display defn
 
 0 : 0
 name=: ... NB. global assignment
-name=. ... NB. local assigment - only for current definition
+name=. ... NB. local assigment - current definition
 
 crsum sentence:
 t=. y,+/y
@@ -161,7 +142,7 @@ names'' NB. list of defined names
 next step opens file ovlab.ijs for editing
 
 focus will be in the edit frame
- click term input area to focus the term frame
+click term input area to focus the term frame
 )
 
 edit fout
@@ -176,16 +157,14 @@ try the following:
 )
 d
 
-0 : 0
-in edit frame:
- ☰.close
-)
+NB. in edit: ☰.close
 
 NB. next advamce will sleep for 3 seconds
 jxsleep 3 NB. sleep for 3 seconds
 
 0 : 0
-what if you asked for a long sleep by mistake or your code had an infinite loop?
+what if you asked for a long sleep by mistake
+or your code had an infinite loop?
 
 you need to signal break to get back control
 )
@@ -194,14 +173,14 @@ you need to signal break to get back control
 ☰.break
 no effect if nothing is running
 
-if J is running locally: signal break with
- ctrl+c in window that started your server
+if running locally: signal break with
+ctrl+c in window that started your server
 
 it takes 2 breaks to break a sleep
- and one to break a loop
+and one to break a loop
 
 next step will sleep for 15 seconds
-use ☰.break twice
+use ☰.c
  or
 ctrl+c twice in your JHS server
 to break out of the sleep
@@ -211,7 +190,9 @@ to break out of the sleep
 enter the following line in the input area:
    jxsleep 15
 
-and then signal 2 breaks with ☰.break or ctrl+c
+and then signal 2 breaks with ctrl+c
+in the window that started your server
+or ☰.c
 )
 
 0 : 0

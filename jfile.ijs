@@ -18,7 +18,7 @@ jhmenu'file explorer'
 'paste'    jhmenuitem 'paste'
 'download' jhmenuitem 'server file -> browser'
 'upload'   jhmenuitem 'browser file -> server'
-'close'    jhmenuitem 'close';'q'
+'close'    jhmenuitem 'close';'x'
            jhmenugroupz''
 
 'renamedlg'  jhdiva''

@@ -5,19 +5,18 @@ HBS=: 0 : 0
 NB. base div implicity opened
       jhclose''
 'title' jhh1 'flex - jhtextarea ,: jhdiv'
-        jhijs'' NB. button to edit source script
 'hbs'   jhb'show HBS'
 'css'   jhb'show CSS'
 
 jhflexa NB. base div close - flex active
-'tatitle'jhtitle'textarea'
+'tatitle'jhh1'textarea'
 'ta'jhtextarea'';10;10
 jhflexz NB. reopen main div
 
 'hr'jhline''
 
 jhflexa
-'tbtitle'jhtitle'jhdiv'
+'tbtitle'jhh1'jhdiv'
 'tb'jhdiv''
 jhflexz
 
@@ -30,12 +29,10 @@ CSS=: 0 : 0
 #hr{height: 10px; background-color: red;}
 )
 
-manapp=: 'jpage y must be '''''
-
 ev_create=: {{
- manapp assert ''-:y
- t=. y jpagedefault ,LF,.~20 20$'some text '
- jhcmds ('set ta *',t);'set tb *','<span style="color:blue;font-size:3rem;">jhdiv</span><br>',t
+t=. (''-:y){::y;<,LF,.~60 20$'silly text ' NB. y or default
+'jpage y must be text' assert 2=3!:0 t
+jhrcmds ('set ta *',t);'set tb *','<span style="color:blue;font-size:3rem;">jhdiv</span><br>',t
 }}
 
 ev_hbs_click=: {{ jhrcmds 'set ta *',HBS }}

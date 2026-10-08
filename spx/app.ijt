@@ -1,0 +1,51 @@
+0 : 0 
+learn gui programming by playing with app examples
+learning curve: long, but gradual, rewards along the way
+applicable not just to JHS, but to all web programming
+JHS is built with the same facilities
+)
+
+NB. next step copies app01 to ~temp/app.ijs with app coclass
+appclone_jhs_ 'app';'~addons/ide/jhs/app/app01.ijs'
+
+defaultshow_jhs_=: 10 10 600 600 NB. default location for new form
+NB. defaultshow can be 'term' or 'tab' or xywh
+NB.spxaction: set defaultshow_jhs to your preference
+
+0 : 0
+script defining form must be run to create
+locale before it can be used to create form
+)
+load '~temp/app.ijs'
+form=: 'app;defaultshow' jpage ''
+
+edit '~temp/app.ijs' NB. study script
+
+0 : 0
+add line to app.ijs HBS def: 'newb' jhb 'my new button'
+and run the script
+)
+
+formrun__form 'close click' NB. close form
+form=: 'app;defaultshow' jpage '' NB. do you see the new button?
+
+formset__form 'set t1 *x123' NB. set data
+formrun__form 'b1 click' NB. trigger form event
+LASTNV__form NB. name value pairs for last event
+
+formrun__form 'close click' NB. close form
+
+0 : 0
+⇧⇧2 shortcut shows page with HBS documentation
+
+CSS is well documented on the web
+)
+
+0 : 0
+do similar steps to study other examples 
+app     folder is for learning 
+page    folder is a bit more advanced
+page_js folder require javacript or react
+)
+
+applist_jhs_'' NB. list app titles in folders app,page,page_js

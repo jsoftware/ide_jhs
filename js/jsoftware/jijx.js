@@ -148,7 +148,7 @@ function colorinput(t){
  e.style.color=t;
 }
 
-function ev_advance_click(){jdoajax([]);}
+function ev_advance_click(){inlab= 1;jdoajax([]);}
 function ev_return_click(){ev_log_enter();}
 function ev_uarrow_click(){uarrow();}
 function ev_darrow_click(){darrow();}
@@ -272,21 +272,10 @@ function framesize(t){
   }
 }
 
-function ev_wrap_click(){
- var t= jbyid('log');
- var b= 'normal'==getComputedStyle(t)['overflowWrap'];
- wrapset(b?1:0);
-};
-
 function wrapset(b){
   var t= jbyid('log');
   t.style.overflowWrap= b?'break-word':'normal';
   t.style.whiteSpace=   b?'normal'    :'nowrap';
-  jbyid('wrap').innerHTML= b?'WRAP ➜ nowrap':'NOWRAP ➜ wrap'
-}
-
-function ev_flow_click(){
-  flowset(jbyid("flow").style.flow=="row");
 }
 
 var pagepx= "300px";
@@ -294,8 +283,6 @@ var pagepx= "300px";
 function flowset(b){
   var e= jbyid("flow");
   if(b){
-    e.style.flow= 'column';
-    e.innerHTML= 'COLUMN&nbsp;➜&nbsp;row<span class="jmenuspanright">u</span>';  
     t= allpages[0].frameElement.parentNode;
     t.removeAttribute("data-flex-splitter-horizontal");
     t.dataset.flexSplitterVertical="";
@@ -303,8 +290,6 @@ function flowset(b){
     setwidth("100vw","100vw");
   }
   else{f
-    e.style.flow= 'row';
-    e.innerHTML= 'ROW&nbsp;➜&nbsp;column<span class="jmenuspanright">u</span>';  
     t= allpages[0].frameElement.parentNode;
     t.removeAttribute("data-flex-splitter-vertical");
     t.dataset.flexSplitterHorizontal="";
@@ -323,20 +308,15 @@ function setheight(first,rest){
     allpages[i].frameElement.style.height= (i==0)?first:rest;
 }
 
-function ev_spa_click(){
-  termset(!SPA);
-}
-
 function termset(b){
   SPA= b;
-  jbyid('spa').innerHTML= SPA?'TERM ➜ tab':'TAB ➜ term';
 }
 
 function removeelement(id){var e= jbyid(id); if(e==null) return; e.remove();}
 
 function ev_cleartemps_click(){removeElementsByClass('transient');}
-function ev_clearwindow_click(){jbyid("log").innerHTML= "";newpline("   ");}
-function ev_clearrefresh_click(){jdoajax([]);}
+function ev_clearwindow_click(){jbyid("log").innerHTML= "";newpline("   ");} // jhsoption calls
+function ev_clearrefresh_click(){jdoajax([]);} 
 function ev_clearLS_click(){localStorage.clear();};
 
 function linkclick(a){pageopen(a,a);return false;} // open new tab or old - cache

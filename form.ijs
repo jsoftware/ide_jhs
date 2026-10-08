@@ -1,14 +1,6 @@
 NB. verbs/nouns for creating page forms
 coclass'jhs'
 
-NB.*.1 verbs/nouns for creating forms
-
-NB.* HBS=: 0 : 0 NB. HBS defines a form 
-NB.  jhclose'' NB. menu with close
-NB.  'bid' jhb 'button'
-NB.  'tid' jhtext 'how now'
-NB.  )
-
 NB.* id jhab text - anchor like button with dblclick
 jhab=: 4 : 0
 (x jhb (boxopen y),<'jhab') jhaddatts ' ondblclick="return jev(event)"'
@@ -69,7 +61,7 @@ NB.* jhclose title - menu with > term pages and close
 jhclose=: 3 : 0
 t=. jhmenu y
 t=. t,'menu0'  jhmenugroup ''
-t=. t,'close'  jhmenuitem 'close';'q'
+t=. t,'close'  jhmenuitem 'close';'x'
 t=. t,         jhmenugroupz''
 t=. jhdivz,~jhdiva t
 )
@@ -122,19 +114,20 @@ y=. y rplc '&nbsp;';'&nbsp;&ZeroWidthSpace;' NB. breaking space
 '<div  class="html" style="overflow-wrap: break-word; white-space: normal;">',y,'</div>'
 )
 
-NB.* jhldlex html
-NB.* jhflex 'id'jhdiv'...'
-NB.* jhflex 'id'jhtextarea'...''
+NB.* jhflex html
+NB.  jhflex 'id'jhdiv'...'
+NB.  jhflex 'id'jhtextarea'...''
+NB.  id for html must have css <PS_FLEX>
+NB.  do not use form{...} with flex
 jhflex=: 3 : 0
 jhflexa,y,jhflexz
 )
 
-NB.* jhflexa - flex start
+NB.* jhflexa - flex start - see jhflex
 jhflexa=: '</div>'
 
-NB.* jhflexa - flex end
+NB.* jhflexz - flex end 
 jhflexz=: '<div>'
-
 
 NB.* start flex row
 jhflexrowa=: '<div id="jflexrow" class="jhdiv" >'
@@ -200,11 +193,13 @@ t hrplc 'ID';x
 )
 
 NB.* jhmenu title;extra - hamburger menu
+NB. menubar has title of title or class if title is empty
 jhmenu=: 3 : 0
 'title xtras'=. 2{.(boxopen y),<''
 c=. coname''
 if. Num_j_ e.~{.;c do. c=. ;{.copath c end.
-title=. (;c),(0~:#title)#' - ',title
+NB. title=. (;c),(0~:#title)#' - ',title
+title=. (0=#title){::title;c
 menuids=:   <'menu0' 
 menutexts=: <'☰'
 menubacks=: <''
@@ -219,7 +214,7 @@ i=. menuids i. <x
 if. i=#menuids do.  i=. 0 end. NB. user not informed of failure
 value=. ;i{menutexts
 backid=. ;i{menubacks
-more=. '<span class="jmenuspanleft" >',(jhfroma'<  '),'</span>',(x-:'menu0')#'<span class="jmenuspanright">ctrl+,</span>'
+more=. '<span class="jmenuspanleft" >',(jhfroma'<  '),'</span>',(x-:'menu0')#'<span class="jmenuspanright">⇧⇧⇧</span>'
 t=. '<button id="<ID>" class="jmenuitem" ',jmon,' onclick="return menushow(''<BACK>'')" ><VALUE></button>'
 t=. t hrplc 'BACK VALUE';backid;more,jhfroma value
 t,~'<div id="<ID>" class="jmenugroup">'rplc '<ID>';x
@@ -388,11 +383,6 @@ t=. t,jeditatts,'><DATA></textarea>'
 t hrplc 'ID DATA ROWS COLS';x;3{.(boxopen y),3;10
 )
 
-NB.* id jhtitle text
-jhtitle=: 4 : 0
-'<span id="',x,'" class="jhtitle">',y,'</span><br>'
-)
-
 NB*  jhtable data
 NB.  y - list of boxed table row data html
 jhtr=: 3 : 0
@@ -408,8 +398,6 @@ if. 2=#t do. t=. t,{.t        end.
 t=. '<a id="<ID>" name="<ID>" href="<REF>" target="<TARGET>" class="jhref" ><TEXT></a>'
 t hrplc 'ID REF TARGET TEXT';x;page;target;text
 )
-
-NB.*.1 verbs/nouns used by jh... verbs
 
 NB. jgrid - special jht for grid
 jhtx=: 3 : 0

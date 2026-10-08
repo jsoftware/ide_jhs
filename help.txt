@@ -12,81 +12,83 @@ the tour can be useful to refresh
  your memory or to get pointers
  about new features in a new release 
  
-***start browser pages
-page - html/css/javascript for display in browser
+***start ide
+​works ​best ​if ​popups ​allowed
+
+ide pages from term menu
+ term   - repl
+ edit   - edit file
+ file   - explore files
+ find   - find in files
+ debug  - debugger 
+ pacman - addon package manager
+ locale - locale explorer
+
+***start shortcuts
+browsers commander most ctrl/cmd/... shortcuts
+
+ctrl+zxcvy - standard
+ctrl+shift+up/down arrow recall lines
+
+edit - standard codemirror6 shortcuts
+
+menus have shortcut on right side
+
+⇧⇧⇧ (shift 3 times) shows menu
+arrow keys navigate and enter runs
+
+⇧⇧a is the same as menu shortcut a
+
+***start tour
+<TOUR>
+
+***start lab
+<CATEGORIES>
+
+***start project manager
+file SPFILE defines project verbs
+running a project verb sets up your session
+getting to work as quickly as possible
+
+   sp'' NB. load SPFILE to define project verbs
+
+   sphelp NB. project utilities
+
+***start term options
+term options
+   jhsoption '' NB. list options
+
+***start building your app
+   jhstour'app'
+  
+app appname is defined by a script that defines 
+ locale appname with HBS, CSS, and event handler verbs
+
+   load'~addons/ide/jhs/app/app01.ijs' NB. define appname locale
+   'app01'jpage''
+
 J locale creates page when requested from browser
 browser displays page in tab/window/iframe
 page source come from named or object (numbered) locale
-   jhshelp 'system' NB. term/edit/jfile/jfif/...
-   jhshelp 'page'   NB. examples with best practices 
-   jhshelp 'demo'   NB. older examples
-   jhshelp 'app'    NB. how to build your own pages
 
-***start system
-there are several system pages
- available through the jijx menu
+appname can also be started by: browse localhost:65001/appname
 
-jijx    - J repl (term)
-jijs    - file edit (edit)
-jfile   - file explorer
-jfif    - find in files
-jdebug  - debugger 
-jpacman - addon package manager
-jlocale - locale explorer
-jcopy   - copy client/server files
+browser page interacts with numbered locale that is an app instance
 
-***start app
-apps are built with J, JHS framework,
- HTML, CSS, and javascript
-learning curve is long, but not steep
- with significant rewards along the way
-what you learn is applicable not just to JHS,
- but to every aspect of web programming
-JHS is built with the same facilities
-☰.options.TAB - if you have larger screen
-run and study each app in order
-if possible, have term and app pages visible
-run 1 of the following:
-   jhsget 'app/app01' NB. overview
-   jhsget 'app/app02' NB. html
-   jhsget 'app/app03' NB. css custmizing look and feel
-   jhsget 'app/app04' NB. flex - ta textarea
-   jhsget 'app/app05' NB. css flex - ta beside tb
-   jhsget 'app/app06' NB. css flex - ta above tb
-   jhsget 'app/app07' NB. chartjs
-   jhsget 'app/app08' NB. password
+app has 4 parts: HBS, CSS, event handlers, JS javascript code
+ HBS (html build sentences) defines html elements (buttons ...)
+ CSS (cascading style sheet) defines how elements look
+ J code defines event handlers (what a button click does)
+ JS is not required except in advanced apps
 
-for additional info:
-   jhshelp 'app overview'
+event handler summary:
+  user clicks button with id 'one'
+   -> browser calls J verb ev_one_click
+    -> ev_one_click calls jhrcmds with list of browser commands
+     -> browser runs commands
 
-***start page
-simple apps showing JHS gui programming - run 1 of the following:
-   jhsget 'page/jcanvas'
-   jhsget 'page/jcjs'
-   jhsget 'page/jd3'
-   jhsget 'page/jhotd3'
-   jhsget 'page/jtable';'t'[t=: 2 2$1;'abc';2;'def'
-   jhsget 'page/jwatch';​'?4 ​6$100'
-   jhsget 'page/tictactoe'
-   jhsget 'page/dates'
-
-***start demo
-simple apps showing JHS gui programming
-run demos to see some of the possibilities
-study the source to see how it is done
-run 1 of the following:
-   jhsget 'demo/jdemo01' NB. Roll with submit
-   jhsget 'demo/jdemo02' NB. Roll with ajax
-   jhsget 'demo/jdemo03' NB. Flip - ajax args and results
-   jhsget 'demo/jdemo04' NB. Controls with javascript and CSS
-   jhsget 'demo/jdemo05' NB. chartjs
-   jhsget 'demo/jdemo06' NB. Grid Demo
-   jhsget 'demo/jdemo07' NB. Table layout
-   jhsget 'demo/jdemo08' NB. Dynamic Resize
-   jhsget 'demo/jdemo09' NB. d3 basic
-   jhsget 'demo/jdemo10' NB. Ajax chunks
-   jhsget 'demo/jdemo11' NB. Ajax interval timer
-   jhsget 'demo/jdemo12' NB. WebGL 3d graphics
+browser provides event data to in a dictionary accessed by getv
+J passes cmds back to browser as JSON built from jhrcmds arg
 
 ***start debug
 debug facilities: suspend execution at stop or error
@@ -111,20 +113,13 @@ press run button to run to stop on dyadic line 0
 
 press thru button to step through
 
-***start tour
-<TOUR>
+***start dissect
+   jhswiki'dissect' NB. Display And Probe A J Sentence Graphically
 
-***start lab
-<CATEGORIES>
+run dissect:
+ on a term input sentence with esc-j
+ on a debug app sentence with dissect button
 
-***start project manager
-file SPFILE defines project verbs
-running a project verb sets up your session
-getting to work as quickly as possible
-
-   sp'' NB. load SPFILE to define project verbs
-
-   sphelp NB. project utilities
 
 ***start canvas
    jhstour 'canvas'
@@ -212,27 +207,6 @@ initial ​data ​was ​numeric, ​so ​non-numeric ​is ​red
 ***start wiki
 <WIKI>
 
-***start shortcuts
-browser ​uses ​most ​ctrl ​shortcuts
-
-☰ shortcut key on right side
-☰ shortcut works when any menu shows
-
-ctrl+, shows menu
- arrow keys navigate menus
-
-esc-key - press ​and ​release ​esc ​then ​key
-is same as ☰ shortcut
-
-undo/cut/copy/paste/redo
- ​ctrl+zxcvy ​- ​standard
-
-J ​ctrl ​shortcuts ​are ​supported ​for
- ​,./<>?
-
-custom ​jterm ​(jijx) ​handler ​for ​ctrl+?
-ev_query_ctrl_jijx_=: ​3 ​: ​'i.5'
-
 ***start copy browser<->server files
 if your browser and JHS server are on the same system,
  they see the same files and copy is not relevant
@@ -253,14 +227,6 @@ to copy from your browser system to the JHS server Downloads:
   navigate to select a file
   click open
 
-***start popup
-JHS ​works ​best ​if ​popups ​allowed
-some ​browers ​require ​permission
-some ​browsers ​let ​you ​configure
- ​(make ​as ​restrictive ​as ​possible)
-
- ​ ​ 'tab' ​edit '' ​NB. popup edit new temp in tab
-
 ***start close
 close ​​page ​with ​☰.close
 this ​lets ​J ​manage ​the ​close
@@ -272,41 +238,3 @@ browser ​close ​button ​misses ​these ​steps
 
 ***start about
 <ABOUT>
-
-***start app overview
-App appname is defined by a script that defines 
- locale appname with HBS, event handler verbs, ...
-
-The script that defines appname must be run first.
-
-App appname is usually started by:
-   'appname' jpage args
-
-It can also be started by:
-   browse to url JHS-server:port/appname
-
-The browser interacts with an object (numbered) locale
- that is an instance of appname.
-
-app has 4 parts: HBS, CSS, J code, JS javascript code
- HBS (html build sentences) defines html elements (buttons ...)
- CSS (cascading style sheet) defines how elements look
- J code defines event handlers (what a button click does)
- JS is not required except in advanced apps
-
-HBS is a set of J lines that create html.
-
-Try the following:
-   c=: jhsget'app/app01' NB. run app1 and return object locale
-   HBS__c
-   gethbs__c''  NB. html from HBS
-
-Event handler example:
-  user clicks button with id 'one'
-   -> browser calls J verb ev_one_click
-    -> ev_one_click calls jhrcmds with list of browser commands
-     -> browser runs commands
-
-Browser gives event data to J in a dictionary (accessed by getv).
-J passes cmds back to browser as JSON built from jhrcmds arg.
-

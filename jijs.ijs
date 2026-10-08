@@ -25,36 +25,22 @@ jhflex 'cm6_editor'jhdiv''
 NB. menu must come after codemirror
 'menu0'   jhmenugroup ''
 'ro'      jhmenuitem 'readonly';'t'
-'runw'    jhmenuitem 'load';'^r'
-          jhmenulink 'edit';'edit'
+'save'   jhmenuitem 'save';'s'
+'runw'    jhmenuitem 'load';'r'
+'find'    jhmenuitem 'find/+replace';'f'
           jhmenulink 'more';'more'
-'close'   jhmenuitem 'close';'q'
-jhmenugroupz''
-
-'edit' jhmenugroup''
-NB. cut/copy/paste do not have cm.commands - only ctrl+xcv
-NB. cut/copy/paste for touch - not supported in codemirror
-'undo'    jhmenuitem 'undo';'^z'
-'redo'    jhmenuitem 'redo';'^y'
-
-'find'     jhmenuitem 'find';'^f'
-'next'     jhmenuitem 'next';'^g'
-'previous' jhmenuitem 'previous';'^G'
-'replace'  jhmenuitem 'replace';'^F'
-'repall'   jhmenuitem 'replaceall';'^R'
+'close'   jhmenuitem 'close';'x'
 jhmenugroupz''
 
 'more' jhmenugroup''
-'save'   jhmenuitem 'save';'^s'
 'saveas' jhmenuitem 'save as ...'
 'runwd'  jhmenuitem 'loadd'
-'lineadv' jhmenuitem 'run line/selection';'^'''
-'comment' jhmenuitem 'NB. add/remove';'^/'
 'chelp'   jhmenuitem 'context sensitive';'h'
+'lineadv' jhmenuitem 'run line/selection';'l'
+'comment' jhmenuitem 'NB. add/remove';'i'
 'numbers' jhmenuitem 'numbers'
 'theme' jhmenuitem 'theme'
 jhmenugroupz''
-
 
 )
 
@@ -81,34 +67,30 @@ end.
 create ;(0=#t){t;jnew ''
 )
 
-0 : 0
-line/lineadv/selection support removed
-conflict with spa
-spa save/load/loaded need immediate error report in spa
-)
-
 NB. save only if dirty
 ev_save_click=: 3 : 0
 'dirty line'=. <;._2 getv'jdata'
-f=. getv'filename'
+line=. ,/:~2 2$ 0".line
 ta=. getv'textarea'
-bta=. <;.2 ta,LF,LF NB. ensure trailing LF and extra one for emtpy last line
+
 if. 'chelp'-:getv'jmid' do.
- 'a b'=. 2{.line
- t=. dltb;{.;:b}.;a{bta
- t=. ;(t-:''){t;'voc'
+ a=. <./1 3{line
+ t=. dltb a}.ta
+ t=. (t-:''){::t;'voc'
+ t=. (t i.LF){.t
  s=. 'jhswiki''',t,''''
- jhrajax JASEP,s,JASEP,":0
+ jhrajax '',JASEP,s,JASEP,":0
  return.
 end.
 
+f=. getv'filename'
+bta=. <;.2 ta,LF,LF NB. ensure trailing LF and extra one for emtpy last line
 if. dirty-:'dirty' do.
  mkdir_j_ (f i:'/'){.f
  r=. (toHOST ta)fwrite f
  if. r<0 do. jhrajax'file save failed' end.
 end. 
 
-line=. ,/:~2 2$ 0".line
 ln=. <:{.line NB. line with caret - J 0 origin - cm6 1 origin
 caret=. 2+ln
 s=. ''
@@ -165,8 +147,6 @@ f=. <jpath'~temp\',a,'.ijs'
 >f
 )
 
-NB. 1+ >./0,;0 ". each _4}.each {."1 d
-
 NB. jdoajax load/loadd need response - mimic jijx
 urlresponse=: 3 : 0
 jhrajax''
@@ -193,7 +173,6 @@ end.
 c{.x}.y
 )
 
-NB. p{} klduge because IE inserts <p> instead of <br> for enter
 NB. codemirror requires no div padding (line number vs caret) so set padding-left:0
 NB. see activeline-background in util/jheme.4.2.css
 CSS=: 0 : 0

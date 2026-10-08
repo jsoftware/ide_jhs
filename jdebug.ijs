@@ -81,7 +81,7 @@ jhmenu'debug'
 'menu0'       jhmenugroup ''
 'help'        jhmenuitem'help - shows in term'
 'dbhelp'      jhmenuitem'standard library - shows in term'
-'close'       jhmenuitem 'quit';'q'
+'close'       jhmenuitem 'close';'x'
 jhmenugroupz''
 
 'stops'    jhdiv'<STOPS>'
@@ -100,6 +100,12 @@ jhhr
 'dissect'  jhb'dissect'
 
 jhflex 'sel'jhdiv'<FILES>'
+)
+
+CSS=: 0 : 0
+*.jhdiv,.jhspan,.jhab,.jhac{<PS_FONTCODE>}
+*.jhac{text-decoration:none;background-color:aqua;} 
+#sel{PS_FLEX}  
 )
 
 help=: 0 : 0
@@ -140,15 +146,6 @@ t=. t,jhfroma dbhelp
 t=. t,'</div>'
 jhtml t
 i.0 0
-)
-
-CSS=: 0 : 0
-form{margin:0px 2px 2px 2px;}
-*.jhdiv{<PS_FONTCODE>}
-*.jhspan{<PS_FONTCODE>}
-*.jhab{<PS_FONTCODE>}
-*.jhac{<PS_FONTCODE>text-decoration:none;background-color:aqua;} 
-#sel{PS_FLEX}  
 )
 
 NB. x is current - -1 or d2 or m3
@@ -418,4 +415,5 @@ function ev_dostack_click(){jijxrunx("dostack_jdebug_''");}
 
 function ev_dissect_click(){jdoajax([]);}
 function ev_dissect_click_ajax(ts){jijxrunx(ts[0]);};
+
 )

@@ -8,8 +8,7 @@ NB. jpage boilerplate from util.ijs
 
 NB. create=: 3 : 'setdata y~'
 ev_create=: 3 : 0
-if. y-:'' do. hotdata=: 2 2$'aa';'b';'c';'dd' end.
-t=. y jpagedefault 'hotdata'
+t=. (''-:y){::y;<2 2$'aa';'b';'c';'dd' NB. y or default
 setdata t~
 NB. fixjs'' should be done after options and data set
 )

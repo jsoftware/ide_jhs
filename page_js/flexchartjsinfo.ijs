@@ -1,4 +1,4 @@
-coclass'jcjs'
+coclass'flexchartjsinfo'
 coinsert'jhs'
 
 INC=: INC_chartjs NB. include chart js code
@@ -6,6 +6,7 @@ INC=: INC_chartjs NB. include chart js code
 NB. define html elements (button,...)
 HBS=: 0 : 0
 jhclose''
+'title'jhh1'flex charta and chart info' 
 'dict'jhb'show chart config'
 'defn'jhb'show chart defintion'
 
@@ -28,7 +29,7 @@ if. ''-:y do.
  jcjs'data';>:5?20
  jcjs'labels';5
 end. 
-jhcmds 'chartjs charta *',cjsdata
+jhrcmds 'chartjs charta *',cjsdata
 )
 
 NB. javascript code

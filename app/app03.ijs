@@ -30,8 +30,6 @@ NB. sentences that define html elements
 HBS=: 0 : 0
 jhclose''
 'title'  jhh1  'css custmizing look and feel'
-         jhijs''                        NB. button to edit source script
-         jhhr
 'how'    jhdiv   how
 'hr'     jhline''
 'e*text' jhtext 'text'
@@ -63,11 +61,9 @@ CSS=: 0 : 0
   linear-gradient(pink,plum,aqua);}
 )
 
-manapp=: 'jpage y must be '''''
-
 ev_create=: 3 : 0 NB. called by page or browser to initialize locale
-manapp assert ''-:y
-jhcmds 'set ta *',CSS
+'jpage y must be empty'assert''-:y
+jhrcmds 'set ta *',CSS
 )
 
 ev_set_click=: {{

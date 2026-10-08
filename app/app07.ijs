@@ -6,8 +6,6 @@ NB. jhbshtml_jdemoxx_'' shows HBS html
 HBS=: 0 : 0
 jhclose''
 'title' jhh1 'chartjs'
-        jhijs''                        NB. button to edit source script
-        jhhr
 'top'   jhdiv'same data - 4 chart types'
 jhbr
 'run'   jhb'run'
@@ -58,7 +56,9 @@ d=. ('set sentence *',t);('chartjs cjsa *',get'line');('chartjs cjsb *',get'bar'
 )
 
 ev_create=: 3 : 0
-jhcmds create y jpagedefault '5?5'
+t=. (''-:y){::y;<'5?5' NB. y or default
+'jpage y must be text' assert 2=3!:0 t
+jhrcmds create t
 )
 
 ev_run_click=: {{ jhrcmds create getv'sentence' }}

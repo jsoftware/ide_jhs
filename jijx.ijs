@@ -3,18 +3,18 @@ coclass'jijx'
 coinsert'jhs'
 
 termmenu=: 0 : 0
-jhmenu'term';'advance'jhb'⇒';'jmenuburger'
+jhmenu'term';('overview'jhb'overview'),LF,'advance'jhb'advance'
 
 'menu0'      jhmenugroup ''
+             jhmenulink 'jpages';'pages'
+'advance'    jhmenuitem 'advance';'a'             
 'sp'         jhmenuitem 'projects';'p'
 'spdefault'  jhmenuitem 'project default';'o'
 'jinputs'    jhmenuitem  'inputs';'i'
 'jbreak'     jhmenuitem 'break';'c'
 'dissect'    jhmenuitem 'dissect input line';'j'
-'jhshelp'    jhmenuitem 'help';'h'         
-'closepages' jhmenuitem 'close pages'
-             jhmenulink 'jpages';'system pages'
-             jhmenulink 'options';'options and view'
+'help'       jhmenuitem 'help';'h'   
+'cleartemps' jhmenuitem 'remove red boxes';'r'             
 'close'      jhmenuitem 'quit';'q'
 jhmenugroupz''
 
@@ -24,19 +24,10 @@ jhmenugroupz''
 'jdebug'  jhmenuitem 'debug';'d'
 'jijs'    jhmenuitem 'edit new temp file';'n'
 'jpacman' jhmenuitem 'package manager'
-'jlocale' jhmenuitem 'locale explorer'
-'jhelp'   jhmenuitem 'jhshelp texts'
-'jdoc'    jhmenuitem 'framework docs'
-jhmenugroupz''
-
-'options'      jhmenugroup''
-'wrap'         jhmenuitem 'NOWRAP ➜ wrap'
-'spa'          jhmenuitem 'Tab ➜ term'
-'flow'         jhmenuitem 'COLUMN ➜ row';'u' NB. see flowset for kludge to preserve shortcut
-'cleartemps'   jhmenuitem 'remove red boxes';'r'
-'clearwindow'  jhmenuitem 'clear window'
-'clearrefresh' jhmenuitem 'clear refresh'
-'clearLS'      jhmenuitem 'clear LS'
+'jlocale' jhmenuitem 'explore locales'
+'allhelp' jhmenuitem 'all help';'1'
+'jdoc'    jhmenuitem 'create app';'2'
+'closepages' jhmenuitem 'close all'
 jhmenugroupz''
 
 )
@@ -111,12 +102,16 @@ jhtml''
 
 ev_clearrefresh_click=: 3 : 'LOG_jhs_=: '''''
 
-ev_jhelp_click=: 3 : 0
-'jhelp'jpage''
+ev_doc_click=: 3 : 0
+'jdoc'jpage''
 )
 
-ev_jhshelp_click=: 3 : 0
+ev_help_click=: 3 : 0
 jhshelp''
+)
+
+ev_allhelp_click=: 3 : 0
+'jhelp'jpage''
 )
 
 ev_about_click=: 3 : 0
@@ -162,18 +157,16 @@ ev_doublequote_ctrl =: 3 : 'echo''doublequote'''
 
 load'~addons/ide/jhs/loadx.ijs'
 
-
 NB. csscore has log css
 CSS=: 0 : 0 
 *{font-family:<PC_FONTFIXED>;font-weight:550;}
-form{margin-top:0;margin-bottom:0;}
 *.fm   {color:<PC_FM_COLOR>;}
 *.er   {color:<PC_ER_COLOR>;}
 *.log  {color:<PC_LOG_COLOR>;}
 *.sys  {color:<PC_SYS_COLOR>;}
 *.file {color:<PC_FILE_COLOR>;}
-
-.jhb#overview{background-color:<PC_JICON>;font-weight:bold;font-size:1em;margin-left:1em;}
+.jhb#overview,.jhb#advance{background-color:transparent;border:none;margin:0 0 0 0;font-weight:bold;color:green;}
+.jhb#advance {margin:0 10px 0 0;}
 #prompt{background-color:blanchedalmond;border:2px solid black;padding:8px 0 8px 0;}
 )
 

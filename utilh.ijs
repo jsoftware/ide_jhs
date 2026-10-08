@@ -119,12 +119,20 @@ canvasnum=: >:canvasnum
 '?',((":6!:0'')rplc' ';'_';'.';'_'),'_',":canvasnum
 )
 
+NB. convert a to html unless already html
+NB. space -> &#32
 NB. output starting with jmarka and ending with jmarkz,LF
 NB.  is assumed to be html and is not touched
 jhtmlfroma=: 3 : 0
 if. (jmarka-:jmarkc{.y)*.jmarkz-:(-jmarkc){.}:y do. y return. end.
-jhfroma y
+jhfromax y
 )
+
+NB. same as jhtmlfroma except &nbsp;
+NB. jhtmlfromaz=: 3 : 0
+NB. if. (jmarka-:jmarkc{.y)*.jmarkz-:(-jmarkc){.}:y do. y return. end.
+NB. jhfroma y NB.!!! wrap
+NB. )
 
 bad=: 1{a. NB. this character hangs the browser
 
@@ -426,9 +434,6 @@ JASEP=: 1{a. NB. delimit substrings in ajax response
 jgetfile=: 3 : '(>:y i: PS)}.y=.jshortname y'
 jgetpath=: 3 : '(>:y i: PS){.y=.jshortname y'
 
-
-NB.*.1 event handlers and responses
-
 NB.* jnv*jnv 1 - toggle display of event name/value pairs
 jnv=: 3 : 'NVDEBUG=:y' NB. toggle event name/value display
 
@@ -535,17 +540,20 @@ NB.* *set id *innerHTML - html elements with HTML (e.g. jhspan)
 NB.* *css *css          - set new extra CSS
 NB.* *other cmds need to be documented here
 jhrcmds=: 3 : 0
-jwdlast=: jwd y
-jwdbuffer=: ''
-jhrajax ({.a.),jsajaxdata=: jsencode jcmds jwdlast
+if. jsdata-:'"uninitialized"' do.
+ jsdata=: jsencode jcmds y
+else. 
+ jwdlast=: jwd y
+ jwdbuffer=: ''
+ jhrajax ({.a.),jsajaxdata=: jsencode jcmds jwdlast
+end. 
 )
 
+NB.* deprecated - just use jhrcmds
 NB.* jhcmds*jhcmds - 0 or or more cmds to be run by ev_body_load
 NB.* run in ev_create/create/jev_get to pass cmds to javascript in var jsdata
 NB.* see jhrcmds 
-jhcmds=: 3 : 0
-jsdata=: jsencode jcmds y
-)
+jhcmds=: jhrcmds
 
 NB.* jhrjson*jhrjson - 0 or more boxed name/value pairs
 jhrjson=: 3 : 0

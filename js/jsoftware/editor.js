@@ -3,9 +3,10 @@ import { LRLanguage, LanguageSupport, HighlightStyle, syntaxHighlighting, indent
 import { EditorState, Compartment } from '../codemirror6/state/dist/index.js';
 import { history, defaultKeymap, historyKeymap, undo, redo } from '../codemirror6/commands/dist/index.js';
 import { closeBrackets, closeBracketsKeymap } from '../codemirror6/autocomplete/dist/index.js';
-import { search, searchKeymap, openSearchPanel, highlightSelectionMatches, findNext, findPrevious, replaceNext, replaceAll, selectMatches } from '../codemirror6/search/dist/index.js';
+import { search, searchKeymap, openSearchPanel, closeSearchPanel, highlightSelectionMatches, findNext, findPrevious, replaceNext, replaceAll, selectMatches } from '../codemirror6/search/dist/index.js';
 import { LRParser, LocalTokenGroup } from "../lezer/lr/dist/index.js";
 import { tags, styleTags } from "../lezer/highlight/dist/index.js";
+import { toggleComment } from '../codemirror6/commands/dist/index.js';
 
 // Code mirror 6 view is private variable in this module. 
 // At the end of this file there are "exported functions" to access it.
@@ -257,6 +258,7 @@ function changeLineNumbers() {
 }
 
 function changeReadOnly() {
+  closeSearchPanel(cm6); // find/replace
   if (cm6.state.readOnly) {
     jbyid("jmenutitle").innerHTML = jbyid("filename").value;
     cm6.dispatch({
@@ -339,9 +341,13 @@ window.cm6_findNext = () => { findNext(cm6); }
 window.cm6_findPrev = () => { findPrevious(cm6); }
 window.cm6_replaceNext = () => { replaceNext(cm6); }
 window.cm6_replaceAll = () => { replaceAll(cm6); }
+window.cm6_toggleComment = () => { toggleComment(cm6);}
+
 window.cm6_changeLineNumbers = changeLineNumbers;
 window.cm6_changeReadOnly = changeReadOnly;
+
 window.cm6_changeTheme = changeTheme;
+
 window.cm6_getSelectionData = () => {
   const anchorCh = cm6.state.selection.main.anchor;
   const headCh = cm6.state.selection.main.head;

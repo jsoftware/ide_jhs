@@ -4,7 +4,6 @@ coinsert'jhs'
 HBS=: 0 : 0
       jhclose''
 'title' jhh1 'flex - jhtextarea , jhdiv'                        NB. button to edit source script
-        jhijs'' NB. button to edit source script
 'hbs'   jhb  'show HBS'
 'css'   jhb  'show CSS'
 
@@ -23,12 +22,10 @@ CSS=: 0 : 0
 #tb{<PS_FONTCODE>;<PS_FLEX>;width:50%;}
 )
 
-manapp=: 'jpage y must be '''''
-
 ev_create=: {{
- manapp assert ''-:y
- t=. y jpagedefault ,LF,.~20 20$'some text '
- jhcmds ('set ta *','jhtextarea',LF,t);'set tb *','<span style="color:blue;font-size:3rem;">jhdiv</span><br>',t
+t=. (''-:y){::y;<,LF,.~60 20$'silly text ' NB. y or default
+'jpage y must be text' assert 2=3!:0 t
+jhrcmds ('set ta *','jhtextarea',LF,t);'set tb *','<span style="color:blue;font-size:3rem;">jhdiv</span><br>',t
 }}
 
 ev_hbs_click=: {{ jhrcmds 'set ta *',HBS }}

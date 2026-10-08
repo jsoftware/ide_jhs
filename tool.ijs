@@ -3,7 +3,6 @@ NB. iphone se displays to col: 34
 
 jhsrun_z_=:  labrun_jijx_
 jhshelp_z_=: jhshelp_jijx_
-jhsget_z_=:  jhsget_jijx_
 jhslab_z_=:  jhslab_jijx_
 jhswiki_z_=: jhswiki_jijx_
 jhstour_z_=: jhstour_jijx_
@@ -36,7 +35,6 @@ n=. 'ABOUT GRULES WIKI TOOL TOUR CATEGORIES '
 t hrplc n;JVERSION;tool_guest_rules;(getwiki'');(gettool'');(gettour'');(getcategories'')
 )
 
-NB. get list of available helps
 gethelp0=: 3 : 0
 t=. gethelptxt''
 d=. <;._2 t,LF
@@ -46,7 +44,7 @@ s=. ;{.each h
 s=. }.(#'start*** ')}.each s
 s=. (<'   jhshelp '''),each s,each ''''
 s=. s-.gethelpsub'' NB. remove from main index those pointed at by others
-'recall line from log and run it',LF,;s,each LF
+'⇧⇧1 - all help',LF,'term - recall line and run it',LF,;s,each LF
 )
 
 NB. get helps that are referred to by another help
@@ -84,26 +82,6 @@ for_i. i.#d do.
  r=. r,".'walkhelp',7}.n
 end. 
 r
-)
-
-NB. jhsget 'app/app01'
-NB. jhsget 'app/app01';arg
-jhsget=: 3 : 0
-'p a'=. 2{.(boxopen y),<''
-f=. '~temp/jhs/',p,'.ijs'
-i=. p i. '/'
-c=. (>:i)}.p
-b=. i{.p
-t=. '~addons/ide/jhs/',p,'.ijs'
-'source file does not exist'assert fexist t
-mkdir_j_ jpath'~temp/jhs/',b
-(fread t)fwrite f
-load f
-echo 'source file: ',t
-echo 'temp file created and loaded'
-echo '   edit''',f,''''
-echo 'object locale created as instance of: ', c
-c jpage a
 )
 
 NB. jijx stuff not directly tied to contenteditable repl
@@ -162,17 +140,18 @@ jselect t,(<'   jhsrun '),each'''',~each'''',each titles
 
 wiki_names=: 0 : 0
 ''
-'voc'  NB. NuVoc vocabulary
-'i.'   NB. edit i. for others - click Dyad for x i. y
-'if.'  NB. control words
-'!:'   NB. foreigns
-'12x'  NB. constants
-'a'    NB. ancilliary 
-'std'  NB. standard library
-'rel'  NB. J release notes
-'JHS'  NB. JHS info
-'807'  NB. 807 legacy html
-'main' NB. main page
+'voc'     NB. NuVoc vocabulary
+'i.'      NB. edit i. for others - click Dyad for x i. y
+'if.'     NB. control words
+'!:'      NB. foreigns
+'12x'     NB. constants
+'a'       NB. ancilliary 
+'dissect' NB. run sentence visually
+'std'     NB. standard library
+'rel'     NB. J release notes
+'JHS'     NB. JHS info
+'807'     NB. 807 legacy html
+'main'    NB. main page
 )
 
 tool_names=: 0 : 0
@@ -187,6 +166,7 @@ tool_names=: 0 : 0
 tour_names=: 0 : 0
 ''
 'overview' NB. start here!
+'app'      NB. developing an app
 'chart'    NB. plot
 'canvas'   NB. draw
 'plot'     NB. other ways to plot
@@ -205,10 +185,6 @@ NB. default ctrl+,./ handlers
 ADVANCE=: 'none'
 
 tool_simple_project=: sphelp
-
-tool_watch=: 0 : 0
-   'jwatch;0 0' jpage '?4 6$100' NB. watch an expression
-)
 
 NB. following are still used!
 tool_guest_rules=: tool_guest_files=: 'this session is not a server guest'
@@ -252,7 +228,6 @@ y #~ -. y e. r                       NB. This line is different from the jlab805
 
 labrun=: 3 : 0
 f=. ;LABFILES{~LABTITLES i. <dltb y
-echo ;f
 ADVANCE=: 'lab'
 require__'~addons/labs/labs/lab.ijs'
 
@@ -262,6 +237,6 @@ spx_jhs_=: spx_jsp_
 
 ADVANCE_jlab_=: 'To advance, press ctrl+.'
 smselout_jijs_=: smfocus_jijs_=: [ NB. allow introcourse to run
-echo'JHS lab advance - ctrl+. or menu >'
-lab_jlab_ f
+
+spxstart_jsp_ f 
 )

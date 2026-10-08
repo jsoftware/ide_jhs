@@ -126,7 +126,7 @@ jhrcmds init 0".getv'exclude'
 HBS=: 0 : 0
 jhmenu''
 'menu0'  jhmenugroup ''
-'close'  jhmenuitem 'close';'q'
+'close'  jhmenuitem 'close';'x'
          jhmenugroupz''
 
 'nl*noun'   jhchk 'noun';1

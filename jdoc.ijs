@@ -3,63 +3,43 @@ coinsert'jhs'
 
 HBS=: 0 : 0
 jhclose''
-'title'jhtitle'JHS framework'
-'jhs locale - utils - verbs/nouns/... for creating apps'
-jhbr
-mfix '~addons/ide/jhs/form.ijs'
-mfix '~addons/ide/jhs/utilh.ijs'
-mfix '~addons/ide/jhs/util.ijs'
+'title'jhh1'verbs/... _jhs_ for creating apps'
+'<a href="#form">HBS</a> <a href="#utilh">events</a> <a href="#util">misc</a>'
+
+jhflexa
+ 'all'jhdiva''
+ '<div class="html1" id="form">~addons/ide/jhs/form.ijs</div>'
+ 'form'  jhdiv getmans '~addons/ide/jhs/form.ijs'
+ '<div class="html1" id="utilh">~addons/ide/jhs/utilh.ijs</div>'
+ 'utilh' jhdiv getmans '~addons/ide/jhs/utilh.ijs'
+ '<div class="html1" id="util">~addons/ide/jhs/util.ijs</div>'
+ 'util'  jhdiv getmans '~addons/ide/jhs/util.ijs'
+ jhdivz
+jhflexz
 )
 
 CSS=: 0 : 0
-form{margin:10px;}
-.defn{white-space:pre;font-family:<PC_FONTFIXED>;color:blue;}
-.html1{white-space:pre;font-family:<PC_FONTFIXED>;font-size:200%;border:solid 1px black;}
-.html2{white-space:pre;font-family:<PC_FONTFIXED>;font-size:150%;border:solid 1px black;}
-.html3{white-space:pre;font-family:<PC_FONTFIXED>;font-size:100%;border:solid 1px black;}
-.doc{white-space:pre;font-family:<PC_FONTFIXED>;padding-left:3em;}
+*.div{white-space:pre;font-family:<PC_FONTFIXED>;}
+.html1{font-size:300%;}
+#all{<PS_FLEX>}
 )
 
-fix=: 3 : 0
+getmans=: 3 :0
 t=. man y
-NB. t=. t rplc '<';'&lt;'
-
-NB. mark =: lines
-bd=. <;.2 t
-
-NB. NB.*< html
-mskhtml=. (<'NB.*.')=5{.each bd
-a=. mskhtml#i.#bd
-z=. dltb each 5}.each a{bd
-class=. {.each z
-z=. jhfromax each dltb each }.each z
-bd=. ((<'<span class="html'),each class,each (<'">') ,each z,each<'</span>') a}bd
-
-NB. NB.*
-msknb=. (-.mskhtml)*.(<'NB.')=3{.each bd
-a=. msknb#i.#bd
-z=. 4}.each a{bd
-z=. jhfromax each z
-bd=. ((<'<span class="doc">'),each,z,each<'</span>') a}bd
-
-NB. defn
-mskdefn=. -. mskhtml +. msknb
-a=. mskdefn#i.#bd
-z=. dltb each a{bd
-z=. jhfromax each z
-bd=. ((<'<span class="defn">'),each,z,each<'</span>') a}bd
-
-t=. ;bd
-)
-
-mfix=: 3 : 0
-t=. ''jhline''
-t=. t,''jhhn 3;y
-t=. t,''jhdiv fix y
-t
+a=. deb each <;._2 t
+b=. <;._2 a
+i=. /:{:each b
+c=. i{<;._2 <;.2 t NB. preserve blanks
+c=. c,each <<LF
+d=. ;c
+b=. (<'NB.')=3{.each d
+i=. b#i.#d
+r=. ;3{each i{d
+p=. 3+('*'=r)+.' '=r
+d=. ((<'      '),each p}.each i{d) i}d
+d=. jhfroma ;d
 )
 
 jev_get=: 3 : 0
 'jdoc'jhr''
 )
-

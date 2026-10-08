@@ -1,8 +1,6 @@
 coclass'app04'
 coinsert'jhs'
 
-manapp=: 'jpage y must be '''''
-
 0 : 0
 css flex allows dynamic sizing
 you can do almost any layout you can imagine
@@ -15,7 +13,6 @@ HBS=: 0 : 0
 NB. base div implicitly opened
          jhclose''
 'title'  jhh1 'flex - jhtextarea'
-         jhijs''                        NB. button to edit source script
 'hbs'    jhb'show HBS'
 'css'    jhb'show CSS'
 
@@ -30,10 +27,9 @@ CSS=: 0 : 0
 
 NB. J code - initialize and handle events
 ev_create=: 3 : 0 NB. called by page or browser to initialize locale
-manapp assert ''-:y
-t=. y jpagedefault ,LF,.~60 20$'silly text '
-'must be text'assert 2=3!:0 t
-jhcmds 'set ta *',t
+t=. (''-:y){::y;<,LF,.~60 20$'silly text ' NB. y or default
+'jpage y must be text' assert 2=3!:0 t
+jhrcmds 'set ta *',t
 )
 
 ev_hbs_click=: 3 : 0

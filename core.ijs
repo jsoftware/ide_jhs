@@ -63,7 +63,7 @@ try.
  class=. >type{'';'fm';'er';'log';'sys';'';'file'
  
  if. (6=type)*.URL-:'jijx' do.
-  t=. jhtmlfroma s
+  t=. jhtmlfroma s NB. &#32;
   if. '<br>'-:_4{.t do. t=. _4}.t end.
  
   a=. LOGN
@@ -84,7 +84,12 @@ try.
  
  elseif. (3~:type)+.-.'jev_'-:4{.dlb s do. NB. jev_... lines not logged
   NB. if. 3=type do. s=. PROMPT,dlb s end. NB. cleaning input is bad
-  t=. jhtmlfroma s
+  if. 3=type do.
+   NB.!!! t=. jhtmlfromaz s NB. &nbsp;
+   t=. jhfroma s
+  else.
+   t=. jhtmlfroma s  NB. &#32;
+  end. 
   if. '<br>'-:_4{.t do. t=. _4}.t end.
   LOGN=: LOGN,'<div class="',class,'">',t,'</div>'
  end.
@@ -98,11 +103,11 @@ NB. event handler called by js event
 NB. catch. changed to catchd. - december 2017 - for debug step with error
 jev=: 3 : 0
 try.
+ LASTNV=: NV
  ".t=. 'ev_',(getv'jmid'),'_',(getv'jtype'),' 0'
-catchd.
+catch. NB. catchd. in order to debug event handlers
  e=. LF,'error: J event handler',LF,'locale: ',;coname''
  e=. e,LF,t,LF,13!:12''
- echo e
  jhrcmds'alert *',e
 end.
 )
@@ -369,6 +374,7 @@ to run a new JHS session on the next free port, run the following:
 NB. html/css/js config parameters
 configdefault=: 3 : 0
 PORT=:   65001       NB. private port range 49152 to 65535
+BIND=:   ''          NB. '127.0.0.1'
 USER=:   ''          NB. 'john' - login
 PASS=:   ''          NB. 'abra' - login
 TIPX=:   ''          NB. tab title prefix - distinguish sessions
@@ -450,14 +456,14 @@ dobind=: 3 : 0
 sdcleanup_jsocket_''
 cloexec SKLISTEN=: 0 pick sdcheck_jsocket_ sdsocket_jsocket_''
 if. IFUNIX do.  sdsetsockopt_jsocket_ SKLISTEN;SOL_SOCKET_jsocket_;SO_REUSEADDR_jsocket_;2-1 end.
-sdbind_jsocket_ SKLISTEN;AF_INET_jsocket_;y;PORT
+sdbind_jsocket_ SKLISTEN;AF_INET_jsocket_;BIND;PORT
 )
 
 nextport=: 3 : 0
 while.
  PORT=: >:PORT
  TIPX=: ":PORT
- r=.dobind y
+ r=.dobind''
  shutdownJ_jsocket_ SKLISTEN ; 2
  sdclose_jsocket_ ::0: SKLISTEN
  sdcleanup_jsocket_''
@@ -516,7 +522,7 @@ LOCALHOST=: '127.0.0.1'
 logappfile=: <jpath'~user/.applog.txt' NB. username
 SETCOOKIE=: 0
 NVDEBUG=: 0 NB. 1 shows NV on each input
-LOG=: jmarka,('overview'jhb'click for interactive session'),jmarkz
+LOG=: ''
 LOGN=: ''
 PDFOUTPUT=: 'output pdf "',(jpath'~temp\pdf\plot.pdf'),'" 480 360;'
 DATAS=: ''
@@ -573,7 +579,7 @@ load__'~addons/ide/jhs/extra/man.ijs'
 load__'~addons/ide/jhs/widget/jhot.ijs'
 
 NB. load addons, but do not fail init if not found
-load__ :: ['~addons/math/misc/trig.ijs' NB. used in overview.ijs chart
+load__ :: ['~addons/math/misc/trig.ijs' NB. used in overview.ijt chart
 load__ :: ['~addons/convert/json/json.ijs'
 load__ :: ['~addons/convert/pjson/pjson.ijs' NB. preferred - kill off json.ijs 
 

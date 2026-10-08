@@ -5,8 +5,6 @@ test=: 3 : 0
 coclass'splitter'
 coinsert'jhs'
 
-manapp=: 'jpage y must be ''''' NB. doc jpage y arg
-
 INC=: INC_splitter NB. css/js library files to include
 
 NB. J lines run in jhs locale that define html for the page
@@ -39,7 +37,7 @@ HBS=: 0 : 0
 
 NB. jpage (or url) calls to init page for browser
 ev_create=: 3 : 0 
-manapp assert ''-:y
+'jpage y must be empty' assert ''-:y
 NB. jhcmds 'set t1 *just loaded'  NB. browser command when page loads
 jhcmds''
 )

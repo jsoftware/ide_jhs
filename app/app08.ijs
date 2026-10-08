@@ -59,8 +59,8 @@ jhrcmds  len;psw;epy;css NB. len;psw;css
 )
 
 ev_create=: 3 : 0 NB. called by page or browser to initialize locale
-man assert ''-:y
-jhcmds ''
+'jpage y must be empty'assert''-:y
+jhrcmds ''
 )
 
 ev_copy_click=: 3 : 0

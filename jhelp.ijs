@@ -3,12 +3,13 @@ coinsert'jhs'
 
 HBS=: 0 : 0
 jhclose'all jhshelp results'
-''jhdiv walkhelp_jijx_''
+jhflex 'help'jhdiv walkhelp_jijx_''
 )
 
 CSS=: 0 : 0
 *{font-family:<PC_FONTFIXED>;}
 .jhdiv{white-space:pre;}
+#help{<PS_FLEX>}
 a{white-space:pre;text-decoration:none;}
 )
 

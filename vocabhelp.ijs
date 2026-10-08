@@ -1,19 +1,5 @@
 coclass'jhs'
 
-0 : 0
-   jhswiki'voc'  NB. NuVoc vocabulary
-   jhswiki'i.'   NB. edit i. for others - click Dyad for x i. y
-   jhswiki'if.'  NB. control words
-   jhswiki'!:'   NB. foreigns
-   jhswiki'12x'  NB. constants
-   jhswiki'a'    NB. ancilliary 
-   jhswiki'std'  NB. standard library
-   jhswiki'rel'  NB. J release notes
-   jhswiki'JHS'  NB. JHS info
-   jhswiki'807'  NB. 807 legacy html
-   jhswiki'main' NB. main page
-)   
-
 NB. add label for each link
 wwwlinks=: <;._2 [ 0 : 0
 vocabulary         https://code.jsoftware.com/wiki/NuVoc
@@ -21,6 +7,7 @@ control structures https://code.jsoftware.com/wiki/Vocabulary/ControlStructures
 foreigns !:        https://code.jsoftware.com/wiki/Vocabulary/Foreigns
 constants          https://code.jsoftware.com/wiki/Vocabulary/Constants
 ancilliary         https://code.jsoftware.com/wiki/NuVoc#bottomrefs
+dissect            https://code.jsoftware.com/wiki/Vocabulary/Dissect
 standard library   https://code.jsoftware.com/wiki/Standard_Library/Overview
 release notes      https://code.jsoftware.com/wiki/System/ReleaseNotes
 JHS                https://code.jsoftware.com/wiki/Guides/JHS
@@ -54,6 +41,7 @@ elseif. '!:'-:a                         do. t=. 'https://code.jsoftware.com/wiki
 elseif. (first='_')+.first e. Num_j_    do. t=. b,'/Constants'
 elseif. 'JHS'-:a                        do. t=. 'https://code.jsoftware.com/wiki/Guides/JHS'
 elseif. a-:,'a'                         do. t=. 'https://code.jsoftware.com/wiki/NuVoc','#bottomrefs'
+elseif. a-:'dissect'                    do. t=. 'https://code.jsoftware.com/wiki/Vocabulary/Dissect' 
 elseif. a-:'807'                        do. t=. 'https://www.jsoftware.com/help/index.htm'
 elseif. a-:'std'                        do. t=. 'https://code.jsoftware.com/wiki/Standard_Library/Overview'
 elseif. a-:'rel'                        do. t=. 'https://code.jsoftware.com/wiki/System/ReleaseNotes'

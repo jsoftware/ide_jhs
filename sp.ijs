@@ -136,6 +136,13 @@ t=. y{.SPFILES
 sptable(shorts_jsp_ t),.t
 )
 
+spxstart=: 3 : 0
+echo 'edit''',y,''''
+b=. 'advance: menu bar advance'
+echo jhtml'<div><font style="color:blue;font-weight:bold">',b,'</font></div>'
+jjs_jhs_'setTimeout(() => {inlab=1;}, 1000);' NB. nust be set after keyup
+)
+
 spxinit=: 3 : 0
 'only runs in JHS'assert IFJHS
 'file must exist' assert fexist spf y
@@ -143,14 +150,10 @@ ADVANCE_jijx_=: 'spx'
 SPXFILE_z_=: spf y
 SEM=: get SPXFILE
 SEMN=: 1
-a=. 'edit''',SPXFILE,'''',LF,'to advance interactive tutorial:',LF
-b=. 'type ctrl+. (ctrl dot) or<br>click ⇒ in menu bar'
-echo a
-echo jhtml'<div><font style="color:blue;font-weight:bold">',b,'</font></div>'
+spxstart SPXFILE
 NB. status''
 i.0 0
 )
-
 
 spxqt=: 3 : 0
 if. 0-:y do.
@@ -173,6 +176,9 @@ t=. (#SECTION)}.each i{y
 )
 
 spx=: 3 : 0
+
+jjs_jhs_'setTimeout(() => {inlab=1;}, 1000);' NB. nust be set after keyup
+
 nsec=. -.':'={.y
 if. nsec*.(0~:#y)*.2=3!:0 y do. spxinit y return. end.
 if. -.fexist SPXFILE do. smoutput 'not initialized - do spxinit' return. end.

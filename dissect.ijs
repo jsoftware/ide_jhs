@@ -108,7 +108,7 @@ HBS=: 0 : 0
 'learning' jhmenuitem'learning dissect'
 'wikidissect' jhmenuitem 'Dissect wiki'
 'wikinuvoc'   jhmenuitem 'NuVoc wiki'
-'close' jhmenuitem 'close';'q'
+'close' jhmenuitem 'close';'x'
         jhmenugroupz''
 
 'prefs' jhdiva''

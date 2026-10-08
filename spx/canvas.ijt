@@ -1,9 +1,7 @@
 NB. graphics - drawing on an html canvas
 coinsert'jgl2'
-require'~addons/ide/jhs/page/jcanvas.ijs'
-form=: 'jcanvas;10 10 700 700'jpage''
-
-NB.spxaction: move focus back to term window
+require'~addons/ide/jhs/page/canvas.ijs'
+form=: 'canvas;10 10 700 700'jpage''
 
 can=: can__form
 
@@ -104,9 +102,7 @@ jsxlines (40$200 0)+?40$300
 draw__can''
 
 NB. draw to selected canvas
-formx=: 'jcanvas;200 200 700 700'jpage''
-
-NB.spxaction: move focus back to term window
+formx=: 'canvas;200 200 700 700'jpage''
 
 canx=: can__formx
 drawverb__canx=: mydraw_base_

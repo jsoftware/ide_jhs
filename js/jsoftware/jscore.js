@@ -383,6 +383,9 @@ function jdoajax(ids,data,sentence,async)
  }
  async= (!async)?false:async;
  sentence=sentence||jevsentence;
+
+ //! alert(sentence);
+
  data=data||"";
  ids=ids||[];
  rq= newrq();
@@ -734,7 +737,8 @@ function jijxset()
 // app keyboard shortcuts
 
 document.onkeyup= keyup; // bad things happen if this is keydown
-document.onkeypress= keypress;
+//document.onkeypress= keypress;
+document.onkeydown= keydown;
 
 var jsc= 0;
 
@@ -747,47 +751,60 @@ function jdostdsc(c)
  }
 }
 
-// IE/FF see esc etc but Chrome/Safari do not
-function keypress(ev)
+var shiftcnt=0;
+var shiftstart=0; // time of first shift
+const shifttime= 2000; 
+
+// keydown (replaces keypress - sep2026)
+function keydown(ev)
 {
- var e=window.event||ev;
- var c=e.charCode||e.keyCode;
-
- // touch escape
- //if(e.key=='è'){jsc=!jsc;return false;}  // esc shortcut - letter e + slide up
-
- var s= String.fromCharCode(c);
- if(!jsc)return true;
- ev.preventDefault();
- jsc=0;
-
- // esc x same as menu shortcut x
- // esc x ev_x_shortcut()
- // esc x standard shortcuts for all (esc-q)
- var ta= window['jmsc'+s];
- var tb= window["ev_"+s+"_shortcut()"];
- if('string'==typeof ta)
-   jscdo(ta)
- elseif('function'==typeof tb)
-   tb();
- elseif(true)
-   jdostdsc(s);
- return false;
+  if(shiftcnt==2 && (shifttime>(Date.now()-shiftstart))){ev.preventDefault();return false;}
 }
 
 function keyup(ev)
 {
- var e=window.event||ev;
- var c=e.keyCode;
- if(e.ctrlKey)
- {
+  var s= ev.key,ls= s.toLowerCase(),ta;
+
+  if((shifttime<(Date.now()-shiftstart))) shiftcnt=0; // reset after too long
+
+  if(shiftcnt==2){ // shortcut
+    shiftcnt= 0;
+    if(s=='Shift')
+      ev_jmenuburger_click();
+    else{
+      ta= window['jmsc'+ls];
+      if('string'==typeof ta)
+         jscdo(ta) // menu shortcut
+      else
+        if(ls=='a') alert('shortcut a only valid when term has focus');  
+     }
+    return false;
+  }
+
+  if(shiftcnt==2){ // menu shortcut
+    shiftcnt= 0;
+    ta= window['jmsc'+ls];
+    if('string'==typeof ta)
+      jscdo(ta) // menu shortcut
+    else
+      // jdoajax([],'',"   'shortcut"+s+"'~0");
+    return false;
+  }
+
+  if('Shift'==s && 0==shiftcnt) shiftstart= Date.now();
+  shiftcnt+= 'Shift'==s;
+
+ if(ev.ctrlKey) {
+  if(s=='ArrowUp'  &&ev.shiftKey&&'function'==typeof uarrow){uarrow();return false;}
+  if(s=='ArrowDown'&&ev.shiftKey&&'function'==typeof darrow){darrow();return false;}
+ }
+
+ /*
   if('MacIntel'==navigator.platform)
   {
    if(c==188&&e.shiftKey&&'function'==typeof uarrow){uarrow();return false;}
    if(c==190&&e.shiftKey&&'function'==typeof darrow){darrow();return false;}
   }
-
-  // if(c==188&&!e.shiftKey){jsc=!jsc; return !jsc;}// ctrl+, as esc 
 
   if(c==188&&!e.shiftKey) {ev_jmenuburger_click(); return false;}
 
@@ -796,19 +813,13 @@ function keyup(ev)
   if(c==191){jscdo(e.shiftKey?"query":"slash",undefined,"ctrl");return false;}
   if(c==59){jscdo(e.shiftKey?"colon":"semicolon",undefined,"ctrl");return false;}
   if(c==222){jscdo(e.shiftKey?"doublequote":"quote",undefined,"ctrl");return false;}
-  if(c==38&&e.shiftKey&&'function'==typeof uarrow){uarrow();return false;}
-  if(c==40&&e.shiftKey&&'function'==typeof darrow){darrow();return false;}
-
   if(c==37&&e.shiftKey) mmshow('menu0');
+*/  
 
- }
- if(c==27&&!e.shiftKey&&!e.altKey){jsc=!jsc;return !jsc;} // esc shortcut
+ //! if(c==27&&!e.shiftKey&&!e.altKey){jsc=!jsc;return !jsc;} // esc shortcut
+ if(s=='Escape'&&!ev.shiftKey&&!ev.altKey){alert("esc not supported see:\n   jhshelp'shortcuts'")} // esc shortcut
  return true; 
 }
-
-
-
-
 
 // debug - numbers from unicode
 function debcodes(t)
@@ -967,7 +978,7 @@ function isSPA(){
 
 function isdirty(){return dirty;} // default - override
 
-function ev_dot_ctrl(){jijxrun("ev_advance_click_jijx_''");} // lab advance lab
+//function ev_dot_ctrl(){jijxrun("ev_advance_click_jijx_''");} // lab advance lab
 
 // chartjs start
 function cjs(id){return Chart.getChart(id);}
@@ -1198,6 +1209,7 @@ function jevdo()
  dochk(id);
 
  JEV= "ev_"+mid+"_"+type; // mid not id - mid handler can check sid
+
  f= window[JEV];
  if('function'!=typeof f)
  {

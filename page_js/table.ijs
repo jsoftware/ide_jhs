@@ -1,11 +1,12 @@
 NB. handsontable table editor - includes jhot iframe
 NB. 'jtable'jpage'n'[n=. i.3 9
 
-coclass'jtable'
+coclass'table'
 coinsert'jhs'
 
 HBS=: 0 : 0
 jhclose''
+'title'jhh1'table - handsontable'
 'head'jhdiv'table'
 '<div id="hots">'
 '<iframe id="hot" name="hot" src="',(;hot),'"  ></iframe>'
@@ -34,7 +35,7 @@ try.
  fixjs__hot'' NB. apply options and data to JS
  JS__hot
  NB. show__hot 'tab' 
- jhcmds 'set head *table: ',header
+ jhrcmds 'set head *table: ',header
 catchd.
  ('create failed:',LF,13!:12'') assert 0
 end.

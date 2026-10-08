@@ -1,16 +1,18 @@
-coclass'jwatch'
+coclass'watch'
 coinsert'jhs'
 
 HBS=: 0 : 0
 jhclose''
+'title'jhh1'watch an expression'
 'run'jhb'run'
 'sentence'jhtext'<SENTENCE>';30
 jhflex 'display'jhdiv''
 )
 
 ev_create=: 3 : 0
-t=. y jpagedefault '5?5'
-jhcmds ('set sentence *',t);'set display *',calc t
+t=. (''-:y){::y;<'5?5' NB. y or default
+'jpage y must be string' assert 2=3!:0 t
+jhrcmds ('set sentence *',t);'set display *',calc t
 )
 
 calc=: 3 : 0

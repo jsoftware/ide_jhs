@@ -23,18 +23,9 @@ function click() {
 function ev_save_click() { click(); }
 function ev_runw_click() { click(); }
 function ev_runwd_click() { click(); }
-function ev_line_click() { click(); }
 function ev_lineadv_click() { click(); }
-function ev_sel_click() { click(); }
+function ev_comment_click() { click(); }
 function ev_chelp_click() { click(); }
-
-function ev_undo_click() { window.cm6_undo(); }
-function ev_redo_click() { window.cm6_redo(); }
-function ev_find_click() { window.cm6_findAll(); }
-function ev_next_click() { window.cm6_findNext(); }
-function ev_previous_click() { window.cm6_findPrev(); }
-function ev_replace_click() { window.cm6_replaceNext(); }
-function ev_repall_click() { window.cm6_replaceAll(); }
 
 function ev_saveasdo_click() { click(); }
 function ev_saveasx_enter() { click(); }
@@ -46,9 +37,11 @@ function ev_saveas_click() {
 
 function ev_saveasclose_click() { jhide("saveasdlg"); }
 
+function ev_find_click() { window.cm6_findAll(); }
 function ev_ro_click() { window.cm6_changeReadOnly(); }
 function ev_numbers_click() { window.cm6_changeLineNumbers(); }
 function ev_theme_click() { window.cm6_changeTheme(); }
+function ev_comment_click() { window.cm6_toggleComment(); }
 
 // ajax response - ts[0] error ; ts[1] sentence ; advance_line ts[2]
 function ajax(ts) {
@@ -75,21 +68,7 @@ function ajax(ts) {
   }
 }
 
-function ev_ijs_enter() { return true; }
-
-function ev_comma_ctrl() { jscdo("line"); }
-function ev_quote_ctrl() { jscdo("lineadv"); }
-function ev_slash_ctrl() { jscdo("sel"); }
-
-function ev_z_shortcut() { } // Handled by cm6.
-function ev_y_shortcut() { }
-function ev_p_shortcut() { jscdo("chelp"); }
-function ev_t_shortcut() { jscdo("ro"); }
-function ev_r_shortcut() { jscdo("runw"); }
-function ev_s_shortcut() { jscdo("save"); }
-function ev_h_shortcut() { jscdo("chelp"); }
-
-//function ev_2_shortcut(){ce.focus();}
+//! function ev_ijs_enter() { return true; }
 
 // override jscore.js defs
 function ev_close_click() { if (dirty) click(); else winclose(); }

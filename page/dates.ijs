@@ -3,6 +3,7 @@ coinsert'jhs'
 
 HBS=: 0 : 0
 jhclose''
+'title' jhh1 'date picker - weather chart' NB. header size 1
 'run'jhb'run'
 'choice'jhtext'';30
 jhbr
@@ -13,7 +14,7 @@ jhbr
 'cjsa'jhchart''
 )
 
-ev_create=: {{jhcmds 'set choice *warsaw 2026-01-01 2026-01-31'}}
+ev_create=: {{jhrcmds 'set choice *warsaw 2026-01-01 2026-01-31'}}
 
 ev_city_change=: {{
 'city start end'=. getvs'city start end'

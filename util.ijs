@@ -10,24 +10,29 @@ coclass'jhs'
 
 NB. routines to affect selected app from j
 
-NB. * mid sid type
-NB. * 'run';'';'click'
-NB. run event handler in form
-NB. runs in form locale
-formrun_jhs_=: 3 : 0
-jjs'findwindowbylocale("<LOC>").jscdo("<MID>","<SID>","<TYPE>");'hrplc 'LOC MID SID TYPE';(":;coname'');y
+NB. *__locale 'mid*sid type'
+NB. *__locale 'close click'
+NB. run event in form locale
+formrun=: 3 : 0
+'mid type'=. <;._1 ' ',deb y
+sid=. ''
+if. '*'e.mid do.
+ i=. mid i.'*'
+ sid=. }.i}.mid
+ mid=. i{.mid
+end.
+jjs'findwindowbylocale("<LOC>").jscdo("<MID>","<SID>","<TYPE>");'hrplc 'LOC MID SID TYPE';(":;coname'');mid;sid;type
 )
 
-NB. * 'set id *asdf';'alert * fubar'
+NB. *__locale 'set id *asdf';'alert * fubar'
 NB. javascript jhrcmds runs commands
-formset_jhs_=: 3 :0
+formset=: 3 :0
 a=. boxopen y
 a=. '"',~each '"',each a
 a=. a,each','
 a=. }:;a
 jjs'findwindowbylocale("<LOC>").jhrcmds([<CMDS>])'hrplc 'LOC CMDS';(":;coname'');a
 )
-
 
 cojhs=: jpage
 
@@ -51,8 +56,6 @@ default jev_get calls jpageget if ev_create is defined (indicates jpage)
  jpageget creates numbered locale for the page
 )
 
-NB.*.1 general utils 
-
 NB.* jhsclosepages jhsclosepages''
 jhsclosepages=: 3 : 0
 jjs 'closepages()'
@@ -72,14 +75,26 @@ else.
 end. 
 )
 
+optionhelp=: 0 : 0
+   jhsoption '' NB. list options
+   jhsoption 'nowrap tab row' NB. default
+
+nowrap wrap   - lines do not wrap or do 
+tab    term   - new page in tab or term
+row    column - term frames in row or column
+
+clear         - clear term log
+
+log output usually has &nbsp; (non-breakng space)
+and wrap will not break on them
+)
+
 NB.* 
-NB.* jhsoption - set term menu option(s)
+NB.*    jhsoption '' NB. help
 NB.*    jhsoption 'wrap'
 NB.*    jhsoption 'term row'
-NB.* wrap / nowrap - term log text
-NB.* tab  / term   - jpage default tab or term iframe
-NB.* row  / column - term iframes
 jhsoption=: 3 : 0
+if. ''-:y do. optionhelp return. end.
 r=. ''
 for_n. ;:tolower y do.
  select. n=. ;n
@@ -89,7 +104,8 @@ for_n. ;:tolower y do.
  case. 'nowrap' do. t=. 'wrapset(0)'
  case. 'term'   do. t=. 'termset(1)'
  case. 'tab'    do. t=. 'termset(0)'
- case.          do. (n,' not a  menu option')assert 0
+ case. 'clear'  do. t=. 'ev_clearwindow_click();'[LOG_jhs_=: ''
+ case.          do. (n,' not an option')assert 0
  end.
  r=. r,t,';'
 end.
@@ -98,7 +114,10 @@ jjs r
 
 NB.* 'test';'~addons/ide/jhs/app/app01.ijs'
 NB.* create clone of app at ~temp/test.ijs
-clone=: 3 : 0
+NB.* to run the app:'
+NB.*   load '~temp/test.ijs'
+NB.*   form=: 'test;10 10 600 600'' jpage ''
+appclone=: 3 : 0
 'snk src'=. y
 f=. snk,src
 src=. jpathsep src
@@ -113,17 +132,41 @@ t=. (<;'coclass''',snk,'''',LF) i}t
 t=. ;t
 fn=. '~temp/',snk,'.ijs'
 t fwrite fn
-edit fn
-load fn
-echo'created, loaded, and opened: ',fn
-echo'   ''',snk,';10 10 300 300'' jpage '''''
+i.0 0
 )
 
-NB.* jtestall'app' - app/page/demo
+applistsub=: 3 : 0
+fs=. 1 dir y
+r=. y,LF
+for_f. fs do.
+ f=. ;f
+ t=. fread f
+ n=. 20{.}.(f i:'/')}.f
+ i=. 1 i.~'jhh1' E. t
+ if. i=#t do.
+  a=. 'jhh1 not found'
+ else.
+  a=. 4}.i}.t
+  a=. }.(a i.'''')}.a
+  a=. (a i.''''){.a
+ end.
+ r=. r,' ',,n,,' ',a,LF
+end.
+r
+)
+
+NB.* list jhh1 headers from apps in app,page,page_js
+applist=: 3 : 0
+r=.   applistsub'~addons/ide/jhs/app/*.ijs'
+r=. r,LF,applistsub'~addons/ide/jhs/page/*.ijs'
+r=. r,LF,applistsub'~addons/ide/jhs/page_js/*.ijs'
+)
+
+NB.* jtestall'app' - app/page/page_js
 NB.*  run all files in folder with jpage
 NB.*  test suite for changes
 jtestall=: 3 : 0
-'bad y'assert (<y)e.'app';'demo';'page'
+'bad y'assert (<y)e.'app';'page';'page_js'
 f=. jpath'~addons/ide/jhs/',y
 n=. 1 dir f
 xywh=. 10 10 700 700
@@ -148,15 +191,14 @@ NB.* jpage - locale=. 'class;show;title' jpage data
 NB.*   show: '' JS var defaultopen or '_' no show or 'tab' or 'term' or x y [w h] window location
 NB.*   title: tab title -  empty class default
 NB.*   if class has ev_create -> create object on class (numbered locale)
-NB.*     'jwatch;10 10;abc' jpage '?4 6$100'
+NB.*     'watch;10 10;abc' jpage '?4 6$100'
 NB.*      app/page folder files have ev_create
 NB.* 
 NB.*  if class does not have ev_create then no object is created and data is ignored
 NB.*  jfile/... and demo folder files do not have ev_create
 NB.*    'jfile'jpage''
-NB.*    'jdemo01'jage''
 NB.* 
-NB.*  jpage show calls open which calls JS pageopen
+NB.*  jpage show calls open which calls javascript pageopen in browser
 NB.* 
 jpage=: 4 : 0
 d=. dltb each<;._2 x,';'
@@ -176,11 +218,6 @@ LASTY=: y
 title=: t
 ev_create a
 if. '_'~:s do. show s end.
-)
-
-NB.* jpagedefault - arg jpagedefault defaultarg - default if x is ''
-jpagedefault=: 4 : 0
-(''-:x){::x;<y
 )
 
 NB.* jpageget - jev_get for a page
@@ -207,9 +244,11 @@ title jhrx (getcss''),(getjs''),gethbs''
 )
 
 NB. return valid open show
-NB. '_' or 'tab' or 'term' or xywh
+NB. '_' or 'tab' or 'term' or 'defaultshow' xywh
+NB. defaultshow uses value in defaultshow_jhs_
 fixshow=: 3 : 0
 s=. deb y
+if. s-:'defaultshow' do. s=. ":defaultshow end.
 if. (<s) e. ('term';'tab';'';,'_') do. s return. end.
 s=. _".s
 'invalid show'assert -.(_ e. s)+.(-.0 2 4 e.~#s)+.0><./s
