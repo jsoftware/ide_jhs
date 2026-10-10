@@ -275,7 +275,7 @@ function framesize(t){
 function wrapset(b){
   var t= jbyid('log');
   t.style.overflowWrap= b?'break-word':'normal';
-  t.style.whiteSpace=   b?'normal'    :'nowrap';
+  t.style.whiteSpace=   b?'pre-wrap':'pre';
 }
 
 var pagepx= "300px";

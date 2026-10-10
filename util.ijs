@@ -312,7 +312,7 @@ jhtml_jhs_'<img src="http://latex.codecogs.com/svg.latex?',y,'" border="0"/>'
 NB.* jselect - jselect 'i.5',LF,'a=:2' - sentences into log for selection
 jselect=: 3 : 0
 if. 1=L.y do. y=. ;y,each LF end.
-jhtml_jhs_'<div class="transient" style="overflow-wrap: break-word; white-space: normal;">',(jhtmlfroma  y),'</div>'
+jhtml_jhs_'<div class="transient" style="overflow-wrap: break-word; white-space: pre;">',(jhtmlfroma  y),'</div>'
 )
 
 NB.* jjs - jjs 'alert("foo");' - eval javascript sentences in ajax response

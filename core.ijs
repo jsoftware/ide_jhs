@@ -85,8 +85,8 @@ try.
  elseif. (3~:type)+.-.'jev_'-:4{.dlb s do. NB. jev_... lines not logged
   NB. if. 3=type do. s=. PROMPT,dlb s end. NB. cleaning input is bad
   if. 3=type do.
-   NB.!!! t=. jhtmlfromaz s NB. &nbsp;
-   t=. jhfroma s
+   t=. jhtmlfroma s NB. &#32;
+   NB. t=. jhfroma s
   else.
    t=. jhtmlfroma s  NB. &#32;
   end. 
@@ -105,11 +105,22 @@ jev=: 3 : 0
 try.
  LASTNV=: NV
  ".t=. 'ev_',(getv'jmid'),'_',(getv'jtype'),' 0'
-catch. NB. catchd. in order to debug event handlers
+catch. NB.!!! catchd. in order to debug event handlers
+ LASTERROR=: 13!:12''
  e=. LF,'error: J event handler',LF,'locale: ',;coname''
  e=. e,LF,t,LF,13!:12''
  jhrcmds'alert *',e
 end.
+)
+
+NB. run event handler with debug
+NB. jevdebug_locale_''
+NB.!!! jhrajax (jhrcmds et al) will be wrong
+NB. htmlresponse=: [ and then when done, erase it
+jevdebug=: 3 : 0
+htmlresponse=: {{ echo y[erase'htmlresponse'}}
+NV=: LASTNV
+ ".t=. 'ev_',(getv'jmid'),'_',(getv'jtype'),' 0'
 )
 
 NB. get/post data - headers end with CRLF,CRLF

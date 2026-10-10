@@ -56,7 +56,7 @@ button:hover{cursor:pointer;}
 .jmenuspanright  {font-family:PC_FONTFIXED;float:right;pointer-events: none;}
 
 /* see ev_wrap_click() */
-#log{overflow-wrap:normal;white-space:nowrap;} /* jijx log wrap */
+#log{overflow-wrap:normal;white-space:pre;} /* jijx log (was nowrap */
 
 
 

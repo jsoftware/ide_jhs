@@ -21,7 +21,8 @@ if. 2=$$r do. r=. ,r,.LF end.
 utf8_from_jboxdraw jhtmlfroma fmt0 r
 )
 
-ev_run_click=: {{ jhrcmds 'set display *',calc getv'sentence' }}
+ev_run_click=: {{ 
+jhrcmds 'set display *',calc getv'sentence' }}
 
 ev_sentence_enter=: ev_run_click
 

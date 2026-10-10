@@ -24,7 +24,7 @@ jhrcmds 'set choice *',city,' ',start,' ',end
 ev_start_change=: ev_city_change
 ev_end_change=:   ev_city_change
 
-ev_run_click=: {{jhrcmds chart 20?20}}
+ev_run_click=: {{ jhrcmds chart 20?20 }}
 
 chart=: {{
 jcjs'reset'

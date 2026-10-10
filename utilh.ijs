@@ -120,19 +120,11 @@ canvasnum=: >:canvasnum
 )
 
 NB. convert a to html unless already html
-NB. space -> &#32
-NB. output starting with jmarka and ending with jmarkz,LF
-NB.  is assumed to be html and is not touched
+NB. &#32 - not &nbsp;
 jhtmlfroma=: 3 : 0
 if. (jmarka-:jmarkc{.y)*.jmarkz-:(-jmarkc){.}:y do. y return. end.
 jhfromax y
 )
-
-NB. same as jhtmlfroma except &nbsp;
-NB. jhtmlfromaz=: 3 : 0
-NB. if. (jmarka-:jmarkc{.y)*.jmarkz-:(-jmarkc){.}:y do. y return. end.
-NB. jhfroma y NB.!!! wrap
-NB. )
 
 bad=: 1{a. NB. this character hangs the browser
 
