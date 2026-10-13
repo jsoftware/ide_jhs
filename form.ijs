@@ -86,7 +86,7 @@ jhdivz=: '</div>'
 
 NB.* id jhd3_basic'' - div for d3 graphics 
 jhd3_basic=: 4 : 0
-r=. 'redspacer'jhdiv'&nbsp;'
+r=. 'redspacer'jhdiv' ' NB. not empty
 r=. r,LF,(x,'_error')jhdiv''
 r=. r,LF,(x,'_header')jhdiv''
 r=. r,LF,(x,'_title')jhdiv''
@@ -106,12 +106,6 @@ t=. t,' onfocus="jecfocus();"'
 t=. t,' onblur="jecblur();"'
 t=. t,'>',y,'</div>'
 t hrplc 'ID';x
-)
-
-NB.* id jhecwrap html - contenteditable div that wraps
-jhecwrap=: 4 : 0
-y=. y rplc '&nbsp;';'&nbsp;&ZeroWidthSpace;' NB. breaking space
-'<div  class="html" style="overflow-wrap: break-word; white-space: normal;">',y,'</div>'
 )
 
 NB.* jhflex html
@@ -259,7 +253,7 @@ esc=.  '<span class="jmenuspanright">',t,'</span>'
 menuids=: menuids,<to
 menutexts=: menutexts,<text
 menubacks=: menubacks,<menuid
-more=. '<span class="jmenuspanleft" >&gt&nbsp;</span>'
+more=. '<span class="jmenuspanleft" >&gt </span>'
 t=. '<button class="jmenuitem" <ID> ',jmon,' onclick="return menushow(''<TO>'')" ><VALUE></button>'
 t hrplc 'ID VALUE TO';x;(more,(jhfroma text),esc);to
 )
@@ -270,7 +264,7 @@ id=. vid x
 'value size class options'=. y addd 10;'jhtext';''
 size=. gdef size;10
 class=. gdef class;'jhpassword'
-value=. jhfromax value NB. special jhfroma
+value=. jhfroma value NB. special jhfroma
 t=. '<input type="password" id="<ID>" name="<ID>" class="<CLASS>" ',jeditatts,'placeholder="<VALUE>" '
 t=. t,'size="<SIZE>" onkeydown="return jev(event)" >'
 t=. t hrplc 'ID CLASS VALUE SIZE';id;class;value;size
@@ -367,7 +361,7 @@ id=. vid x
 'value size class options'=. y addd 10;'jhtext';''
 size=. gdef size;10
 class=. gdef class;'jhtext'
-value=. jhfromax value
+value=. jhfroma value
 t=. '<input type="text" id="<ID>" name="<ID>" class="<CLASS>" ',jeditatts,'value="<VALUE>" '
 t=. t,'size="<SIZE>" onkeydown="return jev(event)" >'
 t=. t hrplc 'ID CLASS VALUE SIZE';id;class;value;size

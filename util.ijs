@@ -84,9 +84,6 @@ tab    term   - new page in tab or term
 row    column - term frames in row or column
 
 clear         - clear term log
-
-log output usually has &nbsp; (non-breakng space)
-and wrap will not break on them
 )
 
 NB.* 
@@ -380,7 +377,7 @@ open=: 3 : 0
 ''open y
 :
 'a b s'=. x pageopenargs y
-jjs 'pageopen(''',a,''',''',b,''',''',s,''');'
+jjs q__=: 'pageopen(''',a,''',''',b,''',''',s,''');'
 )
 
 pageopenargs=: 3 : 0

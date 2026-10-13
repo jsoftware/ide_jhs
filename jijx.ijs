@@ -53,15 +53,8 @@ NB. called at start of input
 NB. ff/safari/chrome collapse empty div (hence bull)
 NB. empty prompt is &bull; which is removed if present from input
 urlresponse=: 3 : 0
-if. 0=#y do.
- t=. JZWSPU8
- PROMPT_jhs_=: JZWSPU8
-else.
- t=. (6*#y)$'&nbsp;'
- PROMPT_jhs_=: y
-end.
-t=. '<div id="prompt" class="log"  onpaste="mypaste(event)">',t,'</div>'
-d=. LOGN,t
+PROMPT_jhs_=: (0=#y){::y;JZWSPU8
+d=. LOGN,'<div id="prompt" class="log"  onpaste="mypaste(event)">',PROMPT_jhs_,'</div>'
 uplog''
 if. METHOD-:'post' do.
  if. CHUNKY do.
@@ -159,6 +152,7 @@ load'~addons/ide/jhs/loadx.ijs'
 
 NB. csscore has log css
 CSS=: 0 : 0 
+div:empty{display:none;}
 *{font-family:<PC_FONTFIXED>;font-weight:550;}
 *.fm   {color:<PC_FM_COLOR>;}
 *.er   {color:<PC_ER_COLOR>;}

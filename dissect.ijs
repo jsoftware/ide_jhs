@@ -154,6 +154,7 @@ ev_create=: 3 : 0
 wdcmds=: ''
 explocs=: '' NB. explorer locales
 mcan=: 'jhjcanvas;_'jpage ''
+jhrcmds''
 )
 
 destroy=: 3 : 0
@@ -363,7 +364,7 @@ if. 1=7{sd do. NB. shift key is request for tutorial
   tut=. hoverdo__caller ''
   hoverend__caller''
   if. #tut do.  qshow'tut' end.
-  jhrcmds'set tut *',jhfromax tut
+  jhrcmds'set tut *',jhfroma tut
   return.
 end. 
 
@@ -421,7 +422,7 @@ for_wdc. wdcmds do.
 
   t=.  'set tut *'
   if. t-:(#t){.b do.
-    t=. jhfromax_jhs_ (#t)}.b
+    t=. jhfroma_jhs_ (#t)}.b
     qshow'tut'
     jwd'set tut *',t
  end.
@@ -453,6 +454,7 @@ CSS=: 0 : 0
 
 ev_create=: 3 : 0
 mcan=: 'jhjcanvas;_'jpage ''
+jhrcmds''
 )
 
 NB. explorer window is closed with jhrcmds in parent

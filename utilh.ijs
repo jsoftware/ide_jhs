@@ -120,23 +120,15 @@ canvasnum=: >:canvasnum
 )
 
 NB. convert a to html unless already html
-NB. &#32 - not &nbsp;
 jhtmlfroma=: 3 : 0
-if. (jmarka-:jmarkc{.y)*.jmarkz-:(-jmarkc){.}:y do. y return. end.
-jhfromax y
+if. (jmarka-:jmarkc{.y)*.jmarkz-:(-jmarkc){.}:y do. }:y return. end. NB. drop traling LF from html
+jhfroma y
 )
 
-bad=: 1{a. NB. this character hangs the browser
-
-NB. &amp is a problem - '&amp;&nbsp;'
+NB. html from ascii - '&#32' for space
+NB. 1{a. hangs the browser
 jhfroma=: 3 : 0
-y rplc '<';'&lt;';'>';'&gt;';'&';'&amp;';'"';'&quot;';CRLF;'<br>';LF;'<br>';CR;'<br>';' ';'&nbsp;';bad;''
-)
-
-NB. special version with normal space entity instead of &nbsp; - used in jhtext and jhpassword
-NB. javascript inverse: jtfromh
-jhfromax=: 3 : 0
-y rplc '<';'&lt;';'>';'&gt;';'&';'&amp;';'"';'&quot;';CRLF;'<br>';LF;'<br>';CR;'<br>';' ';'&#32;';bad;''
+y rplc '<';'&lt;';'>';'&gt;';'&';'&amp;';'"';'&quot;';CRLF;'<br>';LF;'<br>';CR;'<br>';' ';'&#32;';(1{a.);''
 )
 
 NB. app did not send response - send one now

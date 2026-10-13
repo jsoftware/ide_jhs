@@ -145,7 +145,7 @@ function check(v)
  var n=document.getElementsByClassName("jhchk");
  for(var i=0;i<n.length;++i)
  {
-  n[i].innerHTML= marks[v]+'&nbsp;';
+  n[i].innerHTML= marks[v]+'&#32;';
   n[i].setAttribute("data-jhscheck",v);
   //("checkbox"==n[i].getAttribute("type")){n[i].checked=v;}
  }

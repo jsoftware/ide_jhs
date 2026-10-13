@@ -27,6 +27,7 @@ dbx_z_=: 3 : 0
 9!:29[0 NB. don't run twice
 dbxxerr_z_=: 13!:12''
 dbxxstk_z_=: 13!:13''
+dbxxin_z_=: 1 NB.!!!
 try.
  d=. getdata_jdebug_''
  NB. term display of last error if not stop

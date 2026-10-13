@@ -58,8 +58,6 @@ button:hover{cursor:pointer;}
 /* see ev_wrap_click() */
 #log{overflow-wrap:normal;white-space:pre;} /* jijx log (was nowrap */
 
-
-
 .jhb{background-color:PC_BUTTON;border: 1px solid black;border-radius:6px;height:2em;}
 
 /* .jhchk{} .jhrad{} .jhab{} */

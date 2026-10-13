@@ -83,13 +83,7 @@ try.
   CHUNKY_jhs_=: 1
  
  elseif. (3~:type)+.-.'jev_'-:4{.dlb s do. NB. jev_... lines not logged
-  NB. if. 3=type do. s=. PROMPT,dlb s end. NB. cleaning input is bad
-  if. 3=type do.
-   t=. jhtmlfroma s NB. &#32;
-   NB. t=. jhfroma s
-  else.
-   t=. jhtmlfroma s  NB. &#32;
-  end. 
+  t=. jhtmlfroma s
   if. '<br>'-:_4{.t do. t=. _4}.t end.
   LOGN=: LOGN,'<div class="',class,'">',t,'</div>'
  end.
@@ -117,7 +111,7 @@ NB. run event handler with debug
 NB. jevdebug_locale_''
 NB.!!! jhrajax (jhrcmds et al) will be wrong
 NB. htmlresponse=: [ and then when done, erase it
-jevdebug=: 3 : 0
+xxxjevdebug=: 3 : 0
 htmlresponse=: {{ echo y[erase'htmlresponse'}}
 NV=: LASTNV
  ".t=. 'ev_',(getv'jmid'),'_',(getv'jtype'),' 0'
@@ -513,7 +507,6 @@ if. _1=nc<'TARGET' do. TARGET=: '_blank' end.
 if. _1=nc<'OKURL' do. OKURL=: '' end. NB. URL allowed without login
 )
 
-NB. leading &nbsp; for Chrome delete all
 welcome=: 0 : 0
 <span><font style="font-size:2rem; color:blue; padding:0 8px 0 16px;" >J</font>
 )
