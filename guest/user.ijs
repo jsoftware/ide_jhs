@@ -8,7 +8,7 @@ TIPX_jhs_=: 'u'
 QRULES_jhs_=: 1 NB. close tabs - no exit
 
 welcome_jhs_=: 0 : 0
-<div>&nbsp;<font style="font-size:2em; color:red;" >JHS - User</font></div>
+<div><font style="font-size:2em; color:red;" >JHS - User</font></div>
 )
 
 init_jhs_''

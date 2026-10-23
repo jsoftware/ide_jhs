@@ -31,8 +31,8 @@ b=. t=LF
 NB. get help.txt with generated sections
 gethelptxt=: 3 : 0
 t=. CR-.~fread'~addons/ide/jhs/help.txt'
-n=. 'ABOUT GRULES WIKI TOOL TOUR CATEGORIES '
-t hrplc n;JVERSION;tool_guest_rules;(getwiki'');(gettool'');(gettour'');(getcategories'')
+n=. 'ABOUT GRULES WIKI TOOL TOUR CATEGORIES DEBUG STDLIB'
+t hrplc n;JVERSION;tool_guest_rules;(getwiki'');(gettool'');(gettour'');(getcategories'');(getdebug'');dbhelp_z_
 )
 
 gethelp0=: 3 : 0
@@ -44,7 +44,9 @@ s=. ;{.each h
 s=. }.(#'start*** ')}.each s
 s=. (<'   jhshelp '''),each s,each ''''
 s=. s-.gethelpsub'' NB. remove from main index those pointed at by others
-'⇧⇧1 - all help',LF,'term - recall line and run it',LF,;s,each LF
+t=. 'recall line and run it',LF,(;s,each LF),LF
+t=. t,'   ''jhelp''jpage'''' NB. page with all helps',LF
+t=. t,'   ''jdoc'' jpage'''' NB. verbs/... for html/events/...'
 )
 
 NB. get helps that are referred to by another help
@@ -108,6 +110,11 @@ gettool=: 3 : 0
 ;(<'   jhshelp '),each(<;._2 tool_names),each LF 
 )
 
+getdebug=: 3 : 0
+;(<'   jhshelp '),each(<;._2 debug_names),each LF 
+)
+
+
 gettour=: 3 : 0
 ;(<'   jhstour '),each(<;._2 tour_names),each LF
 )
@@ -139,7 +146,6 @@ jselect t,(<'   jhsrun '),each'''',~each'''',each titles
 )
 
 wiki_names=: 0 : 0
-''
 'voc'     NB. NuVoc vocabulary
 'i.'      NB. edit i. for others - click Dyad for x i. y
 'if.'     NB. control words
@@ -160,11 +166,20 @@ tool_names=: 0 : 0
 'table'   NB. spreadsheet
 'node'    NB. server
 'jd3'     NB. D3 javascript plot library
-'debugjs' NB. javascript
+)
+
+debug_names=: 0 : 0
+'debug intro'
+'debug gui'
+'debug stop manager'
+'debug keyboard'
+'debug page code'
+'debug dissect'
+'debug stdlib'
+'debug javascript'
 )
 
 tour_names=: 0 : 0
-''
 'overview' NB. start here!
 'app'      NB. developing an app
 'chart'    NB. plot

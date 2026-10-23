@@ -494,7 +494,7 @@ while. #t do.
  i=. t i. '>'
  t=. }.i}.t
 end.
-r=. r rplc '&nbsp;';' ';'&lt;';'<';'&gt;';'>';'&amp;';'&';'&#160;';' ' NB. non-breaking space
+r=. r rplc '&nbsp;';' ';'&lt;';'<';'&gt;';'>';'&amp;';'&';'&#160;';' ' NB. non-breaking space ok
 )
 
 NB. x is total ms for animation

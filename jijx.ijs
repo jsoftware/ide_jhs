@@ -25,8 +25,6 @@ jhmenugroupz''
 'jijs'    jhmenuitem 'edit new temp file';'n'
 'jpacman' jhmenuitem 'package manager'
 'jlocale' jhmenuitem 'explore locales'
-'allhelp' jhmenuitem 'all help';'1'
-'jdoc'    jhmenuitem 'create app';'2'
 'closepages' jhmenuitem 'close all'
 jhmenugroupz''
 

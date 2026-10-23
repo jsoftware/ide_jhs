@@ -568,6 +568,7 @@ jfe 1
 )
 
 NB. load rest of JHS core
+load__'~addons/ide/jhs/jdebug.ijs'
 load__'~addons/ide/jhs/util.ijs'
 load__'~addons/ide/jhs/utilh.ijs'
 load__'~addons/ide/jhs/form.ijs'
@@ -602,7 +603,6 @@ jev_get_jfif_=:    3 : (stub'jfif')
 jev_get_jpacman_=: 3 : (stub'jpacman')
 jev_get_jlogin_=:  3 : (stub'jlogin')
 jev_get_jfilesrc_=:3 : (stub'jfilesrc')
-jev_get_jdebug_=:  3 : (stub'jdebug')
 jev_get_jlocale_=: 3 : (stub'jlocale')
 
 NB. simple wget with sockets - used to get google charts png

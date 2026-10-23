@@ -13,6 +13,7 @@ NB. routines to affect selected app from j
 NB. *__locale 'mid*sid type'
 NB. *__locale 'close click'
 NB. run event in form locale
+NB.! should be extended to work with named locale with findwindowbyname
 formrun=: 3 : 0
 'mid type'=. <;._1 ' ',deb y
 sid=. ''
@@ -25,14 +26,23 @@ jjs'findwindowbylocale("<LOC>").jscdo("<MID>","<SID>","<TYPE>");'hrplc 'LOC MID 
 )
 
 NB. *__locale 'set id *asdf';'alert * fubar'
+NB. *_debug_ 'set id *asdf'
 NB. javascript jhrcmds runs commands
-formset=: 3 :0
+formcmds=: 3 :0
 a=. boxopen y
 a=. '"',~each '"',each a
 a=. a,each','
 a=. }:;a
-jjs'findwindowbylocale("<LOC>").jhrcmds([<CMDS>])'hrplc 'LOC CMDS';(":;coname'');a
+if. -.({.;coname'')e. Alpha_j_ do.
+ t=. 'findwindowbylocale("<LOC>").jhrcmds([<CMDS>])'
+else.
+ t=. 'findwindowbyname("<LOC>").jhrcmds([<CMDS>])'hrplc 'LOC CMDS';(":;coname'');a
+end.
+t=. t hrplc 'LOC CMDS';(":;coname'');a
+jjs 'try {',t,'} catch(e){ ;}'
+i.0 0
 )
+
 
 cojhs=: jpage
 
@@ -54,6 +64,24 @@ jpage create numbered locale for the page
 
 default jev_get calls jpageget if ev_create is defined (indicates jpage)
  jpageget creates numbered locale for the page
+)
+
+NB.* hbshtml_locale_'' -  show HBS sentences and html
+hbshtml=: 3 : 0
+s=.<;._2 HBS
+seebox s,.LF-.~each jhbsex each s
+)
+
+NB.* gethshortcuts_jijx_'''
+getshortcuts=: 3 : 0
+NB. d=. <;._2 ('jhbsjs_',y,'_')~
+d=. <;._2 jhbsjs
+a=. 8{"1 each d
+i=. /:a
+b=. i{d
+b=. 8}.each b
+r=. >b-.each <'=";'
+r=. r,LF,( ~.tolower AlphaNum_j_)-.;a
 )
 
 NB.* jhsclosepages jhsclosepages''
@@ -272,6 +300,20 @@ fmt0=:3 :0 L:0
 if.#$y do. ,@(,"1&LF)"2^:(_1 + #@$) ":y else. ":y end.
 )
 
+NB. [rows,cols] * noun
+NB. show upper left corner of noun
+corner=: 3 : 0
+6 50 corner y
+:
+d=. fmt0_jhs_ ":y
+d=. ><;._2 d,(LF~:{:d)#LF
+'r c'=. $d
+d=. (x<.$d){.d
+if. r>{.x  do. d=. d,'.' end.
+if. c>{:x do. d=. d,.'.' end.
+;d,.LF
+)
+
 NB. jijs  run line - truncated display
 tell=: 3 : 0
 t=. fmt0 ":y
@@ -309,7 +351,7 @@ jhtml_jhs_'<img src="http://latex.codecogs.com/svg.latex?',y,'" border="0"/>'
 NB.* jselect - jselect 'i.5',LF,'a=:2' - sentences into log for selection
 jselect=: 3 : 0
 if. 1=L.y do. y=. ;y,each LF end.
-jhtml_jhs_'<div class="transient" style="overflow-wrap: break-word; white-space: pre;">',(jhtmlfroma  y),'</div>'
+jhtml jhdiv (jhtmlfroma  y);'transient'
 )
 
 NB.* jjs - jjs 'alert("foo");' - eval javascript sentences in ajax response

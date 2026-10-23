@@ -2,7 +2,6 @@ coclass'app07'
 coinsert'jhs'
 
 NB. sentences to create html elements
-NB. jhbshtml_jdemoxx_'' shows HBS html
 HBS=: 0 : 0
 jhclose''
 'title' jhh1 'chartjs'

@@ -5,99 +5,126 @@ z locale names
  dbx... prefix indicates JHS db verbs
  dbxx.. prefix indicates JHS db nouns
 
- dbxxerr - 13!:12'' - when dbx is run
- dbxxstk - 13!:13'' - when dbx is run
+dbx - utility verb - dbx'' for usage
+ 
+latent expressions update jdebug page
+ 13!:15 - dblxs - updates on suspension
+  9!:27 - updates on return to immex
+
+ dbxclear  - called by latent expression (9!:27)
 
 prior some late 9.7 fix a 13!:13'' could get an error for dbl (foo__dbl)
  that overwrote original error
 
 avoid assert as this stuff runs with debug enabled
 
-latent expressions update jdebug page
- 13!:15 updates on suspension
-  9!:27 updates when no suspension
-
-9.6 changed 13!:13 to have only the monad or dyad defn
- also has some new cols
+9.6 changed 13!:13 to have only the monad or dyad defn - also has new cols
 ) 
 
-NB. update jdebug page - called by debug or dbxup latent expression
-NB. set dbxxerr and dbxxstk now for all subseguent users
-dbx_z_=: 3 : 0
+3 :0''
+if. 0~:nc<'dbxline_z_' do. dbxline_z_=: '' end.
+)
+
+NB. called by 9!:27 as set by dbup
+dbxupdate_z_=: 3 : 0
 9!:29[0 NB. don't run twice
-dbxxerr_z_=: 13!:12''
-dbxxstk_z_=: 13!:13''
-dbxxin_z_=: 1 NB.!!!
-try.
- d=. getdata_jdebug_''
- NB. term display of last error if not stop
- if. 18~:dberr'' do.
-  if. 0~:+/'*'=;8{"1 [dbxxstk do. jhtml_jhs_ '<div class="transient" style="color:red;">',( jhfroma_jhs_;}.each<;.2 dbxxerr),'</div>' end.
- end. 
- a=. jurlencode_jhs_ }:;JASEP_jhs_,~each d
- jjs_jhs_'var w= findwindowbyname("jdebug"); if(w==null) alert("required: debug page (term menu>system pages>debug)"); else w.update("',a,'");'
-catch.
- echo 'error in jdebug',LF,dbxxerr
-end. 
+a=. jurlencode_jhs_ }:;JASEP_jhs_,~each getdata_jdebug_''
+jjs_jhs_'var w= findwindowbyname("jdebug"); if(w==null) alert("required: debug page (term menu>system pages>debug)"); else w.update("',a,'");'
+)
+
+NB. show locals in term
+dbxlocals_z_=: 3 : 0
+ try.
+  s=. >{:1{dblocals'' NB. first 2 are dbx amd dbxlocals
+  ns=. 0{"1 s
+  ds=. 1{"1 s
+
+  t=. ''
+  for_i. i.#ds do.
+   a=. 4 100 corner_jhs_>i{ds
+   if. 1=+/LF=a do.
+    t=. t,jhdiv_jhs_ (8{.;i{ns),' ',(jhfroma_jhs_ a)
+   else.
+    t=. t,jhdiv_jhs_ ;i{ns
+    t=. t,jhdiv_jhs_ (jhfroma_jhs_ a)
+   end. 
+   t=. t,jhhr_jhs_
+  end.
+  jhtml_jhs_ jhdiv_jhs_ t;'transient'
+ catch. 
+  echo 'error in jdebug',LF,13!:12''
+ end.
 i.0 0
 )
 
 dbxup_z_=: 3 : 0
-9!:27'dbx'''''
+9!:27'dbxupdate'''''
 9!:29[1
-y
+''
 )
 
 NB. move > to line
-dbxline_z_=: 3 : 0
-n=. 0{::1{::dbxxstk
+dbxgoto_z_=: 3 : 0
+n=. 0{::1{::13!:13''
 dbss (n,' * : * ;'),dbsq''
 JMP_jdebug_=: 1 NB. get rid of all stops after jmp
-13!:7 y
+dbjmp y
 )
 
 NB. clear stack
 dbxreset_z_=: 3 : 0
-if. 1<#13!:13'' do. NB. 13!:13 ok here
- dblxs'' NB. turn off db lx
- 9!:27'dbxreset''''' NB. dbxup should allow dbxxstk
+if. 1<#13!:13'' do.
+ 9!:27'dbxreset'''''
  9!:29[1
  dbcut''
 else.
- dblxs'dbx''''' NB. turn on db lx
  dbxup''
 end. 
 )
 
-dblxs'dbx''''[9!:29[0' NB. jhs debug latent expression
+NB. display error stack
+dbxstack_z_=: 3 : 0
+s=. 2}.13!:13'' NB. first 2 are dbx amd dbxstack
+'name en ln nc defn args'=. <"1 [ 0 1 2 3 4 6{|:s
+fem=. en{'';9!:8''
+fem=. (_6*(_6{.each fem)=<' error')}.each fem
+args=. ;#each args
+
+NB. class can be wrong for anonymous derived verb - fnc not included in display
+fnc=. <"0 (nc+each (nc=<3)*args=2){'nacmd'
+fln=. '[',each ((args=2){'';':'),        each(":each ln),each']'
+d=. <;._2 each LF,~each defn
+i=. ;>:each ln
+i=. i<.<:;#each d NB. tacit verb has only 1 line
+fld=. ;each i{each d
+seebox_jhs_ fem,.name,.fln,.fld
+)
 
 coclass'jdebug'
 coinsert'jhs'
-
-JMP=: 0 NB. flag to clear all stops for jmp
-nosus=: 'no suspension'
 
 HBS=: 0 : 0
 jhmenu'debug'
 'menu0'       jhmenugroup ''
 'help'        jhmenuitem'help - shows in term'
-'dbhelp'      jhmenuitem'standard library - shows in term'
 'close'       jhmenuitem 'close';'x'
 jhmenugroupz''
 
+'debug'    jhb'debug'
+'line'     jhtext '';50
 'stops'    jhdiv'<STOPS>'
 jhhr
 'stack'    jhdiv '<STACK>'
 'dbrun'    jhb'run'
-'dbover'   jhb'thru'
 'dbinto'   jhb'into'
+'dbover'   jhb'over'
 'dbout'    jhb'out'
 'dbcut'    jhb'cut'
-'dbjmp'    jhb'>'
-'val'      jhtext '';2
+'dbjmp'    jhb'goto'
+'val'      jhtext '0';2
 'dbreset'  jhb'reset'
-'nox'      jhb'no x'
 'dostack'  jhb'stack'
+'dolocals' jhb'locals'
 'dissect'  jhb'dissect'
 
 jhflex 'sel'jhdiv'<FILES>'
@@ -109,43 +136,21 @@ CSS=: 0 : 0
 #sel{PS_FLEX}  
 )
 
-help=: 0 : 0
-x marks stops - click to set/unset
-> marks current line
-
-run  - run until error or stop or end
-thru - run - temp stop on next line
-into - run - temp stop in first called explicit defn 
-out  - run - temp stop on next line in caller
-cut  - run - temp stop on current line in caller
->    - move > to line in input field
-reset- stack (dbs'') to be empty
-no x - remove stops 
-
-   dbxsm''           NB. stop manager
-)
+JMP=: 0 NB. flag to clear all stops for jmp
+nosus=: 'no suspension'
 
 dostack=: 3 : 0
-t=. '<div class="transient">'
-t=. t,jhfroma stack 3
-t=. t,'</div>'
-jhtml t
+jhtml jhdiv (stack 3);'transient'
+i.0 0
+)
+
+dolocals=: 3 : 0
+jhtml jhdiv (dbxlocals'');'transient'
 i.0 0
 )
 
 dohelp=: 3 : 0
-t=. '<div class="transient">'
-t=. t,jhfroma help
-t=. t,'</div>'
-jhtml t
-i.0 0
-)
-
-dodbhelp=: 3 : 0
-t=. '<div class="transient">'
-t=. t,jhfroma dbhelp
-t=. t,'</div>'
-jhtml t
+jhtml jhdiv (jhfroma getdebug_jijx_'');'transient'
 i.0 0
 )
 
@@ -171,24 +176,11 @@ ev_files_click=: 3 : 0
 n=. 0".getv'jsid'
 if. n e. stops do. stops=: stops-.n else. stops=: /:~stops,n end.
 monad setstops namex
-reply''
+jhrajax }:;JASEP_jhs_,~each getdata_jdebug_''
 )
 
 ev_dissect_click=: 3 : 0
 jhrajax 'dissect ',quote ;ln{defn
-)
-
-dbxsm_usage=: 0 : 0
-stops on blank or NB. lines do not work
-
-   dbxsm''          NB. usage
-   dbxsm [ name [ monad lines or * [ : dyad lines or *]]]
-   dbxsm'f'         NB. remove f stops
-   dbxsm'f *:*'     NB. stop f on all lines
-   dbxsm'f 2 : 5 7' NB. stop f on monad 2 and dyad 5 7
-   
-   dbxsm'+'         NB. report stops
-   dbxsm'-'         NB. remove all stops
 )
 
 splitind=: ('__'&E. (i.) 1:) ({. ; 2: }. }.) ] NB. split at first __
@@ -198,11 +190,60 @@ n=. 0{::splitind y
 ('_'={:n){::n; ((}:n)i:'_'){.n NB. invalid name is allowed
 )
 
-dbxsm_z_=: 3 : 0
+dbx_z_=: 3 : 0
 t=. dltb y
-if. 0=#t do. dbxsm_usage_jdebug_ return. end.
-if. '+'={.t do. >'''',~each(<'dbxsm'''),each dltb each <;._2 dltb dbsq'' return. end.
+if. 0=#t do. jselect_jhs_ jhshelp'debug keyboard' return. end.
+i=. (t i.' ')
+n=. }.i}.t
+select. i{.t
+case. 'line'do. dbxline_z_=: n 
+case. 'debug' do. 
+ if. 1<#13!:13'' do. 'stack not empty' return. end.
+ if. 0~:#n do. dbxline_z_=: n end.
+ formcmds_jdebug_ 'set line *',dbxline_z_
+ 9!:27 dbxline_z_,'[dbxup'''''
+ 9!:29[1
+
+NB. ops with 9!:27
+case. 'run'     do.
+ 9!:27'dbrun  dbxup'''''
+ 9!:29[1
+case. 'goto'    do.
+ if. ln_jdebug_=0".n do. i.0 0 return. end.
+ 9!:27'dbxgoto ',(":0".n),'[dbxup'''''
+ 9!:29[1
+case. 'dissect' do.
+ 9!:27 'dissect ',quote ;ln_jdebug_{defn_jdebug_
+ 9!:29[1
+
+NB. dbxup needed only when dbxls does not run
+case. 'into'    do. dbinto dbxup''
+case. 'over'    do. dbover dbxup''
+case. 'out'     do. dbout  dbxup''
+case. 'cut'     do. dbcut  dbxup''
+case. 'reset'   do. dbxreset[ dbxup''
+
+NB. ops that return results
+case. 'stack'   do. dbxstack'' return.
+case. 'locals'  do. dbxlocals'' return.
+case. 'stop'    do. dbxstop n return.
+case.           do. 'not a dbx op' return.
+end.
+i.0 0
+)
+
+dbxstop_z_=: 3 : 0
+if. ';'e. y do.
+ a=. (<;._2 y,';')-.a:
+ for_b. a do. dbxstop ;b end.
+ return.
+end. 
+
+t=. dltb y
+if. 0=#t do. jselect_jhs_ jhshelp'debug stop manager' return. end.
+if. '+'={.t do. >'''',~each(<'dbx'''),each dltb each (<'line ',dbxline_z_),(<'stop '),each<;._2 dltb dbsq'' return. end.
 if. '-'={.t do. dbss'' return. end.
+
 i=. t i.' '
 d=. i}.t
 n=. i{.t
@@ -216,7 +257,7 @@ d=. (-.d-:,'*'){:: d;":~./:~_".d
 if. '_'e.m,d do. 'invalid number' return. end.
 dbss (dbsq''),';',~n,' ',m,(0~:#d)#' : ',d
 cleanstops_jdebug_''
-dbxsm'+'
+dbxstop'+'
 )
 
 NB. keep last, discard empty, sort
@@ -285,7 +326,10 @@ getdata=: 3 : 0
 if. JMP do. JMP=: 0[dbss(>:';'i.~dbsq'')}.dbsq'' end.
 cleanstops''
 stps=. (0~:#dbsq''){::'no stops';dbsq''
-t=. dbxxstk NB. dbxxstk
+t=. }.13!:13''
+n=. +/0~:;1{"1 t
+erron=. (1<n)#LF,~(":n),' errors on stack'
+
 s=. ;8{"1 t
 i=. s i. '*'
 if. i=#s do. '';'';nosus;stps return. end.
@@ -294,7 +338,6 @@ s=. i{t
 name=:  n
 namex=: basename n
 monad=: (class=3)*.1=#args
-
 d=. <;._1 ;LF,;4{s
 if. 1~:#d do.
   d=. }.}:d
@@ -327,94 +370,78 @@ NB. e=. 1{::s
 NB. try. a=. (<:(0=e){e,34){::9!:8'' catch. a=. ":e end.
 NB. a=. (0{::s),'[',(':'#~-.monad),(":line),'] ',a
 
-n=. +/0~:;1{"1 dbxxstk NB. dbxxstk
-a=. (1<n)#LF,~(":n),' errors on stack'
-a=. a,dbxxerr
-
+a=. erron,13!:12''
 r=. r;(":line);(jhfroma a);stps
 )
 
-NB. display error stack
-stack=: 3 : 0
-s=. }.dbxxstk NB. first engry is dbx
-'name en ln nc defn args'=. <"1 [ 0 1 2 3 4 6{|:s
-fem=. en{'';9!:8''
-fem=. (_6*(_6{.each fem)=<' error')}.each fem
-args=. ;#each args
-
-NB. class can be wrong for anonymous derived verb - fnc not included in display
-fnc=. <"0 (nc+each (nc=<3)*args=2){'nacmd'
-fln=. '[',each ((args=2){'';':'),        each(":each ln),each']'
-d=. <;._2 each LF,~each defn
-i=. ;>:each ln
-i=. i<.<:;#each d NB. tacit verb has only 1 line
-fld=. ;each i{each d
-seebox fem,.name,.fln,.fld
-)
-
 jev_get=: 3 : 0
-dbxxerr_z_=: 13!:12''
-dbxxstk_z_=: }.13!:13'' NB. drop jev_get_jdebug_
+dbr 1
+dblxs'dbxupdate'''''
+jsdata=: '"uninitialized"' NB. set jsdata so jhrcmds will set it 
+jhrcmds'set line *',dbxline_z_
 'jdebug' jhrx (getcss''),(getjs''),gethbs'FILES CURLINE STACK STOPS';getdata''
 )
 
-reply=: 3 : 0
-jhrajax }:;JASEP_jhs_,~each getdata_jdebug_''
-)
-
-ev_nox_click=: 3 : 0
-monad clearstops namex
-reply''
+ev_close_click=: 3 : 0
+dbr 0
+dblxs''
+jhrajax''
 )
 
 JS=: 0 : 0
-
-var line;
 
 function ajax(ts)
 {
  var t;
  jbyid("sel").innerHTML= ts[0];
- line= ts[1];
  jbyid("stack").innerHTML= ts[2];
  jbyid("stops").innerHTML= ts[3];
- t= jbyid("files*"+line); 
+ t= jbyid("files*"+ts[1]); 
  if(null!=t) t.scrollIntoView({behavior: 'smooth', block: 'center'});
 }
 
 function update(ts){ajax(ts= decodeURIComponent(ts).split(JASEP));}
 
+// jijxrunx works ev_into_click does not because update inside ajax request
+
 function jdoit(t)
 {
  if("no suspension"==jbyid("stack").innerHTML) return;
- if(t=="dbxline")
- {
-  v= parseInt(jbyid("val").value);
-  v= " "+((isNaN(v)) ? 0 : v);
- }
- else
-  v= "''";
- jijxrunx(t+" dbxup"+v,false);
+ jijxrunx("dbx'"+t+"'",false);
 }
 
-function ev_body_load(){}
+//function ev_body_load(){}
 function ev_files_click() {jdoajax(["val"]);}
-function ev_dbrun_click()    {jdoit('dbrun');}
-function ev_dbover_click()   {jdoit('dbover');}
-function ev_dbinto_click()   {jdoit('dbinto');}
-function ev_dbout_click()    {jdoit('dbout');}
-function ev_dbjmp_click()    {if(line!=jbyid("val").value) jdoit('dbxline');}
-function ev_val_enter()      {ev_dbjmp_click();}
-function ev_dbcut_click(){jdoit('dbcut');}
-function ev_dbreset_click()  {jdoit('dbxreset');}
-function ev_nox_click(){jdoajax();}
+
+function ev_debug_click(){
+ var t= 'debug '+jbyid('line').value;
+ t= t.replaceAll("'","''");
+ jijxrunx("dbx'"+t+"'",false);
+ //jijxrunx("dbx "+t,false);
+}
+function ev_line_enter(){ev_debug_click();}
+
+function ev_dbrun_click()  {jdoit('run');}
+function ev_dbinto_click() {jdoit('into');}
+function ev_dbover_click() {jdoit('over');}
+function ev_dbout_click()  {jdoit('out');}
+function ev_dbcut_click()  {jdoit('cut');}
+function ev_dbreset_click(){jdoit('reset');}
+function ev_dostack_click(){jdoit('stack');}
+function ev_dolocals_click(){jdoit('locals');}
+
+function ev_dissect_click(){jdoit('dissect');}
+
+function ev_dbjmp_click()  {
+  var v= parseInt(jbyid("val").value);
+  jdoit('goto '+((isNaN(v)) ? 0 : v));
+}
+function ev_val_enter(){ev_dbjmp_click();}
+
 function ev_help_click(){jijxrunx("dohelp_jdebug_''");}
-function ev_example_click(){jijxrunx("doexample_jdebug_''");}
-function ev_nuvoc_click(){jijxrunx("jhswiki'nuvoc'");}
 function ev_dbhelp_click(){jijxrunx("dodbhelp_jdebug_''");}
-function ev_dostack_click(){jijxrunx("dostack_jdebug_''");}
 
-function ev_dissect_click(){jdoajax([]);}
-function ev_dissect_click_ajax(ts){jijxrunx(ts[0]);};
-
+// override jscore.js defs - to reset debug state
+function ev_close_click() { jdoajax([]); }
+function ev_close_click_ajax(){ winclose(); }
 )

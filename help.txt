@@ -5,8 +5,7 @@ this help is result of gethelp0''
 welcome - browser interface to J
 
 if new to the JHS interface to J
- take a quick tour by clicking button
- under the menu when you start JHS
+ click menu bar overview for a quck tour
 
 the tour can be useful to refresh
  your memory or to get pointers
@@ -91,35 +90,102 @@ browser provides event data to in a dictionary accessed by getv
 J passes cmds back to browser as JSON built from jhrcmds arg
 
 ***start debug
+<DEBUG>
+
+***start debug intro
 debug facilities: suspend execution at stop or error
- examine/modify values and definitions and continue
+examine/modify values and definitions and continue
 
 practice before you need it for real!
-☰.system pages.debug - show debug page
-best if you can see both debug and term page
+start debug page from term menu or with
+   'jdebug;10 10'jpage'' NB. best if you can see term and debug
 
-   dbr 1       NB. enable debug
-   calendar'a' NB. will stop on error
-   y=. 0       NB. fix error
+   calendar 'a' NB. will stop on error
+   y=. 0        NB. fix error
    
-press thru button to step through verb
- check values as you move along
- step until the verb is finished
+press over button to run to next line
+check values as you move along
+press over until the verb is finished
  
-   dbxsm'calendar 0:0' NB. stop on monadic/dyadic line 0
-   calendar 0
+   dbx'stop calendar :5' NB. stop on dyadic line 5
+   calendar 0 NB. will stop on line 5
+press run
 
-press run button to run to stop on dyadic line 0
+***start debug gui
+debug   - execute - arg or text box or line value
+line    - line to execute
 
-press thru button to step through
+run     - run until error or stop or end
+into    - run - temp stop in first called explicit defn 
+over    - run - temp stop on next line
+out     - run - temp stop on next line in caller
+cut     - run - temp stop on current line in caller
+goto    - move > to line in text box
+reset   - stack (dbs'') to be empty
+stack   - show stack in term
+locals  - show locals in term
+dissect - current line
 
-***start dissect
+x marks stops - click to set/unset
+> marks current line
+
+***start debug keyboard
+   dbx'...' NB. control debug from the keyboard
+most dbx commands map direcly to the gui
+dbx arg is the same as the gui button name
+
+   dbx'over'  NB. same as pressing gui over button
+   dbx'goto 3'
+   dbx'reset'
+
+   dbx'line ...'  NB. set line
+   dbx'debug'     NB. execute line
+   dbx'debug ...' NB. execute new line
+
+***start debug stop manager
+stops on blank or NB. lines do not work
+
+   dbx'stop'           NB. usage
+   dbx'stop [ name [ monad lines or * [ : dyad lines or *]]]
+   dbx'stop f'         NB. remove f stops
+   dbx'stop f *:*'     NB. stop f on all lines
+   dbx'stop f 2 : 5 7' NB. stop f on monad 2 and dyad 5 7
+   
+   dbx'stop +'         NB. report stops
+   dbx'stop -'         NB. remove all stops
+
+   dbx'stop -;f 2;g 5' NB. multiple args
+
+
+***start debug page code
+page code that creates page source from HTML/CSS/JS
+and handles events runs under try. catch. (not catchd.)
+
+a browser request must finish (perhaps with error report)
+so that term and other pages can continue normally
+
+this complicates page code debugging
+
+tools help with page debugging - try the following:
+   'jdebug;10 10'jpage'' NB. best if you can see term and debug
+   load'~addons/ide/jhs/page/watch.ijs'
+   dbx'stop -;dhbs 0;dcreate 0;devent 0' NB. debug stops
+   debughbs_watch_ ''    NB. step thru lines that create html
+   debugcreate_watch_ '' NB. step thru lines that create page
+press into to step into ev_create defn   
+   c=: 'watch;10 500'jpage'' NB. run the app
+   NB. click run button so we have an event to handle
+   debugevent__c ''    NB. run handler under debug
+
+***start debug dissect
    jhswiki'dissect' NB. Display And Probe A J Sentence Graphically
 
 run dissect:
- on a term input sentence with esc-j
- on a debug app sentence with dissect button
+ on a term input line from menu
+ or in a debug suspension with dissect button
 
+***start debug stdlib
+<STDLIB>
 
 ***start canvas
    jhstour 'canvas'
@@ -151,7 +217,7 @@ dissect gets some special treatment
 ***start tool
 <TOOL>
 
-***start debugjs
+***start debug javascript
 browser ​html/css/javascript ​debuggers ​are ​excellent!
 spend ​time ​getting ​familiar ​with ​your ​favorite ​browser
 online ​docs ​are ​good, ​but ​mostly ​you ​just ​have ​to ​play

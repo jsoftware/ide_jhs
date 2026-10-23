@@ -69,9 +69,13 @@ t=. jhdivz,~jhdiva t
 NB.* jhdemo'' - html link to defining script
 jhdemo=: 3 : 'jhbr,jhijs y'
 
-NB.* id jhdiv text - <div ...>text</div>
-jhdiv=: 4 : 0
-'<div id="',x,'" class="jhdiv" >',y,'</div>'
+NB.* [id] jhdiv text [;class]
+jhdiv=: 3 : 0
+'value class'=. y addd 'jhdiv'
+'<div class="',class,'" >',value,'</div>'
+:
+'value class'=. y addd 'jhdiv'
+'<div id="',x,'" class="',class,'" >',value,'</div>'
 )
 
 NB.* [id] jhdiva text - <div id...>text
@@ -317,9 +321,13 @@ t=. t,'</select>'
 t jhaddatts ('~'e.options)#'data-jhsnojdefault="1"'
 )
 
-NB.* id jhspan text - <span id...>text</span>
-jhspan=: 4 : 0
-'<span id="',x,'" class="jhspan">',y,'</span>'
+NB.* [id] jhspan text [;class]
+jhspan=: 3 : 0
+'value class'=. y addd 'jhspan'
+'<span class="',class,'" >',value,'</span>'
+:
+'value class'=. y addd 'jhspan'
+'<span id="',x,'" class="',class,'">',y,'</span>'
 )
 
 NB.* [id] jhsplits [style] - separator -- 'style="abc:123"'
@@ -397,12 +405,6 @@ NB. jgrid - special jht for grid
 jhtx=: 3 : 0
 t=. '<input type="text" id="<ID>" name="<ID>" class="<CLASS>" <EXTRAS>',jeditatts,'value="<VALUE>" size="<SIZE>" onkeydown="return jev(event)" >'
 t hrplc 'ID VALUE SIZE CLASS EXTRAS';5{.y,(#y)}.'';'';'';'ht';''
-)
-
-NB.* jhbshtml_locale_'' -  show HBS sentences and html
-jhbshtml=: 3 : 0
-s=.<;._2 HBS
-seebox s,.LF-.~each jhbsex each s
 )
 
 NB. standard menu on events

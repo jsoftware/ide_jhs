@@ -15,7 +15,7 @@ HBS=:  0 : 0
 'head'  jhh1   'password'
         jhijs''                        NB. button to edit source script
         jhhr
-'pswd'  jhspan '&nbsp;'                NB. pswd text - non-breaking space
+'pswd'  jhspan ''
         jhhr                           NB. html horizonatal rule
 'len'   jhspan'length: ',":length
 'gn*up' jhb'▲'                         NB. button to increase length

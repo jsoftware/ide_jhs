@@ -77,7 +77,7 @@ if. '/'={:;i{b do. ('/',~remlev y);<d return. end.
 NB. y - error;file
 create=: 3 : 0
 'r f'=. y
-if. r-:'' do. r=. '&nbsp;' end. NB. so div does not collapse
+if. r-:'' do. r=. ' ' end. NB. so div does not collapse
 'f d'=. getfandp f
 d=. (<d),<(('/'=;{:each d){'';'▶'),each d
 'jfile' jhr 'R F FILES';r;(jshortname f);(buttons 'files';d,<'<br>')
@@ -85,7 +85,7 @@ d=. (<d),<(('/'=;{:each d){'';'▶'),each d
 
 NB. get file with mid/path opens the file
 jev_get=: 3 : 0
-create '&nbsp;';LASTPATH
+create ' ';LASTPATH
 )
 
 buttons=: 3 : 0
@@ -408,7 +408,7 @@ jhrajax t
 
 CSS=: 0 : 0
 *{font-family:<PC_FONTFIXED>;}
-#report{color:red;}
+#report{color:red;white-space:pre}
 #pathd{color:blue;}
 #renamedlg{display:none;}
 #deletedlg{display:none;}
@@ -509,7 +509,7 @@ function ev_files_dblclick()
 }
 
 function clr(){
- jbyid('report').innerHTML = "&nbsp;";
+ jbyid('report').innerHTML = " ";
  jhide("renamedlg");jhide("deletedlg");jhide('newdlg');
  }
 

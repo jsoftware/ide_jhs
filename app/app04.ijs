@@ -27,7 +27,7 @@ CSS=: 0 : 0
 
 NB. J code - initialize and handle events
 ev_create=: 3 : 0 NB. called by page or browser to initialize locale
-t=. (''-:y){::y;<,LF,.~60 20$'silly text ' NB. y or default
+t=. (''-:y){::y;<sillytext
 'jpage y must be text' assert 2=3!:0 t
 jhrcmds 'set ta *',t
 )

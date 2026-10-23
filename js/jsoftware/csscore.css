@@ -31,7 +31,7 @@ iframe[id^="jifr-jijx"]{overflow:auto;flex:3 1 auto;}
 
 .jhtitle{margin-left:0px;font-size:2em;}
 
-.transient{border:1px red solid;}
+.transient{border:1px red solid; overflow-wrap: break-word; white-space: pre;}
 
 /* button elements */
 button{color:black;margin: 2px; padding: 2px; background-color:white;border:0;}

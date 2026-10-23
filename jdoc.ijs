@@ -19,7 +19,7 @@ jhflexz
 )
 
 CSS=: 0 : 0
-*.div{white-space:pre;font-family:<PC_FONTFIXED>;}
+*.jhdiv{white-space:pre;font-family:<PC_FONTFIXED>;}
 .html1{font-size:300%;}
 #all{<PS_FLEX>}
 )
@@ -27,7 +27,8 @@ CSS=: 0 : 0
 getmans=: 3 :0
 t=. man y
 a=. deb each <;._2 t
-b=. <;._2 a
+b=. <;.2 a
+
 i=. /:{:each b
 c=. i{<;._2 <;.2 t NB. preserve blanks
 c=. c,each <<LF
@@ -37,7 +38,10 @@ i=. b#i.#d
 r=. ;3{each i{d
 p=. 3+('*'=r)+.' '=r
 d=. ((<'      '),each p}.each i{d) i}d
+i=. (d=<LF)#i.#d
+d=. (<'horizontalrule') i}d NB. ugly lazy kludge
 d=. jhfroma ;d
+d=. d rplc 'horizontalrule';'<hr>'
 )
 
 jev_get=: 3 : 0

@@ -11,7 +11,7 @@ buffer=: ''
 draw=: 3 : 0
 drawarg=: y NB. used by resize
 drawverb y
-formset__PARENT 'canvasjs can *',jsxarg buffer
+formcmds__PARENT 'canvasjs can *',jsxarg buffer
 )
 
 ev_create=: 3 : 0

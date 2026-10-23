@@ -1,6 +1,8 @@
 NB. html templates and utilities
 coclass'jhs'
 
+sillytext=: ,LF,.~60 20$'silly   iiiwww      text '
+
 jsdata=: '"uninitialized"'   NB. jsdata not set by app - must be legal javascript
 
 INC=: CSS=: JS=: HBS=: ''  NB. overidden in app locale
@@ -383,27 +385,72 @@ t=. '<body onload="jevload();" onunload="jevunload();" onfocus="jevfocus();">',L
 hbserror=: 0 : 0
 
 if the above does not make the fix clear
-you can run HBS under debug with:
-   dbr 1
-   jhbsdebug_<APP>_ ''
+run HBS sentences without page complications:
+   debughbs_<CLASS>_ ''
 ) 
+
+getclass=: 3 : 0
+c=. ;coname''
+(_~:_".c){c;{.copath c
+)
 
 jhbsex=: 3 : 0
 try.
  t=. LF,}.' ',,".y NB. need lit list
 catch.
  t=. 'HBS error: locale: ',(>coname''),' line: ',y,LF,13!:12''
- t=. t,hbserror rplc '<APP>';coname''
+ t=. t,hbserror rplc '<CLASS>';getclass''
  t=.'<div>',(jhfroma t),'</div>'
 end.
 t
 ) 
 
-NB. debug html generation from HBS
-jhbsdebug=: 3 : 0
-jhbsjs=: '' NB. hbs js statments captured in globals
-t=. <;._2 HBS
-for_s. t do. ".;s end. 
+NB. provide locale in front for debug stuff
+debugcover=: 3 : 0
+d=. cocreate''
+coinsert__d coname''
+cocurrent d
+jhbsjs=: '' NB. JS side effect
+NV=: LASTNV
+jhrcmds=: [
+d
+)
+
+debuguncover=: 3 : 0
+c=. coname''
+cocurrent {.copath coname''
+coerase c
+coname''
+)
+
+NB. *_class_ ''
+debughbs=: 3 : 0
+'HBS not defined'assert 0=nc<'HBS'
+cocurrent debugcover''
+dhbs=. 3 : HBS NB. verb with HBS sentences
+dhbs'' 
+cocurrent debuguncover''
+i.0 0
+)
+
+NB. *_class_ ''
+debugcreate=: 3 : 0
+'ev_create not defined'assert 3=nc<'ev_create'
+cocurrent debugcover''
+dcreate=: 'ev_create'~
+r=. dcreate''
+cocurrent debuguncover''
+r
+)
+
+NB. *__object ''
+debugevent=: 3 : 0
+'no event to handle'assert 0=nc<'LASTNV'
+cocurrent debugcover''
+devent=: ('ev_',(getv'jmid'),'_',getv'jtype')~
+r=. devent 0
+cocurrent debuguncover''
+r
 )
 
 NB.? autocapitalize="none"

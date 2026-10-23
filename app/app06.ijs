@@ -30,7 +30,7 @@ CSS=: 0 : 0
 )
 
 ev_create=: {{
-t=. (''-:y){::y;<,LF,.~60 20$'silly text ' NB. y or default
+t=. (''-:y){::y;<sillytext NB. y or default
 'jpage y must be text' assert 2=3!:0 t
 jhrcmds ('set ta *',t);'set tb *','<span style="color:blue;font-size:3rem;">jhdiv</span><br>',t
 }}

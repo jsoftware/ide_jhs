@@ -38,7 +38,7 @@ i.0 0
 )
 
 draw=: 3 : 0
-formset 'canvasjs can *',jsxarg__can buffer__can
+formcmds 'canvasjs can *',jsxarg__can buffer__can
 )
 
 help=: 0 : 0 

@@ -94,7 +94,8 @@ jhcmds init 0
 )
 
 jev_get=: 3 : 0
-jhcmds init 0
+jsdata=: '"uninitialized"' NB. set jsdata so jhrcmds will set it 
+jhrcmds init 0
 TITLE jhr''
 )
 

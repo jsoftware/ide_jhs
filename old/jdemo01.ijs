@@ -2,7 +2,6 @@ coclass'jdemo01'
 coinsert'jhs'
 
 NB. sentences to create html body
-NB. jhbshtml_jdemo1_'' shows HBS html
 HBS=: 0 : 0
          jhclose'' NB. standard menu with close
          jhh1'Roll with submit'
